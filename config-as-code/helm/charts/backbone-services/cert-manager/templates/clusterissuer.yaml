@@ -1,6 +1,3 @@
-{{- if .Capabilities.APIVersions.Has "cert-manager.io/v1alpha1" }}
-apiVersion: cert-manager.io/v1alpha1
-{{- else }}
 apiVersion: cert-manager.io/v1alpha2
 kind: ClusterIssuer
 metadata:
@@ -15,11 +12,7 @@ spec:
     - http01:
         ingress:
           class: nginx
-{{- end }}          
 ---
-{{- if .Capabilities.APIVersions.Has "cert-manager.io/v1alpha1" }}
-apiVersion: cert-manager.io/v1alpha1
-{{- else }}
 apiVersion: cert-manager.io/v1alpha2
 kind: ClusterIssuer
 metadata:
@@ -34,4 +27,3 @@ spec:
     - http01:
         ingress:
           class: nginx
-{{- end }} 

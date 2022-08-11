@@ -1,5 +1,5 @@
 global:
-   domain: <Domain_name> ## Add your Domain Name Eg "site.mydomain.com" Do not use the dummy domain
+   domain: health-dev.digit.org
    setup: fullsetup
 
 cluster-configs:
@@ -12,19 +12,19 @@ cluster-configs:
     configmaps:
         egov-config:
             data:
-                db-host: "<db_host_name>" ## Add db-host name eg: egov-demo.database.azure.com
-                db-name: "<db_name>" ## Add db-name
-                db-url: "<db_url>" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
-                domain: "<Domain_name>" ## Add your Domain Name    
-                egov-services-fqdn-name: "https://<Domain_name>/" ## Add your Domain Name
+                db-host: "health-eks-dev-db.cqqfmghbjssw.ap-south-1.rds.amazonaws.com" ## Add db-host name eg: egov-demo.database.azure.com
+                db-name: "healthdev" ## Add db-name
+                db-url: "jdbc:postgresql://health-eks-dev-db.cqqfmghbjssw.ap-south-1.rds.amazonaws.com:5432/healthdev" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
+                domain: "health-dev.digit.org" ## Add your Domain Name
+                egov-services-fqdn-name: "https://health-dev.digit.org/" ## Add your Domain Name
                 
                 egov-state-level-tenant-id: "pg" 
-                s3-assets-bucket: "(pg-egov-assets|egov-playground-assets)"
+                s3-assets-bucket: "(pg-health-egov-assets|egov-health-playground-assets)"
                 es-host: "elasticsearch-data-v1.es-cluster"
                 es-indexer-host: "http://elasticsearch-data-v1.es-cluster:9200/"
                 flyway-locations: "filesystem:/flyway/sql,filesystem:/flyway/seed,filesystem:/flyway/qa"
                 kafka-brokers: "kafka-v2.kafka-cluster:9092"
-                kafka-infra-brokers: kafka-v2-infra.kafka-cluster:9092
+                kafka-infra-brokers: "kafka-v2-infra.kafka-cluster:9092"
                 logging-level-jdbc: "DEBUG"
                 mobile-validation-workaround: "true"
                 serializers-timezone-in-ist: "true"
@@ -34,7 +34,7 @@ cluster-configs:
                 spring-datasource-tomcat-initialSize: "1"
                 spring-datasource-tomcat-max-active: "2"
                 spring-jpa-show-sql: "true"
-                timezone: Asia/Kolkata
+                timezone: "Asia/Kolkata"
                 tracer-errors-provideexceptionindetails: "true"
 
         egov-service-host:
@@ -47,8 +47,8 @@ cluster-configs:
                 collection-search-indexer: "http://collection-search-indexer:8080/"
                 citizen-indexer: "http://citizen-indexer:8080/"
                 citizen-services: "http://citizen-services:8080/"
-                dashboard-analytics: http://dashboard-analytics.egov:8080/
-                dashboard-ingest: http://dashboard-ingest.egov:8080/
+                dashboard-analytics: "http://dashboard-analytics.egov:8080/"
+                dashboard-ingest: "http://dashboard-ingest.egov:8080/"
                 demand-services: "http://demand-services:8080/"
                 data-sync-employee: "http://data-sync-employee:8080/"
                 egov-common-masters: "http://egov-common-masters:8080/"
@@ -132,8 +132,8 @@ cluster-configs:
                 vehicle: "http://vehicle.egov:8080"
                 vendor: "http://vendor.egov:8080"
                 egov-edcr: "http://egov-edcr.egov:8080/"
-                echallan-calculator: http://echallan-calculator.egov:8080/
-                echallan-services: http://echallan-services.egov:8080/
+                echallan-calculator: "http://echallan-calculator.egov:8080/"
+                echallan-services: "http://echallan-services.egov:8080/"
                 inbox: "http://inbox.egov:8080/"
                 turn-io-adapter: "http://turn-io-adapter.egov:8080/"
                 pgr-services: "http://pgr-services.egov:8080/"
@@ -267,8 +267,8 @@ egov-mdms-service:
   mdms-path: "/work-dir/egov-mdms-data/data"
   initContainers:
     gitSync:
-      repo: "git@github.com:egovernments/egov-mdms-data"   ##### Change repo url with Your fork Repo url
-      branch: "UAT"                                        ##### Change repo branch with Your fork Repo branch
+      repo: "git@github.com:digit-egov/health-egov-mdms-data.git"   ##### Change repo url with Your fork Repo url
+      branch: "DEV"                                        ##### Change repo branch with Your fork Repo branch
   mdms-folder: "egov-mdms-data"
   masters-config-url: "file:///work-dir/egov-mdms-data/master-config.json"
   java-args: -Dspring.profiles.active=monitoring
@@ -278,8 +278,8 @@ egov-indexer:
   memory_limits: "768Mi"
   initContainers:
     gitSync:
-      repo: "git@github.com:egovernments/configs"        ##### Change repo url with Your fork Repo url
-      branch: "UAT"                                      ##### Change repo branch with Your fork Repo branch
+      repo: "git@github.com:digit-egov/health-configs.git"        ##### Change repo url with Your fork Repo url
+      branch: "DEV"                                      ##### Change repo branch with Your fork Repo branch
   egov-indexer-yaml-repo-path: "file:///work-dir/configs/egov-indexer/billingservices-indexer.yml,file:///work-dir/configs/egov-indexer/collection-indexer.yml,file:///work-dir/configs/egov-indexer/egov-telemetry-indexer.yml,file:///work-dir/configs/egov-indexer/egov-uploader-indexer.yml,file:///work-dir/configs/egov-indexer/error-queue.yml,file:///work-dir/configs/egov-indexer/finance-rolloutadotpion-indexer.yml,file:///work-dir/configs/egov-indexer/payment-indexer.yml,file:///work-dir/configs/egov-indexer/rainmaker-pgr-indexer.yml,file:///work-dir/configs/egov-indexer/rainmaker-pt-indexer.yml,file:///work-dir/configs/egov-indexer/rainmaker-tl-indexer.yml,file:///work-dir/configs/egov-indexer/chatbot-telemetry.yaml"
 
 egov-persister:
@@ -289,35 +289,35 @@ egov-persister:
   persist-yml-path: "file:///work-dir/configs/egov-persister/pt-mutation-calculator-persister.yml,file:///work-dir/configs/egov-persister/apportion-persister.yml,file:///work-dir/configs/egov-persister/billing-services-persist.yml,file:///work-dir/configs/egov-persister/egf-bill.yaml,file:///work-dir/configs/egov-persister/egov-user-event-persister.yml,file:///work-dir/configs/egov-persister/egov-workflow-v2-persister.yml,file:///work-dir/configs/egov-persister/firenoc_persiter.yaml,file:///work-dir/configs/egov-persister/hrms-employee-persister.yml,file:///work-dir/configs/egov-persister/pdf-generator.yml,file:///work-dir/configs/egov-persister/pg-service-persister.yml,file:///work-dir/configs/egov-persister/pgr.v3.yml,file:///work-dir/configs/egov-persister/property-services.yml,file:///work-dir/configs/egov-persister/pt-calculator-v2-persister.yml,file:///work-dir/configs/egov-persister/pt-drafts.yml,file:///work-dir/configs/egov-persister/pt-persist.yml,file:///work-dir/configs/egov-persister/tl-billing-slab-persister.yml,file:///work-dir/configs/egov-persister/tl-calculation-persister.yml,file:///work-dir/configs/egov-persister/uploader-persister.yml,file:///work-dir/configs/egov-persister/collection-migration-persister.yml,file:///work-dir/configs/egov-persister/property-services-registry.yml,file:///work-dir/configs/egov-persister/tradelicense.yml,file:///work-dir/configs/egov-persister/sewerage-persist.yml,file:///work-dir/configs/egov-persister/water-persist.yml,file:///work-dir/configs/egov-persister/water-meter.yml,file:///work-dir/configs/egov-persister/bpa-persister.yml,file:///work-dir/configs/egov-persister/assessment-persister.yml,file:///work-dir/configs/egov-persister/chatbot.yml"
   initContainers:
     gitSync:
-      repo: "git@github.com:egovernments/configs"      ##### Change repo url with Your fork Repo url
-      branch: "UAT"                                    ##### Change repo branch with Your fork Repo branch
+      repo: "git@github.com:digit-egov/health-configs.git"      ##### Change repo url with Your fork Repo url
+      branch: "DEV"                                    ##### Change repo branch with Your fork Repo branch
 
 egov-data-uploader:
   initContainers:
     gitSync:
-      repo: "git@github.com:egovernments/configs"      ##### Change repo url with Your fork Repo url
-      branch: "UAT"                                    ##### Change repo branch with Your fork Repo branch
+      repo: "git@github.com:digit-egov/health-configs.git"      ##### Change repo url with Your fork Repo url
+      branch: "DEV"                                    ##### Change repo branch with Your fork Repo branch
 
 egov-searcher:
   search-yaml-path: "file:///work-dir/configs/egov-searcher/rainmaker-pgr-v2.yml,file:///work-dir/configs/egov-searcher/weekly-impact-emailer-searcher.yml,file:///work-dir/configs/egov-searcher/PTDemandBasedSearcher.yml,file:///work-dir/configs/egov-searcher/bill-genie.yml,file:///work-dir/configs/egov-searcher/rainmaker-tl.yml,file:///work-dir/configs/egov-searcher/localitySearcher.yml"
   initContainers:
     gitSync:
-      repo: "git@github.com:egovernments/configs"     ##### Change repo url with Your fork Repo url
-      branch: "UAT"                                   ##### Change repo branch with Your fork Repo branch
+      repo: "git@github.com:digit-egov/health-configs.git"     ##### Change repo url with Your fork Repo url
+      branch: "DEV"                                   ##### Change repo branch with Your fork Repo branch
 
 dashboard-analytics:
   config-schema-paths: "file:///work-dir/configs/egov-dss-dashboards/dashboard-analytics/*.json"
   initContainers:
     gitSync:
-      repo: "git@github.com:egovernments/configs"      ##### Change repo url with Your fork Repo url
-      branch: "UAT"                                    ##### Change repo branch with Your fork Repo branch
+      repo: "git@github.com:digit-egov/health-configs.git"      ##### Change repo url with Your fork Repo url
+      branch: "DEV"                                    ##### Change repo branch with Your fork Repo branch
 
 dashboard-ingest:
   config-schema-paths: "file:///work-dir/configs/egov-dss-dashboards/dashboard-ingest/*.json"
   initContainers:
     gitSync:
-      repo: "git@github.com:egovernments/configs"      ##### Change repo url with Your fork Repo url
-      branch: "UAT"                                    ##### Change repo branch with Your fork Repo branch
+      repo: "git@github.com:digit-egov/health-configs.git"      ##### Change repo url with Your fork Repo url
+      branch: "DEV"                                    ##### Change repo branch with Your fork Repo branch
 
 # reportinfra >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 report:
@@ -326,15 +326,15 @@ report:
   spring-datasource-tomcat-max-active: 5
   initContainers:
     gitSync:
-      repo: "git@github.com:egovernments/configs"     ##### Change repo url with Your fork Repo url
-      branch: "UAT"                                   ##### Change repo branch with Your fork Repo branch
+      repo: "git@github.com:digit-egov/health-configs.git"     ##### Change repo url with Your fork Repo url
+      branch: "DEV"                                   ##### Change repo branch with Your fork Repo branch
   report-locationsfile-path: "file:///work-dir/configs/reports/reportFileLocationsv1.txt"
 
 pdf-service:
   initContainers:
     gitSync:
-      repo: "git@github.com:egovernments/configs"     ##### Change repo url with Your fork Repo url
-      branch: "UAT"                                   ##### Change repo branch with Your fork Repo branch
+      repo: "git@github.com:digit-egov/health-configs.git"     ##### Change repo url with Your fork Repo url
+      branch: "DEV"                                   ##### Change repo branch with Your fork Repo branch
   data-config-urls: "file:///work-dir/configs/pdf-service/data-config/tradelicense-receipt.json,file:///work-dir/configs/pdf-service/data-config/property-receipt.json,file:///work-dir/configs/pdf-service/data-config/property-bill.json,file:///work-dir/configs/pdf-service/data-config/tradelicense-bill.json,file:///work-dir/configs/pdf-service/data-config/firenoc-receipt.json,file:///work-dir/configs/pdf-service/data-config/pt-receipt.json,file:///work-dir/configs/pdf-service/data-config/tl-receipt.json,file:///work-dir/configs/pdf-service/data-config/consolidatedbill.json,file:///work-dir/configs/pdf-service/data-config/consolidatedreceipt.json,file:///work-dir/configs/pdf-service/data-config/tlapplication.json,file:///work-dir/configs/pdf-service/data-config/passvehicle-certificate.json,file:///work-dir/configs/pdf-service/data-config/ws-consolidatedacknowlegment.json,file:///work-dir/configs/pdf-service/data-config/ws-consolidatedsewerageconnection.json,file:///work-dir/configs/pdf-service/data-config/buildingpermit.json,file:///work-dir/configs/pdf-service/data-config/ptmutationcertificate.json,file:///work-dir/configs/pdf-service/data-config/tlrenewalcertificate.json,file:///work-dir/configs/pdf-service/data-config/bpa-revocation.json,file:///work-dir/configs/pdf-service/data-config/buildingpermit-low.json,file:///work-dir/configs/pdf-service/data-config/misc-receipt.json,file:///work-dir/configs/pdf-service/data-config/ws-applicationwater.json,file:///work-dir/configs/pdf-service/data-config/ws-sanctionletter.json,file:///work-dir/configs/pdf-service/data-config/ws-estimationnotice.json,file:///work-dir/configs/pdf-service/data-config/ws-applicationsewerage.json,file:///work-dir/configs/pdf-service/data-config/tlcertificate.json"
   format-config-urls: "file:///work-dir/configs/pdf-service/format-config/tradelicense-receipt.json,file:///work-dir/configs/pdf-service/format-config/property-receipt.json,file:///work-dir/configs/pdf-service/format-config/property-bill.json,file:///work-dir/configs/pdf-service/format-config/tradelicense-bill.json,file:///work-dir/configs/pdf-service/format-config/firenoc-receipt.json,file:///work-dir/configs/pdf-service/format-config/pt-receipt.json,file:///work-dir/configs/pdf-service/format-config/tl-receipt.json,file:///work-dir/configs/pdf-service/format-config/consolidatedbill.json,file:///work-dir/configs/pdf-service/format-config/consolidatedreceipt.json,file:///work-dir/configs/pdf-service/format-config/tlapplication.json,file:///work-dir/configs/pdf-service/format-config/passvehicle-certificate.json,file:///work-dir/configs/pdf-service/format-config/ws-consolidatedacknowlegment.json,file:///work-dir/configs/pdf-service/format-config/ws-consolidatedsewerageconnection.json,file:///work-dir/configs/pdf-service/format-config/buildingpermit.json,file:///work-dir/configs/pdf-service/format-config/ptmutationcertificate.json,file:///work-dir/configs/pdf-service/format-config/tlrenewalcertificate.json,file:///work-dir/configs/pdf-service/format-config/bpa-revocation.json,file:///work-dir/configs/pdf-service/format-config/buildingpermit-low.json,file:///work-dir/configs/pdf-service/format-config/misc-receipt.json,file:///work-dir/configs/pdf-service/format-config/ws-applicationwater.json,file:///work-dir/configs/pdf-service/format-config/ws-sanctionletter.json,file:///work-dir/configs/pdf-service/format-config/ws-estimationnotice.json,file:///work-dir/configs/pdf-service/format-config/ws-applicationsewerage.json,file:///work-dir/configs/pdf-service/format-config/tlcertificate.json"
 
@@ -343,7 +343,7 @@ pdf-service:
 # financials >>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 egf-master:
-  db-url: "jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo"
+  db-url: "jdbc:postgresql://health-eks-dev-db.cqqfmghbjssw.ap-south-1.rds.amazonaws.com:5432/healthdev"
   memory_limits: 512Mi
   heap: "-Xmx256m -Xms256m"
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -558,12 +558,12 @@ kafka-v2:
   persistence:
     enabled: true
     aws:
-      - volumeId: "<volume_id>" ## add your respective volume id eg. vol-0085073c65f76dre5
-        zone: <zone>            ## add your respective zone eg. ap-south-1a
-      - volumeId: "<volume_id>" ## add your respective volume id eg. vol-0085073c65f76dre5
-        zone: <zone>            ## add your respective zone eg. ap-south-1a
-      - volumeId: "<volume_id>" ## add your respective volume id eg. vol-0085073c65f76dre5
-        zone: <zone>            ## add your respective zone eg. ap-south-1a
+      - volumeId: "vol-04252ba788d687a32" ## add your respective volume id eg. vol-0085073c65f76dre5
+        zone: ap-south-1a            ## add your respective zone eg. ap-south-1a
+      - volumeId: "vol-0999233fdb43fc001" ## add your respective volume id eg. vol-0085073c65f76dre5
+        zone: ap-south-1a            ## add your respective zone eg. ap-south-1a
+      - volumeId: "vol-09555d5b6f7474fd1" ## add your respective volume id eg. vol-0085073c65f76dre5
+        zone: ap-south-1a            ## add your respective zone eg. ap-south-1a
   zookeeperHosts: "zookeeper-v2.zookeeper-cluster:2181/kafka-v2"
 
   heapOptions: "-Xms704M -Xmx704M"
@@ -621,12 +621,12 @@ zookeeper-v2:
   persistence:
     enabled: true
     aws:
-      - volumeId: "<volume_id>" ## add your respective volume id eg. vol-0085073c65f76dre5
-        zone: <zone>            ## add your respective zone eg. ap-south-1a
-      - volumeId: "<volume_id>" ## add your respective volume id eg. vol-0085073c65f76dre5
-        zone: <zone>            ## add your respective zone eg. ap-south-1a
-      - volumeId: "<volume_id>" ## add your respective volume id eg. vol-0085073c65f76dre5
-        zone: <zone>            ## add your respective zone eg. ap-south-1a
+      - volumeId: "vol-0af907e3ec6b45dff" ## add your respective volume id eg. vol-0085073c65f76dre5
+        zone: ap-south-1a            ## add your respective zone eg. ap-south-1a
+      - volumeId: "vol-0c8ed5253e66a3b99" ## add your respective volume id eg. vol-0085073c65f76dre5
+        zone: ap-south-1a            ## add your respective zone eg. ap-south-1a
+      - volumeId: "vol-08667160508016b62" ## add your respective volume id eg. vol-0085073c65f76dre5
+        zone: ap-south-1a            ## add your respective zone eg. ap-south-1a
 
   ## Zookeeper JVM Heap Option
   heapOptions: "-Xms256M -Xmx256M"
@@ -690,12 +690,12 @@ elasticsearch-data-v1:
   persistence:
     enabled: true
     aws:
-      - volumeId: "<volume_id>" ## add your respective volume id eg. vol-0085073c65f76dre5
-        zone: <zone>            ## add your respective zone eg. ap-south-1a
-      - volumeId: "<volume_id>" ## add your respective volume id eg. vol-0085073c65f76dre5
-        zone: <zone>            ## add your respective zone eg. ap-south-1a
-      - volumeId: "<volume_id>" ## add your respective volume id eg. vol-0085073c65f76dre5
-        zone: <zone>            ## add your respective zone eg. ap-south-1a
+      - volumeId: "vol-0471fb65377b31af3" ## add your respective volume id eg. vol-0085073c65f76dre5
+        zone: ap-south-1a            ## add your respective zone eg. ap-south-1a
+      - volumeId: "vol-0d312161f24d7608d" ## add your respective volume id eg. vol-0085073c65f76dre5
+        zone: ap-south-1a            ## add your respective zone eg. ap-south-1a
+      - volumeId: "vol-0dcb03521a8befe8f" ## add your respective volume id eg. vol-0085073c65f76dre5
+        zone: ap-south-1a            ## add your respective zone eg. ap-south-1a
 
   esJavaOpts: "-Xmx1g -Xms1g"
   resources:
@@ -754,12 +754,12 @@ elasticsearch-master-v1:
   persistence:
     enabled: true
     aws:
-      - volumeId: "<volume_id>" ## add your respective volume id eg. vol-0085073c65f76dre5
-        zone: <zone>            ## add your respective zone eg. ap-south-1a
-      - volumeId: "<volume_id>" ## add your respective volume id eg. vol-0085073c65f76dre5
-        zone: <zone>            ## add your respective zone eg. ap-south-1a
-      - volumeId: "<volume_id>" ## add your respective volume id eg. vol-0085073c65f76dre5
-        zone: <zone>            ## add your respective zone eg. ap-south-1a
+      - volumeId: "vol-08afd24346fb136f5" ## add your respective volume id eg. vol-0085073c65f76dre5
+        zone: ap-south-1a            ## add your respective zone eg. ap-south-1a
+      - volumeId: "vol-0c94e7b9cc22e555a" ## add your respective volume id eg. vol-0085073c65f76dre5
+        zone: ap-south-1a            ## add your respective zone eg. ap-south-1a
+      - volumeId: "vol-0986961f7968b5cd5" ## add your respective volume id eg. vol-0085073c65f76dre5
+        zone: ap-south-1a            ## add your respective zone eg. ap-south-1a
  
   esJavaOpts: "-Xmx448m -Xms448m"
   resources:
