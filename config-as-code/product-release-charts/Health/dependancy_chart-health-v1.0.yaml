@@ -1,6 +1,6 @@
 version: v1.0
 modules:
-    - name: backbone
+    - name: m_backbone
       services:
         - zookeeper-v2
         - kafka-v2
@@ -41,6 +41,8 @@ modules:
         - egovio/report:v1.3.4-96b24b0d72-16
         - egovio/egov-document-uploader:v1.1.0-75d461a4d2-4
         - egovio/playground:1.0
+        - egovio/egov-rn-service:health-dev-4c113d4e09-3
+        - egovio/egov-rn-service:health-dev-e2573ba1c6-4
     - name: business
       dependencies:
         - "core"
