@@ -5,15 +5,15 @@ metadata:
   labels:
     app: {{ template "name" . }}
     type: local
-spec: 
+spec:
   storageClassName: manual
-  capacity: 
+  capacity:
     storage: {{ .Values.persistence.dataDirSize | quote }}
   accessModes:
     - ReadWriteOnce
   hostPath:
     path: "/kube/kafka"
-     
+
 
 
 

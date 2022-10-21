@@ -4,7 +4,11 @@
 
 provider "aws" {
   region = "ap-south-1"
+  shared_config_files      = ["~/.aws/config"]
+  shared_credentials_files = ["~/.aws/credentials"]
+  profile = "health-eGov"
 }
+
 
 # Using these data sources allows the configuration to be
 # generic for any region.

@@ -5,7 +5,7 @@
 
 variable "cluster_name" {
   description = "Name of the Kubernetes cluster"
-  default = "my-first-eks" #REPLACE
+  default = "health-eks-qa" #REPLACE
 }
 
 variable "vpc_cidr_block" {
@@ -47,18 +47,22 @@ variable "number_of_worker_nodes" {
 
 variable "ssh_key_name" {
   description = "ssh key name, not required if your using spot instance types"
-  default = "my-first-eks" #REPLACE
+  default = "health-eks-qa" #REPLACE
 }
 
 
 variable "db_name" {
   description = "RDS DB name. Make sure there are no hyphens or other special characters in the DB name. Else, DB creation will fail"
-  default = "digitdb" #REPLACE
+  default = "healthqa" #REPLACE
 }
 
 variable "db_username" {
   description = "RDS database user name"
-  default = "egovdemo" #REPLACE
+  default = "healthegovdemo" #REPLACE
+}
+
+variable "bucket_name" {
+  default = "health-s3-qa"
 }
 
 #DO NOT fill in here. This will be asked at runtime
