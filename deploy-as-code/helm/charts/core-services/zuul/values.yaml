@@ -53,7 +53,9 @@ eventlog-enabled: "false"
 eventlog-topic: "zuul-event-log"
 eventlog-urls-whitelist: ""
 home-isolation-chatbot-router-enabled: false
-
+zuul-response-gzip-filter-enabled: true
+zuul-min-gzip-body-size: 860
+zuul.gzip.contenttypes: "text/html,application/x-javascript,text/css,application/javascript,text/javascript,text/plain,text/xml,application/json,application/vnd.ms-fontobject,application/x-font-opentype,application/x-font-truetype,application/x-font-ttf,application/xml,font/eot,font/opentype,font/otf,image/svg+xml,image/vnd.microsoft.icon"
 # Additional Container Envs
 env: |
   - name: URL_LISTS
