@@ -1,13 +1,13 @@
 # Common Labels
 labels:
-  app: "health-product-service"
+  app: "product"
   group: "core"
 
 # Ingress Configs
 ingress:
   enabled: true
   zuul: true
-  context: "health-product-service"
+  context: "product"
 
 # Init Containers Configs
 initContainers:
@@ -15,19 +15,19 @@ initContainers:
     enabled: false
     schemaTable: "health_product_service_schema"
     image:
-      repository: "health-product-service-db"
+      repository: "product-db"
 
 # Container Configs
 image:
-  repository: "health-product-service"
+  repository: "product"
 replicas: "1"
 healthChecks:
   enabled: true
-  livenessProbePath: "/health-product-service/health"
-  readinessProbePath: "/health-product-service/health"
+  livenessProbePath: "/product/health"
+  readinessProbePath: "/product/health"
 appType: "java-spring"
 tracing-enabled: true
-# persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/digit-health-product-service-persister.yml"
+# persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/digit-product-persister.yml"
 heap: "-Xmx192m -Xms192m"
 java-args: ""
 
