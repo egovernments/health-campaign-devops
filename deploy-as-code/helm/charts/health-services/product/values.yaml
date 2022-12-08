@@ -53,7 +53,7 @@ env: |
   - name: EGOV_IDGEN_PATH
     value: "egov-idgen/id/_generate"
   - name: EGOV_IDGEN_INTEGRATION_ENABLED
-    value: true
+    value: "true"
   - name: SPRING_REDIS_HOST
     value: {{ index .Values "redis_host" | quote }}
   - name: SPRING_REDIS_PORT
