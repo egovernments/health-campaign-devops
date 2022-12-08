@@ -55,7 +55,7 @@ env: |
   - name: EGOV_IDGEN_INTEGRATION_ENABLED
     value: "true"
   - name: SPRING_REDIS_HOST
-    value: {{ index .Values "redis_host" | quote }}
+    value: "redis.backbone"
   - name: SPRING_REDIS_PORT
     value: "6379"
   - name: SPRING_CACHE_TYPE
