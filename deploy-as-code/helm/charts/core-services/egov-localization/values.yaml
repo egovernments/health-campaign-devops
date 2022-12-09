@@ -1,7 +1,7 @@
 # Common Labels
 labels:
   app: "egov-localization"
-  group: "core"
+  group: "health"
 
 # Ingress Configs
 ingress:
