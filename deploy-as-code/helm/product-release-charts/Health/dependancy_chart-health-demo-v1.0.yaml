@@ -42,6 +42,7 @@ modules:
       - egovio/egov-document-uploader:v1.1.0-75d461a4d2-4
       - egovio/playground:1.0
       - egovio/egov-rn-service:health-dev-16ea0aa353-6
+      - egovio/project-db:hlm-700-project-staff-0530ca8bec-4
   - name: business
     dependencies:
       - "core"
