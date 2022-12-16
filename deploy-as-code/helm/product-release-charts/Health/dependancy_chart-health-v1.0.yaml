@@ -82,6 +82,7 @@ modules:
     dependencies:
       - "backbone"
       - "authn-authz"
+      - "core"
     services:
       - egovio/product:hlm-699-product-variant-a0355eb4b3-4
       - egovio/project:hlm-700-project-staff-0530ca8bec-4
