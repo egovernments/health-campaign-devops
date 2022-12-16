@@ -141,7 +141,7 @@ cluster-configs:
         egov-pdf: "http://egov-pdf.egov:8080/"
         health-registration-service: "http://health-registration-service:8080/"
         health-delivery-service: "http://health-delivery-service:8080/"
-
+        project: "http://project:8080/"
 
 #>>>>>> Frontend Servies >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 employee:
