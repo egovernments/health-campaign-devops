@@ -139,7 +139,8 @@ cluster-configs:
         pgr-services: "http://pgr-services.egov:8080/"
         birth-death-services: "http://birth-death-services.egov:8080/"
         egov-pdf: "http://egov-pdf.egov:8080/"
-
+        project: "http://project:8080/"
+        product: "http://product:8080/"
 
 #>>>>>> Frontend Servies >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 employee:
