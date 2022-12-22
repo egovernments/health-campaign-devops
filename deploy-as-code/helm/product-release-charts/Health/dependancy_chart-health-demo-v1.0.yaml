@@ -106,3 +106,11 @@ modules:
       - egovio/egov-user-event:v1.2.0-c1e1e8ce24-21
       - egovio/inbox:v1.1.1-a9e95f948f-75
       - egovio/turn-io-adapter:v1.0.1-96b24b0d72-5
+  - name: health
+    dependencies:
+      - "backbone"
+      - "authn-authz"
+      - "core"
+    services:
+      - egovio/product:hlm-699-product-variant-a0355eb4b3-4
+      - egovio/project:hlm-700-project-staff-0530ca8bec-4
