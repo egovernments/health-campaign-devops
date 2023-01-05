@@ -1,41 +1,41 @@
 # Common Labels
 labels:
-  app: "project"
-  group: "health"
+  app: "individual"
+  group: "core"
 
 # Ingress Configs
 ingress:
   enabled: true
   zuul: true
-  context: "project"
+  context: "individual"
 
 # Init Containers Configs
 initContainers:
   dbMigration:
     enabled: true
-    schemaTable: "project_schema"
+    schemaTable: "individual_schema"
     image:
-      repository: "project-db"
+      repository: "individual-db"
 
 # Container Configs
 image:
-  repository: "project"
+  repository: "individual"
 replicas: "1"
 healthChecks:
   enabled: true
-  livenessProbePath: "/project/health"
-  readinessProbePath: "/project/health"
+  livenessProbePath: "/individual/health"
+  readinessProbePath: "/individual/health"
 appType: "java-spring"
 tracing-enabled: true
 heap: "-Xmx192m -Xms192m"
 java-args: ""
-persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/project-persister.yml"
-indexer-yml-path: "file:///work-dir/health-campaign-config/egov-indexer/project-indexer.yml"
+persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/individual-persister.yml"
+indexer-yml-path: "file:///work-dir/health-campaign-config/egov-persister/individual-indexer.yml"
 
 # Additional Container Envs
 env: |
   - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-    value: health-project
+    value: health-individual
   - name: SPRING_KAFKA_PRODUCER_KEY_SERIALIZER
     value: org.apache.kafka.common.serialization.StringSerializer
   {{- if index .Values "global" "tracer-errors-provideexceptionindetails" }}
@@ -73,20 +73,9 @@ env: |
   - name: SERVER_PORT
     value: "8080"
   - name: SECURITY_BASIC_ENABLED
-    value: "false"
-  - name: EGOV_USER_HOST
-    valueFrom:
-      configMapKeyRef:
-        name: egov-service-host
-        key: egov-user-egov
-  - name: EGOV_USER_CONTEXT_PATH
-    value: "/user/users"
-  - name: EGOV_SEARCH_USER_URL
-    value: "/user/_search"
-  - name: EGOV_USER_INTEGRATION_ENABLED
-    value: "true"
+    value: "false"  
   - name: MANAGEMENT_SECURITY_ENABLED
-    value: "false"
+    value: "false" 
   {{- if index .Values "tracing-enabled" }}
   - name: TRACER_OPENTRACING_ENABLED
     value: "true" 
