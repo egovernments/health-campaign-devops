@@ -13,7 +13,7 @@ image:
 # Ingress Configs
 ingress:
   enabled: true
-  context: "oauth2"  
+  context: "oauth2"
 
 httpPort: 4180
 # Optionally specify an array of imagePullSecrets.
@@ -30,7 +30,7 @@ extraArgs:
 healthChecks:
   enabled: true
   livenessProbePath: "/ping"
-  readinessProbePath: "/ping"  
+  readinessProbePath: "/ping"
 
 args: |
   - --http-address=0.0.0.0:4180
@@ -85,8 +85,12 @@ config:
   configFile: |-
     email_domains = [ "*" ]
     github_org = "egovernments" 
-    github_team = "micro-service-dev"
+    github_team = "health-dev"
     upstreams = [ "file:///dev/null" ]
+  clientId: a9462071958d9bff3e46
+  clientSecret: 071f75baedf14152c32ef9dff731664d78c1d283
+  cookieSecret: YWQwNzA1MjliNjZhYWE2ZDU1MWQyMmFkNWY3MjI5YTQK
+
   # Custom configuration file: oauth2_proxy.cfg
   # configFile: |-
   #   pass_basic_auth = false
