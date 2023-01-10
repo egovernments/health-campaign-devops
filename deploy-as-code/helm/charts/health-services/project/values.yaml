@@ -91,3 +91,30 @@ env: |
   - name: TRACER_OPENTRACING_ENABLED
     value: "true" 
   {{- end }}
+  - name: EGOV_MDMS_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: egov-mdms-service
+  - name: EGOV_MDMS_SEARCH_ENDPOINT
+    value: "/egov-mdms-service/v1/_search"
+  - name: EGOV_MDMS_INTEGRATION_ENABLED
+    value: "true"
+  - name: EGOV_MDMS_MASTER_NAME
+    value: "project_master"
+  - name: EGOV_MDMS_MODULE_NAME
+    value: "project"
+  - name: EGOV_HOUSEHOLD_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: household
+  - name: EGOV_SEARCH_HOUSEHOLD_URL
+    value: "/household/v1/_search"
+  - name: EGOV_INDIVIDUAL_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: individual
+  - name: EGOV_SEARCH_INDIVIDUAL_URL
+    value: "/individual/v1/_search"
