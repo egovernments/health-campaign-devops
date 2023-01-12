@@ -2,3 +2,5 @@
 creation_rules:
   - path_regex: environments/health-dev\-secrets\.yaml$
     kms: 'arn:aws:kms:ap-south-1:218381940040:key/d83c3ae8-20df-418b-b8bb-5bdbe09e0f2c'
+  - path_regex: environments/health-qa\-secrets\.yaml$
+    kms: 'arn:aws:kms:ap-south-1:680148267093:key/b18d1e9d-85ba-402e-9565-7e65cc1a5842'
