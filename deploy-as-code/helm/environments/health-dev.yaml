@@ -382,6 +382,17 @@ nginx-ingress:
   ssl-protocols: "TLSv1.2 TLSv1.3"
   ssl-ciphers: "EECDH+CHACHA20:EECDH+AES"
   ssl-ecdh-curve: "X25519:prime256v1:secp521r1:secp384r1"
+  controller:
+    image:
+      repository: egovio/nginx-ingress-controller
+      tag: "0.26.1"     
+    metrics:            #To collect the matrics data from nginx-ingress.
+      enabled: true
+    serviceMonitor:   #To enable the service monitoring of nginx-ingress
+      enabled: true
+    service:
+      prometheusRule:
+        enabled: true
 
 cert-manager:
   email: "devops@egovernments.org"     ### Add email-id which used by cert-manager for certificates validation.
@@ -476,7 +487,7 @@ logging-config:
   es-host: "elasticsearch-client-v1.es-cluster"
   es-port: "9200"
 
-jaeger-config:
+jaeger:
   host: ""
   port: ""
   sampler-type: ""
@@ -834,5 +845,13 @@ oauth2-proxy:
     configFile: |-
       email_domains = [ "*" ]
       github_org = "egovernments"
-      github_team = "health-dev"
+      github_team = "micro-service-devops, health-dev"
       upstreams = [ "file:///dev/null" ]
+
+grafana:
+  initContainers:
+    gitSync:
+      enabled: true
+      repo: "git@github.com:egovernments/health-campaign-config" #REPLACE with your configs repo
+      branch: "DEV" #REPLACE with config repo branch name
+  dashboardsFolder: /work-dir/health-campaign-config/monitoring-dashboards    
