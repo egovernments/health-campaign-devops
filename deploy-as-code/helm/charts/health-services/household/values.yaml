@@ -73,7 +73,18 @@ env: |
   - name: SERVER_PORT
     value: "8080"
   - name: SECURITY_BASIC_ENABLED
-    value: "false"  
+    value: "false"
+  - name: EGOV_INDIVIDUAL_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: individual
+  - name: EGOV_INDIVIDUAL_SEARCH_URL
+    value: "/individual/v1/_search"
+  - name: HOUSEHOLD_MEMBER_KAFKA_CREATE_TOPIC
+    value: "save-household-member-topic"
+  - name: HOUSEHOLD_MEMBER_KAFKA_UPDATE_TOPIC
+    value: "update-household-member-topic"
   - name: MANAGEMENT_SECURITY_ENABLED
     value: "false" 
   {{- if index .Values "tracing-enabled" }}
