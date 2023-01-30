@@ -80,14 +80,3 @@ env: |
   - name: TRACER_OPENTRACING_ENABLED
     value: "true" 
   {{- end }}
-  - name: EGOV_INDIVIDUAL_HOST
-    valueFrom:
-      configMapKeyRef:
-        name: egov-service-host
-        key: individual
-  - name: EGOV_INDIVIDUAL_SEARCH_URL
-    value: "/individual/v1/_search"
-  - name: HOUSEHOLD_MEMBER_KAFKA_CREATE_TOPIC:
-    value: "save-household-member-topic"
-  - name: HOUSEHOLD_MEMBER_KAFKA_UPDATE_TOPIC:
-    value: "update-household-member-topic"
