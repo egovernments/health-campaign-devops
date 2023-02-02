@@ -54,6 +54,8 @@ env: |
     value: "egov-idgen/id/_generate"
   - name: EGOV_IDGEN_INTEGRATION_ENABLED
     value: "true"
+  - name: PROJECT.TASK.IDGEN.ID.FORMAT
+    value: "project.task.id"
   - name: SPRING_REDIS_HOST
     value: redis.backbone
   - name: SPRING_REDIS_PORT
@@ -118,3 +120,15 @@ env: |
         key: individual
   - name: EGOV_SEARCH_INDIVIDUAL_URL
     value: "/individual/v1/_search"
+  - name: PROJECT.TASK.KAFKA.CREATE.TOPIC
+    value: "save-project-task-topic"
+  - name: PROJECT.TASK.CONSUMER.BULK.CREATE.TOPIC
+    value: "save-project-task-bulk-topic"
+  - name: PROJECT.TASK.KAFKA.UPDATE.TOPIC
+    value: "update-project-task-topic"
+  - name: PROJECT.TASK.CONSUMER.BULK.UPDATE.TOPIC
+    value: "update-project-task-bulk-topic"
+  - name: PROJECT.TASK.KAFKA.DELETE.TOPIC
+    value: "delete-project-task-topic"
+  - name: PROJECT.TASK.CONSUMER.BULK.DELETE.TOPIC
+    value: "delete-project-task-bulk-topic"
