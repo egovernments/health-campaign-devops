@@ -134,6 +134,10 @@ env: |
     value: "delete-project-task-topic"
   - name: PROJECT.TASK.CONSUMER.BULK.DELETE.TOPIC
     value: "delete-project-task-bulk-topic"
+  - name: PROJECT.BENEFICIARY.KAFKA.CREATE.TOPIC
+    value: "save-project-beneficiary-topic"
+  - name: PROJECT.BENEFICIARY.KAFKA.UPDATE.TOPIC
+    value: "update-project-beneficiary-topic"
   - name: PROJECT.BENEFICIARY.KAFKA.DELETE.TOPIC
     value: "delete-project-beneficiary-topic"
   - name: PROJECT.BENEFICIARY.CONSUMER.BULK.CREATE.TOPIC
