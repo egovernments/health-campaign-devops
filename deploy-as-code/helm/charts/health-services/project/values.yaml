@@ -56,6 +56,8 @@ env: |
     value: "true"
   - name: PROJECT.TASK.IDGEN.ID.FORMAT
     value: "project.task.id"
+  - name: IDGEN.PROJECT.BENEFICIARY.ID.FORMAT
+    value: "project.beneficiary.id"
   - name: SPRING_REDIS_HOST
     value: redis.backbone
   - name: SPRING_REDIS_PORT
@@ -132,3 +134,15 @@ env: |
     value: "delete-project-task-topic"
   - name: PROJECT.TASK.CONSUMER.BULK.DELETE.TOPIC
     value: "delete-project-task-bulk-topic"
+  - name: PROJECT.BENEFICIARY.KAFKA.CREATE.TOPIC
+    value: "save-project-beneficiary-topic"
+  - name: PROJECT.BENEFICIARY.KAFKA.UPDATE.TOPIC
+    value: "update-project-beneficiary-topic"
+  - name: PROJECT.BENEFICIARY.KAFKA.DELETE.TOPIC
+    value: "delete-project-beneficiary-topic"
+  - name: PROJECT.BENEFICIARY.CONSUMER.BULK.CREATE.TOPIC
+    value: "project-beneficiary-consumer-bulk-create-topic"
+  - name: PROJECT.BENEFICIARY.CONSUMER.BULK.UPDATE.TOPIC
+    value: "project-beneficiary-consumer-bulk-update-topic"
+  - name: PROJECT.BENEFICIARY.CONSUMER.BULK.DELETE.TOPIC
+    value: "project-beneficiary-consumer-bulk-delete-topic"
