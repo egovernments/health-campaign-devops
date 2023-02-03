@@ -54,6 +54,8 @@ env: |
     value: "egov-idgen/id/_generate"
   - name: EGOV_IDGEN_INTEGRATION_ENABLED
     value: "true"
+  - name: HOUSEHOLD.IDGEN.ID.FORMAT
+    value: "household.id"
   - name: SPRING_REDIS_HOST
     value: redis.backbone
   - name: SPRING_REDIS_PORT
@@ -91,3 +93,15 @@ env: |
   - name: TRACER_OPENTRACING_ENABLED
     value: "true" 
   {{- end }}
+  - name: HOUSEHOLD.CONSUMER.BULK.DELETE.TOPIC
+    value: "delete-household-bulk-topic"
+  - name: HOUSEHOLD.CONSUMER.BULK.CREATE.TOPIC
+    value: "create-household-bulk-topic"
+  - name: HOUSEHOLD.CONSUMER.BULK.UPDATE.TOPIC
+    value: "update-household-bulk-topic"
+  - name: HOUSEHOLD.KAFKA.CREATE.TOPIC
+    value: "save-household-topic"
+  - name: HOUSEHOLD.KAFKA.UPDATE.TOPIC
+    value: "update-household-topic"
+  - name: HOUSEHOLD.KAFKA.DELETE.TOPIC
+    value: "delete-household-topic"
