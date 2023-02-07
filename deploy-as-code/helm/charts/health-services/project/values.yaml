@@ -160,3 +160,5 @@ env: |
     value: "create-project-staff-bulk-topic"
   - name: PROJECT.STAFF.CONSUMER.BULK.UPDATE.TOPIC
     value: "update-project-staff-bulk-topic"
+  - name: SEARCH_API_LIMIT
+    value: "1000"
