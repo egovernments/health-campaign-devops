@@ -146,3 +146,15 @@ env: |
     value: "project-beneficiary-consumer-bulk-update-topic"
   - name: PROJECT.BENEFICIARY.CONSUMER.BULK.DELETE.TOPIC
     value: "project-beneficiary-consumer-bulk-delete-topic"
+  - name: PROJECT.STAFF.KAFKA.DELETE.TOPIC
+    value: "delete-project-staff-topic"
+  - name: PROJECT.STAFF.KAFKA.CREATE.TOPIC
+    value: "create-project-staff-topic"
+  - name: PROJECT.STAFF.KAFKA.UPDATE.TOPIC
+    value: "update-project-staff-topic"
+  - name: PROJECT.STAFF.CONSUMER.BULK.DELETE.TOPIC
+    value: "delete-project-staff-bulk-topic"
+  - name: PROJECT.STAFF.CONSUMER.BULK.CREATE.TOPIC
+    value: "create-project-staff-bulk-topic"
+  - name: PROJECT.STAFF.CONSUMER.BULK.UPDATE.TOPIC
+    value: "update-project-staff-bulk-topic"
