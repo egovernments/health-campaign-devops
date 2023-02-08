@@ -151,7 +151,7 @@ env: |
   - name: PROJECT.STAFF.KAFKA.DELETE.TOPIC
     value: "delete-project-staff-topic"
   - name: PROJECT.STAFF.KAFKA.CREATE.TOPIC
-    value: "create-project-staff-topic"
+    value: "save-project-staff-topic"
   - name: PROJECT.STAFF.KAFKA.UPDATE.TOPIC
     value: "update-project-staff-topic"
   - name: PROJECT.STAFF.CONSUMER.BULK.DELETE.TOPIC
