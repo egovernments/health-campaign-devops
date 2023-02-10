@@ -80,3 +80,11 @@ env: |
   - name: TRACER_OPENTRACING_ENABLED
     value: "true" 
   {{- end }}
+  - name: PRODUCT.KAFKA.CREATE.TOPIC
+    value: "save-product-topic"
+  - name: PRODUCT.KAFKA.UPDATE.TOPIC
+    value: "update-product-topic"
+  - name: PRODUCT.VARIANT.KAFKA.CREATE.TOPIC
+    value: "save-product-variant-topic"
+  - name: PRODUCT.VARIANT.KAFKA.UPDATE.TOPIC
+    value: "update-product-variant-topic"
