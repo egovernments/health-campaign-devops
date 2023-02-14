@@ -169,3 +169,17 @@ env: |
     value: "update-project-staff-bulk-topic"
   - name: SEARCH_API_LIMIT
     value: "1000"
+  - name: PROJECT.DOCUMENT.ID.VERIFICATION.REQUIRED
+    value: "false"
+  - name: PROJECT.MANAGEMENT.SYSTEM.KAFKA.CREATE.TOPIC
+    value: "save-project"
+  - name: PROJECT.MANAGEMENT.SYSTEM.KAFKA.UPDATE.TOPIC
+    value: "update-project"
+  - name: PROJECT.DEFAULT.OFFSET
+    value: "0"
+  - name: PROJECT.DEFAULT.LIMIT
+    value: "100"
+  - name: PROJECT.SEARCH.MAX.LIMIT
+    value: "200"
+  - name: EGOV.IDGEN.PROJECT.NUMBER.NAME
+    value: "project.number"
