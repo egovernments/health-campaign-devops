@@ -56,6 +56,8 @@ env: |
     value: "true"
   - name: STOCK.IDGEN.ID.FORMAT
     value: "stock.id"
+  - name: STOCK.RECONCILIATION.IDGEN.ID.FORMAT
+    value: "stock.reconciliation.id"
   - name: SPRING_REDIS_HOST
     value: redis.backbone
   - name: SPRING_REDIS_PORT
@@ -103,3 +105,15 @@ env: |
     value: "update-stock-bulk-topic"
   - name: SEARCH_API_LIMIT
     value: "1000"
+  - name: STOCK.RECONCILIATION.KAFKA.CREATE.TOPIC
+    value: "save-stock-reconciliation-topic"
+  - name: STOCK.RECONCILIATION.KAFKA.UPDATE.TOPIC
+    value: "update-stock-reconciliation-topic"
+  - name: STOCK.RECONCILIATION.KAFKA.DELETE.TOPIC
+    value: "delete-stock-reconciliation-topic"
+  - name: STOCK.RECONCILIATION.CONSUMER.BULK.DELETE.TOPIC
+    value: "delete-stock-reconciliation-bulk-topic"
+  - name: STOCK.RECONCILIATION.CONSUMER.BULK.CREATE.TOPIC
+    value: "create-stock-reconciliation-bulk-topic"
+  - name: STOCK.RECONCILIATION.CONSUMER.BULK.UPDATE.TOPIC
+    value: "update-stock-reconciliation-bulk-topic"
