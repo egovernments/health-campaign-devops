@@ -1,0 +1,81 @@
+# Common Labels
+labels:
+  app: "transformer"
+  group: "health"
+
+# Ingress Configs
+ingress:
+  enabled: true
+  zuul: true
+  context: "transformer"
+
+# Init Containers Configs
+initContainers:
+  dbMigration:
+    enabled: false
+    schemaTable: "transformer_schema"
+    image:
+      repository: "transformer-db"
+
+# Container Configs
+image:
+  repository: "transformer"
+replicas: "1"
+healthChecks:
+  enabled: true
+  livenessProbePath: "/transformer/health"
+  readinessProbePath: "/transformer/health"
+appType: "java-spring"
+tracing-enabled: true
+heap: "-Xmx192m -Xms192m"
+java-args: ""
+
+# Additional Container Envs
+env: |
+  - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+    value: health-project
+  - name: SPRING_KAFKA_PRODUCER_KEY_SERIALIZER
+    value: org.apache.kafka.common.serialization.StringSerializer
+  {{- if index .Values "global" "tracer-errors-provideexceptionindetails" }}
+  - name: TRACER_ERRORS_PROVIDEEXCEPTIONINDETAILS
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: tracer-errors-provideexceptionindetails
+  {{- end }}
+  - name: EGOV_IDGEN_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: egov-idgen
+  - name: SPRING_REDIS_HOST
+    value: redis.backbone
+  - name: SPRING_REDIS_PORT
+    value: "6379"
+  - name: SPRING_CACHE_TYPE
+    value: "redis"
+  - name: SPRING_CACHE_REDIS_TIME-TO-LIVE
+    value: "60"
+  - name: SPRING_CACHE_AUTOEXPIRY
+    value: "true"
+  - name: JAVA_OPTS
+    value: {{ index .Values "heap" | quote }}
+  - name: JAVA_ARGS
+    value: {{ index .Values "java-args" | quote }}
+  - name: JAVA_ENABLE_DEBUG
+    value: {{ index .Values "java-enable-debug" | quote }}
+  - name: SERVER_PORT
+    value: "8080"
+  - name: SECURITY_BASIC_ENABLED
+    value: "false"
+  - name: MANAGEMENT_SECURITY_ENABLED
+    value: "false"
+  {{- if index .Values "tracing-enabled" }}
+  - name: TRACER_OPENTRACING_ENABLED
+    value: "true" 
+  {{- end }}
+  
+  - name: ENRICHMENT_CONSUMER_BULK_CREATE_PROJECT_TASK_TOPIC
+    value: "enrichment-consumer-bulk-create-project-task-topic"
+  - name: ENRICHMENT_PRODUCER_BULK_CREATE_PROJECT_TASK_INDEX_V1_TOPIC
+    value: "enrichment-producer-bulk-create-project-task-index-v1-topic"
