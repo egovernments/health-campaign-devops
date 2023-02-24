@@ -75,7 +75,7 @@ env: |
     value: "true" 
   {{- end }}
   
-  - name: ENRICHMENT_CONSUMER_BULK_CREATE_PROJECT_TASK_TOPIC
-    value: "enrichment-consumer-bulk-create-project-task-topic"
-  - name: ENRICHMENT_PRODUCER_BULK_CREATE_PROJECT_TASK_INDEX_V1_TOPIC
-    value: "enrichment-producer-bulk-create-project-task-index-v1-topic"
+  - name: TRANSFORMER_CONSUMER_BULK_CREATE_PROJECT_TASK_TOPIC
+    value: "transformer-consumer-bulk-create-project-task-topic"
+  - name: TRANSFORMER_PRODUCER_BULK_CREATE_PROJECT_TASK_INDEX_V1_TOPIC
+    value: "transformer-producer-bulk-create-project-task-index-v1-topic"
