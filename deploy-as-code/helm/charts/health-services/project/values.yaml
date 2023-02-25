@@ -192,3 +192,17 @@ env: |
     value: "200"
   - name: EGOV.IDGEN.PROJECT.NUMBER.NAME
     value: "project.number"
+  - name: PROJECT.RESOURCE.IDGEN.ID.FORMAT
+    value: "project.resource.id"
+  - name: PROJECT.RESOURCE.KAFKA.CREATE.TOPIC
+    value: "save-project-resource-topic"
+  - name: PROJECT.RESOURCE.KAFKA.UPDATE.TOPIC
+    value: "update-project-resource-topic"
+  - name: PROJECT.RESOURCE.KAFKA.DELETE.TOPIC
+    value: "delete-project-resource-topic"
+  - name: PROJECT.RESOURCE.CONSUMER.BULK.CREATE.TOPIC
+    value: "save-project-resource-bulk-topic"
+  - name: PROJECT.RESOURCE.CONSUMER.BULK.UPDATE.TOPIC
+    value: "update-project-resource-bulk-topic"
+  - name: PROJECT.RESOURCE.CONSUMER.BULK.DELETE.TOPIC
+    value: "delete-project-resource-bulk-topic"
