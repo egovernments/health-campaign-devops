@@ -227,3 +227,7 @@ env: |
         key: facility
   - name: EGOV_SEARCH_FACILITY_URL
     value: "/facility/v1/_search"
+  - name: PROJECT_MDMS_MODULE
+    value: "hcm"
+  - name: EGOV_LOCATION_HIERARCHY_TYPE
+    value: "ADMIN"
