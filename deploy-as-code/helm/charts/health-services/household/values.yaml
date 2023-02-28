@@ -27,7 +27,7 @@ healthChecks:
   readinessProbePath: "/household/health"
 appType: "java-spring"
 tracing-enabled: true
-heap: "-Xmx192m -Xms192m"
+heap: "-Xmx1024m -Xms192m"
 java-args: ""
 persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/household-persister.yml"
 indexer-yml-path: "file:///work-dir/health-campaign-config/egov-persister/household-indexer.yml"
