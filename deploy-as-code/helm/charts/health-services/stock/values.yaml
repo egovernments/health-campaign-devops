@@ -117,3 +117,10 @@ env: |
     value: "create-stock-reconciliation-bulk-topic"
   - name: STOCK.RECONCILIATION.CONSUMER.BULK.UPDATE.TOPIC
     value: "update-stock-reconciliation-bulk-topic"
+  - name: EGOV_FACILITY_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: facility
+  - name: EGOV_SEARCH_FACILITY_URL
+    value: "/facility/v1/_search"
