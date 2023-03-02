@@ -82,5 +82,10 @@ modules:
       - "authn-authz"
       - "core"
     services:
-      - egovio/product:hlm-699-product-variant-a0355eb4b3-4
-      - egovio/project:hlm-700-project-staff-0530ca8bec-4
+      - egovio/facility:qa-972edcca9a-10
+      - egovio/household:qa-689445a57c-28
+      - egovio/individual:qa-247a48c674-19
+      - egovio/product:qa-0d6d887736-5
+      - egovio/project:qa-ce966a385f-54
+      - egovio/service-request:qa-2b9bf0593e-5
+      - egovio/stock:qa-ce925a4764-18
