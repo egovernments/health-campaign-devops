@@ -124,3 +124,10 @@ env: |
         key: facility
   - name: EGOV_SEARCH_FACILITY_URL
     value: "/facility/v1/_search"
+  - name: EGOV_PROJECT_FACILITY_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: project
+  - name: EGOV_SEARCH_PROJECT_FACILITY_URL
+    value: "/project/facility/v1/_search"
