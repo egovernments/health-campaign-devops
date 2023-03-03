@@ -64,3 +64,20 @@ env: |
     value: "save-project-task-topic"
   - name: TRANSFORMER_PRODUCER_BULK_CREATE_PROJECT_TASK_INDEX_V1_TOPIC
     value: "transformer-producer-bulk-create-project-task-index-v1-topic"
+  
+  - name: TRANSFORMER_CONSUMER_UPDATE_PROJECT_TOPIC
+    value: "update-project"
+  - name: EGOV_PROJECT_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: project
+  - name: EGOV_LOCATION_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: egov-location
+  - name: EGOV_SEARCH_PROJECT_URL
+    value: "/project/v1/_search"
+  - name: EGOV_LOCATION_ENDPOINT
+    value: "/egov-location/location/v11/boundarys/_search"
