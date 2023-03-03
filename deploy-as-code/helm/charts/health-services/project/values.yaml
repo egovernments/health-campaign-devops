@@ -105,9 +105,9 @@ env: |
         name: egov-service-host
         key: egov-location
   - name: EGOV_LOCATION_CONTEXT_PATH
-    value: /egov-location/location/v11/
+    value: "/egov-location/location/v11"
   - name: EGOV_LOCATION_ENDPOINT
-    value: /boundarys/_search
+    value: "/boundarys/_search"
   - name: EGOV_MDMS_HOST
     valueFrom:
       configMapKeyRef:
