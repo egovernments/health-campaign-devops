@@ -62,6 +62,8 @@ env: |
   
   - name: TRANSFORMER_CONSUMER_BULK_CREATE_PROJECT_TASK_TOPIC
     value: "save-project-task-topic"
+  - name: TRANSFORMER_CONSUMER_BULK_UPDATE_PROJECT_TASK_TOPIC
+    value: "update-project-task-topic"
   - name: TRANSFORMER_PRODUCER_BULK_PROJECT_TASK_INDEX_V1_TOPIC
     value: "transformer-producer-bulk-project-task-index-v1-topic"
   
