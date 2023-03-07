@@ -70,6 +70,11 @@ env: |
   - name: TRANSFORMER_PRODUCER_BULK_PROJECT_STAFF_INDEX_V1_TOPIC
     value: "transformer-producer-bulk-project-staff-index-v1-topic"
   
+  - name: TRANSFORMER_PRODUCER_BULK_PROJECT_INDEX_V1_TOPIC
+    value: "transformer-producer-bulk-project-index-v1-topic"
+  - name: TRANSFORMER_CONSUMER_CREATE_PROJECT_TOPIC
+    value: "save-project"
+
   - name: TRANSFORMER_CONSUMER_UPDATE_PROJECT_TOPIC
     value: "update-project"
   - name: EGOV_PROJECT_HOST
