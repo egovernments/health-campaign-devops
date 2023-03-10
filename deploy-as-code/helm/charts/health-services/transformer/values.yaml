@@ -109,7 +109,7 @@ env: |
         key: facility     
   - name: EGOV_SEARCH_FACILITY_URL
     value: "/facility/v1/_search"
-  - name: TRANSFORMER.CONSUMER.CREATE.FACILITY.TOPIC
+  - name: TRANSFORMER_CONSUMER_CREATE_FACILITY_TOPIC
     value: "save-facility-topic"
-  - name: TRANSFORMER.CONSUMER.UPDATE.FACILITY.TOPIC
+  - name: TRANSFORMER_CONSUMER_UPDATE_FACILITY_TOPIC
     value: "update-facility-topic"
