@@ -69,6 +69,8 @@ env: |
   
   - name: TRANSFORMER_CONSUMER_BULK_CREATE_PROJECT_STAFF_TOPIC
     value: "save-project-staff-topic"
+  - name: TRANSFORMER_CONSUMER_BULK_UPDATE_PROJECT_STAFF_TOPIC
+    value: "update-project-staff-topic"
   - name: TRANSFORMER_PRODUCER_BULK_PROJECT_STAFF_INDEX_V1_TOPIC
     value: "transformer-producer-bulk-project-staff-index-v1-topic"
   
@@ -89,9 +91,17 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: egov-location
-  
   - name: EGOV_SEARCH_PROJECT_URL
     value: "/project/v1/_search"
+  - name: EGOV_MDMS_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: egov-mdms-service
+  - name: EGOV_MDMS_SEARCH_ENDPOINT
+    value: "/egov-mdms-service/v1/_search"
+  - name: PROJECT_MDMS_MODULE
+    value: "HCM-PROJECT-TYPES"
   
   - name: EGOV_LOCATION_ENDPOINT
     value: "/egov-location/location/v11/boundarys/_search"
