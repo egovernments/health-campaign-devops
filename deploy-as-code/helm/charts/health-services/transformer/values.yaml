@@ -93,8 +93,6 @@ env: |
         key: egov-location
   - name: EGOV_SEARCH_PROJECT_URL
     value: "/project/v1/_search"
-  - name: EGOV_LOCATION_ENDPOINT
-    value: "/egov-location/location/v11/boundarys/_search"
   - name: EGOV_MDMS_HOST
     valueFrom:
       configMapKeyRef:
@@ -104,3 +102,24 @@ env: |
     value: "/egov-mdms-service/v1/_search"
   - name: PROJECT_MDMS_MODULE
     value: "HCM-PROJECT-TYPES"
+  
+  - name: EGOV_LOCATION_ENDPOINT
+    value: "/egov-location/location/v11/boundarys/_search"
+  
+  - name: TRANSFORMER_CONSUMER_BULK_CREATE_STOCK_TOPIC
+    value: "save-stock-topic"
+  - name: TRANSFORMER_CONSUMER_BULK_UPDATE_STOCK_TOPIC
+    value: "update-stock-topic"
+  - name: TRANSFORMER_PRODUCER_BULK_STOCK_INDEX_V1_TOPIC
+    value: "transformer-producer-bulk-stock-index-v1-topic"
+  - name: EGOV_FACILITY_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-facility-host
+        key: facility     
+  - name: EGOV_SEARCH_FACILITY_URL
+    value: "/facility/v1/_search"
+  - name: TRANSFORMER_CONSUMER_CREATE_FACILITY_TOPIC
+    value: "save-facility-topic"
+  - name: TRANSFORMER_CONSUMER_UPDATE_FACILITY_TOPIC
+    value: "update-facility-topic"
