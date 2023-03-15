@@ -231,5 +231,5 @@ env: |
     value: "HCM-PROJECT-TYPES"
   - name: EGOV_LOCATION_HIERARCHY_TYPE
     value: "ADMIN"
-  - name: EGOV_LOCATION_CODES_QUERY_PARAM
+  - name: EGOV_LOCATION_CODE_QUERY_PARAM
     value: "code"
