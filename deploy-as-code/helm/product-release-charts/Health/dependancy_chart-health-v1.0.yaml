@@ -40,6 +40,7 @@ modules:
       - egovio/egov-workflow-v2:v1.2.1-df98ec3c35-2
       - egovio/report:v1.3.4-96b24b0d72-16
       - egovio/egov-document-uploader:v1.1.0-75d461a4d2-4
+      - egovio/service-request:v1.0.0-a51bee1435-7
       - egovio/playground:1.0
   - name: business
     dependencies:
@@ -82,10 +83,10 @@ modules:
       - "authn-authz"
       - "core"
     services:
-      - egovio/facility:qa-972edcca9a-10
-      - egovio/household:qa-689445a57c-28
-      - egovio/individual:qa-247a48c674-19
-      - egovio/product:qa-0d6d887736-5
-      - egovio/project:qa-ce966a385f-54
-      - egovio/service-request:qa-2b9bf0593e-5
-      - egovio/stock:qa-ce925a4764-18
+      - egovio/facility:v1.0.0-a51bee1435-19
+      - egovio/product:v1.0.0-a51bee1435-11
+      - egovio/individual:v1.0.0-a51bee1435-33
+      - egovio/transformer:v1.0.0-a51bee1435-33
+      - egovio/stock:v1.0.0-a51bee1435-35
+      - egovio/household:v1.0.0-a51bee1435-42
+      - egovio/project:v1.0.0-a51bee1435-69
