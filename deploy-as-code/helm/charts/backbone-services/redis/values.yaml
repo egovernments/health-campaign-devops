@@ -12,5 +12,5 @@ image:
   repository: "redis"
   pullPolicy: IfNotPresent
   tag: "3.2"
-replicas: "1"
+replicas: "2"
 httpPort: 6379
