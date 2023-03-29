@@ -63,7 +63,7 @@ env: |
   - name: SPRING_CACHE_TYPE
     value: "redis"
   - name: SPRING_CACHE_REDIS_TIME-TO-LIVE
-    value: "420"
+    value: "60000"
   - name: SPRING_CACHE_AUTOEXPIRY
     value: "true"
   - name: INDIVIDUAL.CONSUMER.BULK.CREATE.TOPIC
