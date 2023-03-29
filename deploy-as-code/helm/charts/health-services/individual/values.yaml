@@ -20,7 +20,7 @@ initContainers:
 # Container Configs
 image:
   repository: "individual"
-replicas: "1"
+replicas: "2"
 healthChecks:
   enabled: true
   livenessProbePath: "/individual/health"
@@ -63,7 +63,7 @@ env: |
   - name: SPRING_CACHE_TYPE
     value: "redis"
   - name: SPRING_CACHE_REDIS_TIME-TO-LIVE
-    value: "60000"
+    value: "60"
   - name: SPRING_CACHE_AUTOEXPIRY
     value: "true"
   - name: INDIVIDUAL.CONSUMER.BULK.CREATE.TOPIC
