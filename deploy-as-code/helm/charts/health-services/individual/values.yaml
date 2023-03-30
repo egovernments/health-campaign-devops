@@ -54,6 +54,10 @@ env: |
     value: "egov-idgen/id/_generate"
   - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
     value: "*"
+  - name: SPRING_JMX_ENABLED
+    value: "true"
+  - name: HAWTIO_AUTHENTICATIONENABLED
+    value: "false"
   - name: EGOV_IDGEN_INTEGRATION_ENABLED
     value: "true"
   - name: IDGEN.INDIVIDUAL.ID.FORMAT
