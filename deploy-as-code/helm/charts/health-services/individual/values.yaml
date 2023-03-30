@@ -20,7 +20,7 @@ initContainers:
 # Container Configs
 image:
   repository: "individual"
-replicas: "5"
+replicas: "1"
 healthChecks:
   enabled: true
   livenessProbePath: "/individual/health"
@@ -52,6 +52,8 @@ env: |
         key: egov-idgen
   - name: EGOV_IDGEN_PATH
     value: "egov-idgen/id/_generate"
+  - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+    value: "*"
   - name: EGOV_IDGEN_INTEGRATION_ENABLED
     value: "true"
   - name: IDGEN.INDIVIDUAL.ID.FORMAT
