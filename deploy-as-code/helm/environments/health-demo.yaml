@@ -843,7 +843,7 @@ oauth2-proxy:
     configFile: |-
       email_domains = [ "*" ]
       github_org = "egovernments"
-      github_team = "micro-service-devops, health-dev"
+      github_team = "micro-service-devops,health-dev"
       upstreams = [ "file:///dev/null" ]
 
 grafana:
