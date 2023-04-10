@@ -112,7 +112,26 @@ env: |
     value: "\\d{12}"
   - name: MOBILE_PATTERN
     value: "\\d+"
-    {{- if index .Values "tracing-enabled" }}
+  - name: EGOV_USER_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: egov-user
+  - name: EGOV_CREATE_USER_URL
+    value: "/user/users/_createnovalidate"
+  - name: EGOV_SEARCH_USER_URL
+    value: "/user/_search"
+  - name: EGOV_UPDATE_USER_URL
+    value: "/user/users/_updatenovalidate"
+  - name: EGOV_USER_INTEGRATION_ENABLED
+    value: "true"
+  - name: USER_SYNC_ENABLED
+    value: "true"
+  - name: USER_SERVICE_USER_TYPE
+    value: "CITIZEN"
+  - name: USER_SERVICE_ACCOUNT_LOCKED
+    value: "false"
+  {{- if index .Values "tracing-enabled" }}
   - name: TRACER_OPENTRACING_ENABLED
     value: "true" 
   {{- end }}
