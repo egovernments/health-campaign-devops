@@ -87,8 +87,6 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: egov-user-egov
-  - name: EGOV_USER_CONTEXT_PATH
-    value: "/user/users"
   - name: EGOV_SEARCH_USER_URL
     value: "/user/_search"
   - name: EGOV_USER_INTEGRATION_ENABLED
