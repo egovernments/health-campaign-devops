@@ -18,7 +18,7 @@ cluster-configs:
         domain: "health-dev.digit.org" ## Add your Domain Name
         egov-services-fqdn-name: "https://health-dev.digit.org/" ## Add your Domain Name
 
-        egov-state-level-tenant-id: "pb"
+        egov-state-level-tenant-id: "default"
         s3-assets-bucket: "(pg-health-egov-assets|egov-health-playground-assets)"
         es-host: "elasticsearch-data-v1.es-cluster"
         es-indexer-host: "http://elasticsearch-data-v1.es-cluster:9200/"
