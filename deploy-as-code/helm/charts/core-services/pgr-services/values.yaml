@@ -170,9 +170,9 @@ env: |
     value: "RATE"
   - name: EGOV_USR_EVENTS_REOPEN_CODE
     value: "REOPEN" 
-  - name: enable.state.level.search
+  - name: ENABLE_STATE_LEVEL_SEARCH
     value: true
-  - name: enable.usertype.employee
+  - name: ENABLE_USERTYPE_EMPLOYEE
     value: true
   - name: PGR_STATELEVEL_TENANTID
     valueFrom:
