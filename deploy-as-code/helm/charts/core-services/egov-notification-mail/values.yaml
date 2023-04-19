@@ -27,12 +27,12 @@ env: |
     valueFrom:
       secretKeyRef:
         name: egov-notification-mail
-        key: shiva.burade@egovernments.org                   
+        key: mailsenderusername                  
   - name: MAIL_SENDER_PASSWORD
     valueFrom:
       secretKeyRef:
         name: egov-notification-mail
-        key: hpqfmwgogiizaknt
+        key: mailsenderpassword
   {{- if index .Values "mail-port" }}
   - name: MAIL_PORT
     value: {{ index .Values "mail-port" | quote }}
@@ -40,7 +40,7 @@ env: |
     valueFrom:
       secretKeyRef:
         name: egov-notification-mail
-        key: smtp.gmail.com
+        key: mail-host
   {{- end }}        
   - name: JAVA_OPTS
     value: {{ index .Values "heap" | quote }}
