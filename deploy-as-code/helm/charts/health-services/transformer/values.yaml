@@ -124,12 +124,12 @@ env: |
   - name: TRANSFORMER_CONSUMER_UPDATE_FACILITY_TOPIC
     value: "update-facility-topic"
   - name: BOUNDARY_LABEL_NAME_PROVINCE
-    value: "province"
+    value: "Provincia"
   - name: BOUNDARY_LABEL_NAME_DISTRICT
-    value: "district"
+    value: "Distrito"
   - name: BOUNDARY_LABEL_NAME_ADMINISTRATIVEPROVINCE
-    value: "administrativeprovince
+    value: "Posto Administrativo"
   - name: BOUNDARY_LABEL_NAME_LOCALITY
-    value: "locality"
+    value: "Localidade"
   - name: BOUNDARY_LABEL_NAME_VILLAGE
-    value: "village"
+    value: "Aldeia"
