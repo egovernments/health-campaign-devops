@@ -126,7 +126,7 @@ env: |
   - name: COMMENT_BY_EMPLOYEE_NOTIF_ENABLED
     value: {{ index .Values "comment-by-employee-notif-enabled" | quote }}
   - name: EGOV_PGR_APP_PLAYSTORE_LINK
-    value: "https://goo.gl/ArDyQ1"
+    value: ""
   - name: NOTIFICATION_ALLOWED_ON_STATUS
     value: {{ index .Values "notification-allowed-status" | quote }}
   - name: EGOV_HRMS_HOST
