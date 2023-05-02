@@ -27,7 +27,7 @@ healthChecks:
   readinessProbePath: "/user/health"
 appType: "java-spring"
 tracing-enabled: true
-egov-state-level-tenant-id: "pb"
+egov-state-level-tenant-id: "default"
 decryption-abac-enabled: "false"
 account-unlock-cool-down-period-minutes: "30"
 otp-validation: "true"
@@ -43,11 +43,14 @@ citizen-otp-fixed: "123456"
 citizen-otp-fixed-enabled: "true"
 heap: "-Xmx192m -Xms192m"
 java-args: ""
+java-enable-debug: "true"
 
 # Additional Container Envs
 env: |
   - name: SERVER_PORT
     value: "8080"
+  - name: JAVA_ENABLE_DEBUG
+    value: {{ index .Values "java-enable-debug" | quote }}
   - name: SPRING_REDIS_HOST
     value: redis.backbone
   - name: SPRING_REDIS_PORT
