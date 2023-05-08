@@ -27,7 +27,7 @@ healthChecks:
   readinessProbePath: "/transformer/health"
 appType: "java-spring"
 tracing-enabled: true
-heap: "-Xmx192m -Xms192m"
+heap: "-Xmx1024m -Xms1024m"
 java-args: ""
 
 # Additional Container Envs
