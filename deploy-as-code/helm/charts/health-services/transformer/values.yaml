@@ -133,3 +133,7 @@ env: |
     value: "Localidade"
   - name: BOUNDARY_LABEL_NAME_VILLAGE
     value: "Aldeia"
+  - name: TRANSFORMER_CONSUMER_CREATE_SERVICE_TOPIC
+    value: "save-service"
+  - name: TRANSFORMER_PRODUCER_SERVICE_TASK_INDEX_V1_TOPIC
+    value: "transformer-producer-service-request-index-v1-topic"
