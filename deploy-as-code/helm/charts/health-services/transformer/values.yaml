@@ -29,7 +29,7 @@ appType: "java-spring"
 tracing-enabled: true
 heap: "-Xmx1024m -Xms192m"
 java-args: ""
-
+memory_limits: "1024Gi"
 # Additional Container Envs
 env: |
   - name: SPRING_KAFKA_CONSUMER_GROUP_ID
