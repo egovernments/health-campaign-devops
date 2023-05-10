@@ -35,12 +35,13 @@ modules:
       - egovio/egov-persister:v1.1.4-72f8a8f87b-6
       - egovio/egov-searcher:v1.1.5-72f8a8f87b-16
       - egovio/egov-url-shortening:v1.1.2-1715164454-3
-      - egovio/egov-user:v1.2.7-cc363f0584-12
-      - egovio/user-otp:v1.1.5-1715164454-3
+      - egovio/egov-user:health-digit-master-e27b970-31
+      - egovio/user-otp:health-digit-master-6865af2823-3
       - egovio/egov-workflow-v2:v1.2.1-df98ec3c35-2
       - egovio/report:v1.3.4-96b24b0d72-16
       - egovio/egov-document-uploader:v1.1.0-75d461a4d2-4
       - egovio/playground:1.0
+      - egovio/pgr-services:v1.1.7-f58e5abb0d-8
   - name: business
     dependencies:
       - "core"

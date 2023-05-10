@@ -42,7 +42,7 @@ modules:
       - egovio/egov-document-uploader:v1.1.0-75d461a4d2-4
       - egovio/service-request:v1.0.0-a51bee1435-7
       - egovio/playground:1.0
-      - egovio/pgr-services:dev-b9f615e582-9
+      - egovio/pgr-services:v1.1.7-f58e5abb0d-8
   - name: business
     dependencies:
       - "core"
