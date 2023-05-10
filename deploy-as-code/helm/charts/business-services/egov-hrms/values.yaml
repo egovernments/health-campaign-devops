@@ -51,7 +51,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-config
-        key: egov-state-level-tenant-id      
+        key: egov-state-level-tenant-id     
   - name: EGOV_FILESTORE_URL_ENDPOINT
     value: /filestore/v1/files/url
   - name: EGOV_LOCALIZATION_HOST
@@ -132,8 +132,6 @@ env: |
     value: "/individuals/v1/_update"
   - name: EGOV_HRMS_USER_SERVICE_QUALIFIER
     value: "individualService"
-  - name: STATE_LEVEL_TENANT_ID
-    value: "default"
   {{- if index .Values "tracing-enabled" }}
   - name: TRACER_OPENTRACING_ENABLED
     value: "true" 
