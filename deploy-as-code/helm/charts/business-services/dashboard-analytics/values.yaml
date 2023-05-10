@@ -22,7 +22,8 @@ image:
 replicas: "1"
 tracing-enabled: true
 config-schema-paths: "file:///work-dir/configs/egov-dss-dashboards/dashboard-analytics/*.json"
-
+heap: "-Xmx1024m -Xms256m"
+memory_limits: "1024Mi"
 # Additional Container Envs
 env: |
   - name: SPRING.DATASOURCE.URL
