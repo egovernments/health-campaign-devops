@@ -51,7 +51,7 @@ modules:
       - egovio/egf-instrument:v1.1.4-72f8a8f87b-4
       - egovio/egf-master:v1.1.3-72f8a8f87b-15
       - egovio/egov-apportion-service:v1.1.5-72f8a8f87b-5
-      - egovio/egov-hrms:v1.2.5-1715164454-6
+      - egovio/egov-hrms:health-digit-master-5bc2341e92-14
   - name: utilities
     dependencies:
       - "core"
