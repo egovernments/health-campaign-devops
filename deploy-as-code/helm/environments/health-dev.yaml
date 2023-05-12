@@ -148,7 +148,7 @@ cluster-configs:
         individual: "http://individual:8080/"
         stock: "http://stock:8080/"
         facility: "http://facility:8080/"
-        service-request: "http://service-request:8280/"
+        service-request: "http://service-request:8080/"
 
 
 #>>>>>> Frontend Servies >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
