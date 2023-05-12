@@ -125,11 +125,11 @@ env: |
         name: egov-service-host
         key: individual
   - name: EGOV_INDIVIDUAL_SEARCH_ENDPOINT
-    value: "/individuals/v1/_search"
+    value: "/individual/v1/_search"
   - name: EGOV_INDIVIDUAL_CREATE_ENDPOINT
-    value: "/individuals/v1/_create"
+    value: "/individual/v1/_create"
   - name: EGOV_INDIVIDUAL_UPDATE_ENDPOINT
-    value: "/individuals/v1/_update"
+    value: "/individual/v1/_update"
   - name: EGOV_HRMS_USER_SERVICE_QUALIFIER
     value: "individualService"
   {{- if index .Values "tracing-enabled" }}
