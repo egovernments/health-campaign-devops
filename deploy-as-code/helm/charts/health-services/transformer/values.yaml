@@ -29,7 +29,7 @@ appType: "java-spring"
 tracing-enabled: true
 heap: "-Xmx1024m -Xms192m"
 java-args: ""
-
+memory_limits: "1Gi"
 # Additional Container Envs
 env: |
   - name: SPRING_KAFKA_CONSUMER_GROUP_ID
@@ -133,6 +133,13 @@ env: |
     value: "Localidade"
   - name: BOUNDARY_LABEL_NAME_VILLAGE
     value: "Aldeia"
+  - name: EGOV_SERVICEDEFINITION_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: service-request
+  - name: EGOV_SEARCH_SERVICEDEFINITION_URL
+    value: "/service-request/service/definition/v1/_search"
   - name: TRANSFORMER_CONSUMER_CREATE_SERVICE_TOPIC
     value: "save-service"
   - name: TRANSFORMER_PRODUCER_SERVICE_TASK_INDEX_V1_TOPIC

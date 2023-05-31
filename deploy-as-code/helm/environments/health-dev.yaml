@@ -148,6 +148,8 @@ cluster-configs:
         individual: "http://individual:8080/"
         stock: "http://stock:8080/"
         facility: "http://facility:8080/"
+        service-request: "http://service-request:8080/"
+
 
 #>>>>>> Frontend Servies >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 employee:
@@ -297,7 +299,7 @@ egov-indexer:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"        ##### Change repo url with Your fork Repo url
       branch: "DEV"                                      ##### Change repo branch with Your fork Repo branch
-  egov-indexer-yaml-repo-path: "file:///work-dir/health-campaign-config/egov-indexer/billingservices-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/collection-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/egov-telemetry-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/egov-uploader-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/error-queue.yml,file:///work-dir/health-campaign-config/egov-indexer/finance-rolloutadotpion-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/payment-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/rainmaker-pgr-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/rainmaker-pt-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/rainmaker-tl-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/chatbot-telemetry.yaml,file:///work-dir/health-campaign-config/egov-indexer/product-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/individual-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/household-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-task-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/stock-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/facility-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-staff-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/egov-error-queue-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/service-request-indexer.yml"
+  egov-indexer-yaml-repo-path: "file:///work-dir/health-campaign-config/egov-indexer/error-queue.yml,file:///work-dir/health-campaign-config/egov-indexer/product-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/individual-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/household-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-task-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/stock-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/facility-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-staff-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/egov-error-queue-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/service-request-indexer.yml"
 
 egov-persister:
   replicas: 1
@@ -316,7 +318,7 @@ egov-data-uploader:
       branch: "DEV"                                    ##### Change repo branch with Your fork Repo branch
 
 egov-searcher:
-  search-yaml-path: "file:///work-dir/health-campaign-config/egov-searcher/rainmaker-pgr-v2.yml,file:///work-dir/health-campaign-config/egov-searcher/weekly-impact-emailer-searcher.yml,file:///work-dir/health-campaign-config/egov-searcher/PTDemandBasedSearcher.yml,file:///work-dir/health-campaign-config/egov-searcher/bill-genie.yml,file:///work-dir/health-campaign-config/egov-searcher/rainmaker-tl.yml,file:///work-dir/health-campaign-config/egov-searcher/localitySearcher.yml"
+  search-yaml-path: ""
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url

@@ -133,6 +133,8 @@ env: |
     value: "false"
   - name: INDIVIDUAL_PRODUCER_UPDATE_USER_ID_TOPIC
     value: "update-user-id-topic"
+  - name: NOTIFICATION_SMS_ENABLED
+    value: "false"
   {{- if index .Values "tracing-enabled" }}
   - name: TRACER_OPENTRACING_ENABLED
     value: "true" 
