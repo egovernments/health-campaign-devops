@@ -34,7 +34,7 @@ cluster-configs:
         spring-datasource-tomcat-initialSize: "1"
         spring-datasource-tomcat-max-active: "2"
         spring-jpa-show-sql: "true"
-        timezone: "Asia/Kolkata"
+        timezone: "UTC"
         tracer-errors-provideexceptionindetails: "true"
         egov-internal-microservice-user-uuid: fa0f820c-49df-46bb-8e62-8a0ec5d9af5e
 
