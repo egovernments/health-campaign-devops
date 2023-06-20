@@ -653,7 +653,7 @@ zookeeper-v2:
     aws:
       - volumeId: "vol-0af907e3ec6b45dff" ## add your respective volume id eg. vol-0085073c65f76dre5
         zone: ap-south-1b            ## add your respective zone eg. ap-south-1b
-      - volumeId: "vol-0c8ed5253e66a3b99" ## add your respective volume id eg. vol-0085073c65f76dre5
+      - volumeId: "vol-0d2bcf571beeb4f97" ## add your respective volume id eg. vol-0085073c65f76dre5
         zone: ap-south-1b            ## add your respective zone eg. ap-south-1b
       - volumeId: "vol-08667160508016b62" ## add your respective volume id eg. vol-0085073c65f76dre5
         zone: ap-south-1b            ## add your respective zone eg. ap-south-1b
