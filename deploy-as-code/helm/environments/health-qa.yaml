@@ -273,6 +273,14 @@ sw-services:
 egov-pg-service:
   axis: true
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+audit-service:
+  persist-yml-path: "https://raw.githubusercontent.com/egovernments/health-campaign-config/master/egov-persister/individual-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/master/egov-persister/household-persister.yml"
+  initContainers:
+    gitSync:
+      repo: "git@github.com:egovernments/health-campaign-config"
+      branch: "DEV"
+      
 egov-mdms-service:
   replicas: 1
   images:
