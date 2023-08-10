@@ -279,7 +279,7 @@ audit-service:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"
-      branch: "DEV"
+      branch: "QA"
       
 egov-mdms-service:
   replicas: 1
