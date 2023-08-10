@@ -281,7 +281,7 @@ egov-pg-service:
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 audit-service:
-  persist-yml-path: "https://raw.githubusercontent.com/egovernments/health-campaign-config/master/egov-persister/individual-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/master/egov-persister/household-persister.yml"
+  persist-yml-path: "https://raw.githubusercontent.com/egovernments/health-campaign-config/DEV/egov-persister/individual-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/DEV/egov-persister/household-persister.yml"
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"
