@@ -46,7 +46,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: egov-mdms-service-legacy
+        key: egov-mdms-service
   {{- if index .Values "gmaps" }}
   - name: GMAPS_API_KEY
     valueFrom:
