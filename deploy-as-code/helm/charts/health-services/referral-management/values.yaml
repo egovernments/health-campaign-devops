@@ -1,41 +1,41 @@
 # Common Labels
 labels:
-  app: "adrm"
+  app: "referralmanagement"
   group: "health"
 
 # Ingress Configs
 ingress:
   enabled: true
   zuul: true
-  context: "adrm"
+  context: "referralmanagement"
 
 # Init Containers Configs
 initContainers:
   dbMigration:
     enabled: true
-    schemaTable: "adrm_schema"
+    schemaTable: "referralmanagement_schema"
     image:
-      repository: "adrm-db"
+      repository: "referralmanagement-db"
 
 # Container Configs
 image:
-  repository: "adrm"
+  repository: "referralmanagement"
 replicas: "1"
 healthChecks:
   enabled: true
-  livenessProbePath: "/adrm/health"
-  readinessProbePath: "/adrm/health"
+  livenessProbePath: "/referralmanagement/health"
+  readinessProbePath: "/referralmanagement/health"
 appType: "java-spring"
 tracing-enabled: true
 heap: "-Xmx192m -Xms192m"
 java-args: ""
-persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/adrm-persister.yml"
-indexer-yml-path: "file:///work-dir/health-campaign-config/egov-indexer/adrm-indexer.yml"
+persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/referral-management-persister.yml"
+indexer-yml-path: "file:///work-dir/health-campaign-config/egov-indexer/referral-management-indexer.yml"
 
 # Additional Container Envs
 env: |
   - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-    value: health-adrm
+    value: health-referral-management
   - name: SPRING_KAFKA_PRODUCER_KEY_SERIALIZER
     value: org.apache.kafka.common.serialization.StringSerializer
   {{- if index .Values "global" "tracer-errors-provideexceptionindetails" }}
@@ -54,10 +54,10 @@ env: |
     value: "egov-idgen/id/_generate"
   - name: EGOV_IDGEN_INTEGRATION_ENABLED
     value: "true"
-  - name: ADRM.ADVERSEEVENT.IDGEN.ID.FORMAT
-    value: "adrm.adverseevent.id"
-  - name: ADRM.REFERRAL.IDGEN.ID.FORMAT
-    value: "adrm.referral.id"
+  - name; REFERRALMANAGEMENT.SIDEEFFECT.IDGEN.ID.FORMAT
+    value: "referralmanagement.sideeffect.id"
+  - name: REFERRALMANAGEMENT.REFERRAL.IDGEN.ID.FORMAT
+    value: "referralmanagement.referral.id"
   - name: SPRING_REDIS_HOST
     value: redis.backbone
   - name: SPRING_REDIS_PORT
@@ -112,9 +112,9 @@ env: |
   - name: EGOV_MDMS_INTEGRATION_ENABLED
     value: "true"
   - name: EGOV_MDMS_MASTER_NAME
-    value: "adrm_master"
+    value: "referralmanagement_master"
   - name: EGOV_MDMS_MODULE_NAME
-    value: "adrm"
+    value: "referralmanagement"
   - name: EGOV_HOUSEHOLD_HOST
     valueFrom:
       configMapKeyRef:
@@ -145,27 +145,27 @@ env: |
     value: "/project/task/v1/_search"
   - name: EGOV_SEARCH_PROJECT_BENEFICIARY_URL
     value: "/project/beneficiary/v1/_search"
-  - name: ADRM.ADVERSEEVENT.KAFKA.CREATE.TOPIC
-    value: "save-adverse-event-topic"
-  - name: ADRM.ADVERSEEVENT.KAFKA.UPDATE.TOPIC
-    value: "update-adverse-event-topic"
-  - name: ADRM.ADVERSEEVENT.KAFKA.DELETE.TOPIC
-    value: "delete-adverse-event-topic"
-  - name: ADRM.ADVERSEEVENT.CONSUMER.BULK.CREATE.TOPIC
-    value: "save-adverse-event-bulk-topic"
-  - name: ADRM.ADVERSEEVENT.CONSUMER.BULK.UPDATE.TOPIC
-    value: "update-adverse-event-bulk-topic"
-  - name: ADRM.ADVERSEEVENT.CONSUMER.BULK.DELETE.TOPIC
-    value: "delete-adverse-event-bulk-topic"
+  - name: REFERRALMANAGEMENT.SIDEEFFECT.KAFKA.CREATE.TOPIC
+    value: "save-side-effect-topic"
+  - name: REFERRALMANAGEMENT.SIDEEFFECT.KAFKA.UPDATE.TOPIC
+    value: "update-side-effect-topic"
+  - name: REFERRALMANAGEMENT.SIDEEFFECT.KAFKA.DELETE.TOPIC
+    value: "delete-side-effect-topic"
+  - name: REFERRALMANAGEMENT.SIDEEFFECT.CONSUMER.BULK.CREATE.TOPIC
+    value: "save-side-effect-bulk-topic"
+  - name: REFERRALMANAGEMENT.SIDEEFFECT.CONSUMER.BULK.UPDATE.TOPIC
+    value: "update-side-effect-bulk-topic"
+  - name: REFERRALMANAGEMENT.SIDEEFFECT.CONSUMER.BULK.DELETE.TOPIC
+    value: "delete-side-effect-bulk-topic"
   - name: SEARCH_API_LIMIT
     value: "1000"
-  - name: ADRM.DOCUMENT.ID.VERIFICATION.REQUIRED
+  - name: REFERRALMANAGEMENT.DOCUMENT.ID.VERIFICATION.REQUIRED
     value: "false"
-  - name: ADRM.DEFAULT.OFFSET
+  - name: REFERRALMANAGEMENT.DEFAULT.OFFSET
     value: "0"
-  - name: ADRM.DEFAULT.LIMIT
+  - name: REFERRALMANAGEMENT.DEFAULT.LIMIT
     value: "100"
-  - name: ADRM.SEARCH.MAX.LIMIT
+  - name: REFERRALMANAGEMENT.SEARCH.MAX.LIMIT
     value: "200"
   - name: EGOV.IDGEN.PROJECT.NUMBER.NAME
     value: "project.number"
