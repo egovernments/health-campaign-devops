@@ -157,6 +157,18 @@ env: |
     value: "update-side-effect-bulk-topic"
   - name: REFERRALMANAGEMENT.SIDEEFFECT.CONSUMER.BULK.DELETE.TOPIC
     value: "delete-side-effect-bulk-topic"
+  - name: REFERRALMANAGEMENT.REFERRAL.KAFKA.CREATE.TOPIC
+    value: "save-referral-topic"
+  - name: REFERRALMANAGEMENT.REFERRAL.KAFKA.UPDATE.TOPIC
+    value: "update-referral-topic"
+  - name: REFERRALMANAGEMENT.REFERRAL.KAFKA.DELETE.TOPIC
+    value: "delete-referral-topic"
+  - name: REFERRALMANAGEMENT.REFERRAL.CONSUMER.BULK.CREATE.TOPIC
+    value: "save-referral-bulk-topic"
+  - name: REFERRALMANAGEMENT.REFERRAL.CONSUMER.BULK.UPDATE.TOPIC
+    value: "update-referral-bulk-topic"
+  - name: REFERRALMANAGEMENT.REFERRAL.CONSUMER.BULK.DELETE.TOPIC
+    value: "delete-referral-bulk-topic"
   - name: SEARCH_API_LIMIT
     value: "1000"
   - name: REFERRALMANAGEMENT.DOCUMENT.ID.VERIFICATION.REQUIRED
