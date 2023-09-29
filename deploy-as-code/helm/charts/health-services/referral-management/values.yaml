@@ -54,7 +54,7 @@ env: |
     value: "egov-idgen/id/_generate"
   - name: EGOV_IDGEN_INTEGRATION_ENABLED
     value: "true"
-  - name; REFERRALMANAGEMENT.SIDEEFFECT.IDGEN.ID.FORMAT
+  - name: REFERRALMANAGEMENT.SIDEEFFECT.IDGEN.ID.FORMAT
     value: "referralmanagement.sideeffect.id"
   - name: REFERRALMANAGEMENT.REFERRAL.IDGEN.ID.FORMAT
     value: "referralmanagement.referral.id"
