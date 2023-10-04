@@ -1,33 +1,33 @@
 # Common Labels
 labels:
-  app: "referral-management"
+  app: "referralmanagement"
   group: "health"
 
 # Ingress Configs
 ingress:
   enabled: true
   zuul: true
-  context: "referral-management"
+  context: "referralmanagement"
 
 # Init Containers Configs
 initContainers:
   dbMigration:
     enabled: true
-    schemaTable: "referral_management_schema"
+    schemaTable: "referralmanagement_schema"
     image:
-      repository: "referral-management-db"
+      repository: "referralmanagement-db"
 
 # Container Configs
 image:
-  repository: "referral-management"
+  repository: "referralmanagement"
 replicas: "1"
-appType: "java-spring"
-tracing-enabled: true
 healthChecks:
   enabled: true
-  livenessProbePath: "/referral-management/health"
-  readinessProbePath: "/referral-management/health"
-heap: "-Xmx256m -Xms256m"
+  livenessProbePath: "/referralmanagement/health"
+  readinessProbePath: "/referralmanagement/health"
+appType: "java-spring"
+tracing-enabled: true
+heap: "-Xmx192m -Xms192m"
 java-args: ""
 persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/referral-management-persister.yml"
 indexer-yml-path: "file:///work-dir/health-campaign-config/egov-indexer/referral-management-indexer.yml"
