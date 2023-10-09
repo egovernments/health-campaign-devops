@@ -13,8 +13,8 @@ ingress:
 initContainers:
   gitSync:
     enabled: true
-    repo: "git@github.com:egovernments/configs"
-    branch: "master"
+    repo: "git@github.com/egovernments/health-campaign-config"
+    branch: "DEMO"
 
 # Container Configs
 image:
