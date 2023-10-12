@@ -3,15 +3,11 @@ labels:
   app: "referralmanagement"
   group: "health"
 
-namespace: health
-
 # Ingress Configs
 ingress:
   enabled: true
   zuul: true
-  context: "referralmanagement"
-
-namespace: health  
+  context: "referralmanagement" 
 
 # Init Containers Configs
 initContainers:
