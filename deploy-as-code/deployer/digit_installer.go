@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"container/list"
-	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -11,7 +10,6 @@ import (
 	"os"
 	"os/exec"
 	"strings"
-	s "strings"
 
 	"github.com/manifoldco/promptui"
 	"gopkg.in/yaml.v2"
@@ -55,9 +53,9 @@ func (set *Set) Get(i string) bool {
 }
 
 func main() {
-	var versionfiles []string
-	var envfiles []string
-	var modules []string
+	//var versionfiles []string
+	//var envfiles []string
+	//var modules []string
 	var selectedMod []string
 	svclist := list.New()
 	set := NewSet()
@@ -69,147 +67,147 @@ func main() {
 	// Get the Proceedual of the user
 	fmt.Println(string(Cyan), sPreReq)
 	//var proceedQuestion string
-	preReqConfirm := []string{"Yes", "No"}
-	var proceed string = ""
-	proceed, _ = sel(preReqConfirm, "Are you good to proceed?")
-	if proceed == "Yes" {
-		contextset := setClusterContext()
-		if contextset {
-			// Get the versions from the chart and display it to user to select
-			file, err := os.Open(releaseChartDir)
-			if err != nil {
-				log.Fatalf("failed opening directory: %s", err)
-			}
-			defer file.Close()
-
-			prodList, _ := file.Readdirnames(0) // 0 to read all files and folders
-
-			var product string = ""
-			product, _ = sel(prodList, "Which Product would you like to install, Please Select")
-			if product != "" {
-				files, err := ioutil.ReadDir(releaseChartDir + product)
-				if err != nil {
-					log.Fatal(err)
-				}
-
-				for _, f := range files {
-					name := f.Name()
-					versionfiles = append(versionfiles, name[s.Index(name, "-")+1:s.Index(name, ".y")])
-				}
-				var version string = ""
-				version, _ = sel(versionfiles, "Which version of the product would like to install, Select below")
-				if version != "" {
-					argFile := releaseChartDir + product + "/dependancy_chart-health-" + version + ".yaml"
-
-					// Decode the yaml file and assigning the values to a map
-					chartFile, err := ioutil.ReadFile(argFile)
-					if err != nil {
-						fmt.Println("\n\tERROR: Reading file =>", argFile, err)
-						return
-					}
-
-					// Parse the yaml values
-					fullChart := Digit{}
-					err = yaml.Unmarshal(chartFile, &fullChart)
-					if err != nil {
-						fmt.Println("\n\tERROR: Parsing => ", argFile, err)
-						return
-					}
-
-					// Mapping the images to servicename
-					var m = make(map[string][]string)
-					for _, s := range fullChart.Modules {
-						m[s.Name] = s.Services
-						if strings.Contains(s.Name, "m_") {
-							modules = append(modules, s.Name)
-						}
-					}
-					modules = append(modules, "Exit")
-					result, err := sel(modules, "Select the DIGIT modules that you want to install, choose Exit to complete selection")
-					//if err == nil {
-					for result != "Exit" && err == nil {
-						selectedMod = append(selectedMod, result)
-						result, err = sel(modules, "Select the modules you want to install, choose Exit to complete selection")
-					}
-					if selectedMod != nil {
-						for _, mod := range selectedMod {
-							getService(fullChart, mod, *set, svclist)
-						}
-						for element := svclist.Front(); element != nil; element = element.Next() {
-							imglist := m[element.Value.(string)]
-							imglistsize := len(imglist)
-							for i, service := range imglist {
-								argStr = argStr + service
-								if !(element.Next() == nil && i == imglistsize-1) {
-									argStr = argStr + ","
-								}
-
-							}
-						}
-
-						envfilesFromDir, err := ioutil.ReadDir("../../config-as-code/environments/")
-						if err != nil {
-							log.Fatal(err)
-						}
-						for _, envfile := range envfilesFromDir {
-							filename := envfile.Name()
-							if !s.Contains(filename, "secrets") && !s.Contains(filename, ".DS_Store") {
-								log.Println(filename)
-								envfiles = append(envfiles, filename[0:s.Index(filename, ".yaml")])
-							}
-						}
-
-						// Choose the env
-						var env string = ""
-						env, err = sel(envfiles, "Choose the target env files that are identified from your local configs")
-						if env != "" {
-							confirm := []string{"Yes", "No"}
-
-							var goDeployCmd string = fmt.Sprintf("go run main.go deploy -c -e %s %s", env, argStr)
-							var previewDeployCmd string = fmt.Sprintf("%s -p", goDeployCmd)
-
-							preview, _ := sel(confirm, "Do you want to preview the k8s manifests before the actual Deployment")
-
-							if preview == "Yes" {
-								fmt.Println("That's cool... The preview is getting loaded. Please review it and decide to proceed with the deployment")
-								err := execCommand(previewDeployCmd)
-								if err == nil {
-									fmt.Println("You can now start actual deployment")
-									err := execCommand(goDeployCmd)
-									if err == nil {
-										fmt.Println("We are done with the deployment. You can start using the services. Thank You!!!")
-										return
-									} else {
-										fmt.Println("Something went wrong, refer the error\n")
-										fmt.Println(err)
-									}
-									return
-								} else {
-									fmt.Println("Something went wrong, refer the error\n")
-									fmt.Println(err)
-								}
-							} else {
-								consent, _ := sel(confirm, "Are we good to proceed with the actual deployment?")
-								if consent == "Yes" {
-									fmt.Println("Whola!, That's great... Sit back and wait for the deployment to complete in about 10 min")
-									err := execCommand(goDeployCmd)
-									if err == nil {
-										fmt.Println("We are done with the deployment. You can start using the services. Thank You!!!")
-										fmt.Println("Hope I made your life easy with the deployment ... Have a goodd day !!!")
-										return
-									} else {
-										fmt.Println("Something went wrong, refer the error\n")
-										fmt.Println(err)
-									}
-								}
-
-							}
-						}
-					}
-				}
-			}
-		}
+	//kubeconfigPath := "/home/sripadma/bootcamp-kubeconfig-admin"
+	//contextset := setClusterContext(kubeconfigPath)
+	//if contextset {
+	// Get the versions from the chart and display it to user to select
+	file, err := os.Open(releaseChartDir)
+	if err != nil {
+		log.Fatalf("failed opening directory: %s", err)
 	}
+	defer file.Close()
+
+	//prodList, _ := file.Readdirnames(0) // 0 to read all files and folders
+
+	var product string = "DIGIT"
+	if product != "" {
+		/*files, err := ioutil.ReadDir(releaseChartDir + product)
+		if err != nil {
+			log.Fatal(err)
+		}*
+
+		/*for _, f := range files {
+			name := f.Name()
+			versionfiles = append(versionfiles, name[s.Index(name, "-")+1:s.Index(name, ".y")])
+		}*/
+		//var version string = ""
+		//version, _ = sel(versionfiles, "Which version of the product would like to install, Select below")
+		//if version != "" {
+		argFile := releaseChartDir + product + "/dependancy_chart-" + "digit-v2.7" + ".yaml"
+
+		// Decode the yaml file and assigning the values to a map
+		chartFile, err := ioutil.ReadFile(argFile)
+		if err != nil {
+			fmt.Println("\n\tERROR: Reading file =>", argFile, err)
+			return
+		}
+
+		// Parse the yaml values
+		fullChart := Digit{}
+		err = yaml.Unmarshal(chartFile, &fullChart)
+		if err != nil {
+			fmt.Println("\n\tERROR: Parsing => ", argFile, err)
+			return
+		}
+
+		// Mapping the images to servicename
+		var m = make(map[string][]string)
+		for _, s := range fullChart.Modules {
+			m[s.Name] = s.Services
+			/*if strings.Contains(s.Name, "m_") {
+				modules = append(modules, s.Name)
+			}*/
+		}
+		//modules = append(modules, "Exit")
+		//result, err := sel(modules, "Select the DIGIT modules that you want to install, choose Exit to complete selection")
+		//if err == nil {
+		//for result != "Exit" && err == nil {
+		selectedMod = append(selectedMod, "m_pgr")
+		//fmt.Println("selected modules", result)
+		//result, err = sel(modules, "Select the modules you want to install, choose Exit to complete selection")
+		//}
+		fmt.Println("modles:", selectedMod)
+		if selectedMod != nil {
+			for _, mod := range selectedMod {
+				getService(fullChart, mod, *set, svclist)
+			}
+			fmt.Println("modles:", svclist)
+			for element := svclist.Front(); element != nil; element = element.Next() {
+				imglist := m[element.Value.(string)]
+				imglistsize := len(imglist)
+				for i, service := range imglist {
+					argStr = argStr + service
+					if !(element.Next() == nil && i == imglistsize-1) {
+						argStr = argStr + ","
+					}
+
+				}
+			}
+			fmt.Println("modles:", argStr)
+
+			/*envfilesFromDir, err := ioutil.ReadDir("../../config-as-code/helm/environments/")
+			if err != nil {
+				log.Fatal(err)
+			}
+			for _, envfile := range envfilesFromDir {
+				filename := envfile.Name()
+				if !s.Contains(filename, "secrets") && !s.Contains(filename, ".DS_Store") {
+					log.Println(filename)
+					envfiles = append(envfiles, filename[0:s.Index(filename, ".yaml")])
+				}
+			}*/
+
+			// Choose the env
+			//var env string = ""
+			//env, err = sel(envfiles, "Choose the target env files that are identified from your local configs")
+			//if env != "" {
+			//confirm := []string{"Yes", "No"}
+
+			var goDeployCmd string = fmt.Sprintf("go run main.go deploy -c -e egov-demo %s", argStr)
+			//var previewDeployCmd string = fmt.Sprintf("%s -p", goDeployCmd)
+
+			//preview, _ := sel(confirm, "Do you want to preview the k8s manifests before the actual Deployment")
+
+			/*if preview == "Yes" {
+				fmt.Println("That's cool... The preview is getting loaded. Please review it and decide to proceed with the deployment")
+				err := execCommand(previewDeployCmd)
+				if err == nil {
+					fmt.Println("You can now start actual deployment")
+					err := execCommand(goDeployCmd)
+					if err == nil {
+						fmt.Println("We are done with the deployment. You can start using the services. Thank You!!!")
+						return
+					} else {
+						fmt.Println("Something went wrong, refer the error\n")
+						fmt.Println(err)
+					}
+					return
+				} else {
+					fmt.Println("Something went wrong, refer the error\n")
+					fmt.Println(err)
+				}
+			} else {*/
+			//consent, _ := sel(confirm, "Are we good to proceed with the actual deployment?")
+			//if consent == "Yes" {
+			fmt.Println("Whola!, That's great... Sit back and wait for the deployment to complete in about 10 min")
+			err := execCommand(goDeployCmd)
+			if err == nil {
+				fmt.Println("We are done with the deployment. You can start using the services. Thank You!!!")
+				fmt.Println("Hope I made your life easy with the deployment ... Have a goodd day !!!")
+				return
+			} else {
+				fmt.Println("Something went wrong, refer the error\n")
+				fmt.Println(err)
+			}
+			//}
+
+			//}
+		}
+		//}
+		//}
+		//}
+	}
+	//}
 	fmt.Println("")
 	endScript()
 }
@@ -250,37 +248,67 @@ func execCommand(command string) error {
 	return err
 }
 
-func setClusterContext() bool {
+/*func setClusterContext(kubeconfigPath string) bool {
 	var contextset bool = false
-	var kubeconfig string = "kubeConfig"
 
-	validatepath := func(input string) error {
-		_, err := os.Stat(input)
-		if os.IsNotExist(err) {
-			return errors.New("The File does not exist in the given path")
-		}
-		return nil
+	// Validate the provided kubeconfig path
+	err := validatePath(kubeconfigPath)
+	if err != nil {
+		fmt.Println(err)
+		return contextset
 	}
 
-	validatepath(kubeconfig)
+	// Check if kubectl is installed (optional but recommended)
+	if !checkKubectlInstalled() {
+		fmt.Println("kubectl is not installed or not in the PATH. Please make sure kubectl is installed and try again.")
+		return contextset
+	}
 
-	//kubeconfig = enterValue(validatepath, "Please enter the fully qualified path of your kubeconfig file")
-
-	if kubeconfig != "" {
-		getcontextcmd := fmt.Sprintf("kubectl config get-contexts --kubeconfig=%s", kubeconfig)
-		err := execCommand(getcontextcmd)
-		if err == nil {
-			context := enterValue(nil, "Please enter the cluster context to be used from the avaliable contexts")
-			if context != "" {
-				usecontextcmd := fmt.Sprintf("kubectl config use-context %s --kubeconfig=%s", context, kubeconfig)
-				err := execCommand(usecontextcmd)
-				if err == nil {
-					contextset = true
-				}
+	getcurrentcontextcmd := fmt.Sprintf("kubectl config current-context --kubeconfig=%s", kubeconfigPath)
+	activeContext, err := execCommandWithOutput(getcurrentcontextcmd)
+	if err == nil && activeContext != "" {
+		activeContext = strings.TrimSpace(activeContext)
+		fmt.Printf("Current Context: %s\n", activeContext)
+		if activeContext != "*" {
+			usecontextcmd := fmt.Sprintf("kubectl config use-context %s --kubeconfig=%s", activeContext, kubeconfigPath)
+			err := execCommand(usecontextcmd)
+			if err == nil {
+				contextset = true
 			}
+		} else {
+			fmt.Println("The current context is '*', which is not a valid context name. Please set an explicit context name.")
 		}
+	} else {
+		fmt.Println("Failed to retrieve the current context from the kubeconfig file.")
 	}
+
 	return contextset
+}*/
+
+// Helper function to validate the existence of a file in the given path
+/*func validatePath(input string) error {
+	_, err := os.Stat(input)
+	if os.IsNotExist(err) {
+		return errors.New("The file does not exist in the given path")
+	}
+	return nil
+}*/
+
+// Helper function to execute shell commands and get output
+func execCommandWithOutput(command string) (string, error) {
+	cmd := exec.Command("bash", "-c", command)
+	output, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+	return string(output), nil
+}
+
+// Helper function to check if kubectl is installed
+func checkKubectlInstalled() bool {
+	cmd := exec.Command("kubectl", "version", "--client")
+	err := cmd.Run()
+	return err == nil
 }
 
 func sel(items []string, label string) (string, error) {
