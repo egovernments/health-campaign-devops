@@ -1,6 +1,6 @@
 # Common Labels
 labels:
-  group: "kafka-cluster"
+  group: "kafka-kraft"
 
 cron:
   schedule: "45 18 * * *"  
