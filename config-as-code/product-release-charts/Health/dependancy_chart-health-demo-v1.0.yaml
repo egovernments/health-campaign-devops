@@ -1,6 +1,6 @@
 version: v1.0
 modules:
-  - name: m_backbone
+  - name: backbone
     services:
       - kafka-kraft
       - kafka-connect
