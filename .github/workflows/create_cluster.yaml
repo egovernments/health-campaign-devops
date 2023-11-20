@@ -1,4 +1,5 @@
 name: DIGITClusterworkflow
+# Workflow branch
 on:
   push:
     branches:
@@ -184,6 +185,7 @@ jobs:
           name: config-as-code-artifact
           path: config-as-code.tar.gz      
 
+<<<<<<< HEAD
   # DIGIT-deployment:
   #   needs: Terraform_Infra_Creation
   #   runs-on: ubuntu-latest
@@ -257,6 +259,81 @@ jobs:
   #         AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   #         AWS_DEFAULT_REGION:  ${{ secrets.AWS_DEFAULT_REGION }}
   #         AWS_REGION:  ${{ secrets.AWS_REGION }}  
+=======
+  DIGIT-deployment:
+    needs: Terraform_Infra_Creation
+    runs-on: ubuntu-latest
+    env:
+      TF_IN_AUTOMATION: "true"
+      AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION:  ${{ secrets.AWS_DEFAULT_REGION }}
+      AWS_REGION:  ${{ secrets.AWS_REGION }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Download infra-as-code folder from artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: infra-as-code-artifact
+          path: .
+      - name: Download config-as-code folder from artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: config-as-code-artifact
+          path: .
+      - name: Extract infra-as-code folder
+        run: tar -xzf infra-as-code.tar.gz
+      - name: Extract config-as-code folder
+        run: tar -xzf config-as-code.tar.gz 
+      - name: Convert YAML to ENV
+        uses: dcarbone/yaml-to-env-action@main
+        with:
+          yaml-file: infra-as-code/terraform/sample-aws/input.yaml
+          debug: true # Optional: set to true to output some debug information
+      # Now, use the env vars in subsequent steps          
+      - name: Install AWS IAM Authenticator
+        run: |
+          curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/aws-iam-authenticator
+          chmod +x ./aws-iam-authenticator
+          sudo mv ./aws-iam-authenticator /usr/local/bin/aws-iam-authenticator
+          aws-iam-authenticator version  
+      - name: Generate kubeconfig
+        run: |
+          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name $CLUSTER_NAME
+          cat ~/.kube/config > kubeconfig
+      - name: Verify kubectl configuration
+        run: kubectl config view 
+      - name: Verfiy kubectl get nodes
+        run: |
+          kubectl get nodes  
+        env:
+          AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION:  ${{ secrets.AWS_DEFAULT_REGION }}
+          AWS_REGION:  ${{ secrets.AWS_REGION }}   
+      - name: Install sops
+        run: |
+          sudo apt update
+          sudo apt install -y gnupg
+          wget https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux
+          chmod +x sops-v3.7.1.linux
+          sudo mv sops-v3.7.1.linux /usr/local/bin/sops            
+      - name: digit deployment
+        run: go run digit_installer.go
+        working-directory: deploy-as-code/deployer 
+      - name: Displaying the Loadbalancer ID
+        run: |
+          LB_ID=$(kubectl get svc nginx-ingress-controller -n egov -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          echo "LoadBalancer ID: $LB_ID"
+          echo "Thank you for installing DIGIT! 🙏 Your installation is complete and ready to roll! 🚀"
+          echo "Please map the LoadBalancer ID ($LB_ID) with the domain provided in input.yaml to access the DIGIT UI"
+        env:
+          AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION:  ${{ secrets.AWS_DEFAULT_REGION }}
+          AWS_REGION:  ${{ secrets.AWS_REGION }}  
+>>>>>>> c8f5b6ee (updated cluster_create.yaml)
   
                    
   terraform_infra_destruction:
