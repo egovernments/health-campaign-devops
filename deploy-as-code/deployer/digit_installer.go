@@ -122,7 +122,7 @@ func main() {
 		//result, err := sel(modules, "Select the DIGIT modules that you want to install, choose Exit to complete selection")
 		//if err == nil {
 		//for result != "Exit" && err == nil {
-		selectedMod = append(selectedMod, "m_pgr")
+		selectedMod = append(selectedMod, "m_health")
 		//fmt.Println("selected modules", result)
 		//result, err = sel(modules, "Select the modules you want to install, choose Exit to complete selection")
 		//}

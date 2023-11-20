@@ -1,6 +1,6 @@
 version: v1.0
 modules:
-  - name: m_backbone
+  - name: backbone
     services:
       - kafka-kraft
       - kafka-connect
@@ -77,11 +77,13 @@ modules:
       - egovio/egov-user-event:v1.2.0-c1e1e8ce24-21
       - egovio/inbox:v1.1.1-a9e95f948f-75
       - egovio/turn-io-adapter:v1.0.1-96b24b0d72-5
-  - name: health
+  - name: m_health
     dependencies:
       - "backbone"
       - "authn-authz"
       - "core"
+      - "business"
+      - "utilities"
     services:
       - egovio/facility:v1.1.0-73167482a2-28
       - egovio/product:v1.1.0-73167482a2-12
