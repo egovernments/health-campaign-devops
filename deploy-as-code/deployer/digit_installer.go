@@ -214,7 +214,7 @@ func main() {
 	endScript()
 }
 
-func getService(fullChart Health, service string, set Set, svclist *list.List) {
+func getService(fullChart Digit, service string, set Set, svclist *list.List) {
 	for _, s := range fullChart.Modules {
 		if s.Name == service {
 			if set.Add(service) {
