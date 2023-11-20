@@ -2,7 +2,7 @@ name: DIGITClusterworkflow
 on:
   push:
     branches:
-      - DIGIT-Bootcamp   
+      - kubernetes-1.27   
 jobs:
   input_validation:
     runs-on: ubuntu-latest
