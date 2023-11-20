@@ -4,7 +4,7 @@ on:
     branches:
       - kubernetes-1.27   
 jobs:
-  input_validation:
+  Input_validation:
     runs-on: ubuntu-latest
     env:
       TF_IN_AUTOMATION: "true"
@@ -16,16 +16,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Build project
-        run: echo "Build started"
+        run: echo "Githubactions Workflow has started"
       - name: Displaying the input parameters provided
         run: cat input.yaml
         working-directory: infra-as-code/terraform/sample-aws
+      - name: Convert YAML to ENV
+        uses: dcarbone/yaml-to-env-action@main
+        with:
+          yaml-file: infra-as-code/terraform/sample-aws/input.yaml
+          debug: true # Optional: set to true to output some debug information
+      # Now, use the env vars in subsequent steps
+      - name: Display environment variables
+        run: |
+          echo "Cluster Name: $CLUSTER_NAME"  
       - name: Change working directory
         run: echo "This command is run in the current directory"
         working-directory: infra-as-code/terraform/sample-aws/remote-state
-      - name: Displaying DB Password and key in egov-demo-secrets.yaml
-        run: cat egov-demo-secrets.yaml
-        working-directory: config-as-code/environments
       - name: Updating different files based on parameters provided in input.yaml
         run: go run init.go
         working-directory: infra-as-code/terraform/scripts
@@ -42,9 +48,39 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: config-as-code-artifact
-          path: config-as-code.tar.gz      
+          path: config-as-code.tar.gz
+      # - name: Install AWS IAM Authenticator
+      #   run: |
+      #     curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/aws-iam-authenticator
+      #     chmod +x ./aws-iam-authenticator
+      #     sudo mv ./aws-iam-authenticator /usr/local/bin/aws-iam-authenticator
+      #     aws-iam-authenticator version  
+      # - name: Generate kubeconfig
+      #   run: |
+      #     aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name $CLUSTER_NAME
+      #     cat ~/.kube/config > kubeconfig
+      # - name: Deleting Loadbalancer 
+      #   run: kubectl delete svc nginx-ingress-controller -n egov       
+      # - name: Terraform Init - remotestate
+      #   run: terraform init
+      #   working-directory: infra-as-code/terraform/sample-aws/remote-state
+      # - name: Terraform Validate - remotestate
+      #   run: terraform validate -no-color
+      #   working-directory: infra-as-code/terraform/sample-aws/remote-state
+      # - name: Terraform Init - Infra destruction
+      #   run: terraform init
+      #   working-directory: infra-as-code/terraform/sample-aws
+      # - name: Terraform Validate - Infra destruction
+      #   run: terraform validate -no-color
+      #   working-directory: infra-as-code/terraform/sample-aws
+      # - name: Terraform Plan - Infra destruction
+      #   run: terraform plan -destroy -no-color -input=false -var db_password=demo123456
+      #   working-directory: infra-as-code/terraform/sample-aws
+      # - name: Terraform Destroy - Infra destruction
+      #   run: terraform destroy -no-color -auto-approve -var db_password=demo123456
+      #   working-directory: infra-as-code/terraform/sample-aws       
 
-  terraform_infra_creation:
+  Terraform_Infra_Creation:
     needs: input_validation
     runs-on: ubuntu-latest
     env:
@@ -69,7 +105,13 @@ jobs:
       - name: Extract infra-as-code folder
         run: tar -xzf infra-as-code.tar.gz
       - name: Extract config-as-code folder
-        run: tar -xzf config-as-code.tar.gz    
+        run: tar -xzf config-as-code.tar.gz 
+      - name: Convert YAML to ENV
+        uses: dcarbone/yaml-to-env-action@main
+        with:
+          yaml-file: infra-as-code/terraform/sample-aws/input.yaml
+          debug: true # Optional: set to true to output some debug information
+      # Now, use the env vars in subsequent steps     
       - name: Terraform Init - remotestate
         id: init
         run: terraform init
@@ -87,9 +129,6 @@ jobs:
         run: terraform apply -no-color -input=false -auto-approve
         continue-on-error: true  
         working-directory: infra-as-code/terraform/sample-aws/remote-state
-      - name: printing main.tf file
-        run: cat main.tf  
-        working-directory: infra-as-code/terraform/sample-aws
       - name: Terraform init - Infra creation
         id: init-Infra
         run: terraform init
@@ -115,7 +154,7 @@ jobs:
           aws-iam-authenticator version  
       - name: Generate kubeconfig
         run: |
-          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name k8supgrade
+          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name $CLUSTER_NAME
           cat ~/.kube/config > kubeconfig
       - name: Verify kubectl configuration
         run: kubectl config view 
@@ -146,7 +185,7 @@ jobs:
           path: config-as-code.tar.gz      
 
   DIGIT-deployment:
-    needs: terraform_infra_creation
+    needs: Terraform_Infra_Creation
     runs-on: ubuntu-latest
     env:
       TF_IN_AUTOMATION: "true"
@@ -170,7 +209,13 @@ jobs:
       - name: Extract infra-as-code folder
         run: tar -xzf infra-as-code.tar.gz
       - name: Extract config-as-code folder
-        run: tar -xzf config-as-code.tar.gz         
+        run: tar -xzf config-as-code.tar.gz 
+      - name: Convert YAML to ENV
+        uses: dcarbone/yaml-to-env-action@main
+        with:
+          yaml-file: infra-as-code/terraform/sample-aws/input.yaml
+          debug: true # Optional: set to true to output some debug information
+      # Now, use the env vars in subsequent steps          
       - name: Install AWS IAM Authenticator
         run: |
           curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/aws-iam-authenticator
@@ -179,7 +224,7 @@ jobs:
           aws-iam-authenticator version  
       - name: Generate kubeconfig
         run: |
-          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name k8supgrade
+          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name $CLUSTER_NAME
           cat ~/.kube/config > kubeconfig
       - name: Verify kubectl configuration
         run: kubectl config view 
@@ -197,12 +242,23 @@ jobs:
           sudo apt install -y gnupg
           wget https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux
           chmod +x sops-v3.7.1.linux
-          sudo mv sops-v3.7.1.linux /usr/local/bin/sops         
+          sudo mv sops-v3.7.1.linux /usr/local/bin/sops            
       - name: digit deployment
         run: go run digit_installer.go
-        working-directory: deploy-as-code/deployer     
-                   
+        working-directory: deploy-as-code/deployer 
+      - name: Displaying the Loadbalancer ID
+        run: |
+          LB_ID=$(kubectl get svc nginx-ingress-controller -n egov -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          echo "LoadBalancer ID: $LB_ID"
+          echo "Thank you for installing DIGIT! 🙏 Your installation is complete and ready to roll! 🚀"
+          echo "Please map the LoadBalancer ID ($LB_ID) with the domain provided in input.yaml to access the DIGIT UI"
+        env:
+          AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION:  ${{ secrets.AWS_DEFAULT_REGION }}
+          AWS_REGION:  ${{ secrets.AWS_REGION }}  
   
+                   
   # terraform_infra_destruction:
   #   needs: input_validation
   #   runs-on: ubuntu-latest
@@ -225,6 +281,11 @@ jobs:
   #       with:
   #         name: config-as-code-artifact
   #         path: .
+  #     - name: Convert YAML to ENV
+  #       uses: dcarbone/yaml-to-env-action@main
+  #       with:
+  #         yaml-file: infra-as-code/terraform/sample-aws/input.yaml
+  #         debug: true # Optional: set to true to output some debug information
   #     - name: Terraform Init - remotestate
   #       run: terraform init
   #       working-directory: infra-as-code/terraform/sample-aws/remote-state
@@ -243,4 +304,3 @@ jobs:
   #     - name: Terraform Destroy - Infra destruction
   #       run: terraform destroy -no-color -auto-approve -var db_password=demo123456
   #       working-directory: infra-as-code/terraform/sample-aws
-      
