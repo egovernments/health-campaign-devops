@@ -79,7 +79,7 @@ func main() {
 
 	//prodList, _ := file.Readdirnames(0) // 0 to read all files and folders
 
-	var product string = "DIGIT"
+	var product string = "Health"
 	if product != "" {
 		/*files, err := ioutil.ReadDir(releaseChartDir + product)
 		if err != nil {
