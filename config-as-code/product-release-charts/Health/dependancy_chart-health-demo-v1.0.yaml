@@ -69,7 +69,6 @@ modules:
       - "business"
     services:
       - egovio/egov-user-event:v1.2.0-c1e1e8ce24-21
-      - egovio/inbox:v1.1.1-a9e95f948f-75
   - name: m_health
     dependencies:
       - "backbone"
