@@ -275,7 +275,7 @@ egov-mdms-service:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-mdms"   ##### Change repo url with Your fork Repo url
-      branch: "DEMO"                                        ##### Change repo branch with Your fork Repo branch
+      branch: "DEMO-IMPEL"                                        ##### Change repo branch with Your fork Repo branch
   mdms-folder: "health-campaign-mdms"
   masters-config-url: "file:///work-dir/health-campaign-mdms/master-config.json"
   java-args: -Dspring.profiles.active=monitoring
@@ -286,7 +286,7 @@ egov-indexer:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"        ##### Change repo url with Your fork Repo url
-      branch: "DEMO"                                      ##### Change repo branch with Your fork Repo branch
+      branch: "DEMO-IMPEL"                                      ##### Change repo branch with Your fork Repo branch
   egov-indexer-yaml-repo-path: "file:///work-dir/health-campaign-config/egov-indexer/error-queue.yml,file:///work-dir/health-campaign-config/egov-indexer/product-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/individual-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/household-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-task-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/stock-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/facility-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-staff-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/egov-error-queue-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/service-request-indexer.yml"
 
 egov-persister:
@@ -297,34 +297,34 @@ egov-persister:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
-      branch: "DEMO"                                    ##### Change repo branch with Your fork Repo branch
+      branch: "DEMO-IMPEL"                                    ##### Change repo branch with Your fork Repo branch
 
 egov-data-uploader:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
-      branch: "DEMO"                                    ##### Change repo branch with Your fork Repo branch
+      branch: "DEMO-IMPEL"                                    ##### Change repo branch with Your fork Repo branch
 
 egov-searcher:
   search-yaml-path: ""
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
-      branch: "DEMO"                                   ##### Change repo branch with Your fork Repo branch
+      branch: "DEMO-IMPEL"                                   ##### Change repo branch with Your fork Repo branch
 
 dashboard-analytics:
   config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/dashboard-analytics/*.json"
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
-      branch: "DEMO"                                    ##### Change repo branch with Your fork Repo branch
+      branch: "DEMO-IMPEL"                                    ##### Change repo branch with Your fork Repo branch
 
 dashboard-ingest:
   config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/dashboard-ingest/*.json"
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
-      branch: "DEMO"
+      branch: "DEMO-IMPEL"
 
 # reportinfra >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 report:
@@ -334,14 +334,14 @@ report:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
-      branch: "DEMO"                                   ##### Change repo branch with Your fork Repo branch
+      branch: "DEMO-IMPEL"                                   ##### Change repo branch with Your fork Repo branch
   report-locationsfile-path: "file:///work-dir/health-campaign-config/reports/reportFileLocationsv1.txt"
 
 pdf-service:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
-      branch: "DEMO"                                   ##### Change repo branch with Your fork Repo branch
+      branch: "DEMO-IMPEL"                                   ##### Change repo branch with Your fork Repo branch
   data-config-urls: "file:///work-dir/health-campaign-config/pdf-service/data-config/tradelicense-receipt.json,file:///work-dir/health-campaign-config/pdf-service/data-config/property-receipt.json,file:///work-dir/health-campaign-config/pdf-service/data-config/property-bill.json,file:///work-dir/health-campaign-config/pdf-service/data-config/tradelicense-bill.json,file:///work-dir/health-campaign-config/pdf-service/data-config/firenoc-receipt.json,file:///work-dir/health-campaign-config/pdf-service/data-config/pt-receipt.json,file:///work-dir/health-campaign-config/pdf-service/data-config/tl-receipt.json,file:///work-dir/health-campaign-config/pdf-service/data-config/consolidatedbill.json,file:///work-dir/health-campaign-config/pdf-service/data-config/consolidatedreceipt.json,file:///work-dir/health-campaign-config/pdf-service/data-config/tlapplication.json,file:///work-dir/health-campaign-config/pdf-service/data-config/passvehicle-certificate.json,file:///work-dir/health-campaign-config/pdf-service/data-config/ws-consolidatedacknowlegment.json,file:///work-dir/health-campaign-config/pdf-service/data-config/ws-consolidatedsewerageconnection.json,file:///work-dir/health-campaign-config/pdf-service/data-config/buildingpermit.json,file:///work-dir/health-campaign-config/pdf-service/data-config/ptmutationcertificate.json,file:///work-dir/health-campaign-config/pdf-service/data-config/tlrenewalcertificate.json,file:///work-dir/health-campaign-config/pdf-service/data-config/bpa-revocation.json,file:///work-dir/health-campaign-config/pdf-service/data-config/buildingpermit-low.json,file:///work-dir/health-campaign-config/pdf-service/data-config/misc-receipt.json,file:///work-dir/health-campaign-config/pdf-service/data-config/ws-applicationwater.json,file:///work-dir/health-campaign-config/pdf-service/data-config/ws-sanctionletter.json,file:///work-dir/health-campaign-config/pdf-service/data-config/ws-estimationnotice.json,file:///work-dir/health-campaign-config/pdf-service/data-config/ws-applicationsewerage.json,file:///work-dir/health-campaign-config/pdf-service/data-config/tlcertificate.json"
   format-config-urls: "file:///work-dir/health-campaign-config/pdf-service/format-config/tradelicense-receipt.json,file:///work-dir/health-campaign-config/pdf-service/format-config/property-receipt.json,file:///work-dir/health-campaign-config/pdf-service/format-config/property-bill.json,file:///work-dir/health-campaign-config/pdf-service/format-config/tradelicense-bill.json,file:///work-dir/health-campaign-config/pdf-service/format-config/firenoc-receipt.json,file:///work-dir/health-campaign-config/pdf-service/format-config/pt-receipt.json,file:///work-dir/health-campaign-config/pdf-service/format-config/tl-receipt.json,file:///work-dir/health-campaign-config/pdf-service/format-config/consolidatedbill.json,file:///work-dir/health-campaign-config/pdf-service/format-config/consolidatedreceipt.json,file:///work-dir/health-campaign-config/pdf-service/format-config/tlapplication.json,file:///work-dir/health-campaign-config/pdf-service/format-config/passvehicle-certificate.json,file:///work-dir/health-campaign-config/pdf-service/format-config/ws-consolidatedacknowlegment.json,file:///work-dir/health-campaign-config/pdf-service/format-config/ws-consolidatedsewerageconnection.json,file:///work-dir/health-campaign-config/pdf-service/format-config/buildingpermit.json,file:///work-dir/health-campaign-config/pdf-service/format-config/ptmutationcertificate.json,file:///work-dir/health-campaign-config/pdf-service/format-config/tlrenewalcertificate.json,file:///work-dir/health-campaign-config/pdf-service/format-config/bpa-revocation.json,file:///work-dir/health-campaign-config/pdf-service/format-config/buildingpermit-low.json,file:///work-dir/health-campaign-config/pdf-service/format-config/misc-receipt.json,file:///work-dir/health-campaign-config/pdf-service/format-config/ws-applicationwater.json,file:///work-dir/health-campaign-config/pdf-service/format-config/ws-sanctionletter.json,file:///work-dir/health-campaign-config/pdf-service/format-config/ws-estimationnotice.json,file:///work-dir/health-campaign-config/pdf-service/format-config/ws-applicationsewerage.json,file:///work-dir/health-campaign-config/pdf-service/format-config/tlcertificate.json"
 
@@ -853,5 +853,5 @@ grafana:
     gitSync:
       enabled: true
       repo: "git@github.com:egovernments/health-campaign-config" #REPLACE with your configs repo
-      branch: "DEV" #REPLACE with config repo branch name
+      branch: "DEMO-IMPEL" #REPLACE with config repo branch name
   dashboardsFolder: /work-dir/health-campaign-config/monitoring-dashboards
