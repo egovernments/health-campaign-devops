@@ -147,6 +147,7 @@ cluster-configs:
         stock: "http://stock:8080/"
         facility: "http://facility:8080/"
         service-request: "http://service-request:8080/"
+        health-hrms: "http://health-hrms:8080/"
 
 employee:
   dashboard-url: "https://dashboard-pbuat.egovernments.org/s/w---s/app/kibana#/dashboard/4e687470-f3c7-11e8-8d09-b151e2b1cf8e?embed=true&_g=(refreshInterval%3A(pause%3A!f%2Cvalue%3A300000)%2Ctime%3A(from%3Anow-15m%2Cmode%3Aquick%2Cto%3Anow))"
@@ -207,7 +208,7 @@ individual:
   memory_limits: 512Mi
   tracing-enabled: true
   java-enable-debug: true
-  state-level-tenant-id: "pg"
+  state-level-tenant-id: "mz"
   aadhaar-pattern: "\\d{12}"
   mobile-pattern: "\\d+"
   notification-sms-disabled-roles: "ORG_ADMIN"
