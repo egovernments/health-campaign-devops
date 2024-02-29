@@ -84,7 +84,7 @@ env: |
   {{- end }}
   
   - name: FACILITY.KAFKA.CREATE.TOPIC
-    value: "save-facility-health-health-topic"
+    value: "save-facility-health-topic"
   - name: FACILITY.KAFKA.UPDATE.TOPIC
     value: "update-facility-health-topic"
   - name: FACILITY.KAFKA.DELETE.TOPIC
