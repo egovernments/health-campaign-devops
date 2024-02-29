@@ -113,6 +113,14 @@ env: |
     value: "60"
   - name: SPRING_CACHE_AUTOEXPIRY
     value: "true"
+  - name: EGOV_PROJECT_STAFF_SEARCH_ENDPOINT
+    value: "/project/staff/v1/_search"
+  - name: EGOV_PROJECT_SEARCH_ENDPOINT
+    value: "/project/v1/_search"
+  - name: ATTENDANCE_REGISTER_FIRST_STAFF_INSERT_ENABLED
+    value: "false"
+  - name: PROJECT_MANAGEMENT_SYSTEM_KAFKA_UPDATE_TOPIC
+    value: "update-project"
   - name: ATTENDANCE_REGISTER_OPEN_SEARCH_ENABLED_ROLES
     value: SUPERUSER,EMPLOYEE,DISTRICT_SUPERVISOR,SYSTEM_ADMINISTRATOR,NATIONAL_SUPERVISOR,DISTRIBUTOR
   {{- if index .Values "attendance-register-default-offset" }}
