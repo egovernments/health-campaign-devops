@@ -64,9 +64,9 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: health-hrms
+        key: egov-hrms
   - name: EGOV_HRMS_SEARCH_ENDPOINT
-    value: health-hrms/employees/_search
+    value: egov-hrms/employees/_search
   - name: EGOV_PROJECT_HOST
     valueFrom:
       configMapKeyRef:
