@@ -110,6 +110,13 @@ resource "aws_iam_role" "eks_iam" {
   })
 }
 
+resource "kubernetes_service_account" "ebs_csi_controller_sa" {
+  metadata {
+    name      = "ebs-csi-controller-sa"
+    namespace = "kube-system"
+  }
+} 
+
 resource "kubernetes_annotations" "example" {
   depends_on = [kubernetes_service_account.ebs_csi_controller_sa] 
   api_version = "v1"
