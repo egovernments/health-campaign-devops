@@ -307,7 +307,7 @@ jobs:
           cat ~/.kube/config > kubeconfig
         continue-on-error: true
       - name: Deleting Loadbalancer 
-        run: kubectl delete svc ingress-nginx-controller -n egov   
+        run: kubectl delete svc nginx-ingress-controller -n egov   
         continue-on-error: true
       - name: Terraform Init - remotestate
         run: terraform init
