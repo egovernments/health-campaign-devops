@@ -111,6 +111,7 @@ resource "aws_iam_role" "eks_iam" {
 }
 
 resource "kubernetes_annotations" "example" {
+  depends_on = [kubernetes_service_account.ebs_csi_controller_sa] 
   api_version = "v1"
   kind        = "ServiceAccount"
   metadata {
