@@ -2,7 +2,8 @@ name: DIGITClusterworkflow
 # Workflow branch
 on:
   push:
-    branches:  
+    branches: 
+      - master
       - kubernetes-1.27
   workflow_dispatch:
     inputs:
