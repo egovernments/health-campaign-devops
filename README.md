@@ -54,3 +54,41 @@ Click DIGIT-Install workflow.
 Select Run workflow.
 When prompted, type "destroy". This action starts the terraform_infra_destruction job.
 You can observe the progress of the destruction job in the actions window.
+
+**Create Superuser**
+ kubectl port-forward svc/egov-user -n egov 8080:8080
+ And run the below curl:
+
+ curl --location 'http://localhost:8080/user/users/_createnovalidate' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "requestInfo": {
+    "apiId": "Rainmaker",
+    "ver": ".01",
+    "ts": null,
+    "action": "_update",
+    "did": "1",
+    "key": "",
+    "msgId": "20170310130900|en_IN",
+    "authToken": "51e00caf-3218-4f15-ba70-a45f7d40abc1"
+  },
+  "user": {
+    "userName": "admin",
+    "name": "Admin User",
+    "gender": null,
+    "mobileNumber": "9898989898",
+    "type": "EMPLOYEE",
+    "active": true,
+    "password": "eGov@123",
+    "roles": [
+      {
+        "name": "Super User",
+        "code": "SUPERUSER",
+        "tenantId": "mz"
+      }
+    ],
+    "emailId": "xyz@gmail.com",
+    "tenantId": "mz"
+  }
+}'
+
