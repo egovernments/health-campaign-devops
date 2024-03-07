@@ -38,7 +38,7 @@ modules:
       - egovio/egov-workflow-v2:v1.2.1-df98ec3c35-2
       - egovio/report:v1.3.4-96b24b0d72-16
       - egovio/egov-document-uploader:v1.1.0-75d461a4d2-4
-      - egovio/audit-service:audit-heatlh-40b1a4018a-1
+      - egovio/audit-service:audit-heatlh-40b1a4018a-11
       - egovio/error-handler:master-impel-dump-5022b7acff-1
       - egovio/playground:1.0
       - egovio/pgr-services:v1.1.7-f58e5abb0d-8
