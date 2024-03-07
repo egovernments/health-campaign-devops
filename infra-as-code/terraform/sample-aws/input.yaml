@@ -20,7 +20,7 @@ db_username: "healthdemo"
 # Replace with Domain name you want for your web applications
 domain_name: "health-demo.digit.org"
 
-# Replace with the name you want to give to your S3 bucket which is used to store the terraform state
+# Replace with the name you want to give to your S3 bucket which is used to store the terraform states
 terraform_state_bucket_name: "health-digit-terraform-bucket"
 
 
