@@ -4,7 +4,12 @@ on:
   push:
     branches:
       - master
-      - kubernetes-1.27   
+  workflow_dispatch:
+    inputs:
+      destroyCommand:
+        description: 'Type "destroy" to run the terraform_infra_destruction job.'
+        required: true
+        default: ''    
 jobs:
   Input_validation:
     runs-on: ubuntu-latest
