@@ -5,6 +5,7 @@ This guide provides step-by-step instructions for installing DIGIT using GitHub 
 **Prerequisites**
 
 AWS account
+
 Github account
 
 **Installation Steps:**
@@ -56,8 +57,10 @@ When prompted, type "destroy". This action starts the terraform_infra_destructio
 You can observe the progress of the destruction job in the actions window.
 
 **Create Superuser**
+ Connect to the kubernetes cluster, from your local machine and run below command
  kubectl port-forward svc/egov-user -n egov 8080:8080
- And run the below curl:
+ 
+ And in another window, run the below curl:
 
  curl --location 'http://localhost:8080/user/users/_createnovalidate' \
 --header 'Content-Type: application/json' \
@@ -73,13 +76,13 @@ You can observe the progress of the destruction job in the actions window.
     "authToken": "51e00caf-3218-4f15-ba70-a45f7d40abc1"
   },
   "user": {
-    "userName": "admin",
+    "userName": "<<USERNAME>>",
     "name": "Admin User",
     "gender": null,
     "mobileNumber": "9898989898",
     "type": "EMPLOYEE",
     "active": true,
-    "password": "eGov@123",
+    "password": "<<PASSWORD>>",
     "roles": [
       {
         "name": "Super User",
