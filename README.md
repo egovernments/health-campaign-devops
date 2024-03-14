@@ -1,4 +1,4 @@
-**Installation Guide for DIGIT via GitHub Actions in AWS**
+**Installation Guide for DIGIT-HEALTH via GitHub Actions in AWS**
 
 This guide provides step-by-step instructions for installing DIGIT using GitHub Actions within an AWS environment.
 
