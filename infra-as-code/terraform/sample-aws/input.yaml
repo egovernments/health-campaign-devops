@@ -1,7 +1,7 @@
 # Replace with the name which you want to give to your EKS cluster
 # Cluster name can have only lowercase alphanumeric characters and hyphens
 # For example: "digit-demo"
-cluster_name: "health-corona"
+cluster_name: "demo-health"
 
 # Replace with ssh key name you want
 ssh_key_name: "health-ssh-key" 
@@ -21,6 +21,6 @@ db_username: "healthdemo"
 domain_name: "health-demo.digit.org"
 
 # Replace with the name you want to give to your S3 bucket which is used to store the terraform states
-terraform_state_bucket_name: "corona-health-terraform-buckets"
+terraform_state_bucket_name: "demo-health-digit-buckets"
 
 
