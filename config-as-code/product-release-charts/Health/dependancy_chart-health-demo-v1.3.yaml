@@ -93,4 +93,4 @@ modules:
       - egovio/project:v1.1.2-69baa2050a-199
       - egovio/referralmanagement:v1.0.1-69baa2050a-105
       - egovio/service-request:v1.0.0-a51bee1435-7
-      - egovio/attendance:v1.0.0-2c51c532-54
+      - egovio/health-attendance:v1.0.1-0fe30399-8
