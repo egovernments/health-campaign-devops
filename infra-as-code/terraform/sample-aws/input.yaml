@@ -1,10 +1,10 @@
 # Replace with the name which you want to give to your EKS cluster
 # Cluster name can have only lowercase alphanumeric characters and hyphens
 # For example: "digit-demo"
-cluster_name: "demo-health"
+cluster_name: "healthdemo-upgrade"
 
 # Replace with ssh key name you want
-ssh_key_name: "health-ssh-key" 
+ssh_key_name: "healthdemo-upgrade-ssh-key" 
 
 # Replace with public key which you want to add in your EC2 machines # ssh key which you want to add in your EC2 machines
 public_ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCQqsG1qCPzOLwjoqLmE0f50caH2bp6KndQ8DXTQzvj09vkSG5Wy6rSLMcq94um2BzeRhbq1aADpEXIb2BOY+mfpxsU0UFU4QWufPmGkGpQoM+ov67XnezQL5/DA0mqPrWOs39RAofOUhEtn4tbKlb8t+S023cI7ulX901p23+61r7dJQ557uFyHEJmgXX4CPy+Br+XAzRU7r8YmJ8h43Z5y+r4P3HD04XLQ9O6+FjYljabPKdj3VCdtbtz6xqPcUTRvSKX5iHzOQbqj7iSJ/RqysUSsYE1LCYD/7xfNHxnNU9qYuP3gPkWXsgBFE/PWlAuWCL6yvdjSRZLACVn5T77"
@@ -18,9 +18,9 @@ db_name: "healthdemodb"
 db_username: "healthdemo" 
 
 # Replace with Domain name you want for your web applications
-domain_name: "digit-cms.digit.org"
+domain_name: "health-demo.digit.org"
 
 # Replace with the name you want to give to your S3 bucket which is used to store the terraform states
-terraform_state_bucket_name: "demo-health-digit-buckets"
+terraform_state_bucket_name: "healthdemo-upgrade-digit-buckets"
 
 
