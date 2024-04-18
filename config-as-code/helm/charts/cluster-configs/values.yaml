@@ -143,6 +143,10 @@ cluster-configs:
       namespace: jenkins
       name: postgres
     
+    elasticsearch-master-creds:
+      namespace: [ es-cluster, egov ]
+      name: elasticsearch-master-credentials
+    
     airflow:
       namespace: egov
       name: airflow
