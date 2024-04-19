@@ -86,6 +86,13 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: project
+  - name: EGOV_PRODUCT_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: product
+  - name: EGOV_SEARCH_PRODUCT_VARIANT_URL
+    value: "/product/variant/v1/_search"
   - name: EGOV_LOCATION_HOST
     valueFrom:
       configMapKeyRef:
