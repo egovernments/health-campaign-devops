@@ -86,8 +86,8 @@ modules:
     services:
       - egovio/facility:v1.1.0-73167482a2-28
       - egovio/product:v1.1.0-73167482a2-12
-      - egovio/individual:hlm-5608-hrms-search-individual-type-c3ae4d111c-201
-      - egovio/transformer:transformer-boundary-hierarchy-updation-c9b4009431-186
+      - egovio/individual:hlm-5608-hrms-search-individual-type-b04b1085e3-202
+      - egovio/transformer:transformer-boundary-hierarchy-updation-87ed057825-187
       - egovio/stock:v1.1.2-69baa2050a-87
       - egovio/household:v1.1.1-b78923bee4-103
       - egovio/project:v1.1.2-69baa2050a-199
