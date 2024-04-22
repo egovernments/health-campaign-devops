@@ -78,7 +78,8 @@ env: |
     value: "transformer-producer-bulk-project-index-v1-topic"
   - name: TRANSFORMER_CONSUMER_CREATE_PROJECT_TOPIC
     value: "save-project"
-
+  - name: TRANSFORMER_PRODUCER_SERVICE_INDEX_V2_TOPIC
+    value: "transformer-producer-service-index-v2-topic"
   - name: TRANSFORMER_CONSUMER_UPDATE_PROJECT_TOPIC
     value: "update-project"
   - name: EGOV_PROJECT_HOST
@@ -109,7 +110,26 @@ env: |
     value: "/egov-mdms-service/v1/_search"
   - name: PROJECT_MDMS_MODULE
     value: "HCM-PROJECT-TYPES"
-  
+  - name: EGOV_INDIVIDUAL_HOST
+    valueFrom:
+      configMapKeyRef:
+       name: egov-service-host
+       key: individual
+  - name: EGOV_SEARCH_INDIVIDUAL_URL
+    value: "/individual/v1/_search"
+  - name: TRANSFORMER_CONSUMER_SAVE_HOUSEHOLD_MEMBER_TOPIC
+    value: "save-household-member-topic"
+  - name: TRANSFORMER_CONSUMER_UPDATE_HOUSEHOLD_MEMBER_TOPIC
+    value: "update-household-member-topic"
+  - name: TRANSFORMER_PRODUCER_HOUSEHOLD_MEMBER_INDEX_V1_TOPIC
+    value: "transformer-producer-household-member-index-v1-topic"
+  - name: TRANSFORMER_CONSUMER_CREATE_HOUSEHOLD_TOPIC
+    value: "save-household-topic"
+  - name: TRANSFORMER_CONSUMER_UPDATE_HOUSEHOLD_TOPIC
+    value: "update-household-topic"
+  - name: TRANSFORMER_PRODUCER_HOUSEHOLD_INDEX_V1_TOPIC
+    value: "transformer-producer-household-index-v1-topic"
+  - name: EGOV_LOCATION_ENDPOINT
   - name: EGOV_LOCATION_ENDPOINT
     value: "/egov-location/location/v11/boundarys/_search"
   
@@ -151,3 +171,22 @@ env: |
     value: "save-service"
   - name: TRANSFORMER_PRODUCER_SERVICE_TASK_INDEX_V1_TOPIC
     value: "transformer-producer-service-request-index-v1-topic"
+  - name: EGOV_HOUSEHOLD_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: household
+  - name: EGOV_SEARCH_HOUSEHOLD_URL
+    value: "/household/v1/_search"
+  - name: EGOV_USER_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: egov-user
+  - name: EGOV_SEARCH_USER_URL
+    value: /user/_search
+  - name: PROJECT_STAFF_ROLE_MDMS_MODULE
+    value: HCM-PROJECT-STAFF-ROLES
+  - name: EGOV_SEARCH_PROJECT_BENEFICIARY_URL
+    value: "/project/beneficiary/v1/_search"
+
