@@ -1,6 +1,6 @@
 # Common Labels
 labels:
-  app: "egov-indexer"
+  app: "egov-indexer" 
   group: "core"
 
 # Ingress Configs
