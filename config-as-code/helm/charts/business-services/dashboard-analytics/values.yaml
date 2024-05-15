@@ -81,12 +81,12 @@ env: |
     value: {{ index .Values "heap" | quote }}
   - name: JAVA_ARGS
     value: {{ index .Values "java-args" | quote }}
-  - name: EGOV_INDEXER_ES_USERNAME
+  - name: EGOV_ES_USERNAME
     valueFrom:
       secretKeyRef:
         name: elasticsearch-master-credentials
         key: username
-  - name: EGOV_INDEXER_ES_PASSWORD
+  - name: EGOV_ES_PASSWORD
     valueFrom:
       secretKeyRef:
         name: elasticsearch-master-credentials
