@@ -4,7 +4,7 @@ repositories:
 
 templates: 
   default: &default
-    namespace: backbone-hcm
+    namespace: backbone
     missingFileHandler: Warn
 
 values:

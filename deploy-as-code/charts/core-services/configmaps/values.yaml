@@ -1,7 +1,7 @@
 configmaps:
   egov-config:
     name: egov-config
-    namespace: core-hcm
+    namespace: egov
     data:
       db-host: "postgresql.backbone:5432" ## Add db-host name eg: egov-demo.database.azure.com
       db-name: "postgres" ## Add db-name
@@ -30,7 +30,7 @@ configmaps:
       egov-bnd-live-citizen-tenants: "pg.testing"
   egov-service-host:
     name: egov-service-host
-    namespace: core-hcm
+    namespace: egov
     data:
       asset-services: "http://asset-services:8080/"
       asset-services-maha: "http://asset-services-maha:8080/"
@@ -145,7 +145,7 @@ configmaps:
 
 root-ingress:
   name: root-ingress
-  namespace: core-hcm
+  namespace: egov
   cert-issuer: "letsencrypt-staging"
   appRoot: citizen
   serviceName: citizen
@@ -153,43 +153,43 @@ root-ingress:
 secrets:
   db:
     name: db
-    namespace: core-hcm
+    namespace: egov
   git-sync:
     name: git-creds
-    namespace: core-hcm
+    namespace: egov
   egov-filestore:
     name: egov-filestore
-    namespace: core-hcm
+    namespace: egov
   egov-location:
     name: egov-location
-    namespace: core-hcm
+    namespace: egov
   egov-enc-service:
     name: egov-enc-service
-    namespace: core-hcm
+    namespace: egov
   egov-notification-sms:
     name: egov-notification-sms
-    namespace: core-hcm
+    namespace: egov
   egov-notification-mail:
     name: egov-notification-mail
-    namespace: core-hcm
+    namespace: egov
   oauth2-proxy:
     name: oauth2-proxy
-    namespace: core-hcm
+    namespace: egov
   elasticsearch:
     name: elasticsearch-master-credentials
-    namespace: core-hcm
+    namespace: egov
   egov-pg-service:
     name: egov-pg-service
-    namespace: core-hcm
+    namespace: egov
   chatbot:
     name: chatbot
-    namespace: core-hcm
+    namespace: egov
   egov-edcr-notification:
     name: egov-edcr-notification
-    namespace: core-hcm
+    namespace: egov
   egov-si-microservice:
     name: egov-si-microservice
-    namespace: core-hcm
+    namespace: egov
   egov-user-chatbot:
     name: egov-user-chatbot
-    namespace: core-hcm
+    namespace: egov
