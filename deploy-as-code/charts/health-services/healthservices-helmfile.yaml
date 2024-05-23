@@ -1,0 +1,53 @@
+templates:
+  default: &default
+    chart: ./{{`{{ .Release.Name }}`}}
+    version: 0.1.0
+    namespace: health-hcm
+    # This prevents helmfile exiting when it encounters a missing file
+    # Valid values are "Error", "Warn", "Info", "Debug". The default is "Error"
+    # Use "Debug" to make missing files errors invisible at the default log level(--log-level=INFO)
+    missingFileHandler: Warn
+    values:
+      - ../environments/health-demo-secrets.yaml
+      - ../environments/health-demo.yaml
+
+releases:
+  - name: facility # Replace with your desired namespace
+    installed: true # Replace with the version of your chart, if needed
+    <<: *default
+
+  - name: health-attendance # Replace with your desired namespace
+    installed: true # Replace with the version of your chart, if needed
+    <<: *default
+
+  - name: household # Replace with your desired namespace
+    installed: true
+    <<: *default
+
+  - name: individual # Replace with your desired namespace
+    installed: true
+    <<: *default
+
+  - name: product # Replace with your desired namespace
+    installed: true
+    <<: *default
+
+  - name: project # Replace with your desired namespace
+    installed: true
+    <<: *default
+
+  - name: referralmanagement # Replace with your desired namespace
+    installed: true
+    <<: *default
+
+  - name: service-request # Replace with your desired namespace
+    installed: true
+    <<: *default
+
+  - name: stock # Replace with your desired namespace
+    installed: true
+    <<: *default
+
+  - name: transformer # Replace with your desired namespace
+    installed: true
+    <<: *default

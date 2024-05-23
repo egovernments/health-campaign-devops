@@ -1,0 +1,41 @@
+templates:
+  default: &default
+    chart: ./{{`{{ .Release.Name }}`}}
+    version: 0.1.0
+    namespace: core-hcm
+    # This prevents helmfile exiting when it encounters a missing file
+    # Valid values are "Error", "Warn", "Info", "Debug". The default is "Error"
+    # Use "Debug" to make missing files errors invisible at the default log level(--log-level=INFO)
+    missingFileHandler: Warn
+    values:
+      - ../environments/health-demo-secrets.yaml
+      - ../environments/health-demo.yaml
+
+releases:
+  - name: dashboard-analytics # Replace with your desired namespace
+    installed: true # Replace with the version of your chart, if needed
+    <<: *default
+
+  - name: dashboard-ingest # Replace with your desired namespace
+    installed: true # Replace with the version of your chart, if needed
+    <<: *default
+
+  - name: digit-ui # Replace with your desired namespace
+    installed: true
+    <<: *default
+
+  - name: dss-dashboard # Replace with your desired namespace
+    installed: true
+    <<: *default
+
+  - name: egov-hrms # Replace with your desired namespace
+    installed: true
+    <<: *default
+
+  - name: egov-user-event # Replace with your desired namespace
+    installed: true
+    <<: *default
+
+  - name: employee # Replace with your desired namespace
+    installed: true
+    <<: *default
