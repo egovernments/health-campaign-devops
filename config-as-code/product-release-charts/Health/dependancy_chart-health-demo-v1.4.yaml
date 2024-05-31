@@ -42,6 +42,8 @@ modules:
       - egovio/error-handler:master-impel-dump-5022b7acff-1
       - egovio/playground:1.0
       - egovio/pgr-services:v1.1.7-f58e5abb0d-8
+      - egovio/boundary-service:boundary-hierarchy-def-modified-6d5b30d4f6-9
+      - egovio/mdms-v2-ref-fix-761cd136b7-31
   - name: business
     dependencies:
       - "core"
