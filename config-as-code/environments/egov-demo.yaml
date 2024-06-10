@@ -218,7 +218,7 @@ egov-user:
   citizen-registration-withlogin: "true"
   citizen-otp-fixed: "123456"
   citizen-otp-fixed-enabled: "true"
-  egov-state-level-tenant-id: "default"
+  egov-state-level-tenant-id: "mz"
   decryption-abac-enabled: "false"
 
 chatbot:
