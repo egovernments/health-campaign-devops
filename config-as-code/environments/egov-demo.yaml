@@ -19,7 +19,7 @@ cluster-configs:
                 domain: <domain_name> ## Add your Domain Name    
                 egov-services-fqdn-name: https://<domain_name>/ ## Add your Domain Name
                 
-                egov-state-level-tenant-id: "default"
+                egov-state-level-tenant-id: "mz"
                 s3-assets-bucket: "(pg-health-egov-assets|egov-health-playground-assets)"
                 es-host: "elasticsearch-data.es-cluster-6"
                 es-host-6: "elasticsearch-data.es-cluster-6"
