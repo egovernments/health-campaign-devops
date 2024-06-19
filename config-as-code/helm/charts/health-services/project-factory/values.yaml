@@ -3,7 +3,7 @@ labels:
   app: "project-factory"
   group: "rainmaker"
 
-namespace: health
+namespace: egov
 
 # Ingress Configs
 ingress:
@@ -72,7 +72,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: health-project
+        key: project
   - name: EGOV_USER_HOST
     valueFrom:
       configMapKeyRef:
@@ -87,7 +87,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: health-hrms
+        key: egov-hrms
   - name: EGOV_LOCALIZATION_HOST
     valueFrom:
       configMapKeyRef:
@@ -97,7 +97,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: health-individual
+        key: individual
   - name: EGOV_AUDIT_HOST
     valueFrom:
       configMapKeyRef:
@@ -123,13 +123,13 @@ env: |
   - name: EGOV_BOUNDARY_HIERARCHY_SEARCHPATH
     value: boundary-service/boundary-hierarchy-definition/_search
   - name: HEALTH_PROJECT_CREATE_PATH
-    value: health-project/v1/_create
+    value: project/v1/_create
   - name: EGOV_PROJECT_STAFF_CREATE_PATH
-    value: health-project/staff/v1/_create
+    value: project/staff/v1/_create
   - name: EGOV_PROJECT_RESOURCE_CREATE_PATH
-    value: health-project/resource/v1/_create
+    value: project/resource/v1/_create
   - name: EGOV_PROJECT_RESOURCE_FACILITY_PATH
-    value: health-project/facility/v1/_create
+    value: project/facility/v1/_create
   - name: EGOV_USER_SEARCH_PATH
     value: user/_search
   - name: EGOV_FACILITY_SEARCH_PATH
@@ -141,7 +141,7 @@ env: |
   - name: EGOV_FACILITY_BULK_CREATE
     value: facility/v1/bulk/_create
   - name: EGOV_HEALTH_INDIVIDUAL_SEARCH
-    value: health-individual/v1/_search
+    value: individual/v1/_search
 
 
   - name: CMP_IDGEN_FORMAT
