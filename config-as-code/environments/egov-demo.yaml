@@ -182,9 +182,11 @@ egov-filestore:
   fixed-bucketname: pb-health-egov-assets  ## Add filestore bucket name
 
 egov-idgen:
+  replicas : 2
   idformat-from-mdms: "true"
   java-args: -Dspring.profiles.active=monitoring
-  heap: "-Xmx192m -Xms192m"
+  heap: "-Xmx512m -Xms256m"
+  memory_limits: 512Mi
   autocreate-new-seq: "true"
 
 egov-notification-sms:
@@ -205,7 +207,8 @@ egov-notification-sms:
   sms-error-codes: "401,403,404,405,406,407,408,409,410,411,412,413,414"
 
 egov-user:
-  heap: "-Xmx256m -Xms256m"
+  replicas: 3
+  heap: "-Xmx512m -Xms256m"
   memory_limits: 512Mi
   otp-validation: "true"
   citizen-otp-enabled: "true"
@@ -273,7 +276,7 @@ egov-pg-service:
 
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 egov-mdms-service:
-  replicas: 1
+  replicas: 3
   heap: "-Xmx512m -Xms512m"
   images:
     - egovio/egov-mdms-service
@@ -296,7 +299,8 @@ egov-indexer:
   egov-indexer-yaml-repo-path: "file:///work-dir/health-campaign-config/egov-indexer/error-queue.yml,file:///work-dir/health-campaign-config/egov-indexer/product-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/individual-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/household-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-task-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/stock-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/facility-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-staff-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/egov-error-queue-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/service-request-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/referral-management-indexer.yml"
 
 egov-persister:
-  replicas: 1
+  replicas: 2
+  heap: '-Xmx256m -Xms256m'
   images:
     - egovio/egov-persister
   persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/hrms-employee-persister.yml,file:///work-dir/health-campaign-config/egov-persister/product-persister.yml,file:///work-dir/health-campaign-config/egov-persister/project-persister.yml,file:///work-dir/health-campaign-config/egov-persister/individual-persister.yml,file:///work-dir/health-campaign-config/egov-persister/household-persister.yml,file:///work-dir/health-campaign-config/egov-persister/project-task-persister.yml,file:///work-dir/health-campaign-config/egov-persister/stock-persister.yml,file:///work-dir/health-campaign-config/egov-persister/facility-persister.yml,file:///work-dir/health-campaign-config/egov-persister/service-request-persister.yml,file:///work-dir/health-campaign-config/egov-persister/pgr-services-persister.yml,file:///work-dir/health-campaign-config/egov-persister/egov-workflow-v2-persister.yml,file:///work-dir/health-campaign-config/egov-persister/mdms-persister.yml,file:///work-dir/health-campaign-config/egov-persister/referral-management-persister.yml"
@@ -473,7 +477,9 @@ egov-workflow-v2:
 
 egov-hrms:
   java-args: -Dspring.profiles.active=monitoring
-  heap: "-Xmx192m -Xms192m"
+  replicas : 3
+  heap: '-Xmx512m -Xms256m'
+  memory_limits: 512Mi
   employee-applink: "https://egov-demo.egovernments.org/employee/user/login"
 
 
@@ -482,6 +488,37 @@ egov-weekly-impact-notifier:
 
   mail-interval-in-secs: "604800"
   schedule: "30 07 * * *"
+
+egov-enc-service:
+  replicas: 1
+  heap: '-Xmx512m -Xms256m'
+  memory_limits: 512Mi
+
+egov-accesscontrol:
+  replicas : 1
+  heap: "-Xmx512m -Xms256m"
+
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Health Services
+
+facility:
+  replicas: 3
+  heap: '-Xmx512m -Xms256m'
+  memory_limits: 512Mi
+
+project:
+  replicas: 4
+  memory_limits: 768Mi
+  heap: '-Xmx768m -Xms512m'
+
+individual:
+  replicas: 3
+  heap: '-Xmx512m -Xms256m'
+  memory_limits: 512Mi
+
+product:
+  heap: "-Xmx512m -Xms256m"
+  replicas: 3
+  memory_limits: 512Mi
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 kafka-config:
