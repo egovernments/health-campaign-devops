@@ -1,11 +1,7 @@
 # Common Labels
 labels:
   app: "project-factory"
-<<<<<<< HEAD
-  group: "rainmaker"
-=======
   group: "health"
->>>>>>> 7c6b84c6 (demo devops upgrade)
 
 namespace: egov
 
@@ -20,11 +16,7 @@ ingress:
 initContainers:
   dbMigration:
     enabled: true
-<<<<<<< HEAD
-    schemaTable: "project_factory_health_schema"
-=======
     schemaTable: "project_factory_schema"
->>>>>>> 7c6b84c6 (demo devops upgrade)
     image:
       repository: "project-factory-db"
 
@@ -45,12 +37,8 @@ env: |
     value: save-campaign-details
   - name: KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC
     value: update-campaign-details
-<<<<<<< HEAD
-
-=======
   - name: DB_SCHEMA
     value: public
->>>>>>> 7c6b84c6 (demo devops upgrade)
   - name: EGOV_MDMS_HOST
     valueFrom:
       configMapKeyRef:
@@ -60,11 +48,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-<<<<<<< HEAD
-        key: mdms-service-v2      
-=======
         key: mdms-v2      
->>>>>>> 7c6b84c6 (demo devops upgrade)
   - name: EGOV_FILESTORE_SERVICE_HOST
     valueFrom:
       configMapKeyRef:
@@ -120,11 +104,8 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: audit-service
-
   - name: CONTEXT_PATH
     value: "/project-factory"   
-
-
   - name: FILE_STORE_SERVICE_END_POINT
     value: filestore/v1/files
   - name: EGOV_MDMS_SEARCH_ENDPOINT
@@ -139,10 +120,16 @@ env: |
     value: boundary-service/boundary/_search
   - name: EGOV_BOUNDARY_HIERARCHY_SEARCHPATH
     value: boundary-service/boundary-hierarchy-definition/_search
+  - name: HEALTH_PROJECT_SEARCH_PATH
+    value: project/v1/_search
   - name: HEALTH_PROJECT_CREATE_PATH
     value: project/v1/_create
   - name: EGOV_PROJECT_STAFF_CREATE_PATH
     value: project/staff/v1/_create
+  - name: EGOV_HRMS_EMPLOYEE_CREATE_PATH
+    value: egov-hrms/employees/_create
+  - name: EGOV_HRMS_EMPLOYEE_SEARCH_PATH
+    value: egov-hrms/employees/_search
   - name: EGOV_PROJECT_RESOURCE_CREATE_PATH
     value: project/resource/v1/_create
   - name: EGOV_PROJECT_RESOURCE_FACILITY_PATH
@@ -157,11 +144,8 @@ env: |
     value: boundary-service/boundary/_search
   - name: EGOV_FACILITY_BULK_CREATE
     value: facility/v1/bulk/_create
-<<<<<<< HEAD
   - name: EGOV_HEALTH_INDIVIDUAL_SEARCH
     value: individual/v1/_search
-=======
->>>>>>> 7c6b84c6 (demo devops upgrade)
 
 
   - name: CMP_IDGEN_FORMAT
@@ -180,11 +164,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-config
-<<<<<<< HEAD
-        key: health-db-url
-=======
         key: db-url
->>>>>>> 7c6b84c6 (demo devops upgrade)
   {{- else }}
     valueFrom:
       configMapKeyRef:
@@ -230,11 +210,9 @@ env: |
         key: password   
   - name: DB_PORT
     value: "5432"
-<<<<<<< HEAD
   - name: DB_SCHEMA
-    value: {{ .Values.namespace | default "public" }}
-=======
->>>>>>> 7c6b84c6 (demo devops upgrade)
+    value: public
+
   - name: BOUNDARY_MAIN_SHEET_NAME
     value: "Boundary Data"
   - name: SPLIT_BOUNDARIES_ON
@@ -267,7 +245,6 @@ env: |
     value: "true"  
   - name: USER_DEFAULT_PASSWORD
     value: "eGov@123"  
-<<<<<<< HEAD
   - name: NOT_CREATE_USER_IF_ALREADY_THERE
     value: "true"
   - name: CACHE_ENABLED
@@ -278,6 +255,3 @@ env: |
     value: "6379"
   - name: REDIS_HOST
     value: "redis.backbone"
-=======
-
->>>>>>> 7c6b84c6 (demo devops upgrade)
