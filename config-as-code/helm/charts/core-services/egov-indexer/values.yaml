@@ -46,7 +46,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-config
-        key: es-indexer-host
+        key: es-indexer-host-8
   - name: EGOV_INDEXER_YML_REPO_PATH
     value: {{ index .Values "egov-indexer-yaml-repo-path" | quote }}
   {{- if index .Values "global" "serializers-timezone-in-ist" }}
@@ -66,16 +66,6 @@ env: |
       configMapKeyRef:
         name: egov-config
         key: egov-state-level-tenant-id
-  - name: EGOV_EDCR_HOST
-    valueFrom:
-      configMapKeyRef:
-        name: egov-config
-        key: egov-services-fqdn-name
-  - name: EGOV_BPA_HOST
-    valueFrom:
-      configMapKeyRef:
-        name: egov-service-host
-        key: bpa-services 
   - name: EGOV_INDEXER_ES_USERNAME
     valueFrom:
       secretKeyRef:

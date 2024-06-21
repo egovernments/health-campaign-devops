@@ -1,7 +1,7 @@
 # Common Labels
 labels:
   app: "project-factory"
-  group: "rainmaker"
+  group: "health"
 
 namespace: egov
 
@@ -16,7 +16,7 @@ ingress:
 initContainers:
   dbMigration:
     enabled: true
-    schemaTable: "project_factory_health_schema"
+    schemaTable: "project_factory_schema"
     image:
       repository: "project-factory-db"
 
@@ -37,7 +37,8 @@ env: |
     value: save-campaign-details
   - name: KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC
     value: update-campaign-details
-
+  - name: DB_SCHEMA
+    value: public
   - name: EGOV_MDMS_HOST
     valueFrom:
       configMapKeyRef:
@@ -47,7 +48,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: mdms-service-v2      
+        key: mdms-v2      
   - name: EGOV_FILESTORE_SERVICE_HOST
     valueFrom:
       configMapKeyRef:
@@ -103,11 +104,8 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: audit-service
-
   - name: CONTEXT_PATH
     value: "/project-factory"   
-
-
   - name: FILE_STORE_SERVICE_END_POINT
     value: filestore/v1/files
   - name: EGOV_MDMS_SEARCH_ENDPOINT
@@ -122,10 +120,16 @@ env: |
     value: boundary-service/boundary/_search
   - name: EGOV_BOUNDARY_HIERARCHY_SEARCHPATH
     value: boundary-service/boundary-hierarchy-definition/_search
+  - name: HEALTH_PROJECT_SEARCH_PATH
+    value: project/v1/_search
   - name: HEALTH_PROJECT_CREATE_PATH
     value: project/v1/_create
   - name: EGOV_PROJECT_STAFF_CREATE_PATH
     value: project/staff/v1/_create
+  - name: EGOV_HRMS_EMPLOYEE_CREATE_PATH
+    value: egov-hrms/employees/_create
+  - name: EGOV_HRMS_EMPLOYEE_SEARCH_PATH
+    value: egov-hrms/employees/_search
   - name: EGOV_PROJECT_RESOURCE_CREATE_PATH
     value: project/resource/v1/_create
   - name: EGOV_PROJECT_RESOURCE_FACILITY_PATH
@@ -160,7 +164,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-config
-        key: health-db-url
+        key: db-url
   {{- else }}
     valueFrom:
       configMapKeyRef:
@@ -207,7 +211,8 @@ env: |
   - name: DB_PORT
     value: "5432"
   - name: DB_SCHEMA
-    value: {{ .Values.namespace | default "public" }}
+    value: public
+
   - name: BOUNDARY_MAIN_SHEET_NAME
     value: "Boundary Data"
   - name: SPLIT_BOUNDARIES_ON
