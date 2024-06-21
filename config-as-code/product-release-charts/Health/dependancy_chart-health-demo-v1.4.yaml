@@ -41,25 +41,24 @@ modules:
       - egovio/audit-service:audit-heatlh-40b1a4018a-11
       - egovio/error-handler:master-impel-dump-5022b7acff-1
       - egovio/playground:1.0
-      - egovio/pgr-services:v1.1.7-f58e5abb0d-8
       - egovio/mdms-v2-db:MDMS-v2-2.9LTS-fc6b868dce-47
       - egovio/boundary-service-db:boundary-hierarchy-def-modified-2.9-lts-629baf086b-15
   - name: business
     dependencies:
       - "core"
     services:
-      - egovio/health-hrms:HLM-Health-HRMS-User-7b5216fe51-24
+      - egovio/egov-hrms-db:v1.2.7-00a7accbda-19
   - name: frontend
     dependencies:
       - "business"
     services:
-      - egovio/digit-ui:health-dashboard-product-7d5537c576-617
+      - egovio/digit-ui:health-dashboard-product-3cb11409c9-636
   - name: m_pgr             #PGR
     dependencies:
       - "core"
       - "business"
     services:
-      - egovio/pgr-services:dev-b9f615e582-9
+      - egovio/pgr-services-db:v1.1.7-00a7accbda-19
   - name: dss   #dss
     dependencies:
       - "frontend"
@@ -85,16 +84,16 @@ modules:
       - "Other"
       - "frontend"
     services:
-      - egovio/facility:v1.1.0-73167482a2-28
-      - egovio/product:v1.1.0-73167482a2-12
-      - egovio/individual:hlm-5608-hrms-search-individual-type-b04b1085e3-202
-      - egovio/transformer:transformer-boundary-hierarchy-updation-87ed057825-187
-      - egovio/stock:v1.1.2-69baa2050a-87
-      - egovio/household:v1.1.1-b78923bee4-103
-      - egovio/project:v1.1.2-69baa2050a-199
-      - egovio/referralmanagement:v1.0.1-69baa2050a-105
-      - egovio/service-request:v1.0.0-a51bee1435-7
-      - egovio/health-attendance:HCMv1.3-f8928546-5
+      - egovio/facility-db:v1.1.2-00a7accbda-14
+      - egovio/product-db:v1.1.0-00a7accbda-31
+      - egovio/individual-db:v1.1.5-00a7accbda-6
+      - egovio/transformer:v1.1.2-00a7accbda-19
+      - egovio/stock-db:v1.1.3-00a7accbda-18
+      - egovio/household-db:v1.1.3-00a7accbda-12
+      - egovio/project-db:v1.1.4-00a7accbda-5
+      - egovio/referralmanagement-db:v1.0.2-00a7accbda-14
+      - egovio/service-request-db:v1.0.0-00a7accbda-16
+      - egovio/health-attendance-db:v1.0.2-30824c427-11
   - name: m_hcmconsole
     dependencies:
       - "backbone"
