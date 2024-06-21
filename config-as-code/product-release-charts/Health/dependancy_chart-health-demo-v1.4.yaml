@@ -42,11 +42,13 @@ modules:
       - egovio/error-handler:master-impel-dump-5022b7acff-1
       - egovio/playground:1.0
       - egovio/pgr-services:v1.1.7-f58e5abb0d-8
+      - egovio/mdms-v2-db:MDMS-v2-2.9LTS-fc6b868dce-47
+      - egovio/boundary-service-db:boundary-hierarchy-def-modified-2.9-lts-629baf086b-15
   - name: business
     dependencies:
       - "core"
     services:
-      - egovio/egov-hrms:hlm-5608-hrms-search-individual-type-b2028e3cc6-11
+      - egovio/health-hrms:HLM-Health-HRMS-User-7b5216fe51-24
   - name: frontend
     dependencies:
       - "business"
@@ -93,3 +95,16 @@ modules:
       - egovio/referralmanagement:v1.0.1-69baa2050a-105
       - egovio/service-request:v1.0.0-a51bee1435-7
       - egovio/health-attendance:HCMv1.3-f8928546-5
+  - name: m_hcmconsole
+    dependencies:
+      - "backbone"
+      - "authn-authz"
+      - "core"
+      - "business"
+      - "dss"
+      - "Other"
+      - "frontend"
+      - "health"
+    services:
+      - egovio/project-factory:v0.1.0-6caaf2700e-6
+      - egovio/workbench-ui:v0.1.0-6caaf2700e-16
