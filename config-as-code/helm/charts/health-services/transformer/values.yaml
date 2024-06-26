@@ -217,6 +217,11 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: household
+  - name: EGOV_ATTENDANCE_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: health-attendance
   - name: EGOV_USER_HOST
     valueFrom:
       configMapKeyRef:
@@ -224,6 +229,11 @@ env: |
         key: egov-user
   - name: EGOV_SEARCH_USER_URL
     value: /user/_search
+  - name: EGOV_LOCALIZATION_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: egov-localization
   - name: EGOV_BOUNDARY_HOST
     valueFrom:
       configMapKeyRef:
