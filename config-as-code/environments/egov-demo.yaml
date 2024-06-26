@@ -82,7 +82,7 @@ cluster-configs:
               egov-indexer: "http://egov-indexer:8080/"
               egov-hrms: "http://egov-hrms:8080/"
               es-client: "http://elasticsearch-data-v1.es-cluster:9200"
-              health-attendance: "http://service-request:8080/"
+              health-attendance: "http://health-attendance:8080/"
               location: "http://location:8080/"
               performance-assessment: "http://performance-assessment:8080/"
               pdf-service: "http://pdf-service.egov:8080/"
