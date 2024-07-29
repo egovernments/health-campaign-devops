@@ -5,6 +5,7 @@ on:
     branches: 
       - master
       - kubernetes-1.27
+      - health-demo-kubernetes-1.27
       
   workflow_dispatch:
     inputs:
