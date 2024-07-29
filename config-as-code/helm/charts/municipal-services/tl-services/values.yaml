@@ -82,7 +82,7 @@ env: |
   - name: EGOV_URL_SHORTNER_ENDPOINT
     value: {{ index .Values "egov-url-shortner-endpoint" | quote }}
   - name: EGOV_MDMS_SEARCH_ENDPOINT
-    value: "/egov-mdms-service/v1/_search"
+    value: "/mdms-v2/v1/_search"
   - name: KAFKA_TOPICS_NOTIFICATION_SMS
     value: "egov.core.notification.sms"
   - name: SPRING_KAFKA_CONSUMER_GROUP_ID

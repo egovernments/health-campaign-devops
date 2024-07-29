@@ -144,7 +144,7 @@ egov-filestore:
   fixed-bucketname: pb-health-egov-assets  ## Add filestore bucket name
 
 egov-idgen:
-  replicas : 2
+  replicas : 1
   idformat-from-mdms: "true"
   java-args: -Dspring.profiles.active=monitoring
   heap: "-Xmx512m -Xms256m"
@@ -169,7 +169,7 @@ egov-notification-sms:
   sms-error-codes: "401,403,404,405,406,407,408,409,410,411,412,413,414"
 
 egov-user:
-  replicas: 3
+  replicas: 1
   heap: "-Xmx512m -Xms256m"
   memory_limits: 512Mi
   otp-validation: "true"
@@ -239,7 +239,7 @@ egov-pg-service:
 
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 egov-mdms-service:
-  replicas: 3
+  replicas: 1
   heap: "-Xmx512m -Xms512m"
   images:
     - egovio/egov-mdms-service
@@ -262,7 +262,7 @@ egov-indexer:
   egov-indexer-yaml-repo-path: "file:///work-dir/health-campaign-config/egov-indexer/error-queue.yml,file:///work-dir/health-campaign-config/egov-indexer/product-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/individual-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/household-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-task-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/stock-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/facility-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-staff-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/egov-error-queue-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/service-request-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/referral-management-indexer.yml"
 
 egov-persister:
-  replicas: 2
+  replicas: 1
   heap: '-Xmx256m -Xms256m'
   images:
     - egovio/egov-persister
@@ -444,7 +444,7 @@ egov-workflow-v2:
 
 egov-hrms:
   java-args: -Dspring.profiles.active=monitoring
-  replicas : 3
+  replicas : 1
   heap: '-Xmx512m -Xms256m'
   memory_limits: 512Mi
   employee-applink: "https://egov-demo.egovernments.org/employee/user/login"
@@ -468,23 +468,23 @@ egov-accesscontrol:
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Health Services
 
 facility:
-  replicas: 3
+  replicas: 1
   heap: '-Xmx512m -Xms256m'
   memory_limits: 512Mi
 
 project:
-  replicas: 4
+  replicas: 1
   memory_limits: 768Mi
   heap: '-Xmx768m -Xms512m'
 
 individual:
-  replicas: 3
+  replicas: 1
   heap: '-Xmx512m -Xms256m'
   memory_limits: 512Mi
 
 product:
   heap: "-Xmx512m -Xms256m"
-  replicas: 3
+  replicas: 1
   memory_limits: 512Mi
 
 
@@ -492,7 +492,7 @@ project-factory:
   logLevel: 'info'
   defaultLocale: 'en_MZ'
   splitBoundariesOn: 'CAMPAIGN_DISTRICT'
-  replicas: 3
+  replicas: 1
   namespace: 'egov'
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

@@ -102,7 +102,7 @@ env: |
         name: egov-config
         key: egov-services-fqdn-name
   - name: EGOV_MDMS_SEARCH_ENDPOINT
-    value: "/egov-mdms-service/v1/_search"
+    value: "/mdms-v2/v1/_search"
   - name: DB_PORT
     value: "5432"          
   - name: KAFKA_TOPICS_FIRENOC_CREATE
