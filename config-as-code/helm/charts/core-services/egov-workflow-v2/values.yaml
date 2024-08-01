@@ -66,9 +66,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: egov-user
-  - name: EGOV_USER_SEARCH_ENDPOINT
-    value: "/user/v1/_search"                            
+        key: egov-user                       
   - name: JAVA_OPTS
     value: {{ index .Values "heap" | quote }}
   - name: SERVER_PORT
