@@ -1,5 +1,5 @@
 global:
-   domain: health-demo.digit.org ## Add your Domain Name "Eg: site.mydomain.com" Do not use the dummy domain
+   domain: <domain_name> ## Add your Domain Name "Eg: site.mydomain.com" Do not use the dummy domain
    setup: fullsetup
 
 cluster-configs:
@@ -13,11 +13,11 @@ cluster-configs:
         egov-config:
             namespace: [ egov, monitoring ]
             data:
-                db-host: healthdemo-upgrade-db.cqqfmghbjssw.ap-south-1.rds.amazonaws.com:5432 ## Add db-host name eg: egov-demo.database.azure.com
-                db-name: healthdemo ## Add db-name
-                db-url: jdbc:postgresql://healthdemo-upgrade-db.cqqfmghbjssw.ap-south-1.rds.amazonaws.com:5432/healthdemo ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
-                domain: health-demo.digit.org ## Add your Domain Name    
-                egov-services-fqdn-name: https://health-demo.digit.org/ ## Add your Domain Name
+                db-host: <db_host_name> ## Add db-host name eg: egov-demo.database.azure.com
+                db-name: <db_name> ## Add db-name
+                db-url: "jdbc:postgresql://<db_host_name>/<db_name>" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
+                domain: <domain_name> ## Add your Domain Name
+                egov-services-fqdn-name: https://<domain_name>/ ## Add your Domain Name
                 
                 egov-state-level-tenant-id: "mz"
                 s3-assets-bucket: "(pg-health-egov-assets|egov-health-playground-assets)"
