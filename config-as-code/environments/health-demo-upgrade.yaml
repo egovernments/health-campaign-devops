@@ -257,7 +257,7 @@ egov-indexer:
   memory_limits: "768Mi"
   initContainers:
     gitSync:
-      repo: "git@github.com:egovernments/health-campaign-config"        ##### Change repo url with Your fork Repo url
+      repo: "git@github.com:nitish-egov/health-campaign-config"        ##### Change repo url with Your fork Repo url
       branch: "DEMO"                                      ##### Change repo branch with Your fork Repo branch
   egov-indexer-yaml-repo-path: "file:///work-dir/health-campaign-config/egov-indexer/error-queue.yml,file:///work-dir/health-campaign-config/egov-indexer/product-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/individual-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/household-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-task-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/stock-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/facility-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-staff-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/egov-error-queue-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/service-request-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/referral-management-indexer.yml"
 
@@ -270,7 +270,7 @@ egov-persister:
 
   initContainers:
     gitSync:
-      repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
+      repo: "git@github.com:nitish-egov/health-campaign-config"      ##### Change repo url with Your fork Repo url
       branch: "DEMO"                                    ##### Change repo branch with Your fork Repo branch
 
 egov-data-uploader:
