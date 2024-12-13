@@ -1,26 +1,26 @@
 # Replace with the name which you want to give to your EKS cluster
 # Cluster name can have only lowercase alphanumeric characters and hyphens
 # For example: "digit-demo"
-cluster_name: "testhealth-k8supgrade"
+cluster_name: "console-k8supgrade"
 
 # Replace with ssh key name you want
-ssh_key_name: "testhealth-k8supgrade-ssh-key" 
+ssh_key_name: "console-k8supgrade-ssh-key" 
 
 # Replace with public key which you want to add in your EC2 machines # ssh key which you want to add in your EC2 machines
 public_ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCHcOtwON5v3csYdki9DW1n2BkC2GmzeD86rTkCKSu9GWQOw8PdGabMfppvvjYlmOLlu+WzhM6+eHUXhtS6FaMert71oHUh/mvzb3KC4VJ1ZhpZXMyvbqV2RoOyrseUqwShaTfaH+BypFBaZm52tP1gzfAzSY68UWiQnUXhiNBBfjHhFbfnehEDeN0VZSiH1L27n8Ng2S6xLwZ8ovCOBukJuQ9Q0c5LqV4Nu6YYSERE0qMIDHIM7qvDWMsv8WOe32uBrUW99Tp9+Y0EAnylfS/FvnEh0zT1h5cRjoXYOOOQ0b4eR8qBbY4Zwod2ZKZ8mfzvkUci3qAp4AfLEWYkUe9x"
 
 # Name you want to give to your Database
 # DB name must contain only alphanumeric characters
-db_name: "testhealthdb"
+db_name: "consoledb"
 
 # Replace with DB username you want
 # DB user name must contain only alphanumeric characters
-db_username: "testhealth" 
+db_username: "consoleuser" 
 
 # Replace with Domain name you want for your web applications
-domain_name: "test-health.digit.org"
+domain_name: "hcm-console.digit.org"
 
 # Replace with the name you want to give to your S3 bucket which is used to store the terraform states
-terraform_state_bucket_name: "testhealth-k8supgrade-digit-buckets"
+terraform_state_bucket_name: "console-k8supgrade-digit-buckets"
 
 
