@@ -90,7 +90,7 @@ modules:
       - egovio/household-db:v1.1.4-a0e714254c-30
       - egovio/project-db:v1.1.5-a0e714254c-13
       - egovio/referralmanagement-db:v1.0.3-a0e714254c-42
-      - egovio/health-attendance-db:v1.0.2-30824c427-11
+      - egovio/attendance-db:v1.0.2-30824c427-60
       - egovio/service-request-db:v1.0.1-9dbb1d73f7-39
   - name: m_hcmconsole
     dependencies:
