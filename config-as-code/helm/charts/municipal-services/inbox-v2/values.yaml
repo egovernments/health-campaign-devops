@@ -26,7 +26,7 @@ heap: "-Xmx256m -Xms256m"
 java-args: ""
 
 # Additional Container Envs
-env: |
+env:
   - name: WORKFLOW_HOST
     valueFrom:
       configMapKeyRef:
