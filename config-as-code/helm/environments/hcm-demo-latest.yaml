@@ -609,8 +609,8 @@ egov-hrms:
   heap: '-Xmx512m -Xms256m'
   memory_limits: 512Mi
   employee-applink: "https://egov-demo.egovernments.org/employee/user/login"
-  microplanWebsiteLink: "https://hcm-demo.digit.org/microplan-ui/employee/user/login"
-  microplanImplementationPartner: "NMCP Mozambique"
+  microplanWebsiteLink: "https://hcm-demo.digit.org/workbench-ui/employee/user/login"
+  microplanImplementationPartner: "Console Team"
 
 
 mdms-v2:
