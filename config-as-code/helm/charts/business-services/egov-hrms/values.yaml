@@ -126,7 +126,7 @@ env: |
   - name: HRMS_EMAIL_NOTIFICATION_IMPLEMENTATION_PARTNER
     value: {{ default "Console Team" .Values.microplanImplementationPartner }}
   - name: HRMS_EMAIL_NOTIFICATION_WEBSITE_LINK
-    value: {{ default "https://hcm-demo.digit.org/workbench-ui/employee/user/login" .Values.microplanWebsiteLink }}
+    value: {{ default "https://hcm-demo.digit.org/console-ui/employee/user/login" .Values.microplanWebsiteLink }}
 
   {{- if index .Values "tracing-enabled" }}
   - name: TRACER_OPENTRACING_ENABLED
