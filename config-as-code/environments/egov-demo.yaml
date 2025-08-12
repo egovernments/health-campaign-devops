@@ -176,6 +176,16 @@ egov-idgen:
   memory_limits: 512Mi
   autocreate-new-seq: "true"
 
+# Metabase Configuration
+metabase:
+  image:
+    tag: 'v0.55.10.3'
+  httpPort: 3000
+  healthChecks:
+    enabled: true
+    livenessProbePath: "/api/health"
+    readinessProbePath: "/api/health"  
+
 egov-notification-sms:
   sms-provider-url: "sms provider url" ## Add sms provider url
   sms.provider.class: "Generic"

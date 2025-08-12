@@ -3,7 +3,7 @@ labels:
   app: "metabase"
   group: "analytics"
 
-namespace: health
+namespace: egov
 
 # Ingress Configs
 ingress:
