@@ -300,3 +300,8 @@ env: |
     value: {{ .Values.validateCampaignIdInMetadata | default "false" | quote }}
   - name: NOT_CREATE_USER_IF_ALREADY_THERE
     value: {{ .Values.notCreateUserIfAlreadyThere | default "false" | quote }}
+  - name: BASE_SECRET
+    valueFrom:
+      secretKeyRef:
+          name: project-factory
+          key: basesecret
