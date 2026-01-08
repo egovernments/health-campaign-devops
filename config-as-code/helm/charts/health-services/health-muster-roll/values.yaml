@@ -18,11 +18,11 @@ initContainers:
     enabled: true
     schemaTable: "muster_roll_schema"
     image:
-      repository: "muster-roll-db"
+      repository: "health-muster-roll-db"
 
 # Container Configs
 image:
-  repository: "muster-roll"
+  repository: "health-muster-roll"
 replicas: "1"
 healthChecks:
   enabled: true

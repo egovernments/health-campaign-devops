@@ -18,11 +18,11 @@ initContainers:
     enabled: true
     schemaTable: "expense_schema"
     image:
-      repository: "expense-db"
+      repository: "health-expense-db"
 
 # Container Configs
 image:
-  repository: "expense"
+  repository: "health-expense"
 replicas: "1"
 healthChecks:
   enabled: true
