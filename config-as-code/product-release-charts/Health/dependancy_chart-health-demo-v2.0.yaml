@@ -92,12 +92,12 @@ modules:
       - egovio/household-db:master-cc431fb
       - egovio/project:master-61631c4 
       - egovio/referralmanagement-db:v1.2.1-80c43fbe9a-100
-      - egovio/health-attendance:v1.3.0-b38ace6dd-65
+      - egovio/health-attendance:master-89c74d7
       - egovio/service-request-db:v1.2.0-01c2b65440-4
-      - egovio/health-muster-roll:v1.2.0-4f1ffc1b8-14
-      - egovio/health-expense-db:v1.2.0-4f1ffc1b8-35
-      - egovio/health-expense-calculator-db:v1.0.0-172f7e79e-55
-      - egovio/payments-ui:v0.4.0-dfb8b27a26-108
+      - egovio/health-muster-roll:master-89c74d7
+      - egovio/health-expense:master-89c74d7
+      - egovio/health-expense-calculator:master-89c74d7
+      - egovio/payments-ui:master-07f7fd9
       - egovio/pdf-service:v1.1.6-96b24b0d72-22
       - egovio/beneficiary-idgen:master-cc431fb
   - name: m_hcmconsole
