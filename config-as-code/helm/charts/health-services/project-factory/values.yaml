@@ -295,7 +295,7 @@ env: |
   - name: APP_LOG_LEVEL
     value: {{ .Values.logLevel | default "info" }} 
   - name: APP_MAX_DEBUG_CHAR
-    value: "{{ .Values.maxDebugChar | default "500" }}"
+    value: "{{ .Values.maxDebugChar | default "10000" }}"
   - name: DEBUG
     value: "{{ .Values.DEBUG | default "false" }}"
   - name: READ_ME_TAB
@@ -320,7 +320,7 @@ env: |
   - name: AUTO_RETRY_IF_HTTP_ERROR
     value: "socket hang up"
   - name: ENABLE_DYNAMIC_TEMPLATE_FOR
-    value: {{ .Values.enableDynamicTemplate | default "" }}
+    value: {{ .Values.enableDynamicTemplate | default "false" }}
   - name: IS_CALL_GENERATE_WHEN_DELIVERY_CONDITIONS_DIFFER
     value: {{ .Values.CallGenerateWhenDeliveryConditionsDiffer | default "false" | quote }}
   - name: EXCLUDE_HIERARCHY_TYPE_FROM_BOUNDARY_CODES
