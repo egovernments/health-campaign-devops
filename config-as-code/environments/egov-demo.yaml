@@ -590,9 +590,20 @@ beneficiary-idgen:
   idformat-from-mdms: "true"
   java-args: -Dspring.profiles.active=monitoring
   autocreate-new-seq: "true"
-  mdmsSearchPath: "/mdms-v2/v1/_search"
+  egov-mdms-service-host-key: "mdms-service-v2"
+  egov-mdms-service-endpoint-key: "mdms-v2/v1/_search"
   redis-ttl-in-days: 1
   java-enable-debug: true
+  limit-id-user-device-per-day-enabled: "true"
+  limit-id-user-device-per-day: 100
+  limit-id-user-device-total: 6000
+  limit-id-user-device-per-day-expire-days: 10
+  limit-id-user-device-total-expire-days: 30
+  id-pool-generation-max-records-per-persist-batch: 500
+  id-pool-generation-max-size: 10000
+  id-dispatch-retrieval-restrict-to-today-enabled: "true"
+  kafka-topics-consumer-bulk-update-topic: "beneficiary-id-gen-bulk-update-health-topic"
+  kafka-topics-consumer-bulk-create-topic: "beneficiary-id-gen-bulk-create-health-topic"
   kafka:
     topics:
       saveInIdPool: "save-in-id-pool"
@@ -615,23 +626,14 @@ beneficiary-idgen:
       connectionMinimumIdleSize: 10
       threads: 4
       nettyThreads: 4
-  multiLock:
-    waitTime: 5
-    leaseTime: 10
   idPool:
     validation:
       enabled: true
-    create:
-      maxBatchSize: 500
   idgen:
     pool:
       seqCode: "id.pool.number.random"
     random:
       buffer: 5
-    limit:
-      perUser: 100
-    fetch:
-      limitFromDb: 100
 
 project-factory:
   central-instance-name: egov
