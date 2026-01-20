@@ -194,12 +194,10 @@ env: |
     value: plan-service/plan/facility/_search
   - name: EGOV_PLAN_FACILITY_CONFIG_SEARCH
     value: plan-service/config/_search
-
   - name: EGOV_CENSUS_SEARCH
     value: census-service/_search
   - name: EGOV_PLAN_SEARCH
     value: plan-service/plan/_search
-
   - name: CMP_IDGEN_FORMAT
     value: CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]
   - name: EXCEL_INGESTION_SHEET_SEARCH
@@ -210,13 +208,11 @@ env: |
     value: {{ .Values.excelIngestionGenerate | default "excel-ingestion/v1/data/_generate" }}
   - name: CMP_IDGEN_IDNAME
     value: campaign.number
-    
   - name: EGOV_HOST
     valueFrom:
       configMapKeyRef:
         name: egov-config
         key: egov-services-fqdn-name
-  
   - name: "DB_URL"
   {{- if eq .Values.namespace "health" }}
     valueFrom:
@@ -297,7 +293,7 @@ env: |
   - name: APP_MAX_DEBUG_CHAR
     value: "{{ .Values.maxDebugChar | default "10000" }}"
   - name: DEBUG
-    value: "{{ .Values.DEBUG | default "false" }}"
+    value: "{{ .Values.DEBUG | default "false"  | quote  }}"
   - name: READ_ME_TAB
     value: "HCM_README_SHEETNAME"  
   - name: DEFAULT_TENANT_ID
@@ -316,11 +312,10 @@ env: |
     value: "6379"
   - name: REDIS_HOST
     value: "redis.backbone"
-
   - name: AUTO_RETRY_IF_HTTP_ERROR
     value: "socket hang up"
   - name: ENABLE_DYNAMIC_TEMPLATE_FOR
-    value: {{ .Values.enableDynamicTemplate | default "false" }}
+    value: {{ .Values.enableDynamicTemplate | default "false"  | quote }}
   - name: IS_CALL_GENERATE_WHEN_DELIVERY_CONDITIONS_DIFFER
     value: {{ .Values.CallGenerateWhenDeliveryConditionsDiffer | default "false" | quote }}
   - name: EXCLUDE_HIERARCHY_TYPE_FROM_BOUNDARY_CODES
