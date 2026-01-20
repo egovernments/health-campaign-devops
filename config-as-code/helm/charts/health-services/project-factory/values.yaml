@@ -293,7 +293,7 @@ env: |
   - name: APP_MAX_DEBUG_CHAR
     value: "{{ .Values.maxDebugChar | default "10000" }}"
   - name: DEBUG
-    value: "{{ .Values.DEBUG | default "false"  | quote  }}"
+    value: "{{ .Values.DEBUG | default "false" }}"
   - name: READ_ME_TAB
     value: "HCM_README_SHEETNAME"  
   - name: DEFAULT_TENANT_ID
