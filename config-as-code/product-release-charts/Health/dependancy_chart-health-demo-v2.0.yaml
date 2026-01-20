@@ -108,10 +108,10 @@ modules:
       - "m-health"
       - "m_hcm_microplanning"
     services:
-      - egovio/project-factory:console-8b543cf
-      - egovio/workbench-ui:console-8cd166c
-      - egovio/excel-ingestion:console-c5fecb9
-      - egovio/boundary-management-db:console-7a6b546
+      - project-factory-db:console-fcfd0a5
+      - workbench-ui-788f895dfb-pfjwj
+      - excel-ingestion-db:console-c5fecb9
+      - boundary-management:console-7a6b546
   - name: m_hcm_microplanning
     dependencies:
       - "backbone"
