@@ -64,7 +64,7 @@ modules:
       - "business"
     services:
       - egovio/dashboard-ingest:v1.1.4-72f8a8f87b-10
-      - k8s.gcr.io/git-sync:v3.1.1
+      - egovio/dashboard-analytics:analytics-es8-auth-e53006caa0-70
       - egovio/dss-dashboard:v1.8.0-0d70d60e63-53
       - egovio/dashboard-ui:master-613926d
   - name: Other
