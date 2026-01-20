@@ -109,7 +109,7 @@ modules:
       - "m_hcm_microplanning"
     services:
       - project-factory-db:console-fcfd0a5
-      - egovio/workbench-ui-788f895dfb-pfjwj
+      - egovio/workbench-ui:console-ebf2614
       - excel-ingestion-db:console-c5fecb9
       - boundary-management:console-7a6b546
   - name: m_hcm_microplanning
