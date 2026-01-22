@@ -108,7 +108,7 @@ modules:
       - "m-health"
       - "m_hcm_microplanning"
     services:
-      - project-factory-db:console-fcfd0a5
+      - project-factory:console-65881ae
       - egovio/workbench-ui:console-ebf2614
       - excel-ingestion-db:console-c5fecb9
       - boundary-management:console-7a6b546
