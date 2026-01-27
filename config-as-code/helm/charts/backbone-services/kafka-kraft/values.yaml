@@ -79,8 +79,8 @@ diagnosticMode:
 ## @param image.debug Specify if debug values should be set
 ##
 image:
-  registry: docker.io
-  repository: bitnami/kafka
+  registry: egovio
+  repository: bitnami-kafka
   tag: 3.6.0-debian-11-r0
   digest: ""
   ## Specify a imagePullPolicy
