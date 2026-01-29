@@ -20,10 +20,10 @@ func DeployCharts(options Options) {
 	log.Println("Helm Directory - " + helmDir)
 
 	index := buildIndex(helmDir)
-	envOverrideFile := filepath.FromSlash(fmt.Sprintf(configDir+"/environments/%s.yaml", options.Environment))
+	envOverrideFile := filepath.FromSlash(fmt.Sprintf(configDir+"/helm/environments/%s.yaml", options.Environment))
 
 	if options.ClusterConfigs && !options.Print {
-		envSecretFile := filepath.FromSlash(fmt.Sprintf(configDir+"/environments/%s-secrets.yaml", options.Environment))
+		envSecretFile := filepath.FromSlash(fmt.Sprintf(configDir+"/helm/environments/%s-secrets.yaml", options.Environment))
 		deployClusterConfigs(index, helmDir, envOverrideFile, envSecretFile)
 	}
 

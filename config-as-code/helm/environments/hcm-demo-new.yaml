@@ -966,6 +966,52 @@ elasticsearch-master-v1:
       cpu: "500m"
       memory: "896Mi"
 
+
+elasticsearch-data:
+    namespace: es-cluster
+    image:
+        tag: 8.11.3
+    persistence:
+        enabled: true
+        aws:
+            - volumeId: "vol-0882c1cdc462bad46" ## add your respective volume id eg. vol-0085073c65f76dre5
+              zone: ap-south-1b ## add your respective zone eg. ap-south-1b
+            - volumeId: "vol-0c3d281ed991f1369" ## add your respective volume id eg. vol-0085073c65f76dre5
+              zone: ap-south-1b ## add your respective zone eg. ap-south-1b
+            - volumeId: "vol-0ad19cad8611a66c5" ## add your respective volume id eg. vol-0085073c65f76dre5
+              zone: ap-south-1b ## add your respective zone eg. ap-south-1b
+
+    esJavaOpts: "-Xmx2000M -Xms2000M"
+    resources:
+        requests:
+            memory: "2Gi"
+        limits:
+            memory: "2.5Gi"
+
+
+elasticsearch-master:
+    namespace: es-cluster
+    replicas: 3
+    image:
+        tag: 8.11.3
+    persistence:
+        enabled: true
+        aws:
+            - volumeId: "vol-01588e59516b3d23a" ## add your respective volume id eg. vol-0085073c65f76dre5
+              zone: ap-south-1b ## add your respective zone eg. ap-south-1b
+            - volumeId: "vol-05a3676a0c71f2fcc" ## add your respective volume id eg. vol-0085073c65f76dre5
+              zone: ap-south-1b ## add your respective zone eg. ap-south-1b
+            - volumeId: "vol-0fd2b32302a4aba8d" ## add your respective volume id eg. vol-0085073c65f76dre5
+              zone: ap-south-1b ## add your respective zone eg. ap-south-1b
+
+    esJavaOpts: "-Xmx448m -Xms448m"
+    resources:
+        requests:
+            memory: "448Mi"
+        limits:
+            memory: "896Mi"
+
+
 pgadmin:
   dbUrl: "db-hcm-demo.cqqfmghbjssw.ap-south-1.rds.amazonaws.com"
   port: "5432"

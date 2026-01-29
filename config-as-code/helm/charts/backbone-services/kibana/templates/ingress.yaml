@@ -19,6 +19,7 @@ metadata:
   labels:
 {{ include "kibana.labels" . | nindent 4 }}                           
 spec:
+  ingressClassName: nginx
   rules:
 {{- if .Values.ingress.host }}   
   {{- tpl  .Values.ingress.host . | nindent 2 }}
