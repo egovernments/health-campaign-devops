@@ -44,7 +44,7 @@ func main() {
 		os.Exit(1)
 	}
 	// Read the YAML file
-	yamlFile, err := ioutil.ReadFile("../../../config-as-code/environments/egov-demo.yaml")
+	yamlFile, err := ioutil.ReadFile("../../../config-as-code/helm/environments/egov-demo.yaml")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error reading YAML file: %v\n", err)
 		os.Exit(1)
@@ -63,7 +63,7 @@ func main() {
 	// Write the updated YAML to stdout
 	fmt.Println(output)
 
-	err = ioutil.WriteFile("../../../config-as-code/environments/egov-demo.yaml", []byte(output), 0644)
+	err = ioutil.WriteFile("../../../config-as-code/helm/environments/egov-demo.yaml", []byte(output), 0644)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error writing YAML file: %v\n", err)
 		os.Exit(1)

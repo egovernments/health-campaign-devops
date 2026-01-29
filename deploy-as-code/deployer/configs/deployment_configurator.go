@@ -182,7 +182,7 @@ type Quickstart struct {
 
 func DeployConfig(Config map[string]interface{}, kvids []string, zvids []string, esdids []string, esmids []string, modules []string, smsproceed string, fileproceed string, botproceed string, flag string) {
 
-	file, err := ioutil.ReadFile("DIGIT-DevOps/config-as-code/environments/egov-demo.yaml")
+	file, err := ioutil.ReadFile("DIGIT-DevOps/config-as-code/helm/environments/egov-demo.yaml")
 	if err != nil {
 		log.Printf("%v", err)
 	}
@@ -1275,7 +1275,7 @@ func DeployConfig(Config map[string]interface{}, kvids []string, zvids []string,
 		log.Printf("%v", err)
 
 	}
-	filename := fmt.Sprintf("../../config-as-code/environments/%s.yaml", Config["file_name"])
+	filename := fmt.Sprintf("../../config-as-code/helm/environments/%s.yaml", Config["file_name"])
 	err = ioutil.WriteFile(filename, newfile, 0644)
 	if err != nil {
 		log.Printf("%v", err)
@@ -1286,7 +1286,7 @@ func DeployConfig(Config map[string]interface{}, kvids []string, zvids []string,
 
 func SecretFile(cluster_name string,Ssh string,SecretConfig map[string]string) {
 	var sec Secret
-	secret, err := ioutil.ReadFile("DIGIT-DevOps/config-as-code/environments/egov-demo-secrets.yaml")
+	secret, err := ioutil.ReadFile("DIGIT-DevOps/config-as-code/helm/environments/egov-demo-secrets.yaml")
 	if err != nil {
 		log.Printf("%v", err)
 	}
@@ -1664,7 +1664,7 @@ func SecretFile(cluster_name string,Ssh string,SecretConfig map[string]string) {
 		log.Printf("%v", err)
 
 	}
-	secFilename := fmt.Sprintf("../../config-as-code/environments/%s-secrets.yaml", cluster_name)
+	secFilename := fmt.Sprintf("../../config-as-code/helm/environments/%s-secrets.yaml", cluster_name)
 	err = ioutil.WriteFile(secFilename, secretsmar, 0644)
 	if err != nil {
 		log.Printf("%v", err)
