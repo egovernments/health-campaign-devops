@@ -18,7 +18,7 @@ zookeeperHosts: "zookeeper.zookeeper-cluster:2181/kafka"
 
 image:
   pullPolicy: IfNotPresent  
-  repository: bitnami/kafka
+  repository: egovio/bitnami-kafka:3.6.0-debian-11-r0
   tag: 2.8.0-debian-10-r30
   debug: false
 
