@@ -51,6 +51,7 @@ modules:
       - "business"
     services:
       - egovio/digit-ui:health-dashboard-digit-ui-921afc69c7-758
+      - dashboard-ui:master-613926d
   - name: m_pgr             #PGR
     dependencies:
       - "core"
