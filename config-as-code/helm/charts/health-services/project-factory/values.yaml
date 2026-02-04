@@ -72,6 +72,11 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: egov-idgen
+  - name: EXCEL_INGESTION_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: excel-ingestion
   - name: EGOV_FACILITY_HOST
     valueFrom:
       configMapKeyRef:
@@ -200,6 +205,14 @@ env: |
   - name: CMP_IDGEN_IDNAME
     value: campaign.number
     
+
+  - name: EXCEL_INGESTION_SHEET_SEARCH
+    value: excel-ingestion/v1/data/sheet/_search
+  - name: EXCEL_INGESTION_PROCESS
+    value: {{ .Values.excelIngestionProcess | default "excel-ingestion/v1/data/_process" }} 
+  - name: EXCEL_INGESTION_GENERATE
+    value: {{ .Values.excelIngestionGenerate | default "excel-ingestion/v1/data/_generate" }}
+
   - name: EGOV_HOST
     valueFrom:
       configMapKeyRef:
@@ -278,6 +291,14 @@ env: |
     value: "hcm-admin-schemas"
   - name: MODULE_NAME
     value: "HCM-ADMIN-CONSOLE" 
+  - name: FORM_CONFIG_TEMPLATE_NAME
+    value: {{ .Values.formConfigTemplateName | default "FormConfigTemplate" }}
+  - name: FORM_CONFIG_NAME
+    value: {{ .Values.formConfigName | default "FormConfig" }}
+  - name: EMAIL_NOTIFICATION_ID
+    value: {{ .Values.emailNotificationId | default "support@egov.org.in" }}
+  - name: EGOV_LOGO_LINK
+    value: {{ .Values.egovLogoLink | default "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/digit.png" }}
   - name: LOCALIZATION_WAIT_TIME_IN_BOUNDARY_CREATION
     value: "30000"
   - name: LOCALIZATION_CHUNK_SIZE_FOR_BOUNDARY_CREATION
@@ -290,6 +311,8 @@ env: |
     value: "{{ .Values.DEBUG | default "false" }}"
   - name: READ_ME_TAB
     value: "HCM_README_SHEETNAME"  
+  - name: DEFAULT_TENANT_ID
+    value: {{ .Values.defaultTenantId | default "mz" }}
   - name: USER_PASSWORD_AUTO_GENERATE
     value: "false"  
   - name: USER_DEFAULT_PASSWORD
