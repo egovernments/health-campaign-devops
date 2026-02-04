@@ -101,6 +101,8 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: boundary-service
+  - name: EGOV_BOUNDARY_SEARCH_URL
+    value: {{ index .Values "egov-boundary-search-url" | default "/boundary-service/boundary-relationships/_search" }}
   - name: PROJECT_SERVICE_HOST
     valueFrom:
       configMapKeyRef:
@@ -119,6 +121,10 @@ env: |
         name: egov-service-host
         key: pdf-service
   {{- if index .Values "state-level-tenant-id" }}
+  {{- if index .Values "excell-state-level-tenant-id" }}
+  - name: STATE_LEVEL_TENANT_ID
+    value: {{ index .Values "excell-state-level-tenant-id" | quote }}
+  {{- else }}
   - name: STATE_LEVEL_TENANT_ID
     valueFrom:
       configMapKeyRef:
@@ -203,3 +209,5 @@ env: |
     value: "/individual/v1/_search"
   - name: EGOV_FILESTORE_PATH
     value: "/filestore/v1/files"
+  - name: BILLING_FREQUENCY_CUSTOM_MINIMUM_DAYS
+    value: {{ index .Values "billing-frequency-custom-minimum-days" | quote }} 
