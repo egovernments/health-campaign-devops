@@ -15,5 +15,5 @@ creation_rules:
     kms: 'arn:aws:kms:ap-south-1:218381940040:key/9a3b0835-7713-4925-8b3d-da7e421d28d2'
 
   - path_regex: environments/hcm-demo-new\-secrets\.yaml$
-    kms: 'arn:aws:kms:ap-south-1:680148267093:key/27a2c5e8-5b62-4829-86a0-f3679f340d62'
+    kms: 'arn:aws:kms:ap-south-1:218381940040:key/9a3b0835-7713-4925-8b3d-da7e421d28d2'
     
