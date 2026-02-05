@@ -3,7 +3,7 @@ labels:
   app: "excel-ingestion"
   group: "health"
 
-namespace: health
+namespace: egov
 
 # Ingress Configs
 ingress:
