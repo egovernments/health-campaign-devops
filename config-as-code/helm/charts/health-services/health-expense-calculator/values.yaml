@@ -120,7 +120,6 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: pdf-service
-  {{- if index .Values "state-level-tenant-id" }}
   {{- if index .Values "excell-state-level-tenant-id" }}
   - name: STATE_LEVEL_TENANT_ID
     value: {{ index .Values "excell-state-level-tenant-id" | quote }}
