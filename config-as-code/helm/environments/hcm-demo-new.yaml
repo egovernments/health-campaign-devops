@@ -790,6 +790,15 @@ resource-generator:
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
   egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
 
+excel-ingestion:
+  egov-mdms-service-host-key: 'mdms-service-v2'
+  egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
+  defaultLocale: 'en_MZ'
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: false
+
+  
 transformer:
   egov-boundary-hierarchy-name: "MICROPLAN"
   egov-mdms-service-host-key: 'mdms-service-v2'
