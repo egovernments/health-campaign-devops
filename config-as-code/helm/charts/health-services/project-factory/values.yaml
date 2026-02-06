@@ -344,3 +344,5 @@ env: |
     value: {{ .Values.notCreateUserIfAlreadyThere | default "false" | quote }}
   - name: INCOMING_REQUEST_PAYLOAD_LIMIT
     value: 5mb
+  - name: EXCEL_INGESTION_GENERATE_SEARCH
+    value: {{ .Values.excelIngestionGenerateSearch | default "excel-ingestion/v1/data/generate/_search" }}
