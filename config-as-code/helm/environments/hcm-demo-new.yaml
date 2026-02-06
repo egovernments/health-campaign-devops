@@ -121,6 +121,7 @@ cluster-configs:
               inbox-v2: 'http://inbox-v2.egov:8080/'
               inbox: 'http://inbox.egov:8080/'
               boundary-management: 'http://boundary-management:8080/'
+              excel-ingestion: 'http://excel-ingestion:8080/'
 
               
 employee:
