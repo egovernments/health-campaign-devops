@@ -650,12 +650,18 @@ prePuller:
       pullSecrets: []
 
 ingress:
-  enabled: false
+  enabled: true
+  hosts:
+    - health-demo-new.digit.org
+  tls:
+    - hosts:
+        - health-demo-new.digit.org
+      secretName: health-demo-new.digit.org-tls-certs
   annotations: {}
   ingressClassName: nginx
   pathSuffix: hub
   userPathSuffix: user(/|$)(.*)
-  pathType: Prefix
+  pathType: ImplementationSpecific
 
 # cull relates to the jupyterhub-idle-culler service, responsible for evicting
 # inactive singleuser pods.
