@@ -556,8 +556,8 @@ zuul:
 egov-localization:
   replicas: 4
   heap: '-Xmx4000m -Xms1024m'
-  memory_limits: 2Gi
-  cpu_limits: 700m
+  memory_limits: 4500Mi
+  cpu_limits: 1200m
 
 collection-services:
   receiptnumber-servicebased: "true"
