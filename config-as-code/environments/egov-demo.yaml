@@ -201,6 +201,7 @@ household:
   central-instance-build: true
   central-instance-enabled: false
   java-enable-debug: "true"
+  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
 
 
 service-request:
