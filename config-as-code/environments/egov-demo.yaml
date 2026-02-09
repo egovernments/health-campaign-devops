@@ -114,6 +114,7 @@ cluster-configs:
               beneficiary-idgen: 'http://beneficiary-idgen.egov:8080/'
               excel-ingestion: 'http://excel-ingestion.egov:8080/'
               boundary-management: 'http://boundary-management.egov:8080/'
+              inbox-v2: 'http://inbox-v2.egov:8080/'
 
 
 employee:
@@ -199,6 +200,15 @@ pgr-services:
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: false
+
+inbox-v2:
+  namespace: egov
+  memory_limits: 512Mi
+  heap: "-Xmx512m -Xms256m"
+  java-debug: true
+  tracing-enabled: "true"  
+  service-map : '{}'
+  bs-service-map : '{}'
 
 household:
   central-instance-name: egov
