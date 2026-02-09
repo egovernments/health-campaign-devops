@@ -122,8 +122,6 @@ env: |
     value: "update-household-topic"
   - name: HOUSEHOLD.KAFKA.DELETE.TOPIC
     value: "delete-household-topic"
-    - name: JAVA_ENABLE_DEBUG
-    value: "true"
   - name: MDMS_SERVICE_HOST
     valueFrom:
       configMapKeyRef:
