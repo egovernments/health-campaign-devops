@@ -210,6 +210,15 @@ inbox-v2:
   service-map : '{}'
   bs-service-map : '{}'
 
+inbox:
+  namespace: egov
+  memory_limits: 512Mi
+  heap: "-Xmx512m -Xms256m"
+  java-debug: true
+  tracing-enabled: "true"  
+  service-map : '{}'
+  bs-service-map : '{}'
+
 household:
   central-instance-name: egov
   central-instance-build: true
