@@ -200,6 +200,7 @@ household:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: false
+  java-enable-debug: "true"
 
 
 service-request:
