@@ -22,7 +22,7 @@ modules:
       - "frontend"
     services:
       - egovio/egov-accesscontrol:master-1e8d2bb
-      - egovio/egov-enc-service:master-log-enc-ad23f2c-arm64
+      - egovio/egov-enc-service-db:central-instance-e346023dcb-26
       - egovio/egov-localization-db:DIGIT-2.9-LTS-237578ce80-10
       - egovio/egov-idgen:master-1e8d2bb
       - egovio/egov-filestore:master-1e8d2bb
