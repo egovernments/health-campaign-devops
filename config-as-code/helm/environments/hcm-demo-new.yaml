@@ -739,7 +739,7 @@ project-factory:
   logLevel: 'debug'
   defaultLocale: 'en_MZ'
   splitBoundariesOn: 'CAMPAIGN_DISTRICT'
-  replicas: 2
+  replicas: 3
   namespace: 'egov'
   egov-mdms-service-host-key: 'mdms-service-v2'
   mdmsV2SearchEndpoint: 'mdms-v2/v2/_search'
