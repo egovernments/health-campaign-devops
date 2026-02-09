@@ -27,6 +27,12 @@ image:
   repository: "boundary-management"
 replicas: "1"
 
+appType: "java-spring"
+tracing-enabled: true
+heap: '-Xmx1000m -Xms756m'
+memory_limits: '1Gi'
+cpu_limits: '756m'
+
 # Additional Container Envs
 env: |
   - name: KAFKA_BROKER_HOST
@@ -78,9 +84,9 @@ env: |
   - name: EGOV_MDMS_V2_UPDATE_ENDPOINT
     value: {{ .Values.mdmsV2UpdateEndpoint | default "mdms-v2/v2/_update" }}
   - name: EGOV_MDMS_V1_SEARCH_ENDPOINT
-    value: {{ .Values.mdmsV1SearchEndpoint | default "egov-mdms-service/v1/_search" }}
+    value: {{ .Values.mdmsV1SearchEndpoint | default "mdms-v2/v1/_search" }}
   - name: EGOV_MDMS_SCHEMA_PATH
-    value: {{ .Values.mdmsV1SchemaSearchEndpoint | default "egov-mdms-service/schema/v1/_search" }}
+    value: {{ .Values.mdmsV1SchemaSearchEndpoint | default "mdms-v2/schema/v1/_search" }}
   - name: EGOV_BOUNDARY_RELATIONSHIP_SEARCHPATH
     value: boundary-service/boundary-relationships/_search
   - name: EGOV_BOUNDARY_SERVICE_SEARCHPATH
