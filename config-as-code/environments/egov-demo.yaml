@@ -602,9 +602,10 @@ individual:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: false
-  replicas: 1
+  replicas: 2
   heap: '-Xmx512m -Xms256m'
   memory_limits: 512Mi
+  egov-idgen-host-key: "egov-idgen"
   egov-beneficiary-idgen-host-key: "beneficiary-idgen"
   egov-idgen-generate-path: "egov-idgen/id/_generate"
   egov-beneficiary-idgen-idpool-search-path: "beneficiary-idgen/id/id_pool/_search"
