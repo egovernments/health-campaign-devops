@@ -528,6 +528,15 @@ egov-workflow-v2:
   host-link: "https://egov-demo.egovernments.org/citizen/"
   pdf-link: "/download/epass?tenantId={TENANTID}&ids={UUID}"
 
+transformer:
+  egov-boundary-hierarchy-name: "ADMIN"
+  egov-mdms-service-host-key: 'mdms-service-v2'
+  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
+  egov-localization-module-name: "hcm-boundary-ADMIN"
+  heap: "-Xmx512m -Xms512m"          
+  memory_limits: 1024Mi
+  spring-kafka-consumer-max-poll-records: 20
+
 egov-hrms:
   central-instance-name: egov
   central-instance-build: true

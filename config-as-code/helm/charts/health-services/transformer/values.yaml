@@ -259,5 +259,30 @@ env: |
     value: "3"
   - name: EGOV_PROGRAM_MANDATE_DIVIDING_FACTOR
     value: "1.8"
-  - name: EGOV_PROJECT_TARGET_NUMBER_TYPE
-    value: "OVERALL"
+  - name: EGOV_SEARCH_ATTENDANCE_REGISTER_URL
+    value: "/health-attendance/v1/_search"
+  - name: TRANSFORMER_CONSUMER_SAVE_ATTENDANCE_LOG_TOPIC
+    value: save-attendance-log-health
+  - name: TRANSFORMER_CONSUMER_UPDATE_ATTENDANCE_LOG_TOPIC
+    value: update-attendance-log-health
+  - name: TRANSFORMER_PRODUCER_ATTENDANCE_LOG_INDEX_V1_TOPIC
+    value: transformer-save-attendance-log-health
+  - name: TRANSFORMER_PRODUCER_ATTENDANCE_REGISTER_INDEX_V1_TOPIC
+    value: transformer-save-attendance-register-health
+  - name: EGOV_LOCALIZATION_MODULE_NAME
+    value: hcm-boundary-microplan
+  - name: EGOV_PROJECT_FACTORY_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: project-factory
+  - name: EGOV_PROJECT_FACTORY_SEARCH_ENDPOINT
+    value: "project-factory/v1/project-type/search"
+  - name: SPRING_REDIS_HOST
+    value: redis.backbone
+  - name: SPRING_REDIS_PORT
+    value: "6379"
+  - name: SPRING_CACHE_TYPE
+    value: "redis"
+  - name: SPRING_CACHE_REDIS_TIME-TO-LIVE
+    value: "60"
