@@ -100,7 +100,7 @@ modules:
       - egovio/payments-ui:master-07f7fd9
       - egovio/pdf-service:multiarch-master-99a308d
       - egovio/beneficiary-idgen:master-eb25d83
-      - egovio/inbox:v1.4.0-bd52511479-19
+      - egovio/inbox:master-ac1720b
   - name: m_hcmconsole
     dependencies:
       - "backbone"
