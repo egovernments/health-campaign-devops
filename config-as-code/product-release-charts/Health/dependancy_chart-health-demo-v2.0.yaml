@@ -97,7 +97,7 @@ modules:
       - egovio/health-muster-roll:master-89c74d7
       - egovio/health-expense:master-89c74d7
       - egovio/health-expense-calculator:master-89c74d7
-      - egovio/payments-ui:master-07f7fd9
+      - egovio/payments-ui:master-a6f1a4c
       - egovio/pdf-service:multiarch-master-99a308d
       - egovio/beneficiary-idgen:master-eb25d83
       - inbox:inbox-workflow-fix-b6205e2
