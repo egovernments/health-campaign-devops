@@ -270,7 +270,7 @@ env: |
   - name: TRANSFORMER_PRODUCER_ATTENDANCE_REGISTER_INDEX_V1_TOPIC
     value: transformer-save-attendance-register-health
   - name: EGOV_LOCALIZATION_MODULE_NAME
-    value: hcm-boundary-microplan
+    value: hcm-boundary-admin
   - name: EGOV_PROJECT_FACTORY_HOST
     valueFrom:
       configMapKeyRef:
