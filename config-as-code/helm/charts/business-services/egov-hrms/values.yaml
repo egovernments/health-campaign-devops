@@ -168,4 +168,6 @@ env: |
     value: {{ default "https://hcm-demo.digit.org/workbench-ui/employee/user/login" .Values.microplanWebsiteLink }}
   - name: NOTIFICATION_EMAIL_ENABLED
     value: "true"
+  - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+    value: "org.postgresql.Driver"
   
