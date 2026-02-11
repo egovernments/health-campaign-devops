@@ -44,8 +44,7 @@ modules:
     dependencies:
       - "core"
     services:
-    # replace with the master build
-      - egovio/egov-hrms-db:v1.4.0-683e9da909-23
+      - egovio/egov-hrms-db:master-620d748
   - name: frontend
     dependencies:
       - "business"
@@ -57,7 +56,7 @@ modules:
       - "core"
       - "business"
     services:
-      - egovio/pgr-services-db:v1.2.0-bf5fea17f1-11
+      - egovio/pgr-services-db:master-620d748
   - name: dss   #dss
     dependencies:
       - "frontend"
