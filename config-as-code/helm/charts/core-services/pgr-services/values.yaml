@@ -180,6 +180,8 @@ env: |
     value: "true"
   - name: ENABLE_USERTYPE_EMPLOYEE
     value: "true"
+  - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+    value: "org.postgresql.Driver"
   - name: PGR_STATELEVEL_TENANTID
     valueFrom:
       configMapKeyRef:
