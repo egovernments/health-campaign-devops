@@ -769,6 +769,7 @@ health-expense-calculator:
   java-enable-debug: true
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
   report-header-title: "Health Campaign Payment Report"
+  report-date-time-format: "dd/MM/yyyy HH:mm:ss z"
   is-attendance-approval-required: "true"
   register-batch-size: 15
   bill-generation-async-enabled: "true"
@@ -817,6 +818,8 @@ health-muster-roll:
   musterroll-workflow-enabled: "true"
   musterroll-set-default-duration-enabled: "false"
   musterroll-validate-attendance-register-enabled: "true"
+  egov-mdms-service-host-key: 'mdms-service-v2'
+  egov-mdms-service-endpoint-key: "mdms-v2/v1/_search"   
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 kafka-config:
