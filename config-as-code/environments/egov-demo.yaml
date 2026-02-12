@@ -173,7 +173,7 @@ payments-ui:
     sub_filter.conf: "
       sub_filter  '<head>' '<head>
       <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript ></script>
-      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/demo/globalConfigsPayments.js type=text/javascript></script>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/install/demo/globalConfigsPayments.js type=text/javascript></script>
       ';" 
       
 egov-filestore:
