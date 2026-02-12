@@ -50,7 +50,7 @@ modules:
       - "business"
     services:
       - egovio/digit-ui:health-dashboard-digit-ui-8a3b8bbd1b-850
-      - egovio/dashboard-ui:master-613926d
+      - egovio/dashboard-ui:master-4a97212
   - name: m_pgr             #PGR
     dependencies:
       - "core"
