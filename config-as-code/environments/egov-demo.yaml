@@ -1,5 +1,5 @@
 global:
-   domain: <domain_name> ## Add your Domain Name "Eg: site.mydomain.com" Do not use the dummy domain 
+   domain: hcm-testing.digit.org ## Add your Domain Name "Eg: site.mydomain.com" Do not use the dummy domain 
    setup: fullsetup
 
 cluster-configs:
@@ -13,12 +13,12 @@ cluster-configs:
         egov-config:
             namespace: [ egov, es-cluster, monitoring ]
             data:
-                db-host: <db_host_name> ## Add db-host name eg: egov-demo.database.azure.com
-                db-name: <db_name> ## Add db-name
-                db-url: "jdbc:postgresql://<db_host_name>/<db_name>" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
-                db-url-no-schema: "jdbc:postgresql://<db_host_name>/<db_name>" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
-                domain: <domain_name> ## Add your Domain Name
-                egov-services-fqdn-name: https://<domain_name>/ ## Add your Domain Name
+                db-host: testhealth-k8supgrade-db.cqqfmghbjssw.ap-south-1.rds.amazonaws.com:5432 ## Add db-host name eg: egov-demo.database.azure.com
+                db-name: testhealthdb ## Add db-name
+                db-url: "jdbc:postgresql://testhealth-k8supgrade-db.cqqfmghbjssw.ap-south-1.rds.amazonaws.com:5432/testhealthdb" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
+                db-url-no-schema: "jdbc:postgresql://testhealth-k8supgrade-db.cqqfmghbjssw.ap-south-1.rds.amazonaws.com:5432/testhealthdb" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
+                domain: hcm-testing.digit.org ## Add your Domain Name
+                egov-services-fqdn-name: https://hcm-testing.digit.org/ ## Add your Domain Name
                 egov-state-level-tenant-id: "mz"
                 s3-assets-bucket: "(pg-health-egov-assets|egov-health-playground-assets)"
                 es-host: "elasticsearch-data.es-cluster"
@@ -777,7 +777,7 @@ health-expense-calculator:
   egov-musterroll-search-endpoint: "/health-muster-roll/v1/_search"
   billing-frequency-custom-minimum-days: 1
   excell-state-level-tenant-id: "mz"
-  egov-boundary-search-url: "/boundary-service/boundary/_search"
+  report-localization-boundary-module-name: "hcm-boundary-admin"
 
 health-expense:
   central-instance-name: egov
