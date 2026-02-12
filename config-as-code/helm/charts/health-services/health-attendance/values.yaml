@@ -31,6 +31,7 @@ tracing-enabled: true
 heap: "-Xmx192m -Xms192m"
 java-args: ""
 egov-mdms-service-host-key: "egov-mdms-service"
+egov-mdms-service-endpoint-key: "/egov-mdms-service/v1/_search"
 
 # Additional Container Envs
 env: |
@@ -60,6 +61,12 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: {{ index .Values "egov-mdms-service-host-key" | quote }}
+  - name: EGOV_MDMS_V2_SEARCH_ENDPOINT 
+    value: "/mdms-v2/v1/_search"
+  - name: EGOV_MDMS_PATH
+    value: "mdms-v2/v1/_search"
+  - name: MDMS_PATH
+    value: "mdms-v2/v1/_search"
   - name: EGOV_EXPENSE_CALCULATOR_HOST
     valueFrom:
       configMapKeyRef:
@@ -74,12 +81,6 @@ env: |
         key: health-muster-roll
   - name: EGOV_MUSTER_ROLL_SEARCH_ENDPOINT
     value: {{ index .Values "egov-muster-roll-search-endpoint" | quote }}
-  - name: EGOV_MDMS_V2_SEARCH_ENDPOINT 
-    value: "/mdms-v2/v1/_search"
-  - name: EGOV_MDMS_PATH
-    value: "mdms-v2/v1/_search"
-  - name: MDMS_PATH
-    value: "mdms-v2/v1/_search"
   - name: WORKS_INDIVIDUAL_HOST
     valueFrom:
       configMapKeyRef:
@@ -144,7 +145,7 @@ env: |
   - name: EGOV_PROJECT_SEARCH_ENDPOINT
     value: "project/v1/_search"
   - name: ATTENDANCE_REGISTER_FIRST_STAFF_INSERT_ENABLED
-    value: "false"
+    value: "true"
   - name: PROJECT_MANAGEMENT_SYSTEM_KAFKA_UPDATE_TOPIC
     value: "update-project"
   - name: ATTENDANCE_REGISTER_OPEN_SEARCH_ENABLED_ROLES
@@ -209,4 +210,4 @@ env: |
   {{- if index .Values "musterroll-workflow-business-service" }}
   - name: MUSTERROLL_WORKFLOW_BUSINESS_SERVICE
     value: {{ index .Values "musterroll-workflow-business-service" | quote }}
-  {{- end }}    
+  {{- end }}  
