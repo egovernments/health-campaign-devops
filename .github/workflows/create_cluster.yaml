@@ -5,7 +5,6 @@ on:
     branches: 
       - master
       - release-githubactions
-      - console-v1-helm-update
       
   workflow_dispatch:
     inputs:
