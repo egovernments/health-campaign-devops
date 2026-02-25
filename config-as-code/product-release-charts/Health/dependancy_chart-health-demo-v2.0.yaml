@@ -1,5 +1,5 @@
 
-version: v1.7
+version: v2.0
 modules:
   - name: backbone
     services:
@@ -24,40 +24,39 @@ modules:
       - egovio/egov-accesscontrol:DIGIT-2.9-LTS-237578ce80-10
       - egovio/egov-enc-service-db:central-instance-e346023dcb-26
       - egovio/egov-localization-db:DIGIT-2.9-LTS-237578ce80-10
-      - egovio/egov-idgen-db:DIGIT-2.9-LTS-07f47790b8-8
-      - egovio/egov-filestore-db:DIGIT-2.9-LTS-237578ce80-14
-      - egovio/egov-indexer-db:2.9.1-c781a2f714-65
+      - egovio/egov-idgen:DIGIT-2.9-LTS-07f47790b8-8
+      - egovio/egov-filestore:DIGIT-2.9-LTS-237578ce80-14
+      - egovio/egov-indexer:2.9.1-c781a2f714-65
       - egovio/egov-notification-mail:DIGIT-2.9-LTS-07f47790b8-5
       - egovio/egov-notification-sms:DIGIT-2.9-LTS-07f47790b8-7
-      - egovio/egov-otp-db:central-instance-a0fc793059-8
+      - egovio/egov-otp:central-instance-a0fc793059-8
       - egovio/egov-persister:DIGIT-2.9-LTS-07f47790b8-8
       ## - egovio/egov-url-shortening:v1.1.2-1715164454-3 not used in health now
-      - egovio/egov-user-db:central-instance-70f75d2a82-77
+      - egovio/egov-user:central-instance-70f75d2a82-77
       - egovio/user-otp:v2.9.0-063968adc7-25
       - egovio/egov-workflow-v2-db:central-instance-1248cc50e5-38
-      - egovio/audit-service-db:DIGIT-2.9-LTS-07f47790b8-12
-      - egovio/error-handler:master-impel-dump-5022b7acff-1
+      - egovio/audit-service:DIGIT-2.9-LTS-07f47790b8-12
+      - egovio/error-handler:master-impel-dump-a28582d
       - egovio/playground:2.0
-      - egovio/mdms-v2-db:central-instance-6fae5fdefc-96
-      - egovio/boundary-service-db:v1.0.0-063968adc7-18
+      - egovio/mdms-v2:central-instance-6fae5fdefc-96
+      - egovio/boundary-service:master-1e8d2bb
   - name: business
     dependencies:
       - "core"
     services:
-    # replace with the master build
-      - egovio/egov-hrms-db:v1.4.0-683e9da909-23
+      - egovio/egov-hrms-db:master-620d748
   - name: frontend
     dependencies:
       - "business"
     services:
-      - egovio/digit-ui:health-dashboard-digit-ui-921afc69c7-758
-      - dashboard-ui:master-613926d
+      - egovio/digit-ui:health-dashboard-digit-ui-8a3b8bbd1b-850
+      - egovio/dashboard-ui:master-613926d
   - name: m_pgr             #PGR
     dependencies:
       - "core"
       - "business"
     services:
-      - egovio/pgr-services-db:v1.2.0-bf5fea17f1-11
+      - egovio/pgr-services-db:master-620d748
   - name: dss   #dss
     dependencies:
       - "frontend"
@@ -65,7 +64,7 @@ modules:
       - "business"
     services:
       - egovio/dashboard-ingest:v1.1.4-72f8a8f87b-10
-      - egovio/dashboard-analytics:analytics-es8-auth-e53006caa0-70
+      - egovio/dashboard-analytics:analytics-es8-auth-6a40b6e
       - egovio/dss-dashboard:v1.8.0-0d70d60e63-53
   - name: Other
     dependencies:
@@ -84,22 +83,23 @@ modules:
       - "frontend"
       - "m_hcmconsole"
     services:
-      - egovio/facility-db:v1.2.0-b8e24ab705-33
-      - egovio/product-db:v1.2.0-8900208f3e-1
-      - egovio/individual-db:v1.2.0-8900208f3e-66
-      - egovio/transformer:HDDF-1277-149f70deb7-302
-      - egovio/stock-db:v1.2.0-8900208f3e-67
-      - egovio/household-db:v1.2.0-8900208f3e-74
-      - egovio/project-db:v1.2.0-8900208f3e-51 
-      - egovio/referralmanagement-db:v1.2.0-8900208f3e-96
-      - egovio/attendance-db:v1.2.0-4f1ffc1b8-95
+      - egovio/facility:master-eb25d83
+      - egovio/product:master-eb25d83
+      - egovio/individual:master-25a90a3
+      - egovio/transformer:HDDF-1277-8d30a8e
+      - egovio/stock:master-eb25d83
+      - egovio/household:master-61631c4
+      - egovio/project:master-61631c4
+      - egovio/referralmanagement:master-eb25d83
+      - egovio/health-attendance:master-89c74d7
       - egovio/service-request-db:v1.2.0-01c2b65440-4
-      - egovio/muster-roll-db:v1.2.0-4f1ffc1b8-63
-      - egovio/expense-db:v1.2.0-4f1ffc1b8-123
-      - egovio/health-expense-calculator-db:v1.0.0-172f7e79e-55
-      - payments-ui:console-c692a067dd-57
-      - pdf-service:indexer-bpa-fix-vinoth-88d0942e6a-42
-      - egovio/beneficiary-idgen-db:v1.0.0-5933b8db0e-7
+      - egovio/health-muster-roll:master-89c74d7
+      - egovio/health-expense:master-89c74d7
+      - egovio/health-expense-calculator:master-89c74d7
+      - egovio/payments-ui:master-507e034
+      - egovio/pdf-service:multiarch-master-99a308d
+      - egovio/beneficiary-idgen:master-eb25d83
+      - inbox:inbox-workflow-fix-b6205e2
   - name: m_hcmconsole
     dependencies:
       - "backbone"
@@ -108,8 +108,10 @@ modules:
       - "m-health"
       - "m_hcm_microplanning"
     services:
-      - egovio/project-factory-db:console-ac19a3af65-542
-      - egovio/workbench-ui:console-20c70f79ed-354
+      - egovio/project-factory-db:master-aa57e79
+      - egovio/workbench-ui:master-e20f66d
+      - egovio/excel-ingestion-db:master-25a90a3
+      - egovio/boundary-management:master-aa57e79
   - name: m_hcm_microplanning
     dependencies:
       - "backbone"
@@ -118,7 +120,7 @@ modules:
       - "m_hcmconsole"
       - "m_health"
     services:
-      - plan-service:microplanning-dev-24a32aa371-292
-      - resource-generator:microplanning-dev-6e9df4dc70-134
-      - census-service:microplanning-dev-aa64801625-98
-      - microplan-ui:console-97866dfc66-104
+      - plan-service:v1.0.2-0ea4104b4b-303
+      - resource-generator:v1.0.2-b8bfac27c7-142
+      - census-service:v1.0.1-ddae2629dc-105
+      - microplan-ui:v0.4.0-503b2e90fd-142

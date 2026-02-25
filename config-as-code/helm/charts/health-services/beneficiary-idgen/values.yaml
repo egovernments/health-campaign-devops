@@ -35,7 +35,9 @@ java-args: "-Dspring.profiles.active=monitoring"
 idformat-from-mdms: "false"
 autocreate-new-seq: "false"
 memory_limits: "1Gi"
-cpu_limits: "200m"
+cpu_limits: "300m"
+egov-mdms-service-host-key: "egov-mdms-service"
+egov-mdms-service-endpoint-key: "egov-mdms-service/v1/_search"
 
 # Additional Container Envs
 env: |
@@ -57,9 +59,11 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: mdms-service-v2
+        key: {{ index .Values "egov-mdms-service-host-key" | quote }}
+  - name: MDMS_SERVICE_SEARCH_URI
+    value: {{ index .Values "egov-mdms-service-endpoint-key" | quote }}
   - name: EGOV_MDMS_SEARCH_URI
-    value: {{ .Values.mdmsSearchPath | default "/mdms-v2/v1/_search" }}
+    value: {{ index .Values "egov-mdms-service-endpoint-key" | quote }}
   - name: REDIS_TTL_IN_DAYS
     value: {{ index .Values "redis-ttl-in-days" | quote }}
   - name: SECURITY_BASIC_ENABLED
@@ -104,19 +108,46 @@ env: |
     value: {{ .Values.idgen.pool.seqCode }}
   - name: IDGEN_RANDOM_BUFFER
     value: {{ .Values.idgen.random.buffer | quote }}
-  - name: LIMIT_PER_USER
-    value: {{ .Values.idgen.limit.perUser | quote }}
-  - name: IDPOOL_FETCH_LIMIT_FROM_DB
-    value: {{ .Values.idgen.fetch.limitFromDb | quote }}
-  - name: MULTI_LOCK_WAIT_TIME
-    value: {{ .Values.multiLock.waitTime | quote }}
-  - name: MULTI_LOCK_LEASE_TIME
-    value: {{ .Values.multiLock.leaseTime | quote }}
-  - name: ID_POOL_CREATE_MAX_BATCH_SIZE
-    value: {{ .Values.idPool.create.maxBatchSize | quote }}
+  - name: LIMIT_ID_USER_DEVICE_PER_DAY_ENABLED
+    value: {{ index .Values "limit-id-user-device-per-day-enabled" | quote }}
+  - name: LIMIT_ID_USER_DEVICE_PER_DAY
+    value: {{ index .Values "limit-id-user-device-per-day" | quote }}
+  - name: LIMIT_ID_USER_DEVICE_TOTAL
+    value: {{ index .Values "limit-id-user-device-total" | quote }}
+  - name: LIMIT_ID_USER_DEVICE_PER_DAY_EXPIRE_DAYS
+    value: {{ index .Values "limit-id-user-device-per-day-expire-days" | quote }}
+  - name: LIMIT_ID_USER_DEVICE_TOTAL_EXPIRE_DAYS
+    value: {{ index .Values "limit-id-user-device-total-expire-days" | quote }}
+  - name: ID_POOL_GENERATION_MAX_RECORDS_PER_PERSIST_BATCH
+    value: {{ index .Values "id-pool-generation-max-records-per-persist-batch" | quote }}
+  - name: ID_POOL_GENERATION_MAX_SIZE
+    value: {{ index .Values "id-pool-generation-max-size" | quote }}
+  - name: ID_DISPATCH_RETRIEVAL_RESTRICT_TO_TODAY_ENABLED
+    value: {{ index .Values "id-dispatch-retrieval-restrict-to-today-enabled" | quote }}
   - name: ID_VALIDATION_ENABLED
     value: {{ .Values.idPool.validation.enabled | quote }}
   - name: SPRING_DATA_REDIS_DEFAULT_REPLENISHRATE
     value: "4"
   - name: SPRING_DATA_REDIS_DEFAULT_BURSTCAPACITY
     value: "4"
+  - name: KAFKA_TOPICS_CONSUMER_BULK_UPDATE_TOPIC
+    value: {{ index .Values "kafka-topics-consumer-bulk-update-topic" | quote }}
+  - name: KAFKA_TOPICS_CONSUMER_BULK_CREATE_TOPIC
+    value: {{ index .Values "kafka-topics-consumer-bulk-create-topic" | quote }}
+  # Actuator management port (separate from main app)
+  - name: MANAGEMENT_SERVER_PORT
+    value: {{ index .Values "management-server-port" | default "8080" | quote }}
+  # Expose only lightweight endpoints
+  - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+    value: {{ index .Values "management-endpoints-web-exposure-include" | default "health,info" | quote }}
+  # Enable probes
+  - name: MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED
+    value: {{ index .Values "management-endpoint-health-probes-enabled" | default "true" | quote }}
+  # Hide details in health endpoint
+  - name: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+    value: {{ index .Values "management-endpoint-health-show-details" | default "never" | quote }}
+  # Disable heavy health indicators for liveness/readiness
+  - name: MANAGEMENT_HEALTH_DB_ENABLED
+    value: {{ index .Values "management-health-db-enabled" | default "false" | quote }}
+  - name: MANAGEMENT_HEALTH_REDIS_ENABLED
+    value: {{ index .Values "management-health-redis-enabled" | default "false" | quote }}

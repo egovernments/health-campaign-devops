@@ -18,11 +18,11 @@ initContainers:
     enabled: true
     schemaTable: "muster_roll_schema"
     image:
-      repository: "muster-roll-db"
+      repository: "health-muster-roll-db"
 
 # Container Configs
 image:
-  repository: "muster-roll"
+  repository: "health-muster-roll"
 replicas: "1"
 healthChecks:
   enabled: true
@@ -51,6 +51,8 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: egov-mdms-service
+  - name: EGOV_MDMS_V2_SEARCH_ENDPOINT 
+    value: {{ index .Values "egov-mdms-service-endpoint-key" | quote }}
   - name: EGOV_IDGEN_HOST
     valueFrom:
       configMapKeyRef:

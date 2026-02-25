@@ -1,26 +1,29 @@
 # Common Labels
 labels:
-  app: "inbox"
+  app: "inbox-v2"
   group: "rainmaker"
 
 # Ingress Configs
 ingress:
   enabled: true
   zuul: true
-  context: "inbox"
+  context: "inbox-v2"
+
+# Init Containers Configs
+initContainers: {}
 
 # Container Configs
 image:
-  repository: "inbox"
+  repository: "inbox-v2"
 replicas: "1"
 healthChecks:
   enabled: true
-  livenessProbePath: "/inbox/health"
-  readinessProbePath: "/inbox/health"
+  livenessProbePath: "/inbox-v2/health"
+  readinessProbePath: "/inbox-v2/health"
 appType: "java-spring"
 tracing-enabled: true
 heap: "-Xmx256m -Xms256m"
-java-args: "-Dspring.profiles.active=monitoring"
+java-args: ""
 
 # Additional Container Envs
 env: |
@@ -59,17 +62,6 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: egov-mdms-service
-  - name: EGOV_MDMS_SEARCH_ENDPOINT
-    value: "/mdms-v2/v1/_search"
-  - name: EGOV_MDMS_PATH
-    value: "/mdms-v2/v1/_search"
-  - name: MDMS_PATH
-    value: "/mdms-v2/v1/_search"
-  - name: EGOV_INTERNAL_MICROSERVICE_USER_UUID
-    valueFrom:
-      configMapKeyRef:
-        name: egov-config
-        key: egov-internal-microservice-user-uuid
   - name: SERVICES_ESINDEXER_HOST
     valueFrom:
       configMapKeyRef:
@@ -80,6 +72,11 @@ env: |
       configMapKeyRef:
         name: egov-config
         key: egov-state-level-tenant-id
+  - name: EGOV_INTERNAL_MICROSERVICE_USER_UUID
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: egov-internal-microservice-user-uuid
   - name: EGOV_SEARCHER_PT_SEARCH_PATH
     value: "egov-searcher/property-services/inboxpropertysearch/_get"
   - name: SERVICE_SEARCH_MAPPING
@@ -96,9 +93,30 @@ env: |
     value: "false"
   - name: BS_BUSINESSCODE_SERVICE_SEARCH
     value:  {{ index .Values "bs-service-map" | quote }} 
+  - name: WATER_ES_INDEX
+    value:  {{ index .Values "water-es-index" | quote }}
+  - name: SEWERAGE_ES_INDEX
+    value:  {{ index .Values "sewerage-es-index" | quote }}
   {{- if index .Values "tracing-enabled" }}
   - name: TRACER_OPENTRACING_ENABLED
     value: "true" 
   {{- end }}
   - name: JAVA_ENABLE_DEBUG
     value: "true"
+  - name: EGOV_MDMS_SEARCH_ENDPOINT
+    value: "/mdms-v2/v1/_search"
+  - name: SPRING_DATASOURCE_URL
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: db-url
+  - name: SPRING_DATASOURCE_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: db
+        key: username
+  - name: SPRING_DATASOURCE_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: db
+        key: password

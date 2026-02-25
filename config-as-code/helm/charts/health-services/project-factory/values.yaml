@@ -11,6 +11,8 @@ ingress:
   enabled: true
   zuul: true
   context: "project-factory"
+  additionalAnnotations: |
+    nginx.ingress.kubernetes.io/proxy-body-size: "20m"
 
 # Init Containers Configs
 initContainers:
@@ -37,8 +39,11 @@ env: |
     value: save-campaign-details
   - name: KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC
     value: update-campaign-details
-  - name: DB_SCHEMA
-    value: public
+  - name: BASE_SECRET
+    valueFrom:
+      secretKeyRef:
+          name: project-factory
+          key: basesecret
   - name: EGOV_MDMS_HOST
     valueFrom:
       configMapKeyRef:
@@ -67,6 +72,11 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: egov-idgen
+  - name: EXCEL_INGESTION_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: excel-ingestion
   - name: EGOV_FACILITY_HOST
     valueFrom:
       configMapKeyRef:
@@ -128,12 +138,16 @@ env: |
     value: filestore/v1/files 
   - name: EGOV_MDMS_V2_SEARCH_ENDPOINT
     value: {{ .Values.mdmsV2SearchEndpoint | default "mdms-v2/v2/_search" }}
+  - name: EGOV_MDMS_V2_CREATE_ENDPOINT
+    value: {{ .Values.mdmsV2CreateEndpoint | default "mdms-v2/v2/_create" }}
+  - name: EGOV_MDMS_V2_UPDATE_ENDPOINT
+    value: {{ .Values.mdmsV2UpdateEndpoint | default "mdms-v2/v2/_update" }}
   - name: EGOV_MDMS_V1_SEARCH_ENDPOINT
-    value: {{ .Values.mdmsV1SearchEndpoint | default "egov-mdms-service/v1/_search" }}
+    value: {{ .Values.mdmsV1SearchEndpoint | default "mdms-v2/v1/_search" }}
   - name: EGOV_IDGEN_PATH
     value: egov-idgen/id/_generate
   - name: EGOV_MDMS_SCHEMA_PATH
-    value: egov-mdms-service/schema/v1/_search
+    value: {{ .Values.mdmsV1SchemaSearchEndpoint | default "egov-mdms-service/schema/v1/_search" }}
   - name: EGOV_BOUNDARY_RELATIONSHIP_SEARCHPATH
     value: boundary-service/boundary-relationships/_search
   - name: EGOV_BOUNDARY_SERVICE_SEARCHPATH
@@ -144,6 +158,8 @@ env: |
     value: project/v1/_search
   - name: HEALTH_PROJECT_CREATE_PATH
     value: project/v1/_create
+  - name: HEALTH_PROJECT_UPDATE_PATH
+    value: project/v1/_update
   - name: EGOV_PROJECT_STAFF_CREATE_PATH
     value: project/staff/v1/_create
   - name: EGOV_HRMS_EMPLOYEE_CREATE_PATH
@@ -166,27 +182,39 @@ env: |
     value: facility/v1/bulk/_create
   - name: EGOV_HEALTH_INDIVIDUAL_SEARCH
     value: individual/v1/_search
+  - name: EGOV_HEALTH_PROJECT_FACILITY_SEARCH
+    value: project/facility/v1/_search
+  - name: EGOV_HEALTH_PROJECT_STAFF_SEARCH
+    value: project/staff/v1/_search
+  - name: EGOV_HEALTH_PROJECT_FACILITY_BULK_DELETE
+    value: project/facility/v1/bulk/_delete
+  - name: EGOV_HEALTH_PROJECT_STAFF_BULK_DELETE
+    value: project/staff/v1/bulk/_delete
   - name: EGOV_PLAN_FACILITY_SEARCH
     value: plan-service/plan/facility/_search
   - name: EGOV_PLAN_FACILITY_CONFIG_SEARCH
     value: plan-service/config/_search
-
   - name: EGOV_CENSUS_SEARCH
     value: census-service/_search
   - name: EGOV_PLAN_SEARCH
     value: plan-service/plan/_search
-
   - name: CMP_IDGEN_FORMAT
     value: CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]
+  - name: EXCEL_INGESTION_SHEET_SEARCH
+    value: excel-ingestion/v1/data/sheet/_search
+  - name: EXCEL_INGESTION_PROCESS
+    value: {{ .Values.excelIngestionProcess | default "excel-ingestion/v1/data/_process" }} 
+  - name: EXCEL_INGESTION_GENERATE
+    value: {{ .Values.excelIngestionGenerate | default "excel-ingestion/v1/data/_generate" }}
+  - name: EXCEL_INGESTION_GENERATE_SEARCH
+    value: {{ .Values.excelIngestionGenerateSearch | default "excel-ingestion/v1/data/generate/_search" }}
   - name: CMP_IDGEN_IDNAME
     value: campaign.number
-    
   - name: EGOV_HOST
     valueFrom:
       configMapKeyRef:
         name: egov-config
         key: egov-services-fqdn-name
-  
   - name: "DB_URL"
   {{- if eq .Values.namespace "health" }}
     valueFrom:
@@ -239,12 +267,7 @@ env: |
   - name: DB_PORT
     value: "5432"
   - name: DB_SCHEMA
-    value: public
-
-  - name: BOUNDARY_MAIN_SHEET_NAME
-    value: "Boundary Data"
-  - name: SPLIT_BOUNDARIES_ON
-    value: {{ .Values.splitBoundariesOn | default "Distrito" }} 
+    value: {{ .Values.namespace | default "public" }}
   - name: SPLIT_BOUNDARIES_ON_LENGTH 
     value: "2"
   - name: FACILITY_TAB_NAME
@@ -259,6 +282,14 @@ env: |
     value: "hcm-admin-schemas"
   - name: MODULE_NAME
     value: "HCM-ADMIN-CONSOLE" 
+  - name: FORM_CONFIG_TEMPLATE_NAME
+    value: {{ .Values.formConfigTemplateName | default "FormConfigTemplate" }}
+  - name: FORM_CONFIG_NAME
+    value: {{ .Values.formConfigName | default "FormConfig" }}
+  - name: EMAIL_NOTIFICATION_ID
+    value: {{ .Values.emailNotificationId | default "support@egov.org.in" }}
+  - name: EGOV_LOGO_LINK
+    value: {{ .Values.egovLogoLink | default "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/digit.png" }}  
   - name: LOCALIZATION_WAIT_TIME_IN_BOUNDARY_CREATION
     value: "30000"
   - name: LOCALIZATION_CHUNK_SIZE_FOR_BOUNDARY_CREATION
@@ -266,11 +297,13 @@ env: |
   - name: APP_LOG_LEVEL
     value: {{ .Values.logLevel | default "info" }} 
   - name: APP_MAX_DEBUG_CHAR
-    value: "{{ .Values.maxDebugChar | default "500" }}"
+    value: "{{ .Values.maxDebugChar | default "10000" }}"
   - name: DEBUG
     value: "{{ .Values.DEBUG | default "false" }}"
   - name: READ_ME_TAB
     value: "HCM_README_SHEETNAME"  
+  - name: DEFAULT_TENANT_ID
+    value: {{ .Values.defaultTenantId | default "mz" }}
   - name: USER_PASSWORD_AUTO_GENERATE
     value: "false"  
   - name: USER_DEFAULT_PASSWORD
@@ -285,11 +318,10 @@ env: |
     value: "6379"
   - name: REDIS_HOST
     value: "redis.backbone"
-
   - name: AUTO_RETRY_IF_HTTP_ERROR
     value: "socket hang up"
   - name: ENABLE_DYNAMIC_TEMPLATE_FOR
-    value: {{ .Values.enableDynamicTemplate | default "" }}
+    value: {{ .Values.enableDynamicTemplate | default "false"  | quote }}
   - name: IS_CALL_GENERATE_WHEN_DELIVERY_CONDITIONS_DIFFER
     value: {{ .Values.CallGenerateWhenDeliveryConditionsDiffer | default "false" | quote }}
   - name: EXCLUDE_HIERARCHY_TYPE_FROM_BOUNDARY_CODES
@@ -300,3 +332,5 @@ env: |
     value: {{ .Values.validateCampaignIdInMetadata | default "false" | quote }}
   - name: NOT_CREATE_USER_IF_ALREADY_THERE
     value: {{ .Values.notCreateUserIfAlreadyThere | default "false" | quote }}
+  - name: INCOMING_REQUEST_PAYLOAD_LIMIT
+    value: 5mb

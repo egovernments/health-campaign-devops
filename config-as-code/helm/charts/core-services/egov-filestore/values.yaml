@@ -50,8 +50,6 @@ env: |
     value: "/tmp"
   - name: SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE
     value: "250MB"
-  - name: ISNFSSTORAGEENABLED
-    value: {{ index .Values "is-nfs-enabled" | quote }}
   {{- if index .Values "is-nfs-enabled" }}
   - name: ISNFSSTORAGEENABLED
     value: "true"
@@ -63,8 +61,6 @@ env: |
   - name: SOURCE_DISK
     value: "diskStorage"
   {{- end }}
-  - name: ISS3ENABLED
-    value: {{ index .Values "is-s3-enabled" | quote }}
   {{- if index .Values "is-s3-enabled" }}
   - name: ISS3ENABLED
     value: "true"

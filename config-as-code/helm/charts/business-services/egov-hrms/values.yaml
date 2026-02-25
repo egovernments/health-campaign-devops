@@ -147,6 +147,8 @@ env: |
     value: "/boundary-service/boundary/_search"
   - name: EGOV_BOUNDARY_HIERARCHY_NAME
     value: "ADMIN"
+  - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+    value: "org.postgresql.Driver"
   - name: EGOV_HRMS_USER_SERVICE_QUALIFIER
     value: "individualService"
   {{- if index .Values "tracing-enabled" }}

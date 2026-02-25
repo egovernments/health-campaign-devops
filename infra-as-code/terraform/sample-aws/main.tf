@@ -8,10 +8,18 @@ terraform {
     # The below line is optional if your S3 bucket is encrypted
     encrypt = true
   }
-  required_providers {
+   required_providers {
     kubectl = {
-      source  = "gavinbunney/kubectl"
-      version = "~> 1.14.0" 
+      source  = "alekc/kubectl"
+      version = ">= 2.0.2"
+    }
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+      version = "2.37.1"
+    }
+    helm = {
+      source  = "hashicorp/helm"
+      version = ">= 2.10.1, < 3.0.0"
     }
   }
 }
@@ -116,7 +124,7 @@ module "eks_managed_node_group" {
   max_size     = var.max_worker_nodes
   desired_size = var.desired_worker_nodes
   instance_types = var.instance_types
-  capacity_type  = "SPOT"
+  capacity_type  = "ON_DEMAND"
   ebs_optimized  = "true"
   enable_monitoring = "true"
   iam_role_additional_policies = {
@@ -174,9 +182,13 @@ resource "aws_eks_addon" "aws_ebs_csi_driver" {
 }
 
 provider "kubernetes" {
-  host                   = data.aws_eks_cluster.cluster.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.cluster.token
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    args        = ["eks", "get-token", "--cluster-name", var.cluster_name]
+    command     = "aws"
+  }
 }
 
 resource "kubernetes_storage_class" "ebs_csi_encrypted_gp3_storage_class" {
@@ -197,12 +209,26 @@ resource "kubernetes_storage_class" "ebs_csi_encrypted_gp3_storage_class" {
     type      = "gp3"
   }
 }
+provider "helm" {
+  kubernetes {
+    host                   = data.aws_eks_cluster.cluster.endpoint
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
+    exec {
+      api_version = "client.authentication.k8s.io/v1beta1"
+      args        = ["eks", "get-token", "--cluster-name", var.cluster_name]
+      command     = "aws"
+    }
+  }
+}
 
 provider "kubectl" {
-  host                   = data.aws_eks_cluster.cluster.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.cluster.token
-  load_config_file       = false
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    args        = ["eks", "get-token", "--cluster-name", var.cluster_name]
+    command     = "aws"
+  }              
 }
 
 resource "aws_iam_role_policy" "karpenter_policy" {

@@ -16,11 +16,11 @@ initContainers:
     enabled: true
     schemaTable: "attendance_schema"
     image:
-      repository: "attendance-db"
+      repository: "health-attendance-db"
 
 # Container Configs
 image:
-  repository: "attendance"
+  repository: "health-attendance"
 replicas: "1"
 healthChecks:
   enabled: true
@@ -31,6 +31,7 @@ tracing-enabled: true
 heap: "-Xmx192m -Xms192m"
 java-args: ""
 egov-mdms-service-host-key: "egov-mdms-service"
+egov-mdms-service-endpoint-key: "/egov-mdms-service/v1/_search"
 
 # Additional Container Envs
 env: |
@@ -47,9 +48,7 @@ env: |
     value: "true" 
   {{- end }}
   - name: SERVER_CONTEXT_PATH
-    value: /attendance
-  - name: SERVER_SERVLET_CONTEXT-PATH
-    value: /attendance 
+    value: /health-attendance
   - name: EGOV_MDMS_HOST
     valueFrom:
       configMapKeyRef:
@@ -64,6 +63,24 @@ env: |
         key: {{ index .Values "egov-mdms-service-host-key" | quote }}
   - name: EGOV_MDMS_V2_SEARCH_ENDPOINT 
     value: "/mdms-v2/v1/_search"
+  - name: EGOV_MDMS_PATH
+    value: "mdms-v2/v1/_search"
+  - name: MDMS_PATH
+    value: "mdms-v2/v1/_search"
+  - name: EGOV_EXPENSE_CALCULATOR_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: health-expense-calculator
+  - name: EGOV_EXPENSE_CALCULATOR_BILLING_PERIOD_SEARCH_ENDPOINT
+    value: {{ index .Values "egov-expense-calculator-billing-period-search-endpoint" | quote }}
+  - name: EGOV_MUSTER_ROLL_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: health-muster-roll
+  - name: EGOV_MUSTER_ROLL_SEARCH_ENDPOINT
+    value: {{ index .Values "egov-muster-roll-search-endpoint" | quote }}
   - name: WORKS_INDIVIDUAL_HOST
     valueFrom:
       configMapKeyRef:
@@ -83,10 +100,6 @@ env: |
         key: project
   - name: EGOV_PROJECT_STAFF_SEARCH_ENDPOINT
     value: project/staff/v1/_search
-  {{- if index .Values "java-enable-debug" }}
-  - name: JAVA_ENABLE_DEBUG
-    value: "true"
-  {{- end }}
   - name: EGOV_IDGEN_HOST
     valueFrom:
       configMapKeyRef:
@@ -118,7 +131,7 @@ env: |
         name: egov-service-host
         key: boundary-service
   - name: EGOV_BOUNDARY_SEARCH_URL
-    value: "/boundary-service/boundary/_search"  
+    value: "/boundary-service/boundary/_search"
   - name: SPRING_REDIS_HOST
     value: redis.backbone
   - name: SPRING_REDIS_PORT
@@ -131,10 +144,8 @@ env: |
     value: "true"
   - name: EGOV_PROJECT_SEARCH_ENDPOINT
     value: "project/v1/_search"
-  - name: ATTENDANCE_REGISTER_DEFAULT_LIMIT
-    value: "20"
   - name: ATTENDANCE_REGISTER_FIRST_STAFF_INSERT_ENABLED
-    value: "false"
+    value: "true"
   - name: PROJECT_MANAGEMENT_SYSTEM_KAFKA_UPDATE_TOPIC
     value: "update-project"
   - name: ATTENDANCE_REGISTER_OPEN_SEARCH_ENABLED_ROLES
@@ -191,3 +202,12 @@ env: |
   - name: CONTRACTS_REVISION_TOPIC
     value: {{ index .Values "contracts-revision-topic" | quote }} 
   {{- end }}
+  - name: EGOV_WORKFLOW_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: egov-workflow-v2
+  {{- if index .Values "musterroll-workflow-business-service" }}
+  - name: MUSTERROLL_WORKFLOW_BUSINESS_SERVICE
+    value: {{ index .Values "musterroll-workflow-business-service" | quote }}
+  {{- end }}  
