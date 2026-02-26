@@ -20,6 +20,6 @@ spec:
   tls:
   - hosts:
     - {{ $.Values.global.domain }}
-    secretName: {{ $.Values.global.domain }}-tls-certs         
+    secretName: {{ $.Values.global.domain }}-tls         
 {{- end -}}
 {{- end -}}

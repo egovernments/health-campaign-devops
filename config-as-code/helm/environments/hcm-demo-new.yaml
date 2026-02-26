@@ -1,5 +1,5 @@
 global:
-   domain: health-demo-new.digit.org ## Add your Domain Name "Eg: site.mydomain.com" Do not use the dummy domain
+   domain: health-demo.digit.org ## Add your Domain Name "Eg: site.mydomain.com" Do not use the dummy domain
    setup: fullsetup
 
 cluster-configs:
@@ -21,8 +21,8 @@ cluster-configs:
                 db-name: healthdemo ## Add db-name
                 db-url: "jdbc:postgresql://hcm-demo-new-db.cqqfmghbjssw.ap-south-1.rds.amazonaws.com:5432/healthdemo" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
                 db-url-no-schema: "jdbc:postgresql://hcm-demo-new-db.cqqfmghbjssw.ap-south-1.rds.amazonaws.com:5432/healthdemo"
-                domain: health-demo-new.digit.org ## Add your Domain Name
-                egov-services-fqdn-name: https://health-demo-new.digit.org/ ## Add your Domain Name
+                domain: health-demo.digit.org ## Add your Domain Name
+                egov-services-fqdn-name: https://health-demo.digit.org/ ## Add your Domain Name
                 kibana-host: http://release-name-kibana.es-cluster:5601/
                 kibana-base-path: kibana
                 egov-state-level-tenant-id: "mz"
@@ -626,7 +626,7 @@ egov-hrms:
   heap: '-Xmx512m -Xms256m'
   memory_limits: 512Mi
   employee-applink: "https://egov-demo.egovernments.org/employee/user/login"
-  microplanWebsiteLink: "https://health-demo-new.digit.org/console/employee/user/login"
+  microplanWebsiteLink: "https://health-demo.digit.org/console/employee/user/login"
   microplanImplementationPartner: "Console Team"
 
 
@@ -1050,9 +1050,9 @@ elasticsearch-master:
 
 
 pgadmin:
-  dbUrl: "db-hcm-demo.cqqfmghbjssw.ap-south-1.rds.amazonaws.com"
+  dbUrl: "hcm-demo-new-db.cqqfmghbjssw.ap-south-1.rds.amazonaws.com"
   port: "5432"
-  environment: "hcm-demo"
+  environment: "hcm-demo-new"
   maintenance-db-name: "healthdemo"
   db-admin-username: "healthegovdemo"
   db-read-username: "readonly"
@@ -1063,9 +1063,9 @@ pgadmin:
     enabled: true
     dataDirSize: "1Gi"
     storageClassName: gp3
-    aws:
-      volumeId: "vol-077afc8a5f0c9fcb8"
-      zone: ap-south-1b
+    # aws:
+    #   volumeId: "vol-077afc8a5f0c9fcb8"
+    #   zone: ap-south-1b
 
 es-curator:
   schedule: "45 18 * * *"
@@ -1093,11 +1093,11 @@ jupyterhub:
   ingress:
     enabled: true
     hosts:
-      - health-demo-new.digit.org
+      - health-demo.digit.org
     tls:
       - hosts:
-          - health-demo-new.digit.org
-        secretName: health-demo-new.digit.org-tls-certs
+          - health-demo.digit.org
+        secretName: health-demo.digit.org-tls
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 hcm-moz-impl:

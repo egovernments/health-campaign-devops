@@ -652,11 +652,11 @@ prePuller:
 ingress:
   enabled: true
   hosts:
-    - health-demo-new.digit.org
+    - health-demo.digit.org
   tls:
     - hosts:
-        - health-demo-new.digit.org
-      secretName: health-demo-new.digit.org-tls-certs
+        - health-demo.digit.org
+      secretName: health-demo.digit.org-tls
   annotations: {}
   ingressClassName: nginx
   pathSuffix: hub

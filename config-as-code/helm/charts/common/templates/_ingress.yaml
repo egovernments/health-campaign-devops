@@ -54,11 +54,11 @@ spec:
 {{- if .Values.ingress.hostName }}
   - hosts: 
     - {{ .Values.ingress.hostName }}
-    secretName: {{ .Values.ingress.hostName }}-tls-certs  
+    secretName: {{ .Values.ingress.hostName }}-tls  
 {{- else }}      
   - hosts:
     - {{ .Values.global.domain }}
-    secretName: {{ .Values.global.domain }}-tls-certs 
+    secretName: {{ .Values.global.domain }}-tls 
 {{- end }} 
 {{- end }} 
 {{- end }}
