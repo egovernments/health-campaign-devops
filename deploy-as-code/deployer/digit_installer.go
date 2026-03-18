@@ -93,7 +93,7 @@ func main() {
 		//var version string = ""
 		//version, _ = sel(versionfiles, "Which version of the product would like to install, Select below")
 		//if version != "" {
-		argFile := releaseChartDir + product + "/dependancy_chart-" + "health-demo-v1.8" + ".yaml"
+		argFile := releaseChartDir + product + "/dependancy_chart-" + "health-demo-v2.0" + ".yaml"
 
 		// Decode the yaml file and assigning the values to a map
 		chartFile, err := ioutil.ReadFile(argFile)

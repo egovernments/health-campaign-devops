@@ -3,7 +3,7 @@ labels:
   app: "auth-proxy"
   group: "rainmaker"
 
-namespace: es-upgrade
+namespace: es-cluster
 
 # Container Configs
 image:

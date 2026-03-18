@@ -1,0 +1,119 @@
+
+version: v1.4
+modules:
+  - name: backbone
+    services:
+      - kafka-kraft
+      - elasticsearch-data
+      - elasticsearch-master
+      - kibana
+  - name: m_authn-authz
+    services:
+      - redis
+      - ingress-nginx
+      - cert-manager
+      - egovio/gateway:gateway-2.9.2-a916a090e6-40
+  - name: core
+    dependencies:
+      - "backbone"
+      - "authn-authz"
+      - "frontend"
+    services:
+      - egovio/egov-accesscontrol:DIGIT-2.9-LTS-237578ce80-10
+      - egovio/egov-enc-service:central-instance-e346023dcb-26
+      - egovio/egov-localization:DIGIT-2.9-LTS-237578ce80-10
+      - egovio/egov-idgen:DIGIT-2.9-LTS-07f47790b8-8
+      - egovio/egov-filestore:DIGIT-2.9-LTS-237578ce80-14
+      - egovio/egov-indexer:2.9.1-c781a2f714-65
+      - egovio/egov-notification-mail:DIGIT-2.9-LTS-07f47790b8-5
+      - egovio/egov-notification-sms:DIGIT-2.9-LTS-07f47790b8-7
+      - egovio/egov-otp:central-instance-a0fc793059-8
+      - egovio/egov-persister:DIGIT-2.9-LTS-07f47790b8-8
+      - egovio/egov-url-shortening:DIGIT-2.9-LTS-07f47790b8-12
+      - egovio/egov-user:central-instance-70f75d2a82-77
+      - egovio/egov-user-event:core-2.9-lts-mvn-check-57ef3ac8dd-4
+      - egovio/user-otp:v2.9.0-063968adc7-25
+      - egovio/egov-workflow-v2:central-instance-1248cc50e5-38
+      - egovio/audit-service:DIGIT-2.9-LTS-07f47790b8-12
+      - egovio/beneficiary-idgen:master-cc431fb
+      - egovio/error-handler:master-impel-dump-5022b7acff-1
+      - egovio/playground:1.0
+      - egovio/mdms-v2:central-instance-6fae5fdefc-96
+      - egovio/boundary-service:v1.0.0-063968adc7-18
+      - egovio/census-service:v1.0.1-ddae2629dc-105
+      - egovio/pdf-service:v1.1.6-96b24b0d72-22
+      - egovio/plan-service:v1.0.2-0ea4104b4b-303
+      - egovio/resource-generator:v1.0.2-b8bfac27c7-142
+      - egovio/auth-proxy:auth-proxy-user-fail-fix-2-a92d71909d-41
+  - name: business
+    dependencies:
+      - "core"
+    services:
+      - egovio/egov-hrms:v1.4.0-683e9da909-23
+  - name: frontend
+    dependencies:
+      - "business"
+    services:
+      - egovio/digit-ui:health-dashboard-digit-ui-8a3b8bbd1b-850
+      - egovio/microplan-ui:v0.4.0-503b2e90fd-142
+      - egovio/payments-ui:v0.4.0-dfb8b27a26-108
+  - name: m_pgr             #PGR
+    dependencies:
+      - "core"
+      - "business"
+    services:
+      - egovio/pgr-services:v1.2.0-bf5fea17f1-11
+  - name: dss   #dss
+    dependencies:
+      - "frontend"
+      - "core"
+      - "business"
+    services:
+      - egovio/dashboard-analytics:analytics-es8-auth-6a40b6e
+      - egovio/dashboard-ingest:v1.1.4-72f8a8f87b-10
+      - egovio/dss-dashboard:v1.8.0-0d70d60e63-53
+  - name: Other
+    dependencies:
+      - "core"
+      - "business"
+    services:
+      ## - egovio/egov-user-event:v1.2.0-c1e1e8ce24-21 not used currently in health
+  - name: m_health
+    dependencies:
+      - "backbone"
+      - "authn-authz"
+      - "core"
+      - "business"
+      - "dss"
+      - "Other"
+      - "frontend"
+    services:
+      - egovio/facility:v1.2.0-b8e24ab705-33
+      - egovio/product:v1.2.0-8900208f3e-1
+      - egovio/individual:master-cc431fb
+      - egovio/transformer:HDDF-1277-8d30a8e
+      - egovio/stock:v1.2.0-8900208f3e-67
+      - egovio/household:master-cc431fb
+      - egovio/project:master-61631c4
+      - egovio/referralmanagement:v1.2.1-80c43fbe9a-100
+      - egovio/service-request:v1.2.0-01c2b65440-4
+      - egovio/health-attendance:v1.3.0-b38ace6dd-65
+      - egovio/health-expense:v1.2.0-4f1ffc1b8-35
+      - egovio/health-expense-calculator:v1.0.0-172f7e79e-55
+      - egovio/health-muster-roll:v1.2.0-4f1ffc1b8-14
+      - egovio/inbox:v1.4.0-bd52511479-19
+  - name: m_hcmconsole
+    dependencies:
+      - "backbone"
+      - "authn-authz"
+      - "core"
+      - "business"
+      - "dss"
+      - "Other"
+      - "frontend"
+      - "health"
+    services:
+      - egovio/project-factory:master-e12c3fd
+      - egovio/workbench-ui:v0.4.1-d96a144
+      - egovio/console:ondo-proxy-f806f086a2-149
+      - egovio/core-ui:develop-548f854d1d-57

@@ -1,13 +1,14 @@
 provider "azurerm" {
   features {}
-  subscription_id = "<subscription_id>"
+  subscription_id = "8c247e8d-4f67-46e2-b10e-e89fc1a60fbd"
+  resource_provider_registrations = "none"
 }
 
 terraform {
   backend "azurerm" {
-    resource_group_name  = "<cluster_name>-rg"
-    storage_account_name = "<storage_account_name>"
-    container_name       = "<cluster_name>-container"
+    resource_group_name  = "AFROHCM-T-EUW-RG01"
+    storage_account_name = "afrohcmteuwstg"
+    container_name       = "afrohcm-t-euw-container"
     key                  = "terraform.tfstate"
   }
 }
@@ -27,11 +28,21 @@ resource "azurerm_subnet" "aks" {
 }
 
 # Give AKS system-assigned identity permission to join the subnet
-resource "azurerm_role_assignment" "aks_subnet_network_contributor" {
-  principal_id     = module.kubernetes.aks_principal_id
-  role_definition_name = "Network Contributor"
-  scope        = azurerm_subnet.aks.id
-}
+# NOTE: Commented out due to Limited Contributor Role restrictions
+# The user does not have Microsoft.Authorization/*/Write permissions
+# This role assignment needs to be created manually by an Azure administrator
+#
+# Manual command to run after AKS deployment:
+# az role assignment create \
+#   --assignee <AKS_PRINCIPAL_ID> \
+#   --role "Network Contributor" \
+#   --scope "/subscriptions/8c247e8d-4f67-46e2-b10e-e89fc1a60fbd/resourceGroups/AFROHCM-T-EUW-RG01/providers/Microsoft.Network/virtualNetworks/AFROHCM-T-EUW-RG01-virtual-network/subnets/AFROHCM-T-EUW-RG01-aks-subnet"
+#
+# resource "azurerm_role_assignment" "aks_subnet_network_contributor" {
+#   principal_id     = module.kubernetes.aks_principal_id
+#   role_definition_name = "Network Contributor"
+#   scope        = azurerm_subnet.aks.id
+# }
 
 resource "azurerm_subnet" "postgres" {
   name         = "${var.resource_group}-postgres-subnet"

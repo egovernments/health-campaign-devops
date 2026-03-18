@@ -1,4 +1,4 @@
-environment = "<cluster_name>"
-resource_group = "<cluster_name>-rg"
-location  = "<region>"
-db_user  = "<db_username>"
+environment = "afrohcm-t-euw"
+resource_group = "AFROHCM-T-EUW-RG01"
+location  = "westeurope"
+db_user  = "whoadmin"

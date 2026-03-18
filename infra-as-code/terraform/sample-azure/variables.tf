@@ -22,23 +22,6 @@ EOT
 variable "resource_group" {
   description = "Azure Resource Group name"
   type        = string
-
-  validation {
-    condition = (
-      length(var.resource_group) >= 3 &&
-      length(var.resource_group) <= 40 &&
-      can(regex("^[a-z][a-z0-9-]*[a-z0-9]$", var.resource_group)) &&
-      !can(regex("--", var.resource_group)) # no consecutive hyphens
-    )
-    error_message = <<EOT
-Resource group name must:
-- Be 3 to 40 characters long
-- Contain only lowercase letters, numbers, and hyphens
-- Start with a lowercase letter
-- Not start or end with a hyphen
-- Not contain consecutive hyphens
-EOT
-  }
 }
 
 variable "location" {}
@@ -75,7 +58,7 @@ variable "db_password" {
     condition = (
     length(var.db_password) >= 6 &&
     length(var.db_password) <= 16 &&
-    can(regex("^[a-z][a-z0-9@#]$", var.db_password))
+    can(regex("^[a-z][a-z0-9@#]*$", var.db_password))
     )
     error_message = <<EOT
 DB password must:
