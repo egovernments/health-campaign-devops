@@ -1117,29 +1117,39 @@ hcm-moz-impl:
 
 ### Grafana >>>>>>>>>>>>>>>>>>>>
 grafana:
-  github:
-    allowed_organizations: ["egovernments"]
-    role_attribute_path: contains(groups[*], '@egovernments/hcm-demo-monitoring') && 'Viewer'
+  # github:
+  #   allowed_organizations: ["HCM-BAUCHI"]
+  #   role_attribute_path: contains(groups[*], '@egovernments/bihar-devops') && 'Editor' || contains(groups[*], '@egovernments/bihar-mgramseva-uat') && 'Viewer'
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ### Prometheus & Alertmanager >>>>>>>>>>>>>>>>>>>>
 prometheus:
+  retention: 90d
+  storageSpec:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: gp3
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 30Gi
   alertmanager:
     enabled: true
   externalLabels:
-    cluster: <cluster-name>
+    cluster: hcm-demo-new
   additionalScrapeConfigs:
-    - job_name: 'nginx-ingress-metrics'
+    - job_name: 'ingress-nginx-metrics'
       static_configs:
-        - targets: [ 'nginx-ingress-controller-metrics.egov:10254' ]
+        - targets: [ 'ingress-nginx-controller-metrics.backbone:10254' ]
     - job_name: 'blackbox'
       metrics_path: /probe
       params:
         module: [ http_2xx ]
       static_configs:
         - targets:
-            - https://digit-go.digit.org
-            - <add additional URLs to monitor>
+            - https://health-demo.digit.org/jupyter/hub/
+            - https://health-demo.digit.org/kibana-upgrade/
+            - https://health-demo.digit.org/pgadmin/
       relabel_configs:
         - source_labels: [ __address__ ]
           target_label: __param_target
