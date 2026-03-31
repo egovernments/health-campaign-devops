@@ -7,7 +7,7 @@ namespace: es-cluster
 
 # Container Configs
 image:
-  repository: "egovio/auth-proxy:auth-proxy-urlencoded-fix-aad9a5959c-23"
+  repository: "auth-proxy"
 replicas: "1"
 appType: "java-spring"
 tracing-enabled: true

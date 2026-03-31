@@ -1,18 +1,17 @@
-resource "azurerm_kubernetes_cluster" "aks" { 
+resource "azurerm_kubernetes_cluster" "aks" {
   name                = "${var.name}"
   location            = "${var.location}"
   resource_group_name = "${var.resource_group}"
-  dns_prefix          = "${var.name}"
+  dns_prefix          = "afrohcm-t--AFROHCM-T-EUW-RG-8c247e"
 
   
   default_node_pool {
-    name       = "defaultpool"
+    name       = "nodepool1"
     node_count = "${var.node_count}"
     max_pods   = "100"
     vm_size    = "${var.vm_size}"
     vnet_subnet_id = "${var.vnet_subnet_id}"
     node_public_ip_enabled = false
-    temporary_name_for_rotation = "tempnodepool"
     os_disk_size_gb = var.os_disk_size_gb
   }
 
@@ -21,14 +20,18 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   network_profile {
-    network_plugin     = "azure"
-    outbound_type      = "userAssignedNATGateway" # Use NAT Gateway
-    dns_service_ip     = "10.2.0.10"
-    service_cidr       = "10.2.0.0/16"
+    network_plugin      = "azure"
+    network_plugin_mode = "overlay"  # Enable CNI Overlay mode
+    outbound_type       = "userAssignedNATGateway" # Use NAT Gateway
+    dns_service_ip      = "172.17.0.10"  # Changed to avoid conflicts
+    service_cidr        = "172.17.0.0/16" # Changed from 10.2.0.0/16
+    pod_cidr            = "192.168.0.0/16" # Pod CIDR for overlay mode
   }
 
   tags = {
     Environment = "${var.environment}"
+    ManagedBy = "Terraform"
+    Project = "AFROHCM"
   }
 
 }

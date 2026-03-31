@@ -2,6 +2,9 @@ provider "azurerm" {
   features {}
   subscription_id = "8c247e8d-4f67-46e2-b10e-e89fc1a60fbd"
   resource_provider_registrations = "none"
+
+  # Service Principal authentication (uses environment variables if not specified)
+  # ARM_CLIENT_ID, ARM_CLIENT_SECRET, ARM_TENANT_ID, ARM_SUBSCRIPTION_ID
 }
 
 terraform {
@@ -14,41 +17,34 @@ terraform {
 }
 
 resource "azurerm_virtual_network" "vnet" {
-  name                = "${var.resource_group}-virtual-network"
-  address_space       = ["10.0.0.0/16"]
+  name                = "vnet-afrohcm-t-01"  # Following naming convention
+  address_space       = ["10.20.27.0/24"]    # New allocated range
   location            = var.location
   resource_group_name = var.resource_group
 }
 
 resource "azurerm_subnet" "aks" {
-  name         = "${var.resource_group}-aks-subnet"
+  name         = "snet-aks-afrohcm-t-01"  # Following naming convention
   resource_group_name = var.resource_group
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes   = ["10.0.0.0/21"]
+  address_prefixes   = ["10.20.27.0/25"]  # 128 IPs for AKS
 }
 
 # Give AKS system-assigned identity permission to join the subnet
-# NOTE: Commented out due to Limited Contributor Role restrictions
-# The user does not have Microsoft.Authorization/*/Write permissions
-# This role assignment needs to be created manually by an Azure administrator
-#
-# Manual command to run after AKS deployment:
-# az role assignment create \
-#   --assignee <AKS_PRINCIPAL_ID> \
-#   --role "Network Contributor" \
-#   --scope "/subscriptions/8c247e8d-4f67-46e2-b10e-e89fc1a60fbd/resourceGroups/AFROHCM-T-EUW-RG01/providers/Microsoft.Network/virtualNetworks/AFROHCM-T-EUW-RG01-virtual-network/subnets/AFROHCM-T-EUW-RG01-aks-subnet"
-#
-# resource "azurerm_role_assignment" "aks_subnet_network_contributor" {
-#   principal_id     = module.kubernetes.aks_principal_id
-#   role_definition_name = "Network Contributor"
-#   scope        = azurerm_subnet.aks.id
-# }
+# This will be created by the service principal with User Access Administrator role
+resource "azurerm_role_assignment" "aks_subnet_network_contributor" {
+  principal_id         = module.kubernetes.aks_principal_id
+  role_definition_name = "Network Contributor"
+  scope                = azurerm_subnet.aks.id
+
+  depends_on = [module.kubernetes]
+}
 
 resource "azurerm_subnet" "postgres" {
-  name         = "${var.resource_group}-postgres-subnet"
+  name         = "snet-postgres-afrohcm-t-01"  # Following naming convention
   resource_group_name = var.resource_group
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes   = ["10.0.8.0/21"]
+  address_prefixes   = ["10.20.27.128/26"]  # 64 IPs for PostgreSQL
   service_endpoints  = ["Microsoft.Storage"]
 
   delegation {
