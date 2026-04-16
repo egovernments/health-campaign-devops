@@ -13,6 +13,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
     vnet_subnet_id = "${var.vnet_subnet_id}"
     node_public_ip_enabled = false
     os_disk_size_gb = var.os_disk_size_gb
+    upgrade_settings {
+      drain_timeout_in_minutes      = 0
+      max_surge                     = "10%"
+      node_soak_duration_in_minutes = 0
+    }
   }
 
   identity {
@@ -28,10 +33,25 @@ resource "azurerm_kubernetes_cluster" "aks" {
     pod_cidr            = "192.168.0.0/16" # Pod CIDR for overlay mode
   }
 
+  oms_agent {
+    log_analytics_workspace_id      = azurerm_log_analytics_workspace.logs_workspace.id
+  }
+
   tags = {
     Environment = "${var.environment}"
     ManagedBy = "Terraform"
     Project = "AFROHCM"
+    "appcode"     = "AFROHCM"
   }
+
+}
+
+resource "azurerm_log_analytics_workspace" "logs_workspace" {
+  name                = "${var.name}-logs-workspace"
+  location            = "${var.location}"
+  resource_group_name = "${var.resource_group}"
+
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
 
 }

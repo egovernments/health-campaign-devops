@@ -32,13 +32,13 @@ resource "azurerm_subnet" "aks" {
 
 # Give AKS system-assigned identity permission to join the subnet
 # This will be created by the service principal with User Access Administrator role
-resource "azurerm_role_assignment" "aks_subnet_network_contributor" {
-  principal_id         = module.kubernetes.aks_principal_id
-  role_definition_name = "Network Contributor"
-  scope                = azurerm_subnet.aks.id
+# resource "azurerm_role_assignment" "aks_subnet_network_contributor" {
+#   principal_id         = module.kubernetes.aks_principal_id
+#   role_definition_name = "Network Contributor"
+#   scope                = azurerm_subnet.aks.id
 
-  depends_on = [module.kubernetes]
-}
+#   depends_on = [module.kubernetes]
+# }
 
 resource "azurerm_subnet" "postgres" {
   name         = "snet-postgres-afrohcm-t-01"  # Following naming convention

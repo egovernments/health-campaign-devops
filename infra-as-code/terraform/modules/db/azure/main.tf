@@ -9,6 +9,7 @@ resource "azurerm_postgresql_flexible_server" "postgresql_server" {
   sku_name                         = "${var.sku_name}"
   version                          = "${var.db_version}"
   storage_mb                       = "${var.storage_mb}"
+  zone = 3
 
   backup_retention_days            = "${var.backup_retention_days}"
   geo_redundant_backup_enabled     = false
@@ -31,4 +32,28 @@ resource "azurerm_postgresql_flexible_server_database" "db" {
   lifecycle {
     prevent_destroy = false
   }
+}
+
+resource "azurerm_postgresql_flexible_server_configuration" "log_checkpoints" {
+  name      = "log_checkpoints"
+  server_id = azurerm_postgresql_flexible_server.postgresql_server.id
+  value     = "on"
+}
+
+resource "azurerm_postgresql_flexible_server_configuration" "log_connections" {
+  name      = "log_connections"
+  server_id = azurerm_postgresql_flexible_server.postgresql_server.id
+  value     = "on"
+}
+
+resource "azurerm_postgresql_flexible_server_configuration" "require_secure_transport" {
+  name      = "require_secure_transport"
+  server_id = azurerm_postgresql_flexible_server.postgresql_server.id
+  value     = "on"
+}
+
+resource "azurerm_postgresql_flexible_server_configuration" "ssl_min_protocol_version" {
+  name      = "ssl_min_protocol_version"
+  server_id = azurerm_postgresql_flexible_server.postgresql_server.id
+  value     = "TLSv1.2"
 }
