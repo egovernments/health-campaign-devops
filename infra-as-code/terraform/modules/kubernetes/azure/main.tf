@@ -33,9 +33,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
     pod_cidr            = "192.168.0.0/16" # Pod CIDR for overlay mode
   }
 
-  oms_agent {
-    log_analytics_workspace_id      = azurerm_log_analytics_workspace.logs_workspace.id
-  }
+  # oms_agent {
+  #   log_analytics_workspace_id      = azurerm_log_analytics_workspace.logs_workspace.id
+  # }
 
   tags = {
     Environment = "${var.environment}"
@@ -46,12 +46,12 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
 }
 
-resource "azurerm_log_analytics_workspace" "logs_workspace" {
-  name                = "${var.name}-logs-workspace"
-  location            = "${var.location}"
-  resource_group_name = "${var.resource_group}"
+# resource "azurerm_log_analytics_workspace" "logs_workspace" {
+#   name                = "${var.name}-logs-workspace"
+#   location            = "${var.location}"
+#   resource_group_name = "${var.resource_group}"
 
-  sku                 = "PerGB2018"
-  retention_in_days   = 30
+#   sku                 = "PerGB2018"
+#   retention_in_days   = 30
 
-}
+# }
