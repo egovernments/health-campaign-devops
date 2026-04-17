@@ -52,7 +52,7 @@ persistence:
   storageClassName: default
   accessMode: ReadWriteOnce
   volumeMode: Filesystem
-#  dataDirSize: 1Gi
+  dataDirSize: 1Gi
 #  aws:
 #    volumeId: "value"
 #    zone: ap-south-1a
