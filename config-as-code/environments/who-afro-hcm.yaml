@@ -187,6 +187,49 @@ core-ui:
       <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript ></script>
       ';" 
 
+elasticsearch-data:
+    namespace: es-cluster
+    image:
+        tag: 8.11.3
+    persistence:
+        enabled: true
+        azure:
+            - diskName: "pvc-2c1e9efa-608d-4b4f-a534-4fc44793c024" ## add your respective volume id eg. vol-0085073c65f76dre5
+              diskUri: "/subscriptions/8c247e8d-4f67-46e2-b10e-e89fc1a60fbd/resourceGroups/MC_AFROHCM-T-EUW-RG01_afrohcm-t-euw_westeurope/providers/Microsoft.Compute/disks/pvc-2c1e9efa-608d-4b4f-a534-4fc44793c024" ## add your respective zone eg. ap-south-1b
+            - diskName: "pvc-5f3fbbb9-ce34-40a8-af82-96e4e276bf67" ## add your respective volume id eg. vol-0085073c65f76dre5
+              diskUri: "/subscriptions/8c247e8d-4f67-46e2-b10e-e89fc1a60fbd/resourceGroups/MC_AFROHCM-T-EUW-RG01_afrohcm-t-euw_westeurope/providers/Microsoft.Compute/disks/pvc-5f3fbbb9-ce34-40a8-af82-96e4e276bf67" ## add your respective zone eg. ap-south-1b
+            - diskName: "pvc-9f7f6336-14fc-44e2-acfe-885a00de309b" ## add your respective volume id eg. vol-0085073c65f76dre5
+              diskUri: "/subscriptions/8c247e8d-4f67-46e2-b10e-e89fc1a60fbd/resourceGroups/MC_AFROHCM-T-EUW-RG01_afrohcm-t-euw_westeurope/providers/Microsoft.Compute/disks/pvc-9f7f6336-14fc-44e2-acfe-885a00de309b" ## add your respective zone eg. ap-south-1b
+
+    esJavaOpts: "-Xmx3500M -Xms3500M"
+    resources:
+        requests:
+            memory: "4Gi"
+        limits:
+            memory: "4Gi"
+
+elasticsearch-master:
+    namespace: es-cluster
+    replicas: 3
+    image:
+        tag: 8.11.3
+    persistence:
+        enabled: true
+        azure:
+            - diskName: "pvc-1f6c4d8f-0850-4c9d-8bbb-9d94651607e1" ## add your respective volume id eg. vol-0085073c65f76dre5
+              diskUri: "/subscriptions/8c247e8d-4f67-46e2-b10e-e89fc1a60fbd/resourceGroups/MC_AFROHCM-T-EUW-RG01_afrohcm-t-euw_westeurope/providers/Microsoft.Compute/disks/pvc-1f6c4d8f-0850-4c9d-8bbb-9d94651607e1" ## add your respective zone eg. ap-south-1b
+            - diskName: "pvc-8ca6811f-8f5f-4518-a0fe-65d8d054698c" ## add your respective volume id eg. vol-0085073c65f76dre5
+              diskUri: "/subscriptions/8c247e8d-4f67-46e2-b10e-e89fc1a60fbd/resourceGroups/MC_AFROHCM-T-EUW-RG01_afrohcm-t-euw_westeurope/providers/Microsoft.Compute/disks/pvc-8ca6811f-8f5f-4518-a0fe-65d8d054698c" ## add your respective zone eg. ap-south-1b
+            - diskName: "pvc-c5889d4c-8e90-4f4c-ac1b-11e486da8dc7" ## add your respective volume id eg. vol-0085073c65f76dre5
+              diskUri: "/subscriptions/8c247e8d-4f67-46e2-b10e-e89fc1a60fbd/resourceGroups/MC_AFROHCM-T-EUW-RG01_afrohcm-t-euw_westeurope/providers/Microsoft.Compute/disks/pvc-c5889d4c-8e90-4f4c-ac1b-11e486da8dc7" ## add your respective zone eg. ap-south-1b
+
+    esJavaOpts: "-Xmx448m -Xms448m"
+    resources:
+        requests:
+            memory: "896Mi"
+        limits:
+            memory: "896Mi"
+
 egov-filestore:
   volume: /opt/eGov/filestore
   is-bucket-fixed: "true"
