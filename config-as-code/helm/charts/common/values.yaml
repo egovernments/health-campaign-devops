@@ -46,25 +46,34 @@ initContainers:
       pullPolicy: IfNotPresent  
       tag: latest
     env: |
-        - name: "DB_URL"
-        {{- if and (index .Values "central-instance-build") (eq (index .Values "central-instance-name") "egov") }}
-          valueFrom:
-            configMapKeyRef:
+        - name: DB_URL      
+          valueFrom: 
+            configMapKeyRef: 
               name: egov-config
-              key: db-url-no-schema
-        {{- else }}      
-          valueFrom:
-            configMapKeyRef:
-              name: egov-config
+              {{- if index .Values "central-instance-build" }}
               key: db-url
-        {{- end }}
-        - name: "SCHEMA_NAME"
+              {{- else if eq .Values.namespace "chad" }}
+              key: chad-db-url
+              {{- else if eq .Values.namespace "congob" }}
+              key: congob-db-url
+              {{- else }}
+              key: db-url
+              {{- end }}
+        - name: SCHEMA_NAME
         {{- if and (index .Values "central-instance-build") (index .Values "central-instance-enabled") }}
-          value: {{ index .Values "db-schema-names" | quote }}
-        {{- else }}   
+        valueFrom:
+          configMapKeyRef:
+            name: egov-config
+            key: db-schema-names
+        {{- else if eq .Values.namespace "chad" }}
+          value: "chad"
+        {{- else if eq .Values.namespace "congob" }}
+          value: "congob"
+
+        {{- else }}
           value: "public"
         {{- end }}
-        - name: "SCHEMA_TABLE"
+        - name: SCHEMA_TABLE
           value: {{ .Values.initContainers.dbMigration.schemaTable | quote }}              
         - name: "FLYWAY_USER"
           valueFrom: 
@@ -143,20 +152,14 @@ resources: |
 extraEnv:
   java: |
       - name: SPRING_DATASOURCE_URL
-      {{- if eq .Values.namespace "health" }}
         valueFrom:
           configMapKeyRef:
             name: egov-config
-            key: health-db-url
-      {{- else if eq .Values.namespace "ifix" }}
-        valueFrom:
-          configMapKeyRef:
-            name: egov-config
-            key: ifix-db-url            
+            {{- if eq .Values.namespace "chad" }}
+            key: chad-db-url
+            {{- else if eq .Values.namespace "congob" }}
+            key: congob-db-url            
       {{- else }}
-        valueFrom:
-          configMapKeyRef:
-            name: egov-config
             key: db-url
       {{- end }}
       - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
@@ -175,20 +178,14 @@ extraEnv:
             name: egov-config
             key: timezone              
       - name: FLYWAY_URL
-      {{- if eq .Values.namespace "health" }}  
         valueFrom:
           configMapKeyRef:
             name: egov-config
-            key: health-db-url
-      {{- else if eq .Values.namespace "ifix" }}
-        valueFrom:
-          configMapKeyRef:
-            name: egov-config
-            key: ifix-db-url 
+            {{- if eq .Values.namespace "chad" }}
+              key: chad-db-url
+            {{- else if eq .Values.namespace "congob" }}
+            key: congob-db-url
       {{- else }}
-        valueFrom:
-          configMapKeyRef:
-            name: egov-config
             key: db-url
       {{- end }}
       - name: SPRING_DATASOURCE_USERNAME
@@ -260,11 +257,17 @@ extraEnv:
       - name: STATE_LEVEL_TENANTID_LENGTH
         value: "1"            
       - name: IS_ENVIRONMENT_CENTRAL_INSTANCE
+      {{- if and (index .Values "central-instance-build" | default false) (index .Values "central-instance-enabled" | default false) }}
+        value: "true"
+      {{- else }}
         value: "false"
+      {{- end }}
       - name: STATE_SCHEMA_INDEX_POSITION_TENANTID
-        value: "0"
-            
-            
+        valueFrom:
+          configMapKeyRef:
+            name: egov-config
+            key: state-schema-index-position-tenantid
+
             
   jaeger: |             
       - name: JAEGER_SERVICE_NAME

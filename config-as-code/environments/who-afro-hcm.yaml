@@ -1,25 +1,41 @@
 global:
-   domain: campaigns.afro.who.int ## Add your Domain Name "Eg: site.mydomain.com" Do not use the dummy domain 
-   setup: fullsetup
+  domain: campaigns.afro.who.int ## Add your Domain Name "Eg: site.mydomain.com" Do not use the dummy domain 
+  setup: fullsetup
+  hosts:
+    - campaigns.afro.who.int
+    - campaigns-chad.afro.who.int
+    - campaigns-congob.afro.who.int
+  schema:
+    - chad
+    - congob
+    
 
 cluster-configs:
     namespaces:  
       create: true
-      values: [ backbone, cert-manager, egov, es-cluster, kafka-kraft, logging, monitoring, playground, zookeeper-cluster ]
+      values: [ backbone, cert-manager, egov, es-cluster, kafka-kraft, logging, monitoring, playground, zookeeper-cluster, chad, congob ]
       
     root-ingress:
       cert-issuer: letsencrypt-prod
     configmaps:
         egov-config:
-            namespace: [ egov, es-cluster, monitoring ]
+            namespace: [ egov, es-cluster, monitoring, chad, congob ]
             data:
                 db-host: afrohcm-t-euw-server.postgres.database.azure.com ## Add db-host name example: egov-demo.database.azure.com
                 db-name: afrohcm-t-euw-db ## Add db-name
                 db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
                 db-url-no-schema: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
+                chad-db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db?currentSchema=chad"
+                congob-db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db?currentSchema=congob"
                 domain: campaigns.afro.who.int ## Add your Domain Name
-                egov-services-fqdn-name: https://campaigns.afro.who.int/ ## Add your Domain Name
+                redis-host: "redis.backbone"
+                redis-downsync-host: "redis.backbone"
+                egov-services-fqdn-name: "https://campaigns.afro.who.int/" ## Add your Domain Name
+                state-level-tenantid-length: "1"
+                state-schema-index-position-tenantid: "0"
+                is-environment-central-instance: "true"
                 egov-state-level-tenant-id: "chad"
+                state-level-tenant-id: "chad"
                 s3-assets-bucket: "(pg-health-egov-assets|egov-health-playground-assets)"
                 es-host: "elasticsearch-data.es-cluster"
                 es-host-6: "elasticsearch-data.es-cluster"
@@ -40,11 +56,15 @@ cluster-configs:
                 timezone: "UTC"
                 tracer-errors-provideexceptionindetails: "true"
                 egov-internal-microservice-user-uuid: fa0f820c-49df-46bb-8e62-8a0ec5d9af5e
+                egov-env: "PROD"
+                boundary-hierarchy: "ADMIN"
+                host-map: "{'chad': 'https://campaigns-chad.afro.who.int/','congob':'https://campaigns-congob.afro.who.int/'}"
+                db-schema-names: "chad,congob"
                 kibana-base-path: kibana-upgrade 
                 kibana-host: "http://kibana-v1.es-upgrade:5601/"
 
         egov-service-host:
-            namespace: [ egov, es-cluster, monitoring ]
+            namespace: [ egov, es-cluster, monitoring, chad, congob ]
             data:
               asset-services: "http://asset-services:8080/"
               boundary-management: 'http://boundary-management.egov:8080/'
@@ -252,38 +272,35 @@ egov-idgen:
 
 pgr-services:
   central-instance-build: true
-  central-instance-name: egov
-  central-instance-enabled: false
+  central-instance-enabled: true
 
 household:
-  central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
 
+mdms-v2:
+  central-instance-build: true
+  central-instance-enabled: true
 
 service-request:
-  central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
 
 referralmanagement:
   central-instance-build: true
-  central-instance-name: egov
-  central-instance-enabled: false
+  central-instance-enabled: true
   memory_limits: 768Mi
   heap: "-Xmx384m -Xms384m"
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
 
 stock:
-  central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false 
+  central-instance-enabled: true 
 
 egov-otp:
-  central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   memory_limits: "512Mi"
   heap: "-Xmx256m -Xms256m"   
 
@@ -305,9 +322,8 @@ egov-notification-sms:
   sms-error-codes: "401,403,404,405,406,407,408,409,410,411,412,413,414"
 
 egov-user:
-  central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   replicas: 1
   heap: "-Xmx512m -Xms256m"
   memory_limits: 512Mi
@@ -380,7 +396,7 @@ egov-pg-service:
 egov-mdms-service:
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   replicas: 1
   heap: "-Xmx512m -Xms512m"
   images:
@@ -414,14 +430,14 @@ egov-indexer:
     gitSync:
       repo: "https://github.com/egovernments/health-campaign-config"        ##### Change repo url with Your fork Repo urls
       branch: "DEMO"                                      ##### Change repo branch with Your fork Repo branches
-  egov-indexer-yaml-repo-path: "file:///work-dir/health-campaign-config/egov-indexer/error-queue.yml,file:///work-dir/health-campaign-config/egov-indexer/product-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/individual-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/household-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-task-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/stock-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/facility-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-staff-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/egov-error-queue-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/service-request-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/transformer-pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/referral-management-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/census-service-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/plan-service-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/attendance-service-indexer.yml"
+  egov-indexer-yaml-repo-path: "file:///work-dir/health-campaign-config/egov-indexer/error-queue.yml,file:///work-dir/health-campaign-config/egov-indexer/product-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/individual-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/household-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-task-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/stock-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/facility-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-staff-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/egov-error-queue-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/service-request-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/transformer-pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/referral-management-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/census-service-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/plan-service-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/attendance-service-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/congob/error-queue.yml,file:///work-dir/health-campaign-config/egov-indexer/congob/product-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/congob/project-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/congob/individual-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/congob/household-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/congob/project-task-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/congob/stock-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/congob/facility-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/congob/project-staff-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/congob/egov-error-queue-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/congob/pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/congob/service-request-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/congob/transformer-pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/congob/referral-management-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/congob/census-service-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/congob/plan-service-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/congob/attendance-service-indexer.yml"
 
 egov-persister:
   replicas: 1
   heap: '-Xmx256m -Xms256m'
   images:
     - egovio/egov-persister
-  persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/hrms-employee-persister.yml,file:///work-dir/health-campaign-config/egov-persister/product-persister.yml,file:///work-dir/health-campaign-config/egov-persister/project-persister.yml,file:///work-dir/health-campaign-config/egov-persister/individual-persister.yml,file:///work-dir/health-campaign-config/egov-persister/household-persister.yml,file:///work-dir/health-campaign-config/egov-persister/project-task-persister.yml,file:///work-dir/health-campaign-config/egov-persister/stock-persister.yml,file:///work-dir/health-campaign-config/egov-persister/facility-persister.yml,file:///work-dir/health-campaign-config/egov-persister/service-request-persister.yml,file:///work-dir/health-campaign-config/egov-persister/pgr-services-persister.yml,file:///work-dir/health-campaign-config/egov-persister/egov-workflow-v2-persister.yml,file:///work-dir/health-campaign-config/egov-persister/mdms-persister.yml,file:///work-dir/health-campaign-config/egov-persister/referral-management-persister.yml,file:///work-dir/health-campaign-config/egov-persister/project-factory-persister.yml,file:///work-dir/health-campaign-config/egov-persister/attendance-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/irs-persister.yml,file:///work-dir/health-campaign-config/egov-persister/census-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/plan-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/boundary-persister.yml,file:///work-dir/health-campaign-config/egov-persister/id-pool-persister.yml,file:///work-dir/health-campaign-config/egov-persister/id-pool-dispatch-log-persister.yml"
+  persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/hrms-employee-persister.yml,file:///work-dir/health-campaign-config/egov-persister/product-persister.yml,file:///work-dir/health-campaign-config/egov-persister/project-persister.yml,file:///work-dir/health-campaign-config/egov-persister/individual-persister.yml,file:///work-dir/health-campaign-config/egov-persister/household-persister.yml,file:///work-dir/health-campaign-config/egov-persister/project-task-persister.yml,file:///work-dir/health-campaign-config/egov-persister/stock-persister.yml,file:///work-dir/health-campaign-config/egov-persister/facility-persister.yml,file:///work-dir/health-campaign-config/egov-persister/service-request-persister.yml,file:///work-dir/health-campaign-config/egov-persister/pgr-services-persister.yml,file:///work-dir/health-campaign-config/egov-persister/egov-workflow-v2-persister.yml,file:///work-dir/health-campaign-config/egov-persister/mdms-persister.yml,file:///work-dir/health-campaign-config/egov-persister/referral-management-persister.yml,file:///work-dir/health-campaign-config/egov-persister/project-factory-persister.yml,file:///work-dir/health-campaign-config/egov-persister/attendance-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/irs-persister.yml,file:///work-dir/health-campaign-config/egov-persister/census-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/plan-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/boundary-persister.yml,file:///work-dir/health-campaign-config/egov-persister/id-pool-persister.yml,file:///work-dir/health-campaign-config/egov-persister/id-pool-dispatch-log-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/hrms-employee-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/product-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/project-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/individual-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/household-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/project-task-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/stock-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/facility-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/service-request-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/pgr-services-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/egov-workflow-v2-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/mdms-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/referral-management-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/project-factory-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/attendance-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/irs-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/census-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/plan-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/boundary-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/id-pool-persister.yml,file:///work-dir/health-campaign-config/egov-persister/congob/id-pool-dispatch-log-persister.yml"
   initContainers:
     gitSync:
       repo: "https://github.com/egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
@@ -599,7 +615,7 @@ tl-services:
 egov-workflow-v2:
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   logging-level: "DEBUG"
   java-args: -Dspring.profiles.active=monitoring
   heap: "-Xmx192m -Xms192m"
@@ -610,7 +626,7 @@ egov-workflow-v2:
 egov-hrms:
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   java-args: -Dspring.profiles.active=monitoring
   replicas : 1
   heap: '-Xmx512m -Xms256m'
@@ -638,7 +654,7 @@ egov-accesscontrol:
 facility:
   central-instance-build: true
   central-instance-name: egov
-  central-instance-enabled: false
+  central-instance-enabled: true
   replicas: 1
   heap: '-Xmx512m -Xms256m'
   memory_limits: 512Mi
@@ -646,7 +662,7 @@ facility:
 project:
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   replicas: 1
   memory_limits: 768Mi
   heap: '-Xmx768m -Xms512m'
@@ -654,7 +670,7 @@ project:
 individual:
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   replicas: 1
   heap: '-Xmx512m -Xms256m'
   memory_limits: 512Mi
@@ -666,7 +682,7 @@ individual:
 product:
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   heap: "-Xmx512m -Xms256m"
   replicas: 1
   memory_limits: 512Mi
@@ -755,7 +771,7 @@ resource-generator:
 attendance:
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   heap: "-Xmx256m -Xms256m"
   memory_limits: 512Mi
   egov-mdms-service-host-key: 'mdms-service-v2'
@@ -775,7 +791,7 @@ health-expense-calculator:
 expense:
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   tracing-enabled: true
   java-enable-debug: true
   business-workflow-status-map: "{'EXPENSE.WAGES':'false'}"
@@ -787,7 +803,7 @@ expense:
 muster-roll:
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   tracing-enabled: true
   java-enable-debug: true
   musterroll-default-offset: 0
