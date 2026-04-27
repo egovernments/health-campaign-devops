@@ -83,10 +83,6 @@ cluster-configs:
       namespace: egov
       name: kibana-infra-creds     
 
-    pgadmin: 
-      namespace: playground
-      name: pgadmin
-
     egov-si-microservice:
       namespace: egov
       name: egov-si-microservice
