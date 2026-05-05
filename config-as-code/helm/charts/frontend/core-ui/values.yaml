@@ -3,7 +3,6 @@ labels:
   app: "core-ui"
   group: "web"
 
-namespace: egov    
 
 # Ingress Configs
 ingress:

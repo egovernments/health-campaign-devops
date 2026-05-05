@@ -133,6 +133,7 @@ citizen:
       ';"
 
 workbench-ui:
+  namespace: egov
   image:
     repository: egovio/workbench-ui
     tag: HDDF-4931-6fd335c
@@ -142,6 +143,10 @@ workbench-ui:
       <script src=https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/workbenchGlobalConfigs.js type=text/javascript></script>';" 
 
 microplan-ui:
+  namespace: egov
+  image:
+    repository: egovio/microplan-ui
+    tag: console-56ef678
   custom-js-injection: |
     sub_filter.conf: "
       sub_filter  '<head>' '<head>
@@ -150,6 +155,10 @@ microplan-ui:
       ';" 
 
 digit-ui:
+  namespace: egov
+  image:
+    repository: egovio/digit-ui
+    tag: v0.0.1-e3046cc-87
   custom-js-injection: |
     sub_filter.conf: "
       sub_filter  '<head>' '<head>
@@ -157,6 +166,10 @@ digit-ui:
       ';"
 
 hcm-digit-ui:
+  namespace: egov
+  image:
+    repository: egovio/hcm-digit-ui
+    tag: single-web-app-hcm-digit-ui-761fd76
   custom-js-injection: |
     sub_filter.conf: "
       sub_filter  '<head>' '<head>
@@ -164,6 +177,10 @@ hcm-digit-ui:
       ';"
 
 payments-ui:
+  namespace: egov
+  image:
+    repository: egovio/payments-ui
+    tag: HDDF-4931-2e2ecfd
   custom-js-injection: |
     sub_filter.conf: "
       sub_filter  '<head>' '<head>
@@ -172,6 +189,10 @@ payments-ui:
       ';"  
 
 dashboard-ui:
+  
+  image:
+    repository: egovio/dashboard-ui
+    tag: HDDF-4931-6873013
   custom-js-injection: |
     sub_filter.conf: "
       sub_filter  '<head>' '<head>
@@ -182,6 +203,9 @@ dashboard-ui:
   memory_limits: 1024Mi
 
 console:
+  image:
+    repository: egovio/console
+    tag: ondo-proxy-f806f086a2-149
   custom-js-injection: |
     sub_filter.conf: "
       sub_filter  '<head>' '<head>
@@ -190,6 +214,10 @@ console:
       ';"
 
 core-ui:
+  namespace: egov 
+  image:
+    repository: egovio/core-ui
+    tag: develop-548f854d1d-57
   custom-js-injection: |
     sub_filter.conf: "
       sub_filter  '<head>' '<head>
@@ -241,6 +269,14 @@ elasticsearch-master:
             memory: "896Mi"
 
 egov-filestore:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/egov-filestore-db
+        tag: master-1e8d2bb
+  image:
+    repository: egovio/egov-filestore
+    tag: master-1e8d2bb
   volume: /opt/eGov/filestore
   is-bucket-fixed: "true"
   minio.url : "http://minio.backbone:9000/"
@@ -269,22 +305,54 @@ egov-idgen:
   autocreate-new-seq: "true"
 
 pgr-services:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/pgr-services-db
+        tag: master-b91815e
+  image:
+    repository: egovio/pgr-services
+    tag: master-b91815e
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: false
 
 household:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/household-db
+        tag: vapt-docker-changes-ee5a31f
+  image:
+    repository: egovio/household
+    tag: master-b91815e
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: false
 
 
 service-request:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/service-request-db
+        tag: master-8ddfc8a
+  image:
+    repository: egovio/service-request
+    tag: master-8ddfc8a
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: false
 
 referralmanagement:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/referralmanagement-db
+        tag: vapt-docker-changes-ee5a31f
+  image:
+    repository: egovio/referralmanagement
+    tag: master-b91815e
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: false
@@ -294,11 +362,27 @@ referralmanagement:
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
 
 stock:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/stock-db
+        tag: master-b91815e
+  image:
+    repository: egovio/stock
+    tag: master-b91815e
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: false 
 
 egov-otp:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/egov-otp-db
+        tag: master-1e8d2bb
+  image:
+    repository: egovio/egov-otp
+    tag: master-1e8d2bb
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: false
@@ -306,6 +390,9 @@ egov-otp:
   heap: "-Xmx256m -Xms256m"   
 
 egov-notification-sms:
+  image:
+    repository: egovio/egov-notification-sms
+    tag: sandbox-d760d6b
   sms-provider-url: "sms provider url" ## Add sms provider url
   sms.provider.class: "Generic"
   sms.provider.contentType:  "application/x-www-form-urlencoded"
@@ -323,6 +410,14 @@ egov-notification-sms:
   sms-error-codes: "401,403,404,405,406,407,408,409,410,411,412,413,414"
 
 egov-user:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/egov-user-db
+        tag: sandbox-log-f4a87d0
+  image:
+    repository: egovio/egov-user
+    tag: sandbox-log-f4a87d0
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: false
@@ -385,11 +480,18 @@ sw-services:
   scid-format: "SW/[CITY.CODE]/[fy:yyyy-yy]/[SEQ_EGOV_COMMON]"
 
 audit-service:
-  persist-yml-path: "https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/attendance-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/muster-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/estimate-service.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/contract-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/bankaccounts-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/expense-bill-payment-persister.yaml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/egov-persister/mdms-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/DEMO/egov-persister/boundary-persister.yml"
   initContainers:
+    dbMigration:
+      image:
+        repository: egovio/audit-service-db
+        tag: master-1e8d2bb
     gitSync:
-      repo: "git@github.com:egovernments/configs" 
+      repo: "git@github.com:egovernments/configs"
       branch: "UNIFIED-DEV"
+  image:
+    repository: egovio/audit-service
+    tag: master-1e8d2bb
+  persist-yml-path: "https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/attendance-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/muster-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/estimate-service.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/contract-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/bankaccounts-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/expense-bill-payment-persister.yaml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/egov-persister/mdms-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/DEMO/egov-persister/boundary-persister.yml"
 
 egov-pg-service:
   axis: true
@@ -413,6 +515,14 @@ egov-mdms-service:
   java-args: -Dspring.profiles.active=monitoring
 
 boundary-management:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/boundary-management-db
+        tag: master-aa57e79
+  image:
+    repository: egovio/boundary-management
+    tag: master-aa57e79
   DEBUG: 'true'
   cpu_requests: 200m
   memory_requests: 768Mi
@@ -426,6 +536,14 @@ boundary-management:
   replicas: 1
 
 egov-indexer:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/egov-indexer-db
+        tag: indexer-17-searchBody-1799f17903-57
+  image:
+    repository: egovio/egov-indexer
+    tag: indexer-17-searchBody-1799f17903-57
   heap: "-Xmx512m -Xms512m"
   memory_limits: "768Mi"
   initContainers:
@@ -435,6 +553,9 @@ egov-indexer:
   egov-indexer-yaml-repo-path: "file:///work-dir/health-campaign-config/egov-indexer/error-queue.yml,file:///work-dir/health-campaign-config/egov-indexer/product-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/individual-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/household-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-task-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/stock-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/facility-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-staff-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/egov-error-queue-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/service-request-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/transformer-pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/referral-management-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/census-service-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/plan-service-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/attendance-service-indexer.yml"
 
 egov-persister:
+  image:
+    repository: egovio/egov-persister
+    tag: master-3b238aa
   replicas: 1
   heap: '-Xmx256m -Xms256m'
   images:
@@ -484,6 +605,9 @@ report:
   report-locationsfile-path: "file:///work-dir/health-campaign-config/reports/reportFileLocationsv1.txt"
 
 pdf-service:
+  image:
+    repository: egovio/pdf-service
+    tag: multiarch-master-99a308d
   initContainers:
     gitSync:
       repo: "https://github.com/egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
@@ -615,6 +739,14 @@ tl-services:
 
 
 egov-workflow-v2:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/egov-workflow-v2-db
+        tag: parallel-workflows-lazy-injection-1ace233
+  image:
+    repository: egovio/egov-workflow-v2
+    tag: parallel-workflows-lazy-injection-1ace233
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: false
@@ -626,6 +758,14 @@ egov-workflow-v2:
   pdf-link: "/download/epass?tenantId={TENANTID}&ids={UUID}"
 
 egov-hrms:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/egov-hrms-db
+        tag: master-b91815e
+  image:
+    repository: egovio/egov-hrms
+    tag: master-b91815e
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: false
@@ -642,18 +782,117 @@ egov-weekly-impact-notifier:
   mail-interval-in-secs: "604800"
   schedule: "30 07 * * *"
 
+egov-localization:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/egov-localization-db
+        tag: redis-localization-key-5c0a4c4
+  image:
+    repository: egovio/egov-localization
+    tag: redis-localization-key-5c0a4c4
+
+egov-url-shortening:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/egov-url-shortening-db
+        tag: master-1e8d2bb
+  image:
+    repository: egovio/egov-url-shortening
+    tag: master-1e8d2bb
+
+egov-notification-mail:
+  image:
+    repository: egovio/egov-notification-mail
+    tag: master-1e8d2bb
+
+mdms-v2:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/mdms-v2-db
+        tag: master-1e8d2bb
+  image:
+    repository: egovio/mdms-v2
+    tag: master-1e8d2bb
+
+boundary-service:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/boundary-service-db
+        tag: master-1e8d2bb
+  image:
+    repository: egovio/boundary-service
+    tag: master-1e8d2bb
+
+excel-ingestion:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/excel-ingestion-db
+        tag: master-b91815e
+  image:
+    repository: egovio/excel-ingestion
+    tag: master-b91815e
+
+transformer:
+  image:
+    repository: egovio/transformer
+    tag: master-b91815e
+
+user-otp:
+  image:
+    repository: egovio/user-otp
+    tag: sandbox-log-86902f9
+
+inbox:
+  image:
+    repository: egovio/inbox
+    tag: inbox-workflow-fix-b6205e2
+
+error-handler:
+  image:
+    repository: egovio/error-handler
+    tag: master-impel-dump-a28582d
+
+dss-dashboard:
+  image:
+    repository: egovio/dss-dashboard
+    tag: v1.8.0-0d70d60e63-53
+
 egov-enc-service:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/egov-enc-service-db
+        tag: central-instance-e346023dcb-26
+  image:
+    repository: egovio/egov-enc-service
+    tag: central-instance-e346023dcb-26
   replicas: 1
   heap: '-Xmx512m -Xms256m'
   memory_limits: 512Mi
 
 egov-accesscontrol:
+  image:
+    repository: egovio/egov-accesscontrol
+    tag: master-1e8d2bb
   replicas : 1
   heap: "-Xmx512m -Xms256m"
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Health Services
 
 facility:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/facility-db
+        tag: master-b91815e
+  image:
+    repository: egovio/facility
+    tag: master-b91815e
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: false
@@ -662,6 +901,14 @@ facility:
   memory_limits: 512Mi
 
 project:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/project-db
+        tag: featurefacilitysearch-task-status-17071f7
+  image:
+    repository: egovio/project
+    tag: featurefacilitysearch-task-status-17071f7
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: false
@@ -670,6 +917,14 @@ project:
   heap: '-Xmx768m -Xms512m'
 
 individual:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/individual-db
+        tag: master-b91815e
+  image:
+    repository: egovio/individual
+    tag: master-b91815e
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: false
@@ -682,6 +937,14 @@ individual:
   egov-beneficiary-idgen-idpool-update-path: "beneficiary-idgen/id/id_pool/_update"
 
 product:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/product-db
+        tag: vapt-docker-changes-ee5a31f
+  image:
+    repository: egovio/product
+    tag: master-b91815e
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: false
@@ -742,6 +1005,14 @@ beneficiary-idgen:
   cpu_limits: "300m"
 
 project-factory:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/project-factory-db
+        tag: hcm-console-f039e13
+  image:
+    repository: egovio/project-factory
+    tag: hcm-console-f039e13
   logLevel: 'info'
   defaultLocale: 'en_CHAD'
   splitBoundariesOn: 'ADMIN_DISTRITO'
@@ -755,6 +1026,14 @@ project-factory:
   notCreateUserIfAlreadyThere: 'true'
 
 plan-service:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/plan-service-db
+        tag: master-b91815e
+  image:
+    repository: egovio/plan-service
+    tag: master-b91815e
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
   egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
@@ -762,15 +1041,34 @@ plan-service:
   kafka-producer-max-request-size: "5000000"
 
 census-service:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/census-service-db
+        tag: master-b91815e
+  image:
+    repository: egovio/census-service
+    tag: master-b91815e
   kafka-producer-max-request-size: "5000000"
 
 resource-generator:
+  image:
+    repository: egovio/resource-generator
+    tag: master-b91815e
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
   egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
 
 
 attendance:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/health-attendance-db
+        tag: master-6b124f9
+  image:
+    repository: egovio/health-attendance
+    tag: HCMPRE-1870-DataAccessErrorHandling-a7b1e6b
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: false
@@ -780,6 +1078,14 @@ attendance:
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
 
 health-expense-calculator:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/health-expense-calculator-db
+        tag: master-6b124f9
+  image:
+    repository: egovio/health-expense-calculator
+    tag: master-89c74d7
   tracing-enabled: true
   java-enable-debug: true
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
@@ -791,6 +1097,14 @@ health-expense-calculator:
   egov-musterroll-search-endpoint: "/health-muster-roll/v1/_search"
 
 expense:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/health-expense-db
+        tag: master-6b124f9
+  image:
+    repository: egovio/health-expense
+    tag: master-6b124f9
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: false
@@ -803,6 +1117,14 @@ expense:
   spring-kafka-producer-properties-max-request-size: "10485760"
 
 muster-roll:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/health-muster-roll-db
+        tag: master-6b124f9
+  image:
+    repository: egovio/health-muster-roll
+    tag: master-89c74d7
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: false
