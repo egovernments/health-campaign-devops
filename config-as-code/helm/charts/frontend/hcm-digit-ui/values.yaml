@@ -6,7 +6,7 @@ labels:
 # Ingress Configs
 ingress:
   enabled: true
-  context: "hcm-digit-ui"
+  context: "chad/hcm-digit-ui"
 
 # Init Containers Configs
 initContainers: {}
@@ -14,13 +14,19 @@ initContainers: {}
 # Container Configs
 image:
   repository: "egovio/hcm-digit-ui"
-  tag: "single-web-app-hcm-digit-ui-1ed9dac"
+  tag: "single-web-app-hcm-digit-ui-761fd76"
 replicas: "1"
 httpPort: 80
 healthChecks:
   enabled: true
   livenessProbePath: "/"
   readinessProbePath: "/"
+
+env: |
+  - name: COUNTRY_PREFIX
+    value: "chad"
+  - name: BUILD_VARIANT
+    value: "hcm-digit-ui"
 
 namespace: egov    
 extraVolumes: |
