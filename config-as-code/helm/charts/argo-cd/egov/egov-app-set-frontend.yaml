@@ -10,6 +10,8 @@ spec:
           - name: digit-ui
           - name: workbench-ui
           - name: hcm-digit-ui
+          - name: dashboard-ui
+          - name: payments-ui
 
   template:
     metadata:
