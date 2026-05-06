@@ -826,10 +826,10 @@ mdms-v2:
     dbMigration:
       image:
         repository: egovio/mdms-v2-db
-        tag: master-1e8d2bb
+        tag: central-instance-6fae5fdefc-96
   image:
     repository: egovio/mdms-v2
-    tag: master-1e8d2bb
+    tag: central-instance-6fae5fdefc-96
   central-instance-build: true
   central-instance-enabled: true
   heap: "-Xmx1296m -Xms512m"
