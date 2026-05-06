@@ -1,25 +1,37 @@
 global:
-   domain: campaigns.afro.who.int ## Add your Domain Name "Eg: site.mydomain.com" Do not use the dummy domain 
-   setup: fullsetup
+  domain: campaigns.afro.who.int ## Add your Domain Name "Eg: site.mydomain.com" Do not use the dummy domain 
+  setup: fullsetup
+  hosts:
+    - campaigns.afro.who.int
+  schema:
+    - chad
 
 cluster-configs:
-    namespaces:  
+    namespaces:
       create: true
-      values: [ backbone, cert-manager, egov, es-cluster, kafka-kraft, logging, monitoring, playground, zookeeper-cluster ]
+      values: [ backbone, cert-manager, egov, es-cluster, kafka-kraft, logging, monitoring, playground, zookeeper-cluster, chad ]
       
     root-ingress:
       cert-issuer: letsencrypt-prod
     configmaps:
         egov-config:
-            namespace: [ egov, es-cluster, monitoring ]
+            namespace: [ egov, es-cluster, monitoring, chad ]
             data:
                 db-host: afrohcm-t-euw-server.postgres.database.azure.com ## Add db-host name example: egov-demo.database.azure.com
                 db-name: afrohcm-t-euw-db ## Add db-name
                 db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
                 db-url-no-schema: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
+                chad-db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db?currentSchema=chad"
                 domain: campaigns.afro.who.int ## Add your Domain Name
+                redis-host: "redis.backbone"
+                redis-downsync-host: ""
                 egov-services-fqdn-name: https://campaigns.afro.who.int/ ## Add your Domain Name
+                state-level-tenantid-length: "1"
+                state-schema-index-position-tenantid: "0"
+                is-environment-central-instance: "true"
                 egov-state-level-tenant-id: "chad"
+                state-level-tenant-id: "chad"
+                kafka-tenant-id-pattern: "chad-"
                 s3-assets-bucket: "(pg-health-egov-assets|egov-health-playground-assets)"
                 es-host: "elasticsearch-data.es-cluster"
                 es-host-6: "elasticsearch-data.es-cluster"
@@ -40,11 +52,12 @@ cluster-configs:
                 timezone: "UTC"
                 tracer-errors-provideexceptionindetails: "true"
                 egov-internal-microservice-user-uuid: fa0f820c-49df-46bb-8e62-8a0ec5d9af5e
+                db-schema-names: "chad"
                 kibana-base-path: kibana-upgrade 
                 kibana-host: "http://kibana-v1.es-upgrade:5601/"
 
         egov-service-host:
-            namespace: [ egov, es-cluster, monitoring ]
+            namespace: [ egov, es-cluster, monitoring, chad ]
             data:
               asset-services: "http://asset-services:8080/"
               boundary-management: 'http://boundary-management.egov:8080/'
@@ -706,14 +719,6 @@ collection-services:
   receipt-search-defaultsize: 30
   user-create-enabled: "true"
 
-collection-receipt-voucher-consumer:
-  jalandhar-erp-host: "https://jalandhar-qa.egovernments.org/"
-  mohali-erp-host: "https://mohali-qa.egovernments.org/"
-  nayagaon-erp-host: "https://nayagaon-qa.egovernments.org/"
-  amritsar-erp-host: "https://amritsar-qa.egovernments.org/"
-  kharar-erp-host: "https://kharar-qa.egovernments.org/"
-  zirakpur-erp-host: "https://zirakpur-qa.egovernments.org/"
-
 finance-collections-voucher-consumer:
   erp-env-name: "demo"
   erp-domain-name: "egovernments.org"
@@ -825,6 +830,19 @@ mdms-v2:
   image:
     repository: egovio/mdms-v2
     tag: master-1e8d2bb
+  central-instance-build: true
+  central-instance-enabled: true
+  heap: "-Xmx1296m -Xms512m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  cpu_requests: 200m
+  memory_requests: 768Mi
+  cpu_limits: 300m
+  memory_limits: 1.5Gi
+  replicas: 2
+
 
 boundary-service:
   initContainers:
