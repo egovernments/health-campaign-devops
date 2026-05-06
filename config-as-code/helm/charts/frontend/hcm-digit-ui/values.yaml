@@ -14,7 +14,7 @@ initContainers: {}
 # Container Configs
 image:
   repository: "egovio/hcm-digit-ui"
-  tag: "single-web-app-hcm-digit-ui-761fd76"
+  tag: "single-web-app-hcm-digit-ui-0915ffc"
 replicas: "1"
 httpPort: 80
 healthChecks:
