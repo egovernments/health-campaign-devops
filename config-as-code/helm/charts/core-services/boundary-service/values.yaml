@@ -59,8 +59,6 @@ env: |
     value: "false"  
   - name: MANAGEMENT_SECURITY_ENABLED
     value: "false"
-  - name: JAVA_ENABLE_DEBUG
-    value: "true"
   - name: KAFKA_TOPICS_CREATE_BOUNDARY
     value: {{ index .Values "kafka-topics-create-boundary" | quote }}
   - name: KAFKA_TOPICS_CREATE_BOUNDARY_HIERARCHY
