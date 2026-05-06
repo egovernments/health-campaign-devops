@@ -536,17 +536,16 @@ boundary-management:
   replicas: 1
 
 egov-indexer:
-  initContainers:
-    dbMigration:
-      image:
-        repository: egov-indexer-db
-        tag: indexer-17-searchBody-1799f17903-57
   image:
     repository: egovio/egov-indexer
     tag: indexer-17-searchBody-1799f17903-57
   heap: "-Xmx512m -Xms512m"
   memory_limits: "768Mi"
   initContainers:
+    dbMigration:
+      image:
+        repository: egov-indexer-db
+        tag: indexer-17-searchBody-1799f17903-57
     gitSync:
       repo: "https://github.com/egovernments/health-campaign-config"        ##### Change repo url with Your fork Repo urls
       branch: "DEMO"                                      ##### Change repo branch with Your fork Repo branches

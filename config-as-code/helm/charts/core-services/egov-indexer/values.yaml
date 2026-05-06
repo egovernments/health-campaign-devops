@@ -16,6 +16,7 @@ initContainers:
     schemaTable: "egov_indexer_schema"
     image:
       repository: "egov-indexer-db"
+      tag: "latest"
   gitSync:
     enabled: true
     repo: "git@github.com:egovernments/configs"
