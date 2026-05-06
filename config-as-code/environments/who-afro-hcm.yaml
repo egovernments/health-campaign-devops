@@ -539,7 +539,7 @@ egov-indexer:
   initContainers:
     dbMigration:
       image:
-        repository: egovio/egov-indexer-db
+        repository: egov-indexer-db
         tag: indexer-17-searchBody-1799f17903-57
   image:
     repository: egovio/egov-indexer
