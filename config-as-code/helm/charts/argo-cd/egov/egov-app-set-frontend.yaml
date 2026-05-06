@@ -9,6 +9,7 @@ spec:
         elements:
           - name: digit-ui
           - name: workbench-ui
+          - name: hcm-digit-ui
 
   template:
     metadata:

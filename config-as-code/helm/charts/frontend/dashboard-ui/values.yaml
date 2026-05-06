@@ -3,7 +3,6 @@ labels:
   app: "dashboard-ui"
   group: "web"
 
-namespace: egov
 
 # Ingress Configs
 ingress:

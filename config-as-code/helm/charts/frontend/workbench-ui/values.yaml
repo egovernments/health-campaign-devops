@@ -3,7 +3,6 @@ labels:
   app: "workbench-ui"
   group: "web"
 
-namespace: egov    
 
 # Ingress Configs
 ingress:

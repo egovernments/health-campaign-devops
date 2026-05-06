@@ -28,7 +28,6 @@ env: |
   - name: BUILD_VARIANT
     value: "hcm-digit-ui"
 
-namespace: egov    
 extraVolumes: |
   - name: js-injection
     configMap:
