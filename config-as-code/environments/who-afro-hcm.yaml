@@ -169,7 +169,7 @@ hcm-digit-ui:
   namespace: egov
   image:
     repository: egovio/hcm-digit-ui
-    tag: single-web-app-hcm-digit-ui-0915ffc
+    tag: single-web-app-hcm-digit-ui-5e235e9
   custom-js-injection: |
     sub_filter.conf: "
       sub_filter  '<head>' '<head>
