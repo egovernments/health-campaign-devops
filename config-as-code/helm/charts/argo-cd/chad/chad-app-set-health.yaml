@@ -30,7 +30,7 @@ spec:
         helm:
           valueFiles:
             - values.yaml
-            - ../../../../environments/who-afro-hcm.yaml
+            - ../../../../environments/chad-afro-hcm.yaml
 
       destination:
         server: https://kubernetes.default.svc
