@@ -14,6 +14,10 @@ transformer:
     repository: egovio/transformer
     tag: master-b91815e
   namespace: "chad"
+  ingress:
+    name: chad-transformer
+    namespace: egov
+    context: "chad/transformer"
   heap: "-Xmx768m -Xms512m"
   cpu_requests: 200m
   memory_requests: 1Gi
@@ -209,6 +213,7 @@ census-service:
   ingress:
     name: chad-census-service
     namespace: egov
+    context: "chad/census-service"
   heap: "-Xmx256m -Xms256m"
   hpa:
     enabled: false
@@ -242,6 +247,7 @@ plan-service:
   ingress:
     name: chad-plan-service
     namespace: egov
+    context: "chad/plan-service"
   heap: "-Xmx512m -Xms256m"
   replicas: 2
   hpa:
@@ -279,6 +285,7 @@ resource-generator:
   ingress:
     name: chad-resource-generator
     namespace: egov
+    context: "chad/resource-generator"
   heap: "-Xmx256m -Xms256m"
   hpa:
     enabled: false
@@ -328,6 +335,7 @@ project-factory:
   ingress:
     name: chad-project-factory
     namespace: egov
+    context: "chad/project-factory"
   logLevel: 'debug'
   maxDebugChar: '2000'
   mdmsV2SearchEndpoint: 'mdms-v2/v2/_search'
@@ -397,6 +405,7 @@ excel-ingestion:
   ingress:
     name: chad-excel-ingestion
     namespace: egov
+    context: "chad/excel-ingestion"
   group-id: "chad-excel-ingestion"
   cpu_requests: 200m
   memory_requests: 768Mi
@@ -487,6 +496,7 @@ health-expense-calculator:
   ingress:
     name: chad-expense-calculator
     namespace: egov
+    context: "chad/health-expense-calculator"
   cpu_requests: 200m
   memory_requests: 368Mi
   cpu_limits: 600m
@@ -521,4 +531,3 @@ health-expense-calculator:
   billing-muster-roll-period-aware-enabled: "true"
   egov-musterroll-search-endpoint: "/health-muster-roll/v1/_search"
   project-management-system-kafka-update-topic: chad-update-project
-
