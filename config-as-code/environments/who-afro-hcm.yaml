@@ -885,7 +885,8 @@ user-otp:
   image:
     repository: egovio/user-otp
     tag: sandbox-log-86902f9
-
+  central-instance-build: true
+  central-instance-enabled: true
 inbox:
   image:
     repository: egovio/inbox
@@ -1453,3 +1454,8 @@ health-notification-service:
 worker-registry:
   central-instance-build: true
   central-instance-enabled: true
+
+auth-proxy:
+  image:
+    repository: egovio/auth-proxy
+    tag: auth-proxy-user-fail-fix-2-a92d71909d-41
