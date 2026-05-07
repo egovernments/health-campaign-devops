@@ -82,8 +82,6 @@ env: |
     value: {{ index .Values "heap" | quote }}
   - name: JAVA_ARGS
     value: {{ index .Values "java-args" | quote }}
-  - name: JAVA_ENABLE_DEBUG
-    value: {{ index .Values "java-enable-debug" | quote }}
   - name: SERVER_PORT
     value: "8080"
   - name: SECURITY_BASIC_ENABLED
@@ -156,7 +154,3 @@ env: |
     value: "update-user-id-topic"
   - name: NOTIFICATION_SMS_ENABLED
     value: "false"
-  {{- if index .Values "tracing-enabled" }}
-  - name: TRACER_OPENTRACING_ENABLED
-    value: "true" 
-  {{- end }}

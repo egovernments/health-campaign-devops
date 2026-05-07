@@ -36,8 +36,6 @@ env: |
       secretKeyRef:
           name: project-factory
           key: basesecret
-  - name: DB_SCHEMA
-    value: public
   - name: EGOV_MDMS_HOST
     valueFrom:
       configMapKeyRef:
@@ -49,8 +47,6 @@ env: |
         name: egov-service-host
         key: mdms-v2      
   - name: EGOV_MDMS_SEARCH_ENDPOINT
-    value: "mdms-v2/v1/_search"
-  - name: EGOV_MDMS_V1_SEARCH_ENDPOINT
     value: "mdms-v2/v1/_search"
   - name: EGOV_MDMS_PATH
     value: "mdms-v2/v1/_search"
