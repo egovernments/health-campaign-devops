@@ -983,6 +983,14 @@ product:
   memory_limits: 512Mi
 
 beneficiary-idgen:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/beneficiary-idgen-db
+        tag: master-b91815e
+  image:
+    repository: egovio/beneficiary-idgen
+    tag: master-b91815e
   central-instance-build: true
   central-instance-enabled: true
   idformat-from-mdms: "true"
