@@ -69,7 +69,12 @@ cluster-configs:
               collection-search-indexer: "http://collection-search-indexer:8080/"
               citizen-indexer: "http://citizen-indexer:8080/"
               citizen-services: "http://citizen-services:8080/"
-              dashboard-analytics: "http://dashboard-analytics.egov:8080/"
+              chad-dashboard-analytics: "http://dashboard-analytics.chad:8080/"
+              chad-project-factory: 'http://project-factory.chad:8080/'
+              chad-resource-generator: 'http://resource-generator.chad:8080/'
+              chad-plan-service: 'http://plan-service.chad:8080/'
+              chad-census-service: 'http://census-service.chad:8080/'
+              chad-excel-ingestion: 'http://excel-ingestion.chad:8080/'
               dashboard-ingest: "http://dashboard-ingest.egov:8080/"
               demand-services: "http://demand-services:8080/"
               data-sync-employee: "http://data-sync-employee:8080/"
@@ -98,7 +103,6 @@ cluster-configs:
               egov-indexer: "http://egov-indexer:8080/"
               egov-hrms: "http://egov-hrms:8080/"
               es-client: "http://elasticsearch-data-v1.es-cluster:9200"
-              excel-ingestion: 'http://excel-ingestion:8080/'
               health-attendance: "http://attendance:8080/"
               location: "http://location:8080/"
               performance-assessment: "http://performance-assessment:8080/"
@@ -119,9 +123,6 @@ cluster-configs:
               stock: "http://stock:8080/"
               facility: "http://facility:8080/"
               service-request: "http://service-request:8080/"
-              plan-service: "http://plan-service.egov:8080/"
-              census-service: "http://census-service.egov:8080/"
-              project-factory: "http://project-factory.egov:8080/"
               mdms-service-v2: 'http://mdms-v2.egov:8080/'
               health-expense: 'http://expense.egov:8080/'
               health-expense-calculator: 'http://health-expense-calculator.egov:8080/'
