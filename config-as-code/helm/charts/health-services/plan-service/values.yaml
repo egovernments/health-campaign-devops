@@ -74,7 +74,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: project-factory
+        key: {{ index .Values "project-factory" | default "project-factory" | quote }}
   - name: EGOV_FACILITY_HOST
     valueFrom:
       configMapKeyRef:
@@ -94,7 +94,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: census-service
+        key: {{ index .Values "census-service" | default "census-service" | quote }}
   - name: WORKFLOW_INITIATE_ACTION
     value: "INITIATE"
   - name: WORKFLOW_INTERMEDIATE_ACTION
