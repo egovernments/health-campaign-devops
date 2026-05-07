@@ -15,10 +15,11 @@ spec:
           - name: egov-idgen
           - name: egov-indexer
           - name: egov-localization
-          - name: egov-mdms-service
           - name: egov-notification-mail
           - name: egov-notification-sms
           - name: egov-otp
+          - name: egov-indexer
+          - name: egov-persister
           - name: egov-persister
           - name: egov-url-shortening
           - name: egov-user
