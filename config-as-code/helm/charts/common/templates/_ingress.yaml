@@ -7,6 +7,9 @@ metadata:
   name: {{ default (include "common.name" .) .Values.ingress.name }}
   namespace: {{ .Values.ingress.namespace | default .Values.namespace }}
   annotations:
+    gateway-keyResolver: "@ipKeyResolver"
+    gateway-burstCapacity: "20"
+    gateway-replenishRate: "10"
   {{- if and .Values.ingress .Values.ingress.rewriteEnable }}
     nginx.ingress.kubernetes.io/rewrite-target: /{{ .Values.ingress.rewritePath }}$2
     nginx.ingress.kubernetes.io/use-regex: "true"

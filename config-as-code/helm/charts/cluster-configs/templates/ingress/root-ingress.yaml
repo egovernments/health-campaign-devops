@@ -3,6 +3,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
+    gateway-keyResolver: "@ipKeyResolver"
+    gateway-burstCapacity: "20"
+    gateway-replenishRate: "10"
   {{- if ne .appRoot ""}}
     nginx.ingress.kubernetes.io/app-root: /{{ .appRoot }}
     kubernetes.io/ingress.class: nginx
