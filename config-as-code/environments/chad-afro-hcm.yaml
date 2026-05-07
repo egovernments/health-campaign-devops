@@ -86,6 +86,9 @@ transformer:
 
 hcm-digit-ui:
   namespace: chad
+  ingress:
+    enabled: true
+    context: "chad/hcm-digit-ui"
   image:
     repository: egovio/hcm-digit-ui
     tag: single-web-app-hcm-digit-ui-5e235e9
