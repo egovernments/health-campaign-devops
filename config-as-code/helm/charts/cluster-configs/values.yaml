@@ -112,7 +112,7 @@ cluster-configs:
       name: egov-user-chatbot
 
     project-factory:
-      namespace: [ egov ]
+      namespace: [ egov, chad, congob ]
       name: project-factory
 
     oauth2-proxy:
