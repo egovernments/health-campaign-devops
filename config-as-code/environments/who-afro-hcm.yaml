@@ -560,27 +560,35 @@ egov-indexer:
   image:
     repository: egovio/egov-indexer
     tag: indexer-17-searchBody-1799f17903-57
-  heap: "-Xmx512m -Xms512m"
-  memory_limits: "768Mi"
+  heap: "-Xmx512m -Xms256m"
+  cpu_requests: 200m
+  memory_requests: 512Mi
+  cpu_limits: 300m
+  memory_limits: 768Mi
+  replicas: 2
   initContainers:
     dbMigration:
       image:
         repository: egov-indexer-db
         tag: indexer-17-searchBody-1799f17903-57
     gitSync:
-      repo: "https://github.com/egovernments/health-campaign-config"        ##### Change repo url with Your fork Repo urls
-      branch: "DEMO"                                      ##### Change repo branch with Your fork Repo branches
-  egov-indexer-yaml-repo-path: "file:///work-dir/health-campaign-config/egov-indexer/error-queue.yml,file:///work-dir/health-campaign-config/egov-indexer/product-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/individual-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/household-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-task-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/stock-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/facility-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-staff-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/egov-error-queue-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/service-request-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/transformer-pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/referral-management-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/census-service-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/plan-service-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/attendance-service-indexer.yml"
+      repo: "https://github.com/egovernments/health-campaign-config"        ##### Change repo url with Your fork Repo url
+      branch: "DEMO"
+  egov-indexer-yaml-repo-path: "/work-dir/health-campaign-config/egov-indexer/chad"
 
 egov-persister:
   image:
     repository: egovio/egov-persister
     tag: master-3b238aa
-  replicas: 1
-  heap: '-Xmx256m -Xms256m'
+  heap: "-Xmx512m -Xms256m"
+  cpu_requests: 200m
+  memory_requests: 512Mi
+  cpu_limits: 300m
+  memory_limits: 768Mi
+  replicas: 2
   images:
     - egovio/egov-persister
-  persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/hrms-employee-persister.yml,file:///work-dir/health-campaign-config/egov-persister/product-persister.yml,file:///work-dir/health-campaign-config/egov-persister/project-persister.yml,file:///work-dir/health-campaign-config/egov-persister/individual-persister.yml,file:///work-dir/health-campaign-config/egov-persister/household-persister.yml,file:///work-dir/health-campaign-config/egov-persister/project-task-persister.yml,file:///work-dir/health-campaign-config/egov-persister/stock-persister.yml,file:///work-dir/health-campaign-config/egov-persister/facility-persister.yml,file:///work-dir/health-campaign-config/egov-persister/service-request-persister.yml,file:///work-dir/health-campaign-config/egov-persister/pgr-services-persister.yml,file:///work-dir/health-campaign-config/egov-persister/egov-workflow-v2-persister.yml,file:///work-dir/health-campaign-config/egov-persister/mdms-persister.yml,file:///work-dir/health-campaign-config/egov-persister/referral-management-persister.yml,file:///work-dir/health-campaign-config/egov-persister/project-factory-persister.yml,file:///work-dir/health-campaign-config/egov-persister/attendance-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/irs-persister.yml,file:///work-dir/health-campaign-config/egov-persister/census-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/plan-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/boundary-persister.yml,file:///work-dir/health-campaign-config/egov-persister/id-pool-persister.yml,file:///work-dir/health-campaign-config/egov-persister/id-pool-dispatch-log-persister.yml"
+  persist-yml-path: "/work-dir/health-campaign-config/egov-persister/chad"
   initContainers:
     gitSync:
       repo: "https://github.com/egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
