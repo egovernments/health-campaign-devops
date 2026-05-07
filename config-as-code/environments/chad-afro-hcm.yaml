@@ -1,0 +1,175 @@
+# global:
+#   domain: campaigns.afro.who.int
+
+# service:
+#   additionalAnnotations: |
+#     zuul/route-host: campaigns.afro.who.int
+
+namespace: chad
+
+disableAnnotationTimestamp: true
+
+transformer:
+  image:
+    repository: egovio/transformer
+    tag: master-b91815e
+  namespace: "chad"
+  heap: "-Xmx768m -Xms512m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  cpu_requests: 200m
+  memory_requests: 1Gi
+  cpu_limits: 300m
+  memory_limits: 1.5Gi
+  java-enable-debug: true
+  replicas: 2
+  project-factory-host: "chad-project-factory"
+  save-attendance-log-topic: "chad-save-attendance-log"
+  update-attendance-log-topic: "chad-update-attendance-log"
+  transformer-save-attendance-log-topic: "chad-transformer-save-attendance-log"
+  transformer-save-attendance-register-topic: "chad-transformer-save-attendance-register"
+  save-project-task-topic: "chad-save-project-task-topic"
+  update-project-task-topic: "chad-update-project-task-topic"
+  transformer-producer-bulk-project-task-index-v1-topic: "chad-transformer-producer-bulk-project-task-index-v1-topic"
+  save-project-staff-topic: "chad-save-project-staff-topic"
+  update-project-staff-topic: "chad-update-project-staff-topic"
+  transformer-producer-bulk-project-staff-index-v1-topic: "chad-transformer-producer-bulk-project-staff-index-v1-topic"
+  transformer-producer-bulk-project-index-v1-topic: "chad-transformer-producer-bulk-project-index-v1-topic"
+  save-project: "chad-save-project"
+  update-project: "chad-update-project"
+  save-household-member-topic: "chad-save-household-member-topic"
+  transformer-producer-household-member-index-v1-topic: "chad-transformer-producer-household-member-index-v1-topic"
+  save-household-topic: "chad-save-household-topic"
+  update-household-topic: "chad-update-household-topic"
+  transformer-producer-household-index-v1-topic: "chad-transformer-producer-household-index-v1-topic"
+  transformer-producer-service-index-v2-topic: "chad-transformer-producer-service-index-v2-topic"
+  save-stock-topic: "chad-save-stock-topic"
+  update-stock-topic: "chad-update-stock-topic"
+  transformer-producer-bulk-stock-index-v1-topic: "chad-transformer-producer-bulk-stock-index-v1-topic"
+  save-facility-topic: "chad-save-facility-topic"
+  update-facility-topic: "chad-update-facility-topic"
+  save-service: "chad-save-service"
+  transformer-producer-service-request-index-v1-topic: "chad-transformer-producer-service-request-index-v1-topic"
+  save-referral-topic: "chad-save-referral-topic"
+  transformer-producer-referral-index-v1-topic: "chad-transformer-producer-referral-index-v1-topic"
+  update-referral-topic: "chad-update-referral-topic"
+  save-side-effect-topic: "chad-save-side-effect-topic"
+  update-side-effect-topic: "chad-update-side-effect-topic"
+  transformer-producer-side-effect-index-v1-topic: "chad-transformer-producer-side-effect-index-v1-topic"
+  save-pgr-request: "chad-save-pgr-request"
+  transformer-save-pgr-request: "chad-transformer-save-pgr-request"
+  update-pgr-request: "chad-update-pgr-request"
+  save-hfreferral-topic: "chad-save-hfreferral-topic"
+  update-hfreferral-topic: "chad-update-hfreferral-topic"
+  transformer-producer-hfreferral-index-v1-topic: "chad-transformer-producer-hfreferral-index-v1-topic"
+  transformer-producer-hfreferral-service-index-topic: "chad-transformer-producer-hfreferral-service-index-topic"
+  transformer-producer-finance-checklist-index-v1-topic: "chad-transformer-producer-finance-checklist-index-v1-topic"
+  transformer-producer-special-spraying-index-topic: "chad-transformer-producer-special-spraying-index-topic"
+  save-attendance-log: "chad-save-attendance-log"
+  update-attendance-log: "chad-update-attendance-log"
+  transformer-save-attendance-log: "chad-transformer-save-attendance-log"
+  transformer-save-attendance-register: "chad-transformer-save-attendance-register"
+  transformer-producer-extra-transformed-checklist-index-topic: "chad-transformer-producer-extra-transformed-checklist-index-topic"
+  update-household-member-topic: "chad-update-household-member-topic"
+  save-stock-reconciliation-topic: "chad-save-stock-reconciliation-topic"
+  update-stock-reconciliation-topic: "chad-update-stock-reconciliation-topic"
+  transformer-producer-stock-recon-index-v1-topic: "chad-transformer-producer-stock-recon-index-v1-topic"
+  health-transformer: "chad-health-transformer"
+  transformer-consumer-error-tracer-topic: "error-details-indexer-topic"
+  transformer-producer-error-details-index-v1-topic: "chad-transformed-errors-topic"
+  transformer-error-skip-error-messages: "UPLOAD_ERROR_FROM_APP"
+  transformer-error-skip-error-codes: "DUPLICATE_ENTITY,INDIVIDUAL_ALREADY_MEMBER_OF_HOUSEHOLD,HOUSEHOLD_ALREADY_HAS_HEAD"
+  transformer-error-skip-url-contains: "facility,resource"
+  state-level-tenantid: "chad"
+
+hcm-digit-ui:
+  namespace: chad
+  image:
+    repository: egovio/hcm-digit-ui
+    tag: single-web-app-hcm-digit-ui-5e235e9
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://egov-health-demo-assets.s3.ap-south-1.amazonaws.com/who-chad/globalConfigs.js type=text/javascript></script>
+      ';"
+    
+workbench-ui:
+  namespace: chad
+  image:
+    repository: egovio/workbench-ui
+    tag: HDDF-4931-6fd335c
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/workbenchGlobalConfigs.js type=text/javascript></script>';" 
+
+microplan-ui:
+  namespace: chad
+  image:
+    repository: egovio/microplan-ui
+    tag: console-56ef678
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://egov-dev-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript></script>      
+      <script src=https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/globalConfigsMicroplanDemo.js type=text/javascript></script>
+      ';" 
+
+
+payments-ui:
+  namespace: chad
+  image:
+    repository: egovio/payments-ui
+    tag: HDDF-4931-2e2ecfd
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://egov-dev-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript></script>     
+      <script src=https://egov-dev-assets.s3.ap-south-1.amazonaws.com/globalConfigsPaymentDev.js type=text/javascript></script>
+      ';"  
+
+dashboard-ui:
+  namespace: chad  
+  image:
+    repository: egovio/dashboard-ui
+    tag: HDDF-4931-6873013
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://egov-dev-assets.s3.ap-south-1.amazonaws.com/globalConfigsDashboardDemo.js type=text/javascript ></script>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript async></script>
+      ';"
+  heap: "-Xmx512m -Xms512m"
+  memory_limits: 1024Mi
+
+core-ui:
+  namespace: chad 
+  image:
+    repository: egovio/core-ui
+    tag: develop-548f854d1d-57
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/demo/globalConfigsCoreUIDemo.js type=text/javascript defer></script>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript ></script>
+      ';" 
+
+dss-dashboard:
+  namespace: chad
+  image:
+    repository: egovio/dss-dashboard
+    tag: v1.8.0-0d70d60e63-53
+
+console:
+  namespace: chad
+  image:
+    repository: egovio/console
+    tag: ondo-proxy-f806f086a2-149
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/demo/globalConfigsConsoleDemo.js type=text/javascript defer></script>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript async></script>
+      ';"
