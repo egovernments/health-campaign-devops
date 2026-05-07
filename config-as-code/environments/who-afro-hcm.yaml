@@ -434,13 +434,12 @@ egov-user:
     dbMigration:
       image:
         repository: egovio/egov-user-db
-        tag: sandbox-log-f4a87d0
+        tag: HDDF-5066-single-user-login-250a15b
   image:
     repository: egovio/egov-user
-    tag: sandbox-log-f4a87d0
-  central-instance-name: egov
+    tag: HDDF-5066-single-user-login-250a15b
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   replicas: 1
   heap: "-Xmx512m -Xms256m"
   memory_limits: 512Mi
