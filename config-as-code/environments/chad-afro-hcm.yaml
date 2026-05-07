@@ -15,16 +15,12 @@ transformer:
     tag: master-b91815e
   namespace: "chad"
   heap: "-Xmx768m -Xms512m"
-  hpa:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 3
   cpu_requests: 200m
   memory_requests: 1Gi
   cpu_limits: 300m
   memory_limits: 1.5Gi
   java-enable-debug: true
-  replicas: 2
+  replicas: 1
   project-factory-host: "chad-project-factory"
   save-attendance-log-topic: "chad-save-attendance-log"
   update-attendance-log-topic: "chad-update-attendance-log"
@@ -197,3 +193,332 @@ console:
       <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/demo/globalConfigsConsoleDemo.js type=text/javascript defer></script>
       <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript async></script>
       ';"
+
+census-service:
+  initContainers:
+    dbMigration:
+      image:
+        repository: "census-service-db"
+        tag: master-b91815e
+  image:
+    repository: egovio/census-service
+    tag: master-b91815e
+
+  namespace: "chad"
+  group-id: "chad-census-service"
+  ingress:
+    name: chad-census-service
+    namespace: egov
+  heap: "-Xmx256m -Xms256m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  cpu_requests: 200m
+  memory_requests: 368Mi
+  cpu_limits: 300m
+  memory_limits: 512Mi
+  replicas: 2
+  plan-service-host: "chad-plan-service"
+  egov-plan-employee-assignment-search-endpoint: "/plan-service/employee/_search"
+  census-create-topic: "chad-census-create-topic"
+  census-update-topic: "chad-census-update-topic"
+  census-bulk-update-topic: "chad-census-bulk-update-topic"
+  resource-census-create-topic: "chad-resource-census-create-topic"
+  update-plan-facility: "chad-update-plan-facility"
+
+plan-service:
+  initContainers:
+    dbMigration:
+      image:
+        repository: "plan-service-db"
+        tag: master-b91815e
+  image:
+    repository: egovio/plan-service
+    tag: master-b91815e
+
+  namespace: "chad"
+  group-id: "chad-plan-service"
+  ingress:
+    name: chad-plan-service
+    namespace: egov
+  heap: "-Xmx512m -Xms256m"
+  replicas: 2
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  cpu_requests: 200m
+  memory_requests: 768Mi
+  cpu_limits: 300m
+  memory_limits: 1Gi
+  egov-mdms-service-host-key: 'mdms-v2'
+  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
+  egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
+  census-service: chad-census-service
+  project-factory: chad-project-factory
+  plan-config-create-topic: chad-plan-config-create-topic
+  plan-config-update-topic: chad-plan-config-update-topic
+  plan-create-topic: chad-save-plan
+  plan-update-topic: chad-update-plan
+  plan-bulk-update-topic: chad-bulk-update-plan
+  plan-facility-create-topic: chad-save-plan-facility
+  plan-facility-update-topic: chad-update-plan-facility
+  plan-employee-assignment-create-topic: chad-plan-employee-assignment-create-topic
+  plan-employee-assignment-update-topic: chad-plan-employee-assignment-update-topic
+  resource-microplan-create-topic: chad-resource-microplan-create-topic
+  resource-plan-config-update-topic: chad-resource-plan-config-update-topic
+  project-factory-save-plan-facility: chad-project-factory-save-plan-facility
+
+resource-generator:
+  image:
+    repository: egovio/resource-generator
+    tag: master-b91815e
+  namespace: "chad"
+  group-id: "chad-resource-generator"
+  ingress:
+    name: chad-resource-generator
+    namespace: egov
+  heap: "-Xmx256m -Xms256m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  cpu_requests: 200m
+  memory_requests: 368Mi
+  cpu_limits: 300m
+  memory_limits: 512Mi
+  replicas: 2
+  egov-mdms-service-host-key: 'mdms-v2'
+  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
+  egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
+  plan-service: chad-plan-service
+  census-service: chad-census-service
+  project-factory: chad-project-factory
+  plan-config-create-topic: chad-plan-config-create-topic
+  plan-config-update-topic: chad-plan-config-update-topic
+  resource-microplan-create-topic: chad-resource-microplan-create-topic
+  resource-plan-config-update-topic: chad-resource-plan-config-update-topic
+  resource-census-create-topic: chad-resource-census-create-topic
+
+project-factory:
+  initContainers:
+    dbMigration:
+      image:
+        repository: "project-factory-db"
+        tag: hcm-console-f039e13
+  image:
+    repository: egovio/project-factory
+    tag: hcm-console-f039e13
+
+  central-instance-enabled: false
+  central-instance-build: true
+  namespace: chad
+  heap: "-Xmx768m -Xms512m"
+  replicas: 2
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  cpu_requests: 200m
+  memory_requests: 768Mi
+  cpu_limits: 1000m
+  memory_limits: 2Gi
+  groupId: "chad-project-factory"
+  ingress:
+    name: chad-project-factory
+    namespace: egov
+  logLevel: 'debug'
+  maxDebugChar: '2000'
+  mdmsV2SearchEndpoint: 'mdms-v2/v2/_search'
+  mdmsV1SearchEndpoint: 'mdms-v2/v1/_search'
+  plan-service: chad-plan-service
+  census-service: chad-census-service
+  excel-ingestion-host: chad-excel-ingestion
+  IS_ENVIRONMENT_CENTRAL_INSTANCE: false
+  DB_SCHEMA: ba
+  defaultTenantId: ba
+  saveCampaignDetails: "chad-save-campaign-details"
+  updateCampaignDetails: "chad-update-campaign-details"
+  saveProjectCampaignDetailsTopic: "chad-save-project-campaign-details"
+  updateProjectCampaignDetailsTopic: "chad-update-project-campaign-details"
+  startCampaignMappingTopic: "chad-start-campaign-mapping"
+  createResourceDetailsTopic: "chad-create-resource-details"
+  updateResourceDetailsTopic: "chad-update-resource-details"
+  createResourceActivityTopic: "chad-create-resource-activity"
+  updateGeneratedResourceDetailsTopic: "chad-update-generated-resource-details"
+  createGeneratedResourceDetailsTopic: "chad-create-generated-resource-details"
+  savePlanFacilityTopic: "chad-project-factory-save-plan-facility"
+  saveSheetDataTopic: "chad-save-sheet-data"
+  updateSheetDataTopic: "chad-update-sheet-data"
+  saveMappingDataTopic: "chad-save-mapping-data"
+  updateMappingDataTopic: "chad-update-mapping-data"
+  deleteMappingDataTopic: "chad-delete-mapping-data"
+  saveProcessDataTopic: "chad-save-process-data"
+  updateProcessDataTopic: "chad-update-process-data"
+  startAdminConsoleTaskTopic: "chad-start-admin-console-task"
+  startAdminConsoleMappingTaskTopic: "chad-start-admin-console-mapping-task"
+  notificationEmailTopic: "chad-egov.core.notification.email"
+  testTopic: "chad-test-topic-project-factory"
+  hcmProcessingResultTopic: "chad-hcm-processing-result"
+  facilityCreateBatchTopic: "chad-hcm-facility-create-batch"
+  userCreateBatchTopic: "chad-hcm-user-create-batch"
+  mappingBatchTopic: "chad-hcm-mapping-batch"
+  campaignMarkFailedTopic: "chad-hcm-campaign-mark-failed"
+  userMainBoundary: "NIGERIAUAT_NI"
+  userMainBoundaryType: "COUNTRY"
+  maxResourceCreationAttempts: "10"
+  waitTimeOfEachAttemptMs: "20000"
+  retryTillResourceCreationCompletes: "5"
+  serverTimezone: "UTC"
+  attendanceAttendeeSearchPageSize: "100"
+  attendanceStaffSearchPageSize: "100"
+  command: |
+    - sh
+    - -c
+  args: |
+    - |
+      sed -i "s/const groupId = 'project-factory'/const groupId = process.env.KAFKAJS_GROUP_ID || 'project-factory'/g" src/server/kafka/Listener.ts
+      sed -i 's/--max-old-space-size=3072/--max-old-space-size=2048/g' package.json
+      yarn prod
+
+
+excel-ingestion:
+  initContainers:
+    dbMigration:
+      image:
+        repository: "excel-ingestion-db"
+        tag: master-b91815e
+  image:
+    repository: egovio/excel-ingestion
+    tag: master-b91815e
+
+  namespace: chad
+  ingress:
+    name: chad-excel-ingestion
+    namespace: egov
+  group-id: "chad-excel-ingestion"
+  cpu_requests: 200m
+  memory_requests: 768Mi
+  replicas: 2
+  egov-mdms-service-host-key: 'mdms-v2'
+  egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
+  defaultLocale: 'en_MZ'
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: false
+  project-factory-host: chad-project-factory
+  excel-ingestion-generation-save-topic: "chad-save-generated-file"
+  excel-ingestion-generation-update-topic: "chad-update-generated-file"
+  excel-ingestion-processing-save-topic: "chad-save-processing-file"
+  excel-ingestion-processing-update-topic: "chad-update-processing-file"
+  excel-ingestion-sheet-data-save-topic: "chad-save-sheet-data-temp"
+  excel-ingestion-sheet-data-delete-topic: "chad-delete-sheet-data-temp"
+  excel-ingestion-processing-result-topic: "chad-hcm-processing-result"
+
+dashboard-analytics:
+  image:
+    repository: egovio/dashboard-analytics
+    tag: analytics-es8-auth-6a40b6e
+
+  namespace: chad
+  ingress:
+    name: chad-dashboard-analytics
+    namespace: egov
+  healthChecks:
+    enabled: true
+    livenessProbePath: "/dashboard-analytics/health"
+    readinessProbePath: "/dashboard-analytics/health"
+  heap: "-Xmx512m -Xms256m"
+  replicas: 2
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  cpu_requests: 200m
+  memory_requests: 768Mi
+  cpu_limits: 300m
+  memory_limits: 1Gi
+  initContainers:
+    gitSync:
+      enabled: true
+      repo: "git@github.com:HCM-KEBBI/health-campaign-config"
+      branch: "CENTRAL-UAT"
+  config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/ba/dashboard-analytics/*.json"
+
+auth-proxy:
+  image:
+    repository: egovio/auth-proxy
+    tag: auth-proxy-user-fail-fix-2-a92d71909d-41
+  heap: "-Xmx192m -Xms192m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  ingress:
+    enabled: "true"
+    name: auth-proxy
+    namespace: chad
+    context: kibana-upgrade
+  cpu_requests: 100m
+  memory_requests: 256Mi
+  cpu_limits: 200m
+  memory_limits: 368Mi
+  replicas: 2
+  namespace: chad
+  kibanaBasePath: "/kibana-upgrade"
+
+health-expense-calculator:
+  initContainers:
+    dbMigration:
+      image:
+        repository: "health-expense-calculator-db"
+        tag: master-6b124f9
+  image:
+    repository: egovio/health-expense-calculator
+    tag: master-6b124f9
+  spring-kafka-consumer-group-id: "chad-health-expense-calculator"
+  namespace: chad
+  heap: "-Xmx256m -Xms256m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  ingress:
+    name: chad-expense-calculator
+    namespace: egov
+  cpu_requests: 200m
+  memory_requests: 368Mi
+  cpu_limits: 600m
+  memory_limits: 512Mi
+  replicas: 2
+  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
+  report-header-title: "Health Campaign Payment Report"
+  report-date-time-format: "dd/MM/yyyy HH:mm:ss z"
+  is-attendance-approval-required: "true"
+  register-batch-size: 15
+  tenantId: "ba"
+  excell-state-level-tenant-id: "ba"
+  calculate-musterroll-health: chad-calculate-musterroll-health
+  calculate-error-health: chad-calculate-error-health
+  calculate-billmeta-health: chad-calculate-billmeta-health
+  report-error-queue-topic: chad-report-error-queue-topic
+  report-retry-queue-topic: chad-report-retry-queue-topic
+  report-generation-trigger-topic: chad-report-generation-trigger-topic
+  report-generation-retry-trigger-topic: chad-report-generation-retry-trigger-topic
+  bill-generation-async-topic: chad-bill-generation-async-topic
+  bill-generation-async-enabled: "true"
+  expense-bill-create-topic: chad-expense-bill-create-health
+  expense-bill-update-topic: chad-expense-bill-update-health
+  expense-bill-index-topic: chad-expense-bill-index-health
+  payment-pdf-key: "health-bill-payment-ba"
+  billing-frequency-custom-minimum-days: "1"
+  billing-config-v2-enabled: "true"
+  billing-config-create-topic: chad-billing-config-create
+  billing-config-update-topic: chad-billing-config-update
+  billing-period-status-update-topic: chad-billing-period-status-update
+  billing-period-generation-enabled: "true"
+  billing-muster-roll-period-aware-enabled: "true"
+  egov-musterroll-search-endpoint: "/health-muster-roll/v1/_search"
+  project-management-system-kafka-update-topic: chad-update-project
+
