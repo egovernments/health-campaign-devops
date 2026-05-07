@@ -335,7 +335,7 @@ pgr-services:
     tag: master-b91815e
   central-instance-build: true
   central-instance-name: egov
-  central-instance-enabled: false
+  central-instance-enabled: true
 
 household:
   initContainers:
@@ -348,7 +348,7 @@ household:
     tag: master-b91815e
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
 
 
 service-request:
@@ -362,7 +362,7 @@ service-request:
     tag: master-8ddfc8a
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
 
 referralmanagement:
   initContainers:
@@ -375,7 +375,7 @@ referralmanagement:
     tag: master-b91815e
   central-instance-build: true
   central-instance-name: egov
-  central-instance-enabled: false
+  central-instance-enabled: true
   memory_limits: 768Mi
   heap: "-Xmx384m -Xms384m"
   egov-mdms-service-host-key: 'mdms-service-v2'
@@ -392,7 +392,7 @@ stock:
     tag: master-b91815e
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false 
+  central-instance-enabled: true 
 
 egov-otp:
   initContainers:
@@ -405,7 +405,7 @@ egov-otp:
     tag: master-1e8d2bb
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   memory_limits: "512Mi"
   heap: "-Xmx256m -Xms256m"   
 
@@ -542,6 +542,8 @@ boundary-management:
   image:
     repository: egovio/boundary-management
     tag: master-aa57e79
+  central-instance-build: true
+  central-instance-enabled: true
   DEBUG: 'true'
   cpu_requests: 200m
   memory_requests: 768Mi
@@ -762,7 +764,7 @@ egov-workflow-v2:
     tag: parallel-workflows-lazy-injection-1ace233
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   logging-level: "DEBUG"
   java-args: -Dspring.profiles.active=monitoring
   heap: "-Xmx192m -Xms192m"
@@ -781,7 +783,7 @@ egov-hrms:
     tag: master-b91815e
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   java-args: -Dspring.profiles.active=monitoring
   replicas : 1
   heap: '-Xmx512m -Xms256m'
@@ -852,6 +854,8 @@ boundary-service:
   image:
     repository: egovio/boundary-service
     tag: master-1e8d2bb
+  central-instance-build: true
+  central-instance-enabled: true
 
 excel-ingestion:
   initContainers:
@@ -921,7 +925,7 @@ facility:
     tag: master-b91815e
   central-instance-build: true
   central-instance-name: egov
-  central-instance-enabled: false
+  central-instance-enabled: true
   replicas: 1
   heap: '-Xmx512m -Xms256m'
   memory_limits: 512Mi
@@ -937,7 +941,7 @@ project:
     tag: featurefacilitysearch-task-status-17071f7
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   replicas: 1
   memory_limits: 768Mi
   heap: '-Xmx768m -Xms512m'
@@ -953,7 +957,7 @@ individual:
     tag: master-b91815e
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   replicas: 1
   heap: '-Xmx512m -Xms256m'
   memory_limits: 512Mi
@@ -973,12 +977,14 @@ product:
     tag: master-b91815e
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: false
+  central-instance-enabled: true
   heap: "-Xmx512m -Xms256m"
   replicas: 1
   memory_limits: 512Mi
 
 beneficiary-idgen:
+  central-instance-build: true
+  central-instance-enabled: true
   idformat-from-mdms: "true"
   java-args: -Dspring.profiles.active=monitoring
   autocreate-new-seq: "true"
@@ -1382,3 +1388,51 @@ pgadmin:
   persistence:
     enabled: true
     dataDirSize: "10Gi"
+
+health-attendance:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/health-attendance-db
+        tag: master-6b124f9
+  image:
+    repository: egovio/health-attendance
+    tag: HCMPRE-1870-DataAccessErrorHandling-a7b1e6b
+  central-instance-build: true
+  central-instance-enabled: true
+
+health-expense:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/health-expense-db
+        tag: master-6b124f9
+  image:
+    repository: egovio/health-expense
+    tag: master-6b124f9
+  central-instance-build: true
+  central-instance-enabled: true
+
+health-muster-roll:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/health-muster-roll-db
+        tag: master-6b124f9
+  image:
+    repository: egovio/health-muster-roll
+    tag: master-89c74d7
+  central-instance-build: true
+  central-instance-enabled: true
+
+egov-notification-push:
+  central-instance-build: true
+  central-instance-enabled: true
+
+health-notification-service:
+  central-instance-build: true
+  central-instance-enabled: true
+
+worker-registry:
+  central-instance-build: true
+  central-instance-enabled: true
