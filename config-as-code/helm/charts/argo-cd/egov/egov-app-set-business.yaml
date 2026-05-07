@@ -1,21 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: who-afro-egov-appset-frontend
+  name: who-afro-egov-appset-business
   namespace: argocd
 spec:
   generators:
     - list:
         elements:
-          - name: digit-ui
-          - name: workbench-ui
-          - name: hcm-digit-ui
-          - name: dashboard-ui
-          - name: payments-ui
-          - name: dss-dashboard
-          - name: core-ui
-          - name: console
-          - name: microplan-ui
+          - name: egov-hrms
+          - name: dashboard-ingest
+          - name: dashboard-analytics
 
   template:
     metadata:
@@ -27,7 +21,7 @@ spec:
       source:
         repoURL: git@github.com:egovernments/health-campaign-devops.git
         targetRevision: azure-install-who-test
-        path: config-as-code/helm/charts/frontend/{{name}}
+        path: config-as-code/helm/charts/business-services/{{name}}
         helm:
           valueFiles:
             - values.yaml
@@ -35,7 +29,7 @@ spec:
 
       destination:
         server: https://kubernetes.default.svc
-        namespace: egov
+        namespace: '*'
 
       syncPolicy:
         automated:
