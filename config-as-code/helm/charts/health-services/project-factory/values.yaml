@@ -111,12 +111,12 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: plan-service
+        key: {{ index .Values "plan-service" | default "plan-service" | quote }}
   - name: EGOV_CENSUS_HOST
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: census-service
+        key: {{ index .Values "census-service" | default "census-service" | quote }}
   - name: CONTEXT_PATH
     value: "/project-factory"   
   - name: FILE_STORE_SERVICE_END_POINT
@@ -244,7 +244,7 @@ env: |
   - name: DB_PORT
     value: "5432"
   - name: DB_SCHEMA
-    value: public
+    value: {{ .Values.DB_SCHEMA | default "public" | quote }}
   - name: BOUNDARY_MAIN_SHEET_NAME
     value: "Boundary Data"
   - name: SPLIT_BOUNDARIES_ON
