@@ -1,5 +1,5 @@
-# global:
-#   domain: campaigns.afro.who.int
+global:
+  domain: campaigns.afro.who.int
 
 # service:
 #   additionalAnnotations: |
