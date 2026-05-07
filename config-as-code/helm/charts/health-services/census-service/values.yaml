@@ -56,7 +56,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: plan-service
+        key: {{ index .Values "plan-service-host" | default "plan-service" | quote }}
   - name: EGOV_WORKFLOW_HOST
     valueFrom:
       configMapKeyRef:
