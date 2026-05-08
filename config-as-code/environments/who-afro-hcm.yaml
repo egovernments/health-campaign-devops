@@ -525,17 +525,16 @@ egov-pg-service:
   axis: true
 
 egov-malware-detection:
-initContainers:
-  dbMigration:
-    enabled: true
-    schemaTable: "egov_malware_schema"
-    image:
-      repository: "egov-malware-detection-db"
-      tag: 2.9.4-malware-detection-master-d07ae66
+  initContainers:
+    dbMigration:
+      enabled: true
+      schemaTable: "egov_malware_schema"
+      image:
+        repository: "egov-malware-detection-db"
+        tag: 2.9.4-malware-detection-master-d07ae66
   image:
     repository: "egov-malware-detection"
     tag: 2.9.4-malware-detection-master-d07ae66
-
   namespace: egov
   heap: "-Xmx512m -Xms512m"
   cpu_requests: 100m
