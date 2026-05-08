@@ -1,0 +1,323 @@
+global:
+  domain: campaigns.afro.who.int
+
+# service:
+#   additionalAnnotations: |
+#     zuul/route-host: campaigns.afro.who.int
+
+namespace: congob
+
+disableAnnotationTimestamp: true
+
+transformer:
+  image:
+    repository: egovio/transformer
+    tag: master-b91815e
+  namespace: "congob"
+  ingress:
+    name: congob-transformer
+    namespace: egov
+    context: "congob/transformer"
+  heap: "-Xmx768m -Xms512m"
+  cpu_requests: 200m
+  memory_requests: 1Gi
+  cpu_limits: 300m
+  memory_limits: 1.5Gi
+  java-enable-debug: true
+  replicas: 1
+  project-factory-host: "congob-project-factory"
+  save-attendance-log-topic: "congob-save-attendance-log"
+  update-attendance-log-topic: "congob-update-attendance-log"
+  transformer-save-attendance-log-topic: "congob-transformer-save-attendance-log"
+  transformer-save-attendance-register-topic: "congob-transformer-save-attendance-register"
+  save-project-task-topic: "congob-save-project-task-topic"
+  update-project-task-topic: "congob-update-project-task-topic"
+  transformer-producer-bulk-project-task-index-v1-topic: "congob-transformer-producer-bulk-project-task-index-v1-topic"
+  save-project-staff-topic: "congob-save-project-staff-topic"
+  update-project-staff-topic: "congob-update-project-staff-topic"
+  transformer-producer-bulk-project-staff-index-v1-topic: "congob-transformer-producer-bulk-project-staff-index-v1-topic"
+  transformer-producer-bulk-project-index-v1-topic: "congob-transformer-producer-bulk-project-index-v1-topic"
+  save-project: "congob-save-project"
+  update-project: "congob-update-project"
+  save-household-member-topic: "congob-save-household-member-topic"
+  transformer-producer-household-member-index-v1-topic: "congob-transformer-producer-household-member-index-v1-topic"
+  save-household-topic: "congob-save-household-topic"
+  update-household-topic: "congob-update-household-topic"
+  transformer-producer-household-index-v1-topic: "congob-transformer-producer-household-index-v1-topic"
+  transformer-producer-service-index-v2-topic: "congob-transformer-producer-service-index-v2-topic"
+  save-stock-topic: "congob-save-stock-topic"
+  update-stock-topic: "congob-update-stock-topic"
+  transformer-producer-bulk-stock-index-v1-topic: "congob-transformer-producer-bulk-stock-index-v1-topic"
+  save-facility-topic: "congob-save-facility-topic"
+  update-facility-topic: "congob-update-facility-topic"
+  save-service: "congob-save-service"
+  transformer-producer-service-request-index-v1-topic: "congob-transformer-producer-service-request-index-v1-topic"
+  save-referral-topic: "congob-save-referral-topic"
+  transformer-producer-referral-index-v1-topic: "congob-transformer-producer-referral-index-v1-topic"
+  update-referral-topic: "congob-update-referral-topic"
+  save-side-effect-topic: "congob-save-side-effect-topic"
+  update-side-effect-topic: "congob-update-side-effect-topic"
+  transformer-producer-side-effect-index-v1-topic: "congob-transformer-producer-side-effect-index-v1-topic"
+  save-pgr-request: "congob-save-pgr-request"
+  transformer-save-pgr-request: "congob-transformer-save-pgr-request"
+  update-pgr-request: "congob-update-pgr-request"
+  save-hfreferral-topic: "congob-save-hfreferral-topic"
+  update-hfreferral-topic: "congob-update-hfreferral-topic"
+  transformer-producer-hfreferral-index-v1-topic: "congob-transformer-producer-hfreferral-index-v1-topic"
+  transformer-producer-hfreferral-service-index-topic: "congob-transformer-producer-hfreferral-service-index-topic"
+  transformer-producer-finance-checklist-index-v1-topic: "congob-transformer-producer-finance-checklist-index-v1-topic"
+  transformer-producer-special-spraying-index-topic: "congob-transformer-producer-special-spraying-index-topic"
+  save-attendance-log: "congob-save-attendance-log"
+  update-attendance-log: "congob-update-attendance-log"
+  transformer-save-attendance-log: "congob-transformer-save-attendance-log"
+  transformer-save-attendance-register: "congob-transformer-save-attendance-register"
+  transformer-producer-extra-transformed-checklist-index-topic: "congob-transformer-producer-extra-transformed-checklist-index-topic"
+  update-household-member-topic: "congob-update-household-member-topic"
+  save-stock-reconciliation-topic: "congob-save-stock-reconciliation-topic"
+  update-stock-reconciliation-topic: "congob-update-stock-reconciliation-topic"
+  transformer-producer-stock-recon-index-v1-topic: "congob-transformer-producer-stock-recon-index-v1-topic"
+  health-transformer: "congob-health-transformer"
+  transformer-consumer-error-tracer-topic: "error-details-indexer-topic"
+  transformer-producer-error-details-index-v1-topic: "congob-transformed-errors-topic"
+  transformer-error-skip-error-messages: "UPLOAD_ERROR_FROM_APP"
+  transformer-error-skip-error-codes: "DUPLICATE_ENTITY,INDIVIDUAL_ALREADY_MEMBER_OF_HOUSEHOLD,HOUSEHOLD_ALREADY_HAS_HEAD"
+  transformer-error-skip-url-contains: "facility,resource"
+  state-level-tenantid: "congob"
+
+hcm-digit-ui:
+  namespace: congob
+  ingress:
+    enabled: true
+    context: "congob/hcm-digit-ui"
+  image:
+    repository: egovio/hcm-digit-ui
+    tag: single-web-app-hcm-digit-ui-5e235e9
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://egov-health-demo-assets.s3.ap-south-1.amazonaws.com/who-congob/globalConfigs.js type=text/javascript></script>
+      ';"
+
+project-factory:
+  image:
+    repository: egovio/project-factory
+    tag: health-a73c3e96
+  namespace: "congob"
+  ingress:
+    name: congob-project-factory
+    namespace: egov
+    context: "congob/project-factory"
+  heap: "-Xmx768m -Xms512m"
+  cpu_requests: 200m
+  memory_requests: 1Gi
+  cpu_limits: 300m
+  memory_limits: 1.5Gi
+  java-enable-debug: true
+  replicas: 1
+  save-plan-facility-topic: "congob-save-plan-facility-topic"
+  save-plan-project-mapping-topic: "congob-save-plan-project-mapping-topic"
+  save-project-task-topic: "congob-save-project-task-topic"
+  save-project-facility-bulk-topic: "congob-save-project-facility-bulk-topic"
+  update-project-facility-bulk-topic: "congob-update-project-facility-bulk-topic"
+  save-project-facility-topic: "congob-save-project-facility-topic"
+  update-project-facility-topic: "congob-update-project-facility-topic"
+  save-project-staff-topic: "congob-save-project-staff-topic"
+  update-project-staff-topic: "congob-update-project-staff-topic"
+  save-project-beneficiary-topic: "congob-save-project-beneficiary-topic"
+  update-project-beneficiary-topic: "congob-update-project-beneficiary-topic"
+  save-project-resource-topic: "congob-save-project-resource-topic"
+  update-project-resource-topic: "congob-update-project-resource-topic"
+  save-project-staff-bulk-topic: "congob-save-project-staff-bulk-topic"
+  update-project-staff-bulk-topic: "congob-update-project-staff-bulk-topic"
+  save-project-resource-bulk-topic: "congob-save-project-resource-bulk-topic"
+  update-project-resource-bulk-topic: "congob-update-project-resource-bulk-topic"
+  project-resource-consumer-bulk-create-topic: "congob-project-resource-consumer-bulk-create-topic"
+  project-resource-consumer-bulk-update-topic: "congob-project-resource-consumer-bulk-update-topic"
+  project-staff-consumer-bulk-create-topic: "congob-project-staff-consumer-bulk-create-topic"
+  project-staff-consumer-bulk-update-topic: "congob-project-staff-consumer-bulk-update-topic"
+  project-facility-bulk-create-topic: "congob-project-facility-bulk-create-topic"
+  project-facility-bulk-update-topic: "congob-project-facility-bulk-update-topic"
+  project-beneficiary-consumer-topic: "congob-project-beneficiary-consumer-topic"
+  save-project-beneficiary-bulk-topic: "congob-save-project-beneficiary-bulk-topic"
+  update-project-beneficiary-bulk-topic: "congob-update-project-beneficiary-bulk-topic"
+  project-beneficiary-bulk-create-topic: "congob-project-beneficiary-bulk-create-topic"
+  project-beneficiary-bulk-update-topic: "congob-project-beneficiary-bulk-update-topic"
+  save-campaign-details: "congob-save-campaign-details"
+  update-campaign-details: "congob-update-campaign-details"
+  campaign-manager-consumer-save-campaign-details: "congob-campaign-manager-consumer-save-campaign-details"
+  campaign-manager-consumer-update-campaign-details: "congob-campaign-manager-consumer-update-campaign-details"
+  update-project-task-topic: "congob-update-project-task-topic"
+  save-project: "congob-save-project"
+  update-project: "congob-update-project"
+  pf-consumer: "congob-pf-consumer"
+  pf-consumer-error-v2: "congob-pf-consumer-error-v2"
+  campaign-search-indexer-create: "congob-campaign-search-indexer-create-topic"
+  campaign-search-indexer-update: "congob-campaign-search-indexer-update-topic"
+  state-level-tenantid: "congob"
+
+resource-generator:
+  image:
+    repository: egovio/resource-generator
+    tag: master-da19e6e
+  namespace: "congob"
+  ingress:
+    name: congob-resource-generator
+    namespace: egov
+    context: "congob/resource-generator"
+  heap: "-Xmx256m -Xms192m"
+  cpu_requests: 100m
+  memory_requests: 256Mi
+  cpu_limits: 150m
+  memory_limits: 512Mi
+  java-enable-debug: true
+  replicas: 1
+  save-plan-facility-topic: "congob-save-plan-facility-topic"
+  save-plan-project-mapping-topic: "congob-save-plan-project-mapping-topic"
+  save-plan-topic: "congob-save-plan-topic"
+  update-plan-topic: "congob-update-plan-topic"
+  save-census-data-topic: "congob-save-census-data-topic"
+  update-census-data-topic: "congob-update-census-data-topic"
+  save-facility-topic: "congob-save-facility-topic"
+  update-facility-topic: "congob-update-facility-topic"
+  save-plan-employee-assignment-topic: "congob-save-plan-employee-assignment-topic"
+  update-plan-employee-assignment-topic: "congob-update-plan-employee-assignment-topic"
+  save-locale-data-topic: "congob-save-locale-data-topic"
+  update-locale-data-topic: "congob-update-locale-data-topic"
+  save-campaign-response-topic: "congob-save-campaign-response-topic"
+  update-campaign-response-topic: "congob-update-campaign-response-topic"
+  plan-update-consumer: "congob-plan-update-consumer"
+  plan-create-consumer: "congob-plan-create-consumer"
+  plan-employee-assignment-create-consumer: "congob-plan-employee-assignment-create-consumer"
+  plan-employee-assignment-update-consumer: "congob-plan-employee-assignment-update-consumer"
+  census-create-consumer: "congob-census-create-consumer"
+  census-update-consumer: "congob-census-update-consumer"
+  campaign-response-create-consumer: "congob-campaign-response-create-consumer"
+  campaign-response-update-consumer: "congob-campaign-response-update-consumer"
+  state-level-tenantid: "congob"
+
+plan-service:
+  image:
+    repository: egovio/plan-service
+    tag: master-2fb8bfd
+  namespace: "congob"
+  ingress:
+    name: congob-plan-service
+    namespace: egov
+    context: "congob/plan-service"
+  heap: "-Xmx256m -Xms192m"
+  cpu_requests: 100m
+  memory_requests: 256Mi
+  cpu_limits: 150m
+  memory_limits: 512Mi
+  java-enable-debug: true
+  replicas: 1
+  save-plan-topic: "congob-save-plan-topic"
+  update-plan-topic: "congob-update-plan-topic"
+  save-census-data-topic: "congob-save-census-data-topic"
+  update-census-data-topic: "congob-update-census-data-topic"
+  save-plan-project-mapping-topic: "congob-save-plan-project-mapping-topic"
+  save-plan-facility-topic: "congob-save-plan-facility-topic"
+  update-plan-facility-topic: "congob-update-plan-facility-topic"
+  save-plan-employee-assignment-topic: "congob-save-plan-employee-assignment-topic"
+  update-plan-employee-assignment-topic: "congob-update-plan-employee-assignment-topic"
+  plan-project: "congob-plan-project"
+  state-level-tenantid: "congob"
+  plan-service-host: "https://campaigns.afro.who.int"
+
+excel-ingestion:
+  image:
+    repository: egovio/excel-ingestion
+    tag: health-5a90c1ae
+  namespace: "congob"
+  ingress:
+    name: congob-excel-ingestion
+    namespace: egov
+    context: "congob/excel-ingestion"
+  heap: "-Xmx128m -Xms96m"
+  cpu_requests: 100m
+  memory_requests: 256Mi
+  cpu_limits: 150m
+  memory_limits: 512Mi
+  java-enable-debug: true
+  replicas: 1
+  save-plan-facility-topic: "congob-save-plan-facility-topic"
+  update-plan-facility-topic: "congob-update-plan-facility-topic"
+  state-level-tenantid: "congob"
+
+census-service:
+  image:
+    repository: egovio/census-service
+    tag: master-66a6e0f
+  namespace: "congob"
+  ingress:
+    name: congob-census-service
+    namespace: egov
+    context: "congob/census-service"
+  heap: "-Xmx256m -Xms192m"
+  cpu_requests: 100m
+  memory_requests: 256Mi
+  cpu_limits: 150m
+  memory_limits: 512Mi
+  java-enable-debug: true
+  replicas: 1
+  save-census-data-topic: "congob-save-census-data-topic"
+  update-census-data-topic: "congob-update-census-data-topic"
+  state-level-tenantid: "congob"
+  plan-service-host: "https://campaigns.afro.who.int"
+
+auth-proxy:
+  image:
+    repository: egovio/auth-proxy
+    tag: health-21a9b4e5
+  namespace: "congob"
+  ingress:
+    name: congob-auth-proxy
+    namespace: egov
+    context: "congob/auth-proxy"
+  heap: "-Xmx256m -Xms192m"
+  cpu_requests: 100m
+  memory_requests: 256Mi
+  cpu_limits: 150m
+  memory_limits: 512Mi
+  java-enable-debug: true
+  replicas: 1
+  state-level-tenantid: "congob"
+
+health-expense-calculator:
+  image:
+    repository: egovio/health-expense-calculator
+    tag: master-c74c7e1
+  namespace: "congob"
+  ingress:
+    name: congob-health-expense-calculator
+    namespace: egov
+    context: "congob/health-expense-calculator"
+  heap: "-Xmx256m -Xms192m"
+  cpu_requests: 100m
+  memory_requests: 256Mi
+  cpu_limits: 150m
+  memory_limits: 512Mi
+  java-enable-debug: true
+  replicas: 1
+  state-level-tenantid: "congob"
+
+dashboard-analytics:
+  image:
+    repository: egovio/dashboard-analytics
+    tag: health-a31c5287
+  namespace: "congob"
+  ingress:
+    name: congob-dashboard-analytics
+    namespace: egov
+    context: "congob/dashboard-analytics"
+  heap: "-Xmx128m -Xms96m"
+  cpu_requests: 100m
+  memory_requests: 256Mi
+  cpu_limits: 150m
+  memory_limits: 512Mi
+  java-enable-debug: true
+  replicas: 1
+  save-dashboard-config-topic: "congob-save-dashboard-config-topic"
+  save-dashboard-chart-topic: "congob-save-dashboard-chart-topic"
+  dashboard-ingest-topic: "congob-dashboard-ingest-topic"
+  state-level-tenantid: "congob"

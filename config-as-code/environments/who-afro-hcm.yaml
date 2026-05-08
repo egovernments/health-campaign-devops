@@ -5,6 +5,7 @@ global:
     - campaigns.afro.who.int
   schema:
     - chad
+    - congob
 
 cluster-configs:
     namespaces:
@@ -15,13 +16,14 @@ cluster-configs:
       cert-issuer: letsencrypt-prod
     configmaps:
         egov-config:
-            namespace: [ egov, es-cluster, monitoring, chad ]
+            namespace: [ egov, es-cluster, monitoring, chad, congob ]
             data:
                 db-host: afrohcm-t-euw-server.postgres.database.azure.com ## Add db-host name example: egov-demo.database.azure.com
                 db-name: afrohcm-t-euw-db ## Add db-name
                 db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
                 db-url-no-schema: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
                 chad-db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db?currentSchema=chad"
+                congob-db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db?currentSchema=congob"
                 domain: campaigns.afro.who.int ## Add your Domain Name
                 redis-host: "redis.backbone"
                 redis-downsync-host: ""
@@ -31,7 +33,7 @@ cluster-configs:
                 is-environment-central-instance: "true"
                 egov-state-level-tenant-id: "chad"
                 state-level-tenant-id: "chad"
-                kafka-tenant-id-pattern: "chad-"
+                kafka-tenant-id-pattern: "chad-|congob-"
                 s3-assets-bucket: "(pg-health-egov-assets|egov-health-playground-assets)"
                 es-host: "elasticsearch-data.es-cluster"
                 es-host-6: "elasticsearch-data.es-cluster"
@@ -52,12 +54,12 @@ cluster-configs:
                 timezone: "UTC"
                 tracer-errors-provideexceptionindetails: "true"
                 egov-internal-microservice-user-uuid: fa0f820c-49df-46bb-8e62-8a0ec5d9af5e
-                db-schema-names: "chad"
+                db-schema-names: "chad,congob"
                 kibana-base-path: kibana-upgrade 
                 kibana-host: "http://kibana-v1.es-upgrade:5601/"
 
         egov-service-host:
-            namespace: [ egov, es-cluster, monitoring, chad ]
+            namespace: [ egov, es-cluster, monitoring, chad, congob ]
             data:
               asset-services: "http://asset-services:8080/"
               boundary-management: 'http://boundary-management.egov:8080/'
@@ -75,6 +77,12 @@ cluster-configs:
               chad-plan-service: 'http://plan-service.chad:8080/'
               chad-census-service: 'http://census-service.chad:8080/'
               chad-excel-ingestion: 'http://excel-ingestion.chad:8080/'
+              congob-dashboard-analytics: "http://dashboard-analytics.congob:8080/"
+              congob-project-factory: 'http://project-factory.congob:8080/'
+              congob-resource-generator: 'http://resource-generator.congob:8080/'
+              congob-plan-service: 'http://plan-service.congob:8080/'
+              congob-census-service: 'http://census-service.congob:8080/'
+              congob-excel-ingestion: 'http://excel-ingestion.congob:8080/'
               dashboard-ingest: "http://dashboard-ingest.egov:8080/"
               demand-services: "http://demand-services:8080/"
               data-sync-employee: "http://data-sync-employee:8080/"
@@ -575,7 +583,7 @@ egov-indexer:
     gitSync:
       repo: "https://github.com/egovernments/health-campaign-config"        ##### Change repo url with Your fork Repo url
       branch: "DEMO"
-  egov-indexer-yaml-repo-path: "/work-dir/health-campaign-config/egov-indexer/chad"
+  egov-indexer-yaml-repo-path: "/work-dir/health-campaign-config/egov-indexer/chad,/work-dir/health-campaign-config/egov-indexer/congob"
 
 egov-persister:
   image:
@@ -589,7 +597,7 @@ egov-persister:
   replicas: 2
   images:
     - egovio/egov-persister
-  persist-yml-path: "/work-dir/health-campaign-config/egov-persister/chad"
+  persist-yml-path: "/work-dir/health-campaign-config/egov-persister/chad,/work-dir/health-campaign-config/egov-persister/congob"
   initContainers:
     gitSync:
       repo: "https://github.com/egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
