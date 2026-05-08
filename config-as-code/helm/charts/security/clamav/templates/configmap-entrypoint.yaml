@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "common.name" . }}-entrypoint
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+data:
+  entrypoint.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "Starting ClamAV setup..."
+
+    # Create necessary directories if they don't exist
+    mkdir -p /data/run
+    mkdir -p /data/logs
+    mkdir -p /data/tmp
+
+    # Copy initial database files if not present
+    if [ ! -f /data/main.cvd ] && [ -f /var/lib/clamav/main.cvd ]; then
+      echo "Copying initial database files..."
+      cp -n /var/lib/clamav/*.cvd /data/ 2>/dev/null || true
+      cp -n /var/lib/clamav/*.cld /data/ 2>/dev/null || true
+    fi
+
+    # Update database ownership (only for files we can modify)
+    chmod 755 /data/run /data/logs /data/tmp 2>/dev/null || true
+
+    echo "Starting freshclam to update virus definitions..."
+    freshclam --config-file=/etc/clamav/freshclam.conf --daemon &
+
+    echo "Waiting for database to be ready..."
+    sleep 10
+
+    echo "Starting ClamAV daemon..."
+    exec clamd --config-file=/etc/clamav/clamd.conf

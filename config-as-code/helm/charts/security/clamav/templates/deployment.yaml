@@ -54,6 +54,9 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/bash
+            - /scripts/entrypoint.sh
           ports:
             - name: clamav
               containerPort: 3310
@@ -108,10 +111,21 @@ spec:
             - name: freshclam-config
               mountPath: /etc/clamav/freshclam.conf
               subPath: freshclam.conf
-          {{- with .Values.extraEnvVars }}
+            - name: entrypoint
+              mountPath: /scripts
+              readOnly: true
           env:
+            - name: CLAMAV_NO_CLAMD
+              value: "false"
+            - name: CLAMAV_NO_FRESHCLAMD
+              value: "false"
+            - name: CLAMAV_NO_MILTERD
+              value: "true"
+            - name: CLAMD_STARTUP_TIMEOUT
+              value: "1800"
+            {{- with .Values.extraEnvVars }}
             {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- end }}
           {{- with .Values.extraVolumeMounts }}
           {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -161,6 +175,10 @@ spec:
         - name: freshclam-config
           configMap:
             name: {{ include "common.name" . }}-freshclam
+        - name: entrypoint
+          configMap:
+            name: {{ include "common.name" . }}-entrypoint
+            defaultMode: 0755
         {{- with .Values.extraVolumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
