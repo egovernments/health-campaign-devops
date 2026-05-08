@@ -31,6 +31,7 @@ spec:
           - name: pgr-services
           - name: service-request
           - name: user-otp
+          - name: egov-malware-detection
 
   template:
     metadata:
