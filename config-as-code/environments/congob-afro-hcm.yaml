@@ -225,21 +225,41 @@ plan-service:
   plan-service-host: "https://campaigns.afro.who.int"
 
 excel-ingestion:
+  initContainers:
+    dbMigration:
+      image:
+        repository: "excel-ingestion-db"
+        tag: master-b91815e
   image:
     repository: egovio/excel-ingestion
-    tag: health-5a90c1ae
+    tag: master-b91815e
   namespace: "congob"
   ingress:
     name: congob-excel-ingestion
     namespace: egov
     context: "congob/excel-ingestion"
+  group-id: "congob-excel-ingestion"
   heap: "-Xmx128m -Xms96m"
-  cpu_requests: 100m
-  memory_requests: 256Mi
+  cpu_requests: 200m
+  memory_requests: 768Mi
   cpu_limits: 150m
   memory_limits: 512Mi
   java-enable-debug: true
   replicas: 1
+  egov-mdms-service-host-key: 'mdms-v2'
+  egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
+  defaultLocale: 'en_MZ'
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: false
+  project-factory-host: congob-project-factory
+  excel-ingestion-generation-save-topic: "congob-save-generated-file"
+  excel-ingestion-generation-update-topic: "congob-update-generated-file"
+  excel-ingestion-processing-save-topic: "congob-save-processing-file"
+  excel-ingestion-processing-update-topic: "congob-update-processing-file"
+  excel-ingestion-sheet-data-save-topic: "congob-save-sheet-data-temp"
+  excel-ingestion-sheet-data-delete-topic: "congob-delete-sheet-data-temp"
+  excel-ingestion-processing-result-topic: "congob-hcm-processing-result"
   save-plan-facility-topic: "congob-save-plan-facility-topic"
   update-plan-facility-topic: "congob-update-plan-facility-topic"
   state-level-tenantid: "congob"
@@ -281,26 +301,65 @@ auth-proxy:
   cpu_limits: 200m
   memory_limits: 368Mi
   java-enable-debug: true
-  replicas: 2
+  replicas: 1
   kibanaBasePath: "/kibana-upgrade"
   state-level-tenantid: "congob"
 
 health-expense-calculator:
+  initContainers:
+    dbMigration:
+      image:
+        repository: "health-expense-calculator-db"
+        tag: master-6b124f9
   image:
     repository: egovio/health-expense-calculator
-    tag: master-c74c7e1
+    tag: master-6b124f9
+  spring-kafka-consumer-group-id: "congob-health-expense-calculator"
   namespace: "congob"
   ingress:
-    name: congob-health-expense-calculator
+    name: congob-expense-calculator
     namespace: egov
     context: "congob/health-expense-calculator"
-  heap: "-Xmx256m -Xms192m"
-  cpu_requests: 100m
-  memory_requests: 256Mi
-  cpu_limits: 150m
+  heap: "-Xmx256m -Xms256m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  cpu_requests: 200m
+  memory_requests: 368Mi
+  cpu_limits: 600m
   memory_limits: 512Mi
   java-enable-debug: true
   replicas: 1
+  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
+  report-header-title: "Health Campaign Payment Report"
+  report-date-time-format: "dd/MM/yyyy HH:mm:ss z"
+  is-attendance-approval-required: "true"
+  register-batch-size: 15
+  tenantId: "congob"
+  excell-state-level-tenant-id: "congob"
+  calculate-musterroll-health: congob-calculate-musterroll-health
+  calculate-error-health: congob-calculate-error-health
+  calculate-billmeta-health: congob-calculate-billmeta-health
+  report-error-queue-topic: congob-report-error-queue-topic
+  report-retry-queue-topic: congob-report-retry-queue-topic
+  report-generation-trigger-topic: congob-report-generation-trigger-topic
+  report-generation-retry-trigger-topic: congob-report-generation-retry-trigger-topic
+  bill-generation-async-topic: congob-bill-generation-async-topic
+  bill-generation-async-enabled: "true"
+  expense-bill-create-topic: congob-expense-bill-create-health
+  expense-bill-update-topic: congob-expense-bill-update-health
+  expense-bill-index-topic: congob-expense-bill-index-health
+  payment-pdf-key: "health-bill-payment-congob"
+  billing-frequency-custom-minimum-days: "1"
+  billing-config-v2-enabled: "true"
+  billing-config-create-topic: congob-billing-config-create
+  billing-config-update-topic: congob-billing-config-update
+  billing-period-status-update-topic: congob-billing-period-status-update
+  billing-period-generation-enabled: "true"
+  billing-muster-roll-period-aware-enabled: "true"
+  egov-musterroll-search-endpoint: "/health-muster-roll/v1/_search"
+  project-management-system-kafka-update-topic: congob-update-project
   state-level-tenantid: "congob"
 
 dashboard-analytics:
@@ -326,7 +385,7 @@ dashboard-analytics:
     minReplicas: 1
     maxReplicas: 3
   java-enable-debug: true
-  replicas: 2
+  replicas: 1
   initContainers:
     gitSync:
       enabled: true
