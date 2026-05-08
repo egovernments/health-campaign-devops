@@ -268,19 +268,21 @@ census-service:
 auth-proxy:
   image:
     repository: egovio/auth-proxy
-    tag: health-21a9b4e5
+    tag: auth-proxy-user-fail-fix-2-a92d71909d-41
   namespace: "congob"
   ingress:
-    name: congob-auth-proxy
-    namespace: egov
-    context: "congob/auth-proxy"
-  heap: "-Xmx256m -Xms192m"
+    enabled: "true"
+    name: auth-proxy
+    namespace: congob
+    context: kibana-upgrade
+  heap: "-Xmx192m -Xms192m"
   cpu_requests: 100m
   memory_requests: 256Mi
-  cpu_limits: 150m
-  memory_limits: 512Mi
+  cpu_limits: 200m
+  memory_limits: 368Mi
   java-enable-debug: true
-  replicas: 1
+  replicas: 2
+  kibanaBasePath: "/kibana-upgrade"
   state-level-tenantid: "congob"
 
 health-expense-calculator:
@@ -304,20 +306,133 @@ health-expense-calculator:
 dashboard-analytics:
   image:
     repository: egovio/dashboard-analytics
-    tag: health-a31c5287
+    tag: analytics-es8-auth-6a40b6e
   namespace: "congob"
   ingress:
     name: congob-dashboard-analytics
     namespace: egov
     context: "congob/dashboard-analytics"
-  heap: "-Xmx128m -Xms96m"
-  cpu_requests: 100m
-  memory_requests: 256Mi
-  cpu_limits: 150m
-  memory_limits: 512Mi
+  healthChecks:
+    enabled: true
+    livenessProbePath: "/dashboard-analytics/health"
+    readinessProbePath: "/dashboard-analytics/health"
+  heap: "-Xmx512m -Xms256m"
+  cpu_requests: 200m
+  memory_requests: 768Mi
+  cpu_limits: 300m
+  memory_limits: 1Gi
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
   java-enable-debug: true
-  replicas: 1
+  replicas: 2
+  initContainers:
+    gitSync:
+      enabled: true
+      repo: "git@github.com:HCM-KEBBI/health-campaign-config"
+      branch: "CENTRAL-UAT"
+  config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/congob/dashboard-analytics/*.json"
   save-dashboard-config-topic: "congob-save-dashboard-config-topic"
   save-dashboard-chart-topic: "congob-save-dashboard-chart-topic"
   dashboard-ingest-topic: "congob-dashboard-ingest-topic"
   state-level-tenantid: "congob"
+
+workbench-ui:
+  namespace: congob
+  image:
+    repository: egovio/workbench-ui
+    tag: HDDF-4931-6fd335c
+  ingress:
+    enabled: true
+    context: "workbench-ui"
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://central-instance-uat-assets.s3.af-south-1.amazonaws.com/globalConfigsWorkbench-congob.js type=text/javascript></script>';"
+
+microplan-ui:
+  namespace: congob
+  image:
+    repository: egovio/microplan-ui
+    tag: console-56ef678
+  ingress:
+    enabled: true
+    context: "congob/microplan-ui"
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://egov-dev-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript></script>
+      <script src=https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/globalConfigsMicroplanDemo.js type=text/javascript></script>
+      ';"
+
+payments-ui:
+  namespace: congob
+  image:
+    repository: egovio/payments-ui
+    tag: HDDF-4931-2e2ecfd
+  ingress:
+    enabled: true
+    context: "payments-ui"
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://egov-dev-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript></script>
+      <script src=https://central-instance-uat-assets.s3.af-south-1.amazonaws.com/globalConfigsPayments-congob.js type=text/javascript></script>
+      ';"
+
+dashboard-ui:
+  namespace: congob
+  image:
+    repository: egovio/dashboard-ui
+    tag: HDDF-4931-6873013
+  ingress:
+    enabled: true
+    context: "dashboard-ui"
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://central-instance-uat-assets.s3.af-south-1.amazonaws.com/globalConfigsDashboard-congob.js type=text/javascript ></script>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript async></script>
+      ';"
+  heap: "-Xmx512m -Xms512m"
+  memory_limits: 1024Mi
+
+core-ui:
+  namespace: congob
+  image:
+    repository: egovio/core-ui
+    tag: develop-548f854d1d-57
+  ingress:
+    enabled: true
+    context: "congob/core-ui"
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/demo/globalConfigsCoreUIDemo.js type=text/javascript defer></script>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript ></script>
+      ';"
+
+dss-dashboard:
+  namespace: congob
+  image:
+    repository: egovio/dss-dashboard
+    tag: v1.8.0-0d70d60e63-53
+  ingress:
+    enabled: true
+    context: "congob/dss-dashboard"
+
+console:
+  namespace: congob
+  image:
+    repository: egovio/console
+    tag: ondo-proxy-f806f086a2-149
+  ingress:
+    enabled: true
+    context: "congob/console"
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/demo/globalConfigsConsoleDemo.js type=text/javascript defer></script>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript async></script>
+      ';"

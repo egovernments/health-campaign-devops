@@ -8,6 +8,13 @@ spec:
     - list:
         elements:
           - name: hcm-digit-ui
+          - name: workbench-ui
+          - name: microplan-ui
+          - name: payments-ui
+          - name: dashboard-ui
+          - name: core-ui
+          - name: dss-dashboard
+          - name: console
 
   template:
     metadata:
