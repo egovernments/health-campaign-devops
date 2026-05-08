@@ -1,0 +1,97 @@
+global:
+  domain: campaigns.afro.who.int
+
+namespace: security
+
+clamav:
+  namespace: security
+  replicaCount: 1
+
+  image:
+    repository: clamav/clamav-debian
+    tag: "1.4.3"
+    pullPolicy: IfNotPresent
+
+  resources:
+    limits:
+      cpu: 500m
+      memory: 2Gi
+    requests:
+      cpu: 200m
+      memory: 1Gi
+
+  persistentVolume:
+    enabled: true
+    size: 5Gi
+    storageClass: "default"
+
+  service:
+    type: ClusterIP
+    port: 3310
+    annotations: {}
+
+  ingress:
+    enabled: false
+
+  hpa:
+    enabled: false
+    maxReplicas: 3
+    cpu: 80
+    memory: 80
+
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      interval: 30s
+      scrapeTimeout: 10s
+
+  clamdConfigDict:
+    DatabaseDirectory: /data
+    TemporaryDirectory: /tmp
+    LogTime: "yes"
+    PidFile: /tmp/clamd.pid
+    LocalSocket: /tmp/clamd.sock
+    TCPSocket: 3310
+    Foreground: "yes"
+    DetectPUA: "yes"
+    ExcludePUA:
+      - NetTool
+      - PWTool
+    HeuristicAlerts: "yes"
+    Bytecode: "yes"
+    ScanPE: "yes"
+    DisableCertCheck: "yes"
+    ScanELF: "yes"
+    AlertBrokenExecutables: "yes"
+    ScanOLE2: "yes"
+    ScanPDF: "yes"
+    ScanSWF: "yes"
+    ScanMail: "yes"
+    PhishingSignatures: "yes"
+    PhishingScanURLs: "yes"
+    ScanHTML: "yes"
+    ScanArchive: "yes"
+    MaxScanSize: 150M
+    MaxFileSize: 30M
+    MaxRecursion: 10
+    MaxFiles: 15000
+    MaxEmbeddedPE: 10M
+    MaxHTMLNormalize: 10M
+    MaxHTMLNoTags: 2M
+    MaxScriptNormalize: 5M
+    MaxZipTypeRcg: 1M
+    MaxPartitions: 128
+    MaxIconsPE: 200
+    PCREMatchLimit: 10000
+    PCRERecMatchLimit: 10000
+
+  freshclamConfigDict:
+    DatabaseDirectory: /data
+    LogTime: "yes"
+    PidFile: /tmp/freshclam.pid
+    DatabaseOwner: "2000"
+    DatabaseMirror: database.clamav.net
+    ScriptedUpdates: "yes"
+    NotifyClamd: /etc/clamav/clamd.conf
+    Bytecode: "yes"

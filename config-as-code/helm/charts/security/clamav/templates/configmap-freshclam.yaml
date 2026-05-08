@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "common.name" . }}-freshclam
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+data:
+  freshclam.conf: |
+{{- range $key, $value := .Values.freshclamConfigDict }}
+  {{- if kindIs "slice" $value }}
+    {{- range $value }}
+    {{ $key }} {{ . }}
+    {{- end }}
+  {{- else }}
+    {{ $key }} {{ $value }}
+  {{- end }}
+{{- end }}
