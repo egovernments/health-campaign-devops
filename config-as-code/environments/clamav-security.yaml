@@ -7,6 +7,20 @@ clamav:
   namespace: security
   replicaCount: 1
 
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 100
+    runAsGroup: 101
+    fsGroup: 101
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    privileged: false
+    capabilities:
+      drop:
+        - ALL
+
   image:
     repository: clamav/clamav-debian
     tag: "1.4.3"
@@ -50,8 +64,9 @@ clamav:
     DatabaseDirectory: /data
     TemporaryDirectory: /tmp
     LogTime: "yes"
-    PidFile: /tmp/clamd.pid
-    LocalSocket: /tmp/clamd.sock
+    LogFile: /data/logs/clamd.log
+    PidFile: /run/clamav/clamd.pid
+    LocalSocket: /run/clamav/clamd.sock
     TCPSocket: 3310
     Foreground: "yes"
     DetectPUA: "yes"
@@ -89,8 +104,9 @@ clamav:
   freshclamConfigDict:
     DatabaseDirectory: /data
     LogTime: "yes"
-    PidFile: /tmp/freshclam.pid
-    DatabaseOwner: "2000"
+    LogFile: /data/logs/freshclam.log
+    PidFile: /run/clamav/freshclam.pid
+    DatabaseOwner: "100"
     DatabaseMirror: database.clamav.net
     ScriptedUpdates: "yes"
     NotifyClamd: /etc/clamav/clamd.conf

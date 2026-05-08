@@ -27,6 +27,27 @@ spec:
       serviceAccountName: {{ include "common.name" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: init-clamav
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              mkdir -p /data/run
+              mkdir -p /data/tmp
+              mkdir -p /data/logs
+              chmod 755 /data/run
+              chmod 755 /data/tmp
+              chmod 755 /data/logs
+              echo "Directories created successfully"
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          securityContext:
+            runAsUser: 0
+            runAsNonRoot: false
       containers:
         - name: clamav
           securityContext:
@@ -75,6 +96,12 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
+            - name: data
+              mountPath: /run/clamav
+              subPath: run
+            - name: data
+              mountPath: /tmp
+              subPath: tmp
             - name: clamd-config
               mountPath: /etc/clamav/clamd.conf
               subPath: clamd.conf
