@@ -242,8 +242,8 @@ excel-ingestion:
   heap: "-Xmx128m -Xms96m"
   cpu_requests: 200m
   memory_requests: 768Mi
-  cpu_limits: 150m
-  memory_limits: 512Mi
+  cpu_limits: 300m
+  memory_limits: 1Gi
   java-enable-debug: true
   replicas: 1
   egov-mdms-service-host-key: 'mdms-v2'
