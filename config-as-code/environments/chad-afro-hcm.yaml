@@ -105,7 +105,7 @@ workbench-ui:
     tag: HDDF-4931-6fd335c
   ingress:
     enabled: true
-    context: "chad/workbench-ui"
+    context: "workbench-ui"
   custom-js-injection: |
     sub_filter.conf: "
       sub_filter  '<head>' '<head>
@@ -134,7 +134,7 @@ payments-ui:
     tag: HDDF-4931-2e2ecfd
   ingress:
     enabled: true
-    context: "chad/payments-ui"
+    context: "payments-ui"
   custom-js-injection: |
     sub_filter.conf: "
       sub_filter  '<head>' '<head>
@@ -149,7 +149,7 @@ dashboard-ui:
     tag: HDDF-4931-6873013
   ingress:
     enabled: true
-    context: "chad/dashboard-ui"
+    context: "dashboard-ui"
   custom-js-injection: |
     sub_filter.conf: "
       sub_filter  '<head>' '<head>
