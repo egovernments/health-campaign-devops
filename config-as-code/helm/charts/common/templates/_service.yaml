@@ -14,7 +14,7 @@ metadata:
 {{- if .Values.ingress.zuul }} 
     zuul/route-path: {{ .Values.ingress.context }}
 {{- end }}
-{{- if .Values.service.internal-gateway-enabled }} 
+{{- if index .Values.service "internal-gateway-enabled" }}
     internal-gateway-enabled: "true"
 {{- end }}
 {{- if and .Values.service .Values.service.additionalAnnotations}}                                   
