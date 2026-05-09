@@ -10,12 +10,14 @@ namespace: egov
 initContainers:
   extraInitContainers: |
     - name: "gateway-kubernetes-discovery"
-      image: {{ .Values.global.containerRegistry }}/gateway-kubernetes-discovery:master-gateway-kubernetes-discovery-host-76493aa615-13
+      image: {{ .Values.global.containerRegistry }}/gateway-kubernetes-discovery:master-gateway-kubernetes-discovery-host-259fe06659-14
       env: 
       - name: "OUTPUT_FILE_PATH"
         value: "/etc/zuul/routes.properties" 
       - name: "NAMESPACE"
-        value: "egov,chad,congob"         
+        value: "egov,chad,congob"
+      - name: DEFAULT_INTERNAL_GATEWAY_SERVICE
+        value: internal-gateway-scg.egov         
       volumeMounts:
       - name: zuul-routes
         mountPath: /etc/zuul
