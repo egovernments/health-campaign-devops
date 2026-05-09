@@ -72,17 +72,15 @@ cluster-configs:
               citizen-indexer: "http://citizen-indexer:8080/"
               citizen-services: "http://citizen-services:8080/"
               chad-dashboard-analytics: "http://dashboard-analytics.chad:8080/"
-              chad-project-factory: 'http://project-factory.chad:8080/'
+              project-factory: 'http://internal-gateway.egov:8080/'
               chad-resource-generator: 'http://resource-generator.chad:8080/'
               chad-plan-service: 'http://plan-service.chad:8080/'
               chad-census-service: 'http://census-service.chad:8080/'
-              chad-excel-ingestion: 'http://excel-ingestion.chad:8080/'
+              excel-ingestion: 'http://internal-gateway.egov:8080/'
               congob-dashboard-analytics: "http://dashboard-analytics.congob:8080/"
-              congob-project-factory: 'http://project-factory.congob:8080/'
               congob-resource-generator: 'http://resource-generator.congob:8080/'
               congob-plan-service: 'http://plan-service.congob:8080/'
               congob-census-service: 'http://census-service.congob:8080/'
-              congob-excel-ingestion: 'http://excel-ingestion.congob:8080/'
               dashboard-ingest: "http://dashboard-ingest.egov:8080/"
               demand-services: "http://demand-services:8080/"
               data-sync-employee: "http://data-sync-employee:8080/"
@@ -749,6 +747,26 @@ gateway:
   spring-data-redis-ratelimit-enabled: "true"
   egov-open-endpoints-whitelist: "/user/v1/_validate,/user/v1/_switch,/user/oauth/token,/user-otp/v1/_send,/otp/v1/_validate,/user/citizen/_create,/localization/messages,/localization/messages/v1/_search,/user/password/nologin/_update,/pgr/servicedefinition/v1/_search,/pgr/servicecategories/v1/_search,/pgr/v1/otp/_send,/pgr-master/receivingmode/v1/_search,/tenant/v1/tenant/_search,/egov-location/boundarys,/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName,/pgr-master/service/v1/_search,/egov-location/boundarys/getLocationByLocationName,/pgr-master/OTPConfig/_search,/pgr-master/serviceGroup/v1/_search,/egov-location/boundarys/isshapefileexist,/pgr/services/v1/_search,/hr-masters/hrconfigurations/_search,/collection-services/receipts/_view,/pgr-master/service/v2/_search,/pgr-master/servicedefinition/v1/_search,/citizen-services,/citizen-services/v1/requests/receipt/_create,/citizen-services/v1/pgresponse,/citizen-services/v1/requests/anonymous/_search,/egov-mdms-service/v1/_search,/egov-mdms-service/v1/_get,/egov-mdms-service/v1/_reload,/egov-mdms-service/v1/_reloadobj,/egov-location/boundarys/getshapefile,/egov-indexer/index-operations/_index,/egov-indexer/index-operations/_reload,/egov-mdms-service-test/v1/_search,/egov-mdms-create/v1/_update,/egov-mdms-create/v1/_create,/egov-mdms-service-test/v1/_reload,/filestore/v1/files/url,/eus,/egov-url-shortening,/whatsapp-webhook/messages,/edcr/rest/dcr/downloadfile,/dashboard-ingest/ingest/upload,/egov-searcher/water-services/wateropensearch/_get,/egov-searcher/sewerage-services/sewerageopensearch/_get,/xstate-chatbot/status,/xstate-chatbot/reminder,/nlp-engine/fuzzy/city,/nlp-engine/fuzzy/locality,/user/v1/_validate,/user/v1/_switch,/user/oauth/token,/user-otp/v1/_send,/otp/v1/_validate,/localization/messages,/localization/messages/v1/_search,/user/password/nologin/_update,/tenant/v1/tenant/_search,/egov-location/boundarys,/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName,/egov-location/boundarys/getLocationByLocationName,/egov-location/boundarys/isshapefileexist,/hr-masters/hrconfigurations/_search,/egov-mdms-service/v1/_search,/egov-mdms-service/v1/_get,/egov-location/boundarys/getshapefile,/egov-indexer/index-operations/_index,/egov-indexer/index-operations/_reload,/egov-mdms-service-test/v1/_search,/egov-mdms-create/v1/_update,/egov-mdms-create/v1/_create,/egov-mdms-service-test/v1/_reload,/filestore/v1/files/url,/egov-url-shortening,/mdms-v2/schema/v1/_search,/mdms-v2/v2/_search,/mdms-v2/v1/_search,/boundary-service/boundary/_search"
   egov-mixed-mode-endpoints-whitelist: "/workflow/history/v1/_search,/filestore/v1/files/id,/filestore/v1/files,/filestore/v1/files/tagso,/egov-idgen/id/_generate,/egf-masters/financialyears/_search,/user/_search,/billing-service/demand/_dues,/billing-service/bill/_generate,/billing-service/demand/_create,/access/v1/actions/mdms/_get,/egov-user-event/v1/events/_search,/boundary-service/boundary-relationships/_search"
+
+internal-gateway-scg:
+  image:
+    repository: "internal-gateway-scg"
+    tag: 2.9-LTS-internal-gateway-cdac11d
+  kafka-consumer-group-id: "internal-gateway"
+  heap: "-Xmx512m -Xms512m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  cpu_requests: 200m
+  memory_requests: 512Mi
+  cpu_limits: 300m
+  memory_limits: 768Mi
+  internal-gateway-json-path: "file:///work-dir/health-campaign-config/internal-gateway/internal-gateway.json"
+  initContainers:
+    gitSync:
+      repo: "git@github.com:egovernments/health-campaign-config"
+      branch: "DEMO"
 
 
 collection-services:
