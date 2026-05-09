@@ -317,6 +317,8 @@ project-factory:
   image:
     repository: egovio/project-factory
     tag: hcm-console-f039e13
+  service:
+    internal-gateway-enabled: true
 
   central-instance-enabled: false
   central-instance-build: true
@@ -401,6 +403,8 @@ excel-ingestion:
   image:
     repository: egovio/excel-ingestion
     tag: master-b91815e
+  service:
+    internal-gateway-enabled: true
 
   namespace: chad
   ingress:
@@ -486,6 +490,8 @@ health-expense-calculator:
   image:
     repository: egovio/health-expense-calculator
     tag: master-6b124f9
+  service:
+    internal-gateway-enabled: true
   spring-kafka-consumer-group-id: "chad-health-expense-calculator"
   namespace: chad
   heap: "-Xmx256m -Xms256m"
