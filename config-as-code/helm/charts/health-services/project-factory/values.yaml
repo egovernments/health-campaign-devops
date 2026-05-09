@@ -45,7 +45,7 @@ env: |
   - name: EXCEL_INGESTION_HOST
     valueFrom:
       configMapKeyRef:
-        key: {{ index .Values excel-ingestion-host | quote }}
+        key: {{ index .Values "excel-ingestion-host" | quote }}
         name: egov-service-host   
   - name: EGOV_MDMS_V2_HOST
     valueFrom:
