@@ -82,7 +82,7 @@ transformer:
   transformer-error-skip-error-messages: "UPLOAD_ERROR_FROM_APP"
   transformer-error-skip-error-codes: "DUPLICATE_ENTITY,INDIVIDUAL_ALREADY_MEMBER_OF_HOUSEHOLD,HOUSEHOLD_ALREADY_HAS_HEAD"
   transformer-error-skip-url-contains: "facility,resource"
-  state-level-tenantid: "congob"
+  state-level-tenantid: "chad"
 
 hcm-digit-ui:
   namespace: congob
@@ -104,14 +104,19 @@ hcm-digit-ui:
       ';"
 
 project-factory:
+  initContainers:
+    dbMigration:
+      image:
+        repository: "project-factory-db"
+        tag: hcm-console-f039e13
   image:
     repository: egovio/project-factory
-    tag: health-a73c3e96
+    tag: hcm-console-f039e13
   namespace: "congob"
   ingress:
-    name: congob-project-factory
+    name: project-factory
     namespace: egov
-    context: "congob/project-factory"
+    context: "project-factory"
   heap: "-Xmx768m -Xms512m"
   cpu_requests: 200m
   memory_requests: 1Gi
@@ -119,6 +124,11 @@ project-factory:
   memory_limits: 1.5Gi
   java-enable-debug: true
   replicas: 1
+  excel-ingestion-host: excel-ingestion
+  defaultLocale: 'en_CONGOB'
+  IS_ENVIRONMENT_CENTRAL_INSTANCE: false
+  DB_SCHEMA: congob
+  defaultTenantId: congob
   save-plan-facility-topic: "congob-save-plan-facility-topic"
   save-plan-project-mapping-topic: "congob-save-plan-project-mapping-topic"
   save-project-task-topic: "congob-save-project-task-topic"
@@ -158,7 +168,7 @@ project-factory:
   pf-consumer-error-v2: "congob-pf-consumer-error-v2"
   campaign-search-indexer-create: "congob-campaign-search-indexer-create-topic"
   campaign-search-indexer-update: "congob-campaign-search-indexer-update-topic"
-  state-level-tenantid: "congob"
+  state-level-tenantid: "chad"
 
 resource-generator:
   image:
@@ -198,7 +208,7 @@ resource-generator:
   census-update-consumer: "congob-census-update-consumer"
   campaign-response-create-consumer: "congob-campaign-response-create-consumer"
   campaign-response-update-consumer: "congob-campaign-response-update-consumer"
-  state-level-tenantid: "congob"
+  state-level-tenantid: "chad"
 
 plan-service:
   image:
@@ -226,7 +236,7 @@ plan-service:
   save-plan-employee-assignment-topic: "congob-save-plan-employee-assignment-topic"
   update-plan-employee-assignment-topic: "congob-update-plan-employee-assignment-topic"
   plan-project: "congob-plan-project"
-  state-level-tenantid: "congob"
+  state-level-tenantid: "chad"
   plan-service-host: "https://campaigns.afro.who.int"
 
 excel-ingestion:
@@ -240,11 +250,11 @@ excel-ingestion:
     tag: master-b91815e
   namespace: "congob"
   ingress:
-    name: congob-excel-ingestion
+    name: excel-ingestion
     namespace: egov
-    context: "congob/excel-ingestion"
+    context: "excel-ingestion"
   group-id: "congob-excel-ingestion"
-  heap: "-Xmx128m -Xms96m"
+  heap: "-Xmx768m -Xms512m"
   cpu_requests: 200m
   memory_requests: 768Mi
   cpu_limits: 300m
@@ -257,7 +267,7 @@ excel-ingestion:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: false
-  project-factory-host: congob-project-factory
+  project-factory-host: project-factory
   excel-ingestion-generation-save-topic: "congob-save-generated-file"
   excel-ingestion-generation-update-topic: "congob-update-generated-file"
   excel-ingestion-processing-save-topic: "congob-save-processing-file"
@@ -267,7 +277,7 @@ excel-ingestion:
   excel-ingestion-processing-result-topic: "congob-hcm-processing-result"
   save-plan-facility-topic: "congob-save-plan-facility-topic"
   update-plan-facility-topic: "congob-update-plan-facility-topic"
-  state-level-tenantid: "congob"
+  state-level-tenantid: "chad"
 
 census-service:
   image:
@@ -287,7 +297,7 @@ census-service:
   replicas: 1
   save-census-data-topic: "congob-save-census-data-topic"
   update-census-data-topic: "congob-update-census-data-topic"
-  state-level-tenantid: "congob"
+  state-level-tenantid: "chad"
   plan-service-host: "https://campaigns.afro.who.int"
 
 auth-proxy:
@@ -308,7 +318,7 @@ auth-proxy:
   java-enable-debug: true
   replicas: 1
   kibanaBasePath: "/kibana-upgrade"
-  state-level-tenantid: "congob"
+  state-level-tenantid: "chad"
 
 health-expense-calculator:
   initContainers:
@@ -365,7 +375,7 @@ health-expense-calculator:
   billing-muster-roll-period-aware-enabled: "true"
   egov-musterroll-search-endpoint: "/health-muster-roll/v1/_search"
   project-management-system-kafka-update-topic: congob-update-project
-  state-level-tenantid: "congob"
+  state-level-tenantid: "chad"
 
 dashboard-analytics:
   image:
@@ -400,7 +410,7 @@ dashboard-analytics:
   save-dashboard-config-topic: "congob-save-dashboard-config-topic"
   save-dashboard-chart-topic: "congob-save-dashboard-chart-topic"
   dashboard-ingest-topic: "congob-dashboard-ingest-topic"
-  state-level-tenantid: "congob"
+  state-level-tenantid: "chad"
 
 workbench-ui:
   namespace: congob

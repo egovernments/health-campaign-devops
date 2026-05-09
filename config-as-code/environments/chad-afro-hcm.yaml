@@ -331,22 +331,22 @@ project-factory:
   memory_requests: 768Mi
   cpu_limits: 1000m
   memory_limits: 2Gi
-  context-path: "/chad/project-factory"
   groupId: "chad-project-factory"
   ingress:
-    name: chad-project-factory
+    name: project-factory
     namespace: egov
-    context: "chad/project-factory"
+    context: "project-factory"
   logLevel: 'debug'
   maxDebugChar: '2000'
   mdmsV2SearchEndpoint: 'mdms-v2/v2/_search'
   mdmsV1SearchEndpoint: 'mdms-v2/v1/_search'
   plan-service: chad-plan-service
   census-service: chad-census-service
-  excel-ingestion-host: chad-excel-ingestion
+  excel-ingestion-host: excel-ingestion
+  defaultLocale: 'en_CHAD'
   IS_ENVIRONMENT_CENTRAL_INSTANCE: false
-  DB_SCHEMA: ba
-  defaultTenantId: ba
+  DB_SCHEMA: chad
+  defaultTenantId: chad
   saveCampaignDetails: "chad-save-campaign-details"
   updateCampaignDetails: "chad-update-campaign-details"
   saveProjectCampaignDetailsTopic: "chad-save-project-campaign-details"
@@ -404,20 +404,19 @@ excel-ingestion:
 
   namespace: chad
   ingress:
-    name: chad-excel-ingestion
+    name: excel-ingestion
     namespace: egov
-    context: "chad/excel-ingestion"
+    context: "excel-ingestion"
   group-id: "chad-excel-ingestion"
   cpu_requests: 200m
   memory_requests: 768Mi
   replicas: 2
   egov-mdms-service-host-key: 'mdms-v2'
   egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
-  defaultLocale: 'en_MZ'
-  central-instance-name: egov
+  defaultLocale: 'en_CHAD'
   central-instance-build: true
   central-instance-enabled: false
-  project-factory-host: chad-project-factory
+  project-factory-host: project-factory
   excel-ingestion-generation-save-topic: "chad-save-generated-file"
   excel-ingestion-generation-update-topic: "chad-update-generated-file"
   excel-ingestion-processing-save-topic: "chad-save-processing-file"
@@ -454,7 +453,7 @@ dashboard-analytics:
       enabled: true
       repo: "git@github.com:HCM-KEBBI/health-campaign-config"
       branch: "CENTRAL-UAT"
-  config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/ba/dashboard-analytics/*.json"
+  config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/chad/dashboard-analytics/*.json"
 
 auth-proxy:
   image:
@@ -508,8 +507,8 @@ health-expense-calculator:
   report-date-time-format: "dd/MM/yyyy HH:mm:ss z"
   is-attendance-approval-required: "true"
   register-batch-size: 15
-  tenantId: "ba"
-  excell-state-level-tenant-id: "ba"
+  tenantId: "chad"
+  excell-state-level-tenant-id: "chad"
   calculate-musterroll-health: chad-calculate-musterroll-health
   calculate-error-health: chad-calculate-error-health
   calculate-billmeta-health: chad-calculate-billmeta-health
@@ -522,7 +521,7 @@ health-expense-calculator:
   expense-bill-create-topic: chad-expense-bill-create-health
   expense-bill-update-topic: chad-expense-bill-update-health
   expense-bill-index-topic: chad-expense-bill-index-health
-  payment-pdf-key: "health-bill-payment-ba"
+  payment-pdf-key: "health-bill-payment-chad"
   billing-frequency-custom-minimum-days: "1"
   billing-config-v2-enabled: "true"
   billing-config-create-topic: chad-billing-config-create
