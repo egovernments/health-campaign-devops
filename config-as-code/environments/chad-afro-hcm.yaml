@@ -331,6 +331,7 @@ project-factory:
   memory_requests: 768Mi
   cpu_limits: 1000m
   memory_limits: 2Gi
+  context-path: "/chad/project-factory"
   groupId: "chad-project-factory"
   ingress:
     name: chad-project-factory
