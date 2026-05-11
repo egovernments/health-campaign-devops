@@ -28,10 +28,6 @@ env: |
       configMapKeyRef:
         name: egov-config
         key: kafka-brokers 
-  - name: KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC
-    value: save-campaign-details
-  - name: KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC
-    value: update-campaign-details
   - name: BASE_SECRET
     valueFrom:
       secretKeyRef:
@@ -327,3 +323,53 @@ env: |
     value: {{ .Values.notCreateUserIfAlreadyThere | default "true" | quote }}
   - name: INCOMING_REQUEST_PAYLOAD_LIMIT
     value: 5mb
+  - name: KAFKA_START_CAMPAIGN_MAPPING_TOPIC
+    value: {{ .Values.startCampaignMappingTopic | default "start-campaign-mapping" }}
+  - name: KAFKA_CREATE_RESOURCE_DETAILS_TOPIC
+    value: {{ .Values.createResourceDetailsTopic | default "create-resource-details" }}
+  - name: KAFKA_UPDATE_RESOURCE_DETAILS_TOPIC
+    value: {{ .Values.updateResourceDetailsTopic | default "update-resource-details" }}
+  - name: KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC
+    value: {{ .Values.createResourceActivityTopic | default "create-resource-activity" }}
+  - name: KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC
+    value: {{ .Values.updateGeneratedResourceDetailsTopic | default "update-generated-resource-details" }}
+  - name: KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC
+    value: {{ .Values.createGeneratedResourceDetailsTopic | default "create-generated-resource-details" }}
+  - name: KAFKA_SAVE_PLAN_FACILITY_TOPIC
+    value: {{ .Values.savePlanFacilityTopic | default "project-factory-save-plan-facility" }}
+  - name: KAFKA_SAVE_SHEET_DATA_TOPIC
+    value: {{ .Values.saveSheetDataTopic | default "save-sheet-data" }}
+  - name: KAFKA_UPDATE_SHEET_DATA_TOPIC
+    value: {{ .Values.updateSheetDataTopic | default "update-sheet-data" }}
+  - name: KAFKA_SAVE_MAPPING_TOPIC
+    value: {{ .Values.saveMappingDataTopic | default "save-mapping-data" }}
+  - name: KAFKA_UPDATE_MAPPING_TOPIC
+    value: {{ .Values.updateMappingDataTopic | default "update-mapping-data" }}
+  - name: KAFKA_DELETE_MAPPING_TOPIC
+    value: {{ .Values.deleteMappingDataTopic | default "delete-mapping-data" }}
+  - name: KAFKA_SAVE_PROCESS_TOPIC
+    value: {{ .Values.saveProcessDataTopic | default "save-process-data" }}
+  - name: KAFKA_UPDATE_PROCESS_TOPIC
+    value: {{ .Values.updateProcessDataTopic | default "update-process-data" }}
+  - name: KAFKA_START_TASK_TOPIC
+    value: {{ .Values.startAdminConsoleTaskTopic | default "start-admin-console-task" }}
+  - name: KAFKA_START_MAPPING_TASK_TOPIC
+    value: {{ .Values.startAdminConsoleMappingTaskTopic | default "start-admin-console-mapping-task" }}
+  - name: KAFKA_NOTIFICATION_EMAIL_TOPIC
+    value: {{ .Values.notificationEmailTopic | default "egov.core.notification.email" }}
+  - name: KAFKA_SAVE_PROJECT_CAMPAIGN_DETAILS_TOPIC
+    value: {{ .Values.saveProjectCampaignDetailsTopic | default "save-project-campaign-details" }}
+  - name: KAFKA_UPDATE_PROJECT_CAMPAIGN_DETAILS_TOPIC
+    value: {{ .Values.updateProjectCampaignDetailsTopic | default "update-project-campaign-details" }}
+  - name: KAFKA_TEST_TOPIC
+    value: {{ .Values.testTopic | default "test-topic-project-factory" }}
+  - name: KAFKA_HCM_PROCESSING_RESULT_TOPIC
+    value: {{ .Values.hcmProcessingResultTopic | default "hcm-processing-result" }}
+  - name: KAFKA_FACILITY_CREATE_BATCH_TOPIC
+    value: {{ .Values.facilityCreateBatchTopic | default "hcm-facility-create-batch" }}
+  - name: KAFKA_USER_CREATE_BATCH_TOPIC
+    value: {{ .Values.userCreateBatchTopic | default "hcm-user-create-batch" }}
+  - name: KAFKA_MAPPING_BATCH_TOPIC
+    value: {{ .Values.mappingBatchTopic | default "hcm-mapping-batch" }}
+  - name: KAFKA_CAMPAIGN_MARK_FAILED_TOPIC
+    value: {{ .Values.campaignMarkFailedTopic | default "hcm-campaign-mark-failed" }}
