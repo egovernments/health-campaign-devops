@@ -275,8 +275,6 @@ env: |
     value: "HCM_ADMIN_CONSOLE_USER_LIST"
   - name: LOCALE
     value: {{ .Values.defaultLocale | default "en_IN" }} 
-  - name: LOCALIZATION_MODULE
-    value: "hcm-admin-schemas"
   - name: MODULE_NAME
     value: "HCM-ADMIN-CONSOLE"
   - name: FORM_CONFIG_TEMPLATE_NAME
