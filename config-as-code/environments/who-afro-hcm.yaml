@@ -441,10 +441,10 @@ egov-user:
     dbMigration:
       image:
         repository: egovio/egov-user-db
-        tag: HDDF-5066-single-user-login-250a15b
+        tag: feature-sso-impl-1e23b63
   image:
     repository: egovio/egov-user
-    tag: HDDF-5066-single-user-login-250a15b
+    tag: feature-sso-impl-1e23b63
   central-instance-build: true
   central-instance-enabled: true
   replicas: 1
