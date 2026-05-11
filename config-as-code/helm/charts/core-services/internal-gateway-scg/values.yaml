@@ -1,0 +1,100 @@
+# Common Labels
+labels:
+  app: "internal-gateway"
+  group: "gateway"
+
+serviceAccount: internal-gateway
+namespace: egov
+
+# Init Containers Configs
+initContainers:
+  gitSync:
+    enabled: false
+    repo: "git@github.com:egovernments/configs"
+    branch: "master"
+  extraInitContainers: |
+    - name: "git-sync"
+      image: k8s.gcr.io/git-sync:v3.1.1
+      imagePullPolicy: IfNotPresent
+      securityContext:
+        runAsUser: 65533
+      volumeMounts:
+      - name: git-secret
+        mountPath: /etc/git-secret
+      - name: workdir
+        mountPath: "/work-dir"
+      env:
+      - name: "GIT_SYNC_REPO"
+        value: "{{ .Values.initContainers.gitSync.repo }}"
+      - name: "GIT_SYNC_BRANCH"
+        value: "{{ .Values.initContainers.gitSync.branch }}"
+      - name: "GIT_SYNC_DEPTH"
+        value: "1"
+      - name: "GIT_SYNC_ONE_TIME"
+        value: "true"
+      - name: "GIT_SYNC_SSH"
+        value: "true"
+      - name: "GIT_SYNC_ROOT"
+        value: "/work-dir"
+
+securityContext:
+  fsGroup: 65533
+
+extraVolumes: |
+  - name: zuul-routes
+    emptyDir: {}
+  - name: git-secret
+    secret:
+      secretName: git-creds
+      defaultMode: 288
+  - name: workdir
+    emptyDir: {}
+
+extraVolumeMounts: |
+  - name: zuul-routes
+    mountPath: "/etc/zuul"
+  - name: workdir
+    mountPath: "/work-dir"
+
+# Container Configs
+image:
+  repository: "internal-gateway-scg"
+replicas: "1"
+healthChecks:
+  enabled: true
+  livenessProbePath: "/health"
+  readinessProbePath: "/health"
+custom-filter-property: "false"
+posthook-config: ""
+prehook-config: ""
+heap: "-Xmx512m -Xms512m"
+appType: "java-spring"
+tracing-enabled: true
+server-tomcat-max-threads: "350"
+server-tomcat-max-connections: "1500"
+java-args: ""
+egov-open-endpoints-whitelist: "/user/oauth/token,/user-otp/v1/_send,/otp/v1/_validate,/user/citizen/_create,/localization/messages,/localization/messages/v1/_search,/user/password/nologin/_update,/tenant/v1/tenant/_search,/egov-location/boundarys,/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName,/egov-location/boundarys/getLocationByLocationName,/egov-mdms-service/v1/_search,/egov-location/location/v11/geography/_search,/filestore/v1/files/url,/pt-calculator-v2/billing-slab/_search,/egov-searcher/property-services/propertyopensearch/_get,/edcr/rest/dcr/downloadfile"  
+egov-mixed-mode-endpoints-whitelist: "/filestore/v1/files/id,/filestore/v1/files,/filestore/v1/files/tag,/user/_search,/access/v1/actions/mdms/_get,/tl-services/v1/_search,/tl-services/v1/BPAREG/_search,/tl-services/v1/BPAREG/_create,/tl-services/v1/BPAREG/_update,/tl-calculator/v1/BPAREG/_getbill,/bpa-services/bpa/appl/_search,/edcr/rest/dcr/scrutinize,/edcr/rest/dcr/scrutinydetails"
+eventlog-enabled: "false"
+eventlog-topic: "springInternalGateway-event-log"
+eventlog-urls-whitelist: ""
+home-isolation-chatbot-router-enabled: false
+
+# Additional Container Envs
+env: |
+  - name: SERVER_PORT
+    value: "8080"
+  - name: JAVA_OPTS
+    value: {{ index .Values "heap" | quote }}     
+  - name: ZUUL_HOST_CONNECT_TIMEOUT_MILLIS
+    value: "20000"
+  - name: ZUUL_HOST_SOCKET_TIMEOUT_MILLIS
+    value: "60000"
+  - name: SECURITY_BASIC_ENABLED
+    value: "false"
+  - name: MANAGEMENT_SECURITY_ENABLED
+    value: "false"
+  - name: JAVA_ARGS
+    value: {{ index .Values "java-args" | quote }}  
+  - name: EGOV_SERVICE_CONFIG_PATH
+    value: {{ index .Values "internal-gateway-json-path" | quote }} 

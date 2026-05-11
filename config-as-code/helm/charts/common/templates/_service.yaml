@@ -14,9 +14,13 @@ metadata:
 {{- if .Values.ingress.zuul }} 
     zuul/route-path: {{ .Values.ingress.context }}
 {{- end }}
+{{- if index .Values.service "internal-gateway-enabled" }}
+    internal-gateway-enabled: "true"
+{{- end }}
 {{- if and .Values.service .Values.service.additionalAnnotations}}                                   
   {{- tpl  .Values.service.additionalAnnotations . | nindent 4 }}
-{{- end }} 
+{{- end }}
+
   labels:
 {{- include "common.labels" . | nindent 4 }}   
 spec:
