@@ -447,7 +447,7 @@ egov-user:
     tag: feature-sso-impl-1e23b63
   central-instance-build: true
   central-instance-enabled: true
-  replicas: 1
+  replicas: 2
   heap: "-Xmx512m -Xms256m"
   memory_limits: 512Mi
   otp-validation: "true"
