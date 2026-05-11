@@ -131,7 +131,7 @@ cluster-configs:
               service-request: "http://service-request:8080/"
               mdms-service-v2: 'http://mdms-v2.egov:8080/'
               health-expense: 'http://expense.egov:8080/'
-              health-expense-calculator: 'http://health-expense-calculator.egov:8080/'
+              health-expense-calculator: 'http://internal-gateway.egov:8080/'
               health-muster-roll: 'http://muster-roll.egov:8080/'
               beneficiary-idgen: 'http://beneficiary-idgen.egov:8080/'
 disableAnnotationTimestamp: true
