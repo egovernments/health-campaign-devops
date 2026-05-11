@@ -500,9 +500,9 @@ health-expense-calculator:
     minReplicas: 1
     maxReplicas: 3
   ingress:
-    name: chad-expense-calculator
+    name: health-expense-calculator
     namespace: egov
-    context: "chad/health-expense-calculator"
+    context: "health-expense-calculator"
   cpu_requests: 200m
   memory_requests: 368Mi
   cpu_limits: 600m

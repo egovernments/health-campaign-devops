@@ -338,9 +338,9 @@ health-expense-calculator:
   spring-kafka-consumer-group-id: "congob-health-expense-calculator"
   namespace: "congob"
   ingress:
-    name: congob-expense-calculator
+    name: health-expense-calculator
     namespace: egov
-    context: "congob/health-expense-calculator"
+    context: "health-expense-calculator"
   heap: "-Xmx256m -Xms256m"
   hpa:
     enabled: false
@@ -358,7 +358,7 @@ health-expense-calculator:
   is-attendance-approval-required: "true"
   register-batch-size: 15
   tenantId: "congob"
-  excell-state-level-tenant-id: "congob"
+  excell-state-level-tenant-id: "chad"
   calculate-musterroll-health: congob-calculate-musterroll-health
   calculate-error-health: congob-calculate-error-health
   calculate-billmeta-health: congob-calculate-billmeta-health
