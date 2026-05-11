@@ -527,7 +527,7 @@ egov-pg-service:
 egov-malware-detection:
   initContainers:
     dbMigration:
-      enabled: true
+      enabled: false
       schemaTable: "egov_malware_schema"
       image:
         repository: "egov-malware-detection-db"
