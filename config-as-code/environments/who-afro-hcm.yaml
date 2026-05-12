@@ -306,6 +306,9 @@ egov-filestore:
   image:
     repository: egovio/egov-filestore
     tag: master-1e8d2bb
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
   volume: /opt/eGov/filestore
   is-bucket-fixed: "true"
   minio.url : "http://minio.backbone:9000/"
@@ -326,6 +329,9 @@ egov-idgen:
   image:
     repository: egovio/egov-idgen
     tag: master-1e8d2bb
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
   replicas : 1
   idformat-from-mdms: "true"
   java-args: -Dspring.profiles.active=monitoring
@@ -542,6 +548,9 @@ egov-malware-detection:
     repository: "egov-malware-detection"
     tag: 2.9.4-malware-detection-master-d07ae66
   namespace: egov
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
   heap: "-Xmx512m -Xms512m"
   cpu_requests: 100m
   memory_requests: 256Mi
@@ -894,6 +903,9 @@ egov-url-shortening:
   image:
     repository: egovio/egov-url-shortening
     tag: master-1e8d2bb
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
 
 egov-notification-mail:
   image:
@@ -938,6 +950,7 @@ boundary-service:
   image:
     repository: egovio/boundary-service
     tag: master-1e8d2bb
+  central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
 
@@ -998,6 +1011,9 @@ egov-enc-service:
   image:
     repository: egovio/egov-enc-service
     tag: central-instance-e346023dcb-26
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
   replicas: 1
   heap: '-Xmx512m -Xms256m'
   memory_limits: 512Mi
@@ -1174,6 +1190,9 @@ plan-service:
   image:
     repository: egovio/plan-service
     tag: master-b91815e
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
   egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
