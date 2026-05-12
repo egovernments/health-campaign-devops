@@ -225,6 +225,9 @@ console:
   image:
     repository: egovio/console
     tag: ondo-proxy-f806f086a2-149
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
   custom-js-injection: |
     sub_filter.conf: "
       sub_filter  '<head>' '<head>
@@ -419,6 +422,9 @@ egov-notification-sms:
   image:
     repository: egovio/egov-notification-sms
     tag: sandbox-d760d6b
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
   sms-provider-url: "sms provider url" ## Add sms provider url
   sms.provider.class: "Generic"
   sms.provider.contentType:  "application/x-www-form-urlencoded"
@@ -516,6 +522,9 @@ audit-service:
   image:
     repository: egovio/audit-service
     tag: master-1e8d2bb
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
   persist-yml-path: "https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/attendance-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/muster-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/estimate-service.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/contract-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/bankaccounts-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/expense-bill-payment-persister.yaml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/egov-persister/mdms-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/DEMO/egov-persister/boundary-persister.yml"
 
 egov-pg-service:
@@ -586,6 +595,9 @@ egov-indexer:
   image:
     repository: egovio/egov-indexer
     tag: indexer-17-searchBody-1799f17903-57
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
   heap: "-Xmx512m -Xms256m"
   cpu_requests: 200m
   memory_requests: 512Mi
@@ -606,6 +618,9 @@ egov-persister:
   image:
     repository: egovio/egov-persister
     tag: master-3b238aa
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
   heap: "-Xmx512m -Xms256m"
   cpu_requests: 200m
   memory_requests: 512Mi
@@ -662,6 +677,9 @@ pdf-service:
   image:
     repository: egovio/pdf-service
     tag: multiarch-master-99a308d
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
   initContainers:
     gitSync:
       repo: "https://github.com/egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
@@ -735,6 +753,9 @@ gateway:
   image:
     repository: egovio/gateway
     tag: gatewat-rate-limit-per-route-f808ba0
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
   replicas: 1
   custom-filter-property: "false"
   cpu_requests: 200m
@@ -751,6 +772,9 @@ internal-gateway-scg:
   image:
     repository: "internal-gateway-scg"
     tag: 2.9-LTS-internal-gateway-cdac11d
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
   kafka-consumer-group-id: "internal-gateway"
   heap: "-Xmx512m -Xms512m"
   hpa:
@@ -878,6 +902,9 @@ egov-notification-mail:
   image:
     repository: egovio/egov-notification-mail
     tag: master-1e8d2bb
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
 
 mdms-v2:
   initContainers:
@@ -931,6 +958,9 @@ transformer:
   image:
     repository: egovio/transformer
     tag: master-b91815e
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
 
 user-otp:
   image:
@@ -942,16 +972,25 @@ inbox:
   image:
     repository: egovio/inbox
     tag: inbox-workflow-fix-b6205e2
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
 
 error-handler:
   image:
     repository: egovio/error-handler
     tag: master-impel-dump-a28582d
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
 
 dss-dashboard:
   image:
     repository: egovio/dss-dashboard
     tag: v1.8.0-0d70d60e63-53
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
 
 egov-enc-service:
   initContainers:
@@ -970,6 +1009,9 @@ egov-accesscontrol:
   image:
     repository: egovio/egov-accesscontrol
     tag: master-1e8d2bb
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
   replicas : 1
   heap: "-Xmx512m -Xms256m"
 
@@ -1156,6 +1198,9 @@ resource-generator:
   image:
     repository: egovio/resource-generator
     tag: master-b91815e
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
   egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
@@ -1467,6 +1512,7 @@ health-attendance:
   image:
     repository: egovio/health-attendance
     tag: HCMPRE-1870-DataAccessErrorHandling-a7b1e6b
+  central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
 
@@ -1479,6 +1525,7 @@ health-expense:
   image:
     repository: egovio/health-expense
     tag: master-6b124f9
+  central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
 
@@ -1491,18 +1538,22 @@ health-muster-roll:
   image:
     repository: egovio/health-muster-roll
     tag: master-89c74d7
+  central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
 
 egov-notification-push:
+  central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
 
 health-notification-service:
+  central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
 
 worker-registry:
+  central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
 
@@ -1510,3 +1561,6 @@ auth-proxy:
   image:
     repository: egovio/auth-proxy
     tag: auth-proxy-user-fail-fix-2-a92d71909d-41
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
