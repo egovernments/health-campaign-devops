@@ -941,8 +941,8 @@ boundary-service:
   image:
     repository: egovio/boundary-service
     tag: master-1e8d2bb
-  central-instance-build: false
-  central-instance-enabled: false
+  central-instance-build: true
+  central-instance-enabled: true
 
 excel-ingestion:
   initContainers:
