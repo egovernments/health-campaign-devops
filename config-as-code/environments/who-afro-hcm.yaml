@@ -884,9 +884,6 @@ egov-localization:
   image:
     repository: egovio/egov-localization
     tag: redis-localization-key-5c0a4c4
-  central-instance-name: egov
-  central-instance-build: true
-  central-instance-enabled: true  
 
 egov-url-shortening:
   initContainers:
