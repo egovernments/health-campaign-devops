@@ -931,13 +931,13 @@ mdms-v2:
   central-instance-enabled: true
   heap: "-Xmx2048m -Xms1024m"
   replicas: 2
-  resources:
+  resources: |
     limits:
-      cpu: "1"
-      memory: "3Gi"
+      cpu: 1000m
+      memory: 3Gi
     requests:
-      cpu: "500m"
-      memory: "2Gi"
+      cpu: 500m
+      memory: 2Gi
   hpa:
     enabled: true
     minReplicas: 2
