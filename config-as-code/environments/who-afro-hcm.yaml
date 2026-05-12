@@ -888,6 +888,9 @@ mdms-v2:
   image:
     repository: egovio/mdms-v2
     tag: central-instance-6fae5fdefc-96
+  ingress:
+    replenishRate: "10"
+    burstCapacity: "40"
   central-instance-build: true
   central-instance-enabled: true
   heap: "-Xmx1296m -Xms512m"
