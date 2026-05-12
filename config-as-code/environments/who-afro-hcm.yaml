@@ -1394,87 +1394,86 @@ kafka-connect:
 
 ### Grafana >>>>>>>>>>>>>>>>>>>>
 grafana:
-  github:
-    allowed_organizations: ["egovernments"]
-    role_attribute_path: contains(groups[*], '@egovernments/micro-service-dev') && 'Viewer'
+  # github:
+  #   allowed_organizations: ["egovernments"]
+  #   role_attribute_path: contains(groups[*], '@egovernments/micro-service-dev') && 'Viewer'
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ### Prometheus & Alertmanager >>>>>>>>>>>>>>>>>>>>
 prometheus:
-  prometheusSpec:
-    retention: 7d
-    storageSpec:
-      volumeClaimTemplate:
-        spec:
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 30Gi
-    alertmanager:
-      enabled: false
-    externalLabels:
-      cluster: <cluster-name>                         ## provide cluster name
-    additionalScrapeConfigs:
-      - job_name: 'nginx-ingress-metrics'
-        static_configs:
-          - targets: [ 'ingress-nginx-controller-metrics.egov:10254' ]
-      - job_name: 'redis-exporter'
-        static_configs:
-          - targets: [ 'prometheus-redis-exporter.backbone:9121' ]
-      - job_name: 'blackbox'
-        metrics_path: /probe
-        params:
-          module: [ http_2xx ]
-        static_configs:
-          - targets:
-              - <list of urls to be monitored>         ## add all URLs to monitor example -  https://demo.digit.org/digit-ui
-        relabel_configs:
-          - source_labels: [ __address__ ]
-            target_label: __param_target
-          - source_labels: [ __param_target ]
-            target_label: instance
-          - target_label: __address__
-            replacement: blackbox-prometheus-blackbox-exporter:9115
-      - job_name: 'blackbox_exporter'
-        static_configs:
-          - targets: [ 'blackbox-prometheus-blackbox-exporter:9115' ]
+  retention: 90d
+  storageSpec:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: default
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 30Gi
+  alertmanager:
+    enabled: true
+  externalLabels:
+    cluster: afrohcm-t-euw
+  additionalScrapeConfigs:
+    - job_name: 'nginx-ingress-metrics'
+      static_configs:
+        - targets: [ 'ingress-nginx-controller-metrics.egov:10254' ]
+    - job_name: 'blackbox'
+      metrics_path: /probe
+      params:
+        module: [ http_2xx ]
+      static_configs:
+        - targets:
+            - https://campaigns.afro.who.int/jupyter/hub/
+            - https://campaigns.afro.who.int/kibana-upgrade/
+            - https://campaigns.afro.who.int/pgadmin/
+      relabel_configs:
+        - source_labels: [ __address__ ]
+          target_label: __param_target
+        - source_labels: [ __param_target ]
+          target_label: instance
+        - target_label: __address__
+          replacement: prometheus-blackbox-exporter:9115
+    - job_name: 'blackbox_exporter'
+      static_configs:
+        - targets: [ 'prometheus-blackbox-exporter:9115' ]
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ### loki-stack >>>>>>>>>>>>>>>>>>>>>>>>>>
-loki:
-  persistence:
-    enabled: true
-    accessModes:
-      - ReadWriteOnce
-    size: 30Gi
-  serviceAccount:
-    annotations: {}
-  additionalConfigs:
-    schema_config:
-      configs:
-        - from: 2020-10-24
-          store: boltdb-shipper
-          object_store: filesystem                 ## local filesystem as storage
-          schema: v11
-          index:
-            prefix: index_
-            period: 24h
-    storage_config:
-      boltdb_shipper:
-        active_index_directory: /data/loki/index
-        cache_location: /data/loki/index_cache
-        shared_store: filesystem                  ## local filesystem as storage
-        cache_ttl: 24h
-      filesystem:
-        directory: /data/loki/chunks
-    compactor:
-      working_directory: /data/loki/boltdb-shipper-compactor
-      shared_store: filesystem                    ## local filesystem as storage
-      retention_enabled: true
-      compaction_interval: 72h                    ## compaction in hours
-    table_manager:
-      retention_deletes_enabled: true
-      retention_period: 72h                       ## retention in hours
+# loki:
+#   persistence:
+#     enabled: true
+#     accessModes:
+#       - ReadWriteOnce
+#     size: 30Gi
+#   serviceAccount:
+#     annotations: {}
+#   additionalConfigs:
+#     schema_config:
+#       configs:
+#         - from: 2020-10-24
+#           store: boltdb-shipper
+#           object_store: filesystem                 ## local filesystem as storage
+#           schema: v11
+#           index:
+#             prefix: index_
+#             period: 24h
+#     storage_config:
+#       boltdb_shipper:
+#         active_index_directory: /data/loki/index
+#         cache_location: /data/loki/index_cache
+#         shared_store: filesystem                  ## local filesystem as storage
+#         cache_ttl: 24h
+#       filesystem:
+#         directory: /data/loki/chunks
+#     compactor:
+#       working_directory: /data/loki/boltdb-shipper-compactor
+#       shared_store: filesystem                    ## local filesystem as storage
+#       retention_enabled: true
+#       compaction_interval: 72h                    ## compaction in hours
+#     table_manager:
+#       retention_deletes_enabled: true
+#       retention_period: 72h                       ## retention in hours
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ### kafka-ui >>>>>>>>>>>>>>>>>>>>>>>>>>>>

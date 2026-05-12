@@ -1,10 +1,12 @@
 environments:
-  demo:
+  env:
     values:
       - namespace: monitoring
-      - ../../../environments/egov-demo.yaml
-      - ../../../environments/egov-demo-secrets.yaml
+      - ../../../environments/who-afro-hcm.yaml
+    secrets:
+      - ../../../environments/who-afro-hcm-secrets.yaml
 ---
+
 repositories:
 - name: grafana
   url: https://grafana.github.io/helm-charts
@@ -20,15 +22,6 @@ repositories:
   url: https://helm.elastic.co
 
 releases:
-- name: loki-stack
-  installed: true
-  namespace: {{ .Values.namespace | default "default-namespace" }}
-  chart: grafana/loki-stack
-  version: 2.10.1
-  values:
-  - ./values/loki-stack.yaml
-  - {{ .Values | toYaml | nindent 8 }}
-
 - name: kube-prometheus-stack
   installed: true
   namespace: {{ .Values.namespace | default "default-namespace" }}
@@ -38,6 +31,18 @@ releases:
   values:
   - ./values/prometheus.yaml
   - {{ .Values | toYaml | nindent 8 }}
+  - alertmanager:
+      enabled: {{ .Values.prometheus.alertmanager.enabled }}
+  {{- if .Values.prometheus.alertmanager.enabled }}
+  - alertmanager:
+      config: {{ index .Values "cluster-configs" "secrets" "alertmanager" "config" | toYaml | nindent 8 }}
+  {{- end }}
+  - prometheus:
+      prometheusSpec:
+        additionalScrapeConfigs: {{ .Values.prometheus.additionalScrapeConfigs | toYaml | nindent 8 }}
+        externalLabels: {{ .Values.prometheus.externalLabels | toYaml | nindent 10 }}
+        storageSpec: {{ .Values.prometheus.storageSpec | toYaml | nindent 10 }}
+        retention:  {{ .Values.prometheus.retention | toYaml | nindent 10 }}
 
 - name: jaeger
   installed: false
@@ -61,13 +66,6 @@ releases:
   version: 7.3.0
   values:
   - ./values/grafana.yaml
-  - grafana.ini:
-      auth.github:
-        allowed_organizations: {{ .Values.grafana.github.allowed_organizations }}
-        role_attribute_path: {{ .Values.grafana.github.role_attribute_path }}
-  - envRenderSecret:
-      GF_AUTH_GITHUB_YAMLAPPLICATIONCONFIG_AUTH_OAUTH2_CLIENT_GITHUB_CLIENTID: {{ index .Values "cluster-configs" "secrets" "grafana" "clientID" }}
-      GF_AUTH_GITHUB_CLIENT_SECRET: {{ index .Values "cluster-configs" "secrets" "grafana" "clientSecret" }}
   set:
     - name: ingress.hosts[0]
       value: {{ .Values.global.domain | quote }}
@@ -84,7 +82,7 @@ releases:
   - {{ .Values | toYaml | nindent 8 }}
 
 - name: kafka-ui
-  installed: true
+  installed: false
   namespace: backbone
   chart: kafka-ui/kafka-ui
   version: 0.7.6
