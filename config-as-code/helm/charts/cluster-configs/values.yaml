@@ -154,3 +154,7 @@ cluster-configs:
     airflow:
       namespace: egov
       name: airflow
+    
+    sso:
+      namespace: egov
+      name: sso
