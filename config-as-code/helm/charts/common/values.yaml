@@ -51,8 +51,8 @@ initContainers:
               name: egov-config
               {{- if index .Values "central-instance-build" }}
               key: db-url
-              {{- else if eq .Values.namespace "chad" }}
-              key: chad-db-url
+              {{- else if and .Values.namespace (ne .Values.namespace "egov") }}
+              key: {{ .Values.namespace }}-db-url
               {{- else }}
               key: db-url
               {{- end }}
@@ -70,11 +70,11 @@ initContainers:
             configMapKeyRef:
               name: egov-config
               key: db-schema-names
-          {{- else if eq .Values.namespace "chad" }}
-          value: "chad"
-        {{- else }}
+          {{- else if and .Values.namespace (ne .Values.namespace "egov") }}
+          value: "{{ .Values.namespace }}"
+          {{- else }}
           value: "public"
-        {{- end }}
+          {{- end }}
         - name: "SCHEMA_TABLE"
           value: {{ .Values.initContainers.dbMigration.schemaTable | quote }}              
         - name: "FLYWAY_USER"
@@ -157,8 +157,8 @@ extraEnv:
         valueFrom:
           configMapKeyRef:
             name: egov-config
-      {{- if eq .Values.namespace "chad" }}
-            key: chad-db-url
+      {{- if and .Values.namespace (ne .Values.namespace "egov") }}
+            key: {{ .Values.namespace }}-db-url
       {{- else }}
             key: db-url
       {{- end }}
@@ -181,8 +181,8 @@ extraEnv:
         valueFrom:
           configMapKeyRef:
             name: egov-config
-      {{- if eq .Values.namespace "chad" }}  
-            key: chad-db-url
+      {{- if and .Values.namespace (ne .Values.namespace "egov") }}
+            key: {{ .Values.namespace }}-db-url
       {{- else }}
             key: db-url
       {{- end }}
