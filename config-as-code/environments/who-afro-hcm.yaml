@@ -920,15 +920,15 @@ mdms-v2:
     burstCapacity: "40"
   central-instance-build: true
   central-instance-enabled: true
-  heap: "-Xmx1296m -Xms512m"
+  heap: "-Xmx2048m -Xms1024m"
   hpa:
     enabled: false
     minReplicas: 1
     maxReplicas: 3
-  cpu_requests: 200m
-  memory_requests: 768Mi
-  cpu_limits: 300m
-  memory_limits: 1.5Gi
+  cpu_requests: 500m
+  memory_requests: 2Gi
+  cpu_limits: 1000m
+  memory_limits: 3Gi
   replicas: 2
 
 
