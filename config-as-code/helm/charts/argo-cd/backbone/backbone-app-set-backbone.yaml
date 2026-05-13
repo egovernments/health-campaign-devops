@@ -8,7 +8,7 @@ spec:
   generators:
     - git:
         repoURL: git@github.com:egovernments/health-campaign-devops.git
-        revision: backbone-argocd
+        revision: azure-install-who-test
         directories:
           - path: config-as-code/helm/charts/backbone-used-charts/*
 
@@ -21,7 +21,7 @@ spec:
 
       source:
         repoURL: git@github.com:egovernments/health-campaign-devops.git
-        targetRevision: backbone-argocd
+        targetRevision: azure-install-who-test
         path: '{{path}}'
 
         helm:
