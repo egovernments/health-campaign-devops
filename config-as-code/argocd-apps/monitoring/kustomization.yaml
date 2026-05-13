@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - azure-storage-secret.yaml
+  - loki-stack-app.yaml
+  - prometheus-stack-app.yaml
+  - grafana-app.yaml
+  - blackbox-exporter-app.yaml
+
+# Add common labels to all child applications
+commonLabels:
+  app.kubernetes.io/part-of: monitoring-stack
+  app.kubernetes.io/managed-by: monitoring-stack-argocd
+
+# Add annotations to prevent standalone deployment
+commonAnnotations:
+  argocd.argoproj.io/sync-options: Prune=false
+  monitoring-stack/managed: "true"
+  monitoring-stack/warning: "This application is managed by monitoring-stack. Do not deploy separately."

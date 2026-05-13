@@ -1,7 +1,9 @@
 # Monitoring Stack - ArgoCD Migration
 
 ## Overview
-This directory contains ArgoCD Application manifests for deploying the monitoring stack.
+This directory contains ArgoCD Application manifests for deploying the monitoring stack using the **App of Apps pattern**.
+
+⚠️ **IMPORTANT**: All applications are managed by the parent `monitoring-stack` application. DO NOT deploy child applications separately!
 
 ## Components
 1. **loki-stack-app.yaml** - Loki with TSDB configuration for log aggregation
@@ -65,6 +67,18 @@ helm uninstall kube-prometheus-stack -n monitoring --keep-history
 helm uninstall grafana -n monitoring --keep-history
 helm uninstall blackbox -n monitoring --keep-history
 ```
+
+## Protection Against Duplicate Deployments
+
+Each child application includes:
+- **Labels**: `app.kubernetes.io/part-of: monitoring-stack`
+- **Annotations**: Warning that apps are managed by monitoring-stack
+- **Tracking IDs**: Links them to the parent application
+
+If someone tries to deploy these apps separately, it will cause:
+1. Resource conflicts (same namespaces, services)
+2. Configuration inconsistencies
+3. Secret access issues
 
 ## Important Notes
 

@@ -3,6 +3,12 @@ kind: Application
 metadata:
   name: loki-stack
   namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: monitoring-stack
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    monitoring-stack/managed: "true"
+    monitoring-stack/do-not-deploy-standalone: "This app is managed by monitoring-stack"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
