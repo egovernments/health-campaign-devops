@@ -1,0 +1,72 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: 56.6.2
+    helm:
+      valuesFiles:
+        - values/prometheus.yaml
+      values: |
+        alertmanager:
+          enabled: false
+        prometheus:
+          prometheusSpec:
+            retention: 90d
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: default
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 30Gi
+            externalLabels:
+              cluster: afrohcm-t-euw
+            additionalScrapeConfigs:
+              - job_name: 'nginx-ingress-metrics'
+                static_configs:
+                  - targets: [ 'ingress-nginx-controller-metrics.egov:10254' ]
+              - job_name: 'blackbox'
+                metrics_path: /probe
+                params:
+                  module: [ http_2xx ]
+                static_configs:
+                  - targets:
+                      - https://campaigns.afro.who.int/jupyter/hub/
+                      - https://campaigns.afro.who.int/kibana-upgrade/
+                      - https://campaigns.afro.who.int/pgadmin/
+                relabel_configs:
+                  - source_labels: [ __address__ ]
+                    target_label: __param_target
+                  - source_labels: [ __param_target ]
+                    target_label: instance
+                  - target_label: __address__
+                    replacement: prometheus-blackbox-exporter:9115
+              - job_name: 'blackbox_exporter'
+                static_configs:
+                  - targets: [ 'prometheus-blackbox-exporter:9115' ]
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

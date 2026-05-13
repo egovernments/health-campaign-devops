@@ -1,0 +1,64 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: grafana
+    targetRevision: 7.3.0
+    helm:
+      values: |
+        ingress:
+          enabled: true
+          annotations:
+            kubernetes.io/ingress.class: nginx
+            cert-manager.io/cluster-issuer: letsencrypt-prod
+          hosts:
+            - campaigns.afro.who.int
+          path: /grafana
+          tls:
+            - secretName: campaigns-afro-who-int-tls
+              hosts:
+                - campaigns.afro.who.int
+        env:
+          GF_SERVER_ROOT_URL: https://campaigns.afro.who.int/grafana
+          GF_SERVER_SERVE_FROM_SUB_PATH: "true"
+        datasources:
+          datasources.yaml:
+            apiVersion: 1
+            datasources:
+              - name: Prometheus
+                type: prometheus
+                url: http://kube-prometheus-stack-prometheus:9090
+                access: proxy
+                isDefault: true
+              - name: Loki
+                type: loki
+                url: http://loki-stack:3100
+                access: proxy
+        persistence:
+          enabled: true
+          size: 10Gi
+        adminUser: admin
+        adminPassword: admin # Change this in production
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

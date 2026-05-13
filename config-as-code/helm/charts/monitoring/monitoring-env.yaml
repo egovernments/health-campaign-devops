@@ -1,0 +1,54 @@
+namespace: monitoring
+global:
+  domain: campaigns.afro.who.int
+
+prometheus:
+  retention: 90d
+  storageSpec:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: default
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 30Gi
+  alertmanager:
+    enabled: false
+  externalLabels:
+    cluster: afrohcm-t-euw
+  additionalScrapeConfigs: []
+
+
+loki:
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 30Gi
+  additionalConfigs:
+    schema_config:
+      configs:
+        - from: 2023-10-20
+          store: tsdb
+          object_store: azure
+          schema: v13
+          index:
+            prefix: index_
+            period: 24h
+    storage_config:
+      tsdb_shipper:
+        active_index_directory: /data/loki/index
+        cache_location: /data/loki/index_cache
+        shared_store: azure
+        cache_ttl: 24h
+      azure:
+        container_name: loki        # Your Azure Storage Container
+        account_name: whoafrolokisaprd         # Your Azure Storage Account
+        account_key: <AZURE_STORAGE_ACCOUNT_KEY>             # Or use managed identity
+        use_managed_identity: false
+        request_timeout: 0
+    compactor:
+      working_directory: /data/loki/tsdb-compactor
+      shared_store: azure
+      retention_enabled: true
+      compaction_interval: 168h

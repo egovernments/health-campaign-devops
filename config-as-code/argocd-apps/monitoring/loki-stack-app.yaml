@@ -1,0 +1,143 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki-stack
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: loki-stack
+    targetRevision: 2.10.1
+    helm:
+      values: |
+        test_pod:
+          enabled: false
+        loki:
+          enabled: true
+          isDefault: true
+          image:
+            tag: 2.9.3
+            repository: "grafana/loki"
+          service:
+            port: 3100
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+            initialDelaySeconds: 45
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+            initialDelaySeconds: 45
+          datasource:
+            jsonData: "{}"
+            uid: ""
+          persistence:
+            enabled: true
+            accessModes:
+              - ReadWriteOnce
+            size: 30Gi
+          config:
+            auth_enabled: false
+            server:
+              http_listen_port: 3100
+              grpc_listen_port: 9095
+            common:
+              path_prefix: /data/loki
+              storage:
+                azure:
+                  container_name: loki
+                  account_name: whoafrolokisaprd
+                  account_key: <AZURE_STORAGE_ACCOUNT_KEY> # Set via secret or environment variable
+                  use_managed_identity: false
+                  request_timeout: 0
+              replication_factor: 1
+              ring:
+                kvstore:
+                  store: inmemory
+            schema_config:
+              configs:
+                - from: "2023-10-20"
+                  store: tsdb
+                  object_store: azure
+                  schema: v13
+                  index:
+                    prefix: index_
+                    period: 24h
+            storage_config:
+              tsdb_shipper:
+                active_index_directory: /data/loki/index
+                cache_location: /data/loki/index_cache
+                shared_store: azure
+                cache_ttl: 24h
+              azure:
+                container_name: loki
+                account_name: whoafrolokisaprd
+                account_key: <AZURE_STORAGE_ACCOUNT_KEY>
+                use_managed_identity: false
+                request_timeout: 0
+            compactor:
+              working_directory: /data/loki/compactor
+              shared_store: azure
+              compaction_interval: 10m
+              retention_enabled: true
+              retention_delete_delay: 2h
+              retention_delete_worker_count: 150
+            limits_config:
+              enforce_metric_name: false
+              reject_old_samples: true
+              reject_old_samples_max_age: 168h
+              max_entries_limit_per_query: 5000
+              retention_period: 720h
+            ingester:
+              wal:
+                enabled: true
+                dir: /data/loki/wal
+              chunk_idle_period: 30m
+              chunk_retain_period: 1m
+              max_transfer_retries: 0
+              lifecycler:
+                ring:
+                  replication_factor: 1
+            memberlist:
+              join_members:
+                - loki-stack-memberlist
+            analytics:
+              reporting_enabled: false
+        promtail:
+          enabled: true
+          config:
+            logLevel: info
+            serverPort: 3101
+            clients:
+              - url: http://loki-stack:3100/loki/api/v1/push
+        grafana:
+          enabled: false
+          sidecar:
+            datasources:
+              label: ""
+              labelValue: ""
+              enabled: true
+              maxLines: 1000
+        prometheus:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
