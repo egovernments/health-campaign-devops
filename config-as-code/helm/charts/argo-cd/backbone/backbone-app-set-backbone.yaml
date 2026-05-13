@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: who-afro-backbone-appset
+  namespace: argocd
+
+spec:
+  generators:
+    - git:
+        repoURL: git@github.com:egovernments/health-campaign-devops.git
+        revision: backbone-argocd
+        directories:
+          - path: config-as-code/helm/charts/backbone-used-charts/*
+
+  template:
+    metadata:
+      name: 'backbone-{{path.basename}}'
+
+    spec:
+      project: backbone-project
+
+      source:
+        repoURL: git@github.com:egovernments/health-campaign-devops.git
+        targetRevision: backbone-argocd
+        path: '{{path}}'
+
+        helm:
+          valueFiles:
+            - values.yaml
+            - ../../../../environments/who-afro-hcm.yaml
+
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: default
+
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: true
+
+        syncOptions:
+          - ApplyOutOfSyncOnly=true
+          - ServerSideApply=true
+
+        retry:
+          limit: 10
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m
