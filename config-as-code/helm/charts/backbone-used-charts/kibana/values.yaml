@@ -189,7 +189,7 @@ tolerations: []
 affinity: {}
 
 nameOverride: ""
-fullnameOverride: ""
+fullnameOverride: "release-name-kibana"
 
 lifecycle: {}
 # preStop:
