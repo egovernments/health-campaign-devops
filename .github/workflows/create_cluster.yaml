@@ -101,12 +101,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Download infra-as-code folder from artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v8
         with:
           name: infra-as-code-artifact
           path: .
       - name: Download config-as-code folder from artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v8
         with:
           name: config-as-code-artifact
           path: .
@@ -205,12 +205,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Download infra-as-code folder from artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v8
         with:
           name: infra-as-code-artifact
           path: .
       - name: Download config-as-code folder from artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v8
         with:
           name: config-as-code-artifact
           path: .
@@ -280,12 +280,12 @@ jobs:
   #     - name: Checkout code
   #       uses: actions/checkout@v2
   #     - name: Download infra-as-code folder from artifacts
-  #       uses: actions/download-artifact@v2
+  #       uses: actions/download-artifact@v8
   #       with:
   #         name: infra-as-code-artifact
   #         path: .
   #     - name: Download config-as-code folder from artifacts
-  #       uses: actions/download-artifact@v2
+  #       uses: actions/download-artifact@v8
   #       with:
   #         name: config-as-code-artifact
   #         path: .
