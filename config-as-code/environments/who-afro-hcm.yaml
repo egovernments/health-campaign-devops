@@ -531,7 +531,7 @@ audit-service:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
-  persist-yml-path: "https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/attendance-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/muster-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/estimate-service.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/contract-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/bankaccounts-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/expense-bill-payment-persister.yaml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/egov-persister/mdms-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/DEMO/egov-persister/boundary-persister.yml"
+  persist-yml-path: "https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/attendance-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/muster-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/estimate-service.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/contract-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/bankaccounts-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/expense-bill-payment-persister.yaml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/egov-persister/mdms-persister.yml,https://raw.githubusercontent.com/HCM-WHO-AFRO/health-campaign-config/DEMO/egov-persister/boundary-persister.yml"
 
 egov-pg-service:
   axis: true
@@ -619,7 +619,7 @@ egov-indexer:
         repository: egov-indexer-db
         tag: indexer-17-searchBody-1799f17903-57
     gitSync:
-      repo: "https://github.com/egovernments/health-campaign-config"        ##### Change repo url with Your fork Repo url
+      repo: "https://github.com/HCM-WHO-AFRO/health-campaign-config"        ##### Change repo url with Your fork Repo url
       branch: "DEMO"
   egov-indexer-yaml-repo-path: "/work-dir/health-campaign-config/egov-indexer/chad,/work-dir/health-campaign-config/egov-indexer/congob"
 
@@ -641,34 +641,34 @@ egov-persister:
   persist-yml-path: "/work-dir/health-campaign-config/egov-persister/chad,/work-dir/health-campaign-config/egov-persister/congob,/work-dir/health-campaign-config/egov-persister/common"
   initContainers:
     gitSync:
-      repo: "https://github.com/egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
+      repo: "https://github.com/HCM-WHO-AFRO/health-campaign-config"      ##### Change repo url with Your fork Repo url
       branch: "DEMO"                                    ##### Change repo branch with Your fork Repo branch
 
 egov-data-uploader:
   initContainers:
     gitSync:
-      repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
+      repo: "git@github.com:HCM-WHO-AFRO/health-campaign-config"      ##### Change repo url with Your fork Repo url
       branch: "DEMO"                                    ##### Change repo branch with Your fork Repo branch
 
 egov-searcher:
   search-yaml-path: ""
   initContainers:
     gitSync:
-      repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
+      repo: "git@github.com:HCM-WHO-AFRO/health-campaign-config"     ##### Change repo url with Your fork Repo url
       branch: "DEMO"                                   ##### Change repo branch with Your fork Repo branch
 
 dashboard-analytics:
   config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/dashboard-analytics/*.json"
   initContainers:
     gitSync:
-      repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
+      repo: "git@github.com:HCM-WHO-AFRO/health-campaign-config"      ##### Change repo url with Your fork Repo url
       branch: "DEMO"                                    ##### Change repo branch with Your fork Repo branch
 
 dashboard-ingest:
   config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/dashboard-ingest/*.json"
   initContainers:
     gitSync:
-      repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
+      repo: "git@github.com:HCM-WHO-AFRO/health-campaign-config"      ##### Change repo url with Your fork Repo url
       branch: "DEMO"
 
 # reportinfra >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -678,7 +678,7 @@ report:
   spring-datasource-tomcat-max-active: 5
   initContainers:
     gitSync:
-      repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
+      repo: "git@github.com:HCM-WHO-AFRO/health-campaign-config"     ##### Change repo url with Your fork Repo url
       branch: "DEMO"                                   ##### Change repo branch with Your fork Repo branch
   report-locationsfile-path: "file:///work-dir/health-campaign-config/reports/reportFileLocationsv1.txt"
 
@@ -691,7 +691,7 @@ pdf-service:
   central-instance-enabled: true
   initContainers:
     gitSync:
-      repo: "https://github.com/egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
+      repo: "https://github.com/HCM-WHO-AFRO/health-campaign-config"     ##### Change repo url with Your fork Repo url
       branch: "DEMO"                                   ##### Change repo branch with Your fork Repo branch
   data-config-urls: "file:///work-dir/health-campaign-config/pdf-service/data-config/tradelicense-receipt.json,file:///work-dir/health-campaign-config/pdf-service/data-config/property-receipt.json,file:///work-dir/health-campaign-config/pdf-service/data-config/property-bill.json,file:///work-dir/health-campaign-config/pdf-service/data-config/tradelicense-bill.json,file:///work-dir/health-campaign-config/pdf-service/data-config/firenoc-receipt.json,file:///work-dir/health-campaign-config/pdf-service/data-config/pt-receipt.json,file:///work-dir/health-campaign-config/pdf-service/data-config/tl-receipt.json,file:///work-dir/health-campaign-config/pdf-service/data-config/consolidatedbill.json,file:///work-dir/health-campaign-config/pdf-service/data-config/consolidatedreceipt.json,file:///work-dir/health-campaign-config/pdf-service/data-config/tlapplication.json,file:///work-dir/health-campaign-config/pdf-service/data-config/passvehicle-certificate.json,file:///work-dir/health-campaign-config/pdf-service/data-config/ws-consolidatedacknowlegment.json,file:///work-dir/health-campaign-config/pdf-service/data-config/ws-consolidatedsewerageconnection.json,file:///work-dir/health-campaign-config/pdf-service/data-config/buildingpermit.json,file:///work-dir/health-campaign-config/pdf-service/data-config/ptmutationcertificate.json,file:///work-dir/health-campaign-config/pdf-service/data-config/tlrenewalcertificate.json,file:///work-dir/health-campaign-config/pdf-service/data-config/bpa-revocation.json,file:///work-dir/health-campaign-config/pdf-service/data-config/buildingpermit-low.json,file:///work-dir/health-campaign-config/pdf-service/data-config/misc-receipt.json,file:///work-dir/health-campaign-config/pdf-service/data-config/ws-applicationwater.json,file:///work-dir/health-campaign-config/pdf-service/data-config/ws-sanctionletter.json,file:///work-dir/health-campaign-config/pdf-service/data-config/ws-estimationnotice.json,file:///work-dir/health-campaign-config/pdf-service/data-config/ws-applicationsewerage.json,file:///work-dir/health-campaign-config/pdf-service/data-config/tlcertificate.json,file:///work-dir/health-campaign-config/pdf-service/data-config/detailed-estimate.json,file:///work-dir/health-campaign-config/pdf-service/data-config/deviation-statement.json,file:///work-dir/health-campaign-config/pdf-service/data-config/measurement-book.json,file:///work-dir/health-campaign-config/pdf-service/data-config/fsm-receipt.json,file:///work-dir/health-campaign-config/pdf-service/data-config/pqm-adhoctest.json,file:///work-dir/health-campaign-config/works/pdf-service/data-config/analysis-statement.json,file:///work-dir/health-campaign-config/works/pdf-service/data-config/utilization-statement.json,file:///work-dir/health-campaign-config/health/pdf-service/data-config/health-bill-payment.json"
   format-config-urls: "file:///work-dir/health-campaign-config/pdf-service/format-config/tradelicense-receipt.json,file:///work-dir/health-campaign-config/pdf-service/format-config/property-receipt.json,file:///work-dir/health-campaign-config/pdf-service/format-config/property-bill.json,file:///work-dir/health-campaign-config/pdf-service/format-config/tradelicense-bill.json,file:///work-dir/health-campaign-config/pdf-service/format-config/firenoc-receipt.json,file:///work-dir/health-campaign-config/pdf-service/format-config/pt-receipt.json,file:///work-dir/health-campaign-config/pdf-service/format-config/tl-receipt.json,file:///work-dir/health-campaign-config/pdf-service/format-config/consolidatedbill.json,file:///work-dir/health-campaign-config/pdf-service/format-config/consolidatedreceipt.json,file:///work-dir/health-campaign-config/pdf-service/format-config/tlapplication.json,file:///work-dir/health-campaign-config/pdf-service/format-config/passvehicle-certificate.json,file:///work-dir/health-campaign-config/pdf-service/format-config/ws-consolidatedacknowlegment.json,file:///work-dir/health-campaign-config/pdf-service/format-config/ws-consolidatedsewerageconnection.json,file:///work-dir/health-campaign-config/pdf-service/format-config/buildingpermit.json,file:///work-dir/health-campaign-config/pdf-service/format-config/ptmutationcertificate.json,file:///work-dir/health-campaign-config/pdf-service/format-config/tlrenewalcertificate.json,file:///work-dir/health-campaign-config/pdf-service/format-config/bpa-revocation.json,file:///work-dir/health-campaign-config/pdf-service/format-config/buildingpermit-low.json,file:///work-dir/health-campaign-config/pdf-service/format-config/misc-receipt.json,file:///work-dir/health-campaign-config/pdf-service/format-config/ws-applicationwater.json,file:///work-dir/health-campaign-config/pdf-service/format-config/ws-sanctionletter.json,file:///work-dir/health-campaign-config/pdf-service/format-config/ws-estimationnotice.json,file:///work-dir/health-campaign-config/pdf-service/format-config/ws-applicationsewerage.json,file:///work-dir/health-campaign-config/pdf-service/format-config/tlcertificate.json,file:///work-dir/health-campaign-config/pdf-service/format-config/detailed-estimate.json,file:///work-dir/health-campaign-config/pdf-service/format-config/deviation-statement.json,file:///work-dir/health-campaign-config/pdf-service/format-config/measurement-book.json,file:///work-dir/health-campaign-config/pdf-service/format-config/fsm-receipt.json,file:///work-dir/health-campaign-config/pdf-service/format-config/pqm-adhoctest.json,file:///work-dir/health-campaign-config/works/pdf-service/format-config/analysis-statement.json,file:///work-dir/health-campaign-config/works/pdf-service/format-config/utilization-statement.json,file:///work-dir/health-campaign-config/health/pdf-service/format-config/health-bill-payment.json"
@@ -794,7 +794,7 @@ internal-gateway-scg:
   internal-gateway-json-path: "file:///work-dir/health-campaign-config/internal-gateway/internal-gateway.json"
   initContainers:
     gitSync:
-      repo: "git@github.com:egovernments/health-campaign-config"
+      repo: "git@github.com:HCM-WHO-AFRO/health-campaign-config"
       branch: "DEMO"
 
 
