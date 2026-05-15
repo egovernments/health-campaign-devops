@@ -762,9 +762,6 @@ gateway:
   image:
     repository: egovio/gateway
     tag: gatewat-rate-limit-per-route-f808ba0
-  central-instance-name: egov
-  central-instance-build: true
-  central-instance-enabled: true
   replicas: 1
   custom-filter-property: "false"
   cpu_requests: 200m
