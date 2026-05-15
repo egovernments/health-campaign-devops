@@ -1,4 +1,8 @@
 name: DIGITClusterworkflow
+
+permissions:
+  contents: read
+
 # Workflow branch
 on:
   push:
@@ -10,7 +14,7 @@ on:
       destroyCommand:
         description: 'Type "destroy" to run the terraform_infra_destruction job.'
         required: true
-        default: ''    
+        default: ''
 jobs:
   Input_validation:
     runs-on: ubuntu-latest

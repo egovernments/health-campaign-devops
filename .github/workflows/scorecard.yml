@@ -27,9 +27,8 @@ jobs:
       security-events: write
       # Needed to publish results and get PR comment
       id-token: write
-      # Uncomment the permissions below if installing in a private repository
-      # contents: read
-      # actions: read
+      # Needed to read repository contents
+      contents: read
 
     steps:
       - name: "Checkout code"
