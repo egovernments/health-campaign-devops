@@ -7,7 +7,7 @@ metadata:
 spec:
   generators:
     - git:
-        repoURL: git@github.com:egovernments/health-campaign-devops.git
+        repoURL: git@github.com:HCM-WHO-AFRO/health-campaign-devops.git
         revision: azure-install-who-test
         directories:
           - path: config-as-code/helm/charts/backbone-used-charts/*
@@ -20,7 +20,7 @@ spec:
       project: backbone-project
 
       source:
-        repoURL: git@github.com:egovernments/health-campaign-devops.git
+        repoURL: git@github.com:HCM-WHO-AFRO/health-campaign-devops.git
         targetRevision: azure-install-who-test
         path: '{{path}}'
 

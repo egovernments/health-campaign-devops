@@ -25,7 +25,7 @@ spec:
       project: egov-project
 
       source:
-        repoURL: git@github.com:egovernments/health-campaign-devops.git
+        repoURL: git@github.com:HCM-WHO-AFRO/health-campaign-devops.git
         targetRevision: azure-install-who-test
         path: config-as-code/helm/charts/frontend/{{name}}
         helm:
