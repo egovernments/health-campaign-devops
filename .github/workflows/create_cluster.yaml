@@ -22,7 +22,7 @@ jobs:
       AWS_REGION:  ${{ secrets.AWS_REGION }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
       - name: Build project
         run: echo "Githubactions Workflow has started"
       - name: Displaying the input parameters provided
@@ -99,7 +99,7 @@ jobs:
       AWS_REGION:  ${{ secrets.AWS_REGION }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
       - name: Download infra-as-code folder from artifacts
         uses: actions/download-artifact@v2
         with:
@@ -203,7 +203,7 @@ jobs:
       AWS_REGION:  ${{ secrets.AWS_REGION }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
       - name: Download infra-as-code folder from artifacts
         uses: actions/download-artifact@v2
         with:
@@ -278,7 +278,7 @@ jobs:
   #     AWS_REGION:  ${{ secrets.AWS_REGION }}
   #   steps:
   #     - name: Checkout code
-  #       uses: actions/checkout@v2
+  #       uses: actions/checkout@v6
   #     - name: Download infra-as-code folder from artifacts
   #       uses: actions/download-artifact@v2
   #       with:
