@@ -25,7 +25,7 @@ cluster-configs:
                 chad-db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db?currentSchema=chad"
                 congob-db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db?currentSchema=congob"
                 domain: campaigns.afro.who.int ## Add your Domain Name
-                redis-host: "redis.backbone"
+                redis-host: "redis.backbone.svc.cluster.local"
                 redis-downsync-host: ""
                 egov-services-fqdn-name: https://campaigns.afro.who.int/ ## Add your Domain Name
                 state-level-tenantid-length: "1"
