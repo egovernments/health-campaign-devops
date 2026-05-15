@@ -72,11 +72,11 @@ cluster-configs:
               citizen-indexer: "http://citizen-indexer:8080/"
               citizen-services: "http://citizen-services:8080/"
               chad-dashboard-analytics: "http://dashboard-analytics.chad:8080/"
-              project-factory: 'http://internal-gateway.egov:8080/'
+              project-factory: 'http://internal-gateway-scg.egov:8080/'
               chad-resource-generator: 'http://resource-generator.chad:8080/'
               chad-plan-service: 'http://plan-service.chad:8080/'
               chad-census-service: 'http://census-service.chad:8080/'
-              excel-ingestion: 'http://internal-gateway.egov:8080/'
+              excel-ingestion: 'http://internal-gateway-scg.egov:8080/'
               congob-dashboard-analytics: "http://dashboard-analytics.congob:8080/"
               congob-resource-generator: 'http://resource-generator.congob:8080/'
               congob-plan-service: 'http://plan-service.congob:8080/'
@@ -130,7 +130,7 @@ cluster-configs:
               service-request: "http://service-request.egov:8080/"
               mdms-service-v2: 'http://mdms-v2.egov:8080/'
               health-expense: 'http://expense.egov:8080/'
-              health-expense-calculator: 'http://internal-gateway.egov:8080/'
+              health-expense-calculator: 'http://internal-gateway-scg.egov:8080/'
               health-muster-roll: 'http://muster-roll.egov:8080/'
               beneficiary-idgen: 'http://beneficiary-idgen.egov:8080/'
 disableAnnotationTimestamp: true
