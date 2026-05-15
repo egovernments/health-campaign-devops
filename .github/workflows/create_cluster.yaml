@@ -48,12 +48,12 @@ jobs:
       - name: Archive config-as-code folder
         run: tar -czf config-as-code.tar.gz config-as-code/
       - name: Upload infra-as-code folder as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v7
         with:
           name: infra-as-code-artifact
           path: infra-as-code.tar.gz
       - name: Upload config-as-code folder as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v7
         with:
           name: config-as-code-artifact
           path: config-as-code.tar.gz
@@ -182,12 +182,12 @@ jobs:
       - name: Archive config-as-code folder
         run: tar -czf config-as-code.tar.gz config-as-code/
       - name: Upload infra-as-code folder as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v7
         with:
           name: infra-as-code-artifact
           path: infra-as-code.tar.gz
       - name: Upload config-as-code folder as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v7
         with:
           name: config-as-code-artifact
           path: config-as-code.tar.gz      
