@@ -531,7 +531,7 @@ audit-service:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
-  persist-yml-path: "https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/attendance-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/muster-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/estimate-service.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/contract-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/bankaccounts-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/expense-bill-payment-persister.yaml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/egov-persister/mdms-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/DEMO/egov-persister/common/boundary-persister.yml"
+  persist-yml-path: "https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/attendance-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/muster-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/estimate-service.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/contract-service-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/bankaccounts-persister.yml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/works/egov-persister/expense-bill-payment-persister.yaml,https://raw.githubusercontent.com/egovernments/configs/UNIFIED-DEV/egov-persister/mdms-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/DEMO/egov-persister/boundary-persister.yml"
 
 egov-pg-service:
   axis: true
@@ -638,7 +638,7 @@ egov-persister:
   replicas: 2
   images:
     - egovio/egov-persister
-  persist-yml-path: "/work-dir/health-campaign-config/egov-persister/chad,/work-dir/health-campaign-config/egov-persister/congob,/work-dir/health-campaign-config/DEMO/egov-persister/common/boundary-persister.yml"
+  persist-yml-path: "/work-dir/health-campaign-config/egov-persister/chad,/work-dir/health-campaign-config/egov-persister/congob,/work-dir/health-campaign-config/DEMO/egov-persister/common"
   initContainers:
     gitSync:
       repo: "https://github.com/egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
