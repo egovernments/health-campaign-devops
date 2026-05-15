@@ -1,0 +1,66 @@
+# OpenSSF Scorecard workflow
+# This workflow runs OpenSSF Scorecard analysis on the repository
+# Learn more: https://github.com/ossf/scorecard-action
+
+name: OpenSSF Scorecard
+
+on:
+  # Run analysis on code changes to the default branch
+  push:
+    branches: [ master, main ]
+
+  # Weekly schedule to catch any missed policy violations
+  schedule:
+    - cron: '30 1 * * 1'  # Runs at 1:30 AM UTC every Monday
+
+  # Allow manual triggering of the workflow
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  analysis:
+    name: Scorecard analysis
+    runs-on: ubuntu-latest
+    permissions:
+      # Needed to upload results to code-scanning dashboard
+      security-events: write
+      # Needed to publish results and get PR comment
+      id-token: write
+      # Uncomment the permissions below if installing in a private repository
+      # contents: read
+      # actions: read
+
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: "Run analysis"
+        uses: ossf/scorecard-action@v2.4.0
+        with:
+          results_file: results.sarif
+          results_format: sarif
+          # Read-only PAT token. Uncomment the `repo_token` line below if:
+          # - you are in a private repository, or
+          # - you have a PAT with public_repo scope and want to enable additional checks
+          # repo_token: ${{ secrets.SCORECARD_TOKEN }}
+
+          # Publish the results for public repositories to enable scorecard badges
+          # For private repositories, `publish_results` will automatically be set to `false`
+          publish_results: true
+
+      # Upload the results as artifacts (optional)
+      - name: "Upload artifact"
+        uses: actions/upload-artifact@v4
+        with:
+          name: SARIF file
+          path: results.sarif
+          retention-days: 5
+
+      # Upload the results to GitHub's code scanning dashboard
+      - name: "Upload to code-scanning"
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif
