@@ -638,7 +638,7 @@ egov-persister:
   replicas: 2
   images:
     - egovio/egov-persister
-  persist-yml-path: "/work-dir/health-campaign-config/egov-persister/chad,/work-dir/health-campaign-config/egov-persister/congob"
+  persist-yml-path: "/work-dir/health-campaign-config/egov-persister/chad,/work-dir/health-campaign-config/egov-persister/congob,/work-dir/health-campaign-config/egov-persister/common"
   initContainers:
     gitSync:
       repo: "https://github.com/egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
