@@ -7,6 +7,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   
   default_node_pool {
     name       = "nodepool1"
+    temporary_name_for_rotation = "temprotate"
     node_count = "${var.node_count}"
     max_pods   = "100"
     vm_size    = "${var.vm_size}"
