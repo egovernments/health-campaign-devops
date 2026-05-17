@@ -1,0 +1,12 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: chaduat-project
+  namespace: argocd
+spec:
+  sourceRepos:
+    - git@github.com:HCM-WHO-AFRO/health-campaign-devops.git
+
+  destinations:
+    - namespace: '*'
+      server: https://kubernetes.default.svc
