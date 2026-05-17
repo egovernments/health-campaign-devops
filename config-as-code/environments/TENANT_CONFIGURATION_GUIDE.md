@@ -91,6 +91,107 @@ health-campaign-config/
             └── *.json
 ```
 
+### 5. ArgoCD Configuration
+
+#### Create ArgoCD Resources:
+Create the following files in `config-as-code/helm/charts/argo-cd/<new-tenant>/`:
+
+1. **AppProject** (`<new-tenant>-app-project.yaml`):
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: <new-tenant>-project
+  namespace: argocd
+spec:
+  sourceRepos:
+    - git@github.com:HCM-WHO-AFRO/health-campaign-devops.git
+  destinations:
+    - namespace: '*'
+      server: https://kubernetes.default.svc
+```
+
+2. **Frontend ApplicationSet** (`<new-tenant>-app-set-frontend.yaml`):
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: who-afro-<new-tenant>-appset-frontend
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - name: workbench-ui
+          - name: hcm-digit-ui
+          - name: dashboard-ui
+          - name: payments-ui
+          - name: dss-dashboard
+          - name: core-ui
+          - name: console
+          - name: microplan-ui
+  template:
+    metadata:
+      name: '<new-tenant>-{{name}}'
+    spec:
+      project: <new-tenant>-project
+      source:
+        repoURL: git@github.com:HCM-WHO-AFRO/health-campaign-devops.git
+        targetRevision: <your-branch>
+        path: config-as-code/helm/charts/frontend/{{name}}
+        helm:
+          valueFiles:
+            - values.yaml
+            - ../../../../environments/<new-tenant>-afro-hcm.yaml
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: <new-tenant>
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: true
+        syncOptions:
+          - ApplyOutOfSyncOnly=true
+          - ServerSideApply=true
+```
+
+3. **Business ApplicationSet** (`<new-tenant>-app-set-business.yaml`):
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: who-afro-<new-tenant>-appset-business
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - name: dashboard-analytics
+  # Similar template structure as frontend
+```
+
+4. **Health Services ApplicationSet** (`<new-tenant>-app-set-health.yaml`):
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: who-afro-<new-tenant>-appset-health
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - name: project-factory
+          - name: transformer
+          - name: resource-generator
+          - name: plan-service
+          - name: excel-ingestion
+          - name: census-service
+          - name: auth-proxy
+          - name: health-expense-calculator
+  # Similar template structure
+```
+
 ## Service Configuration Matrix
 
 | Service | Namespace Isolated | Shared Across Tenants | Notes |
@@ -119,9 +220,50 @@ health-campaign-config/
 - [ ] Secrets created in namespace
 
 ### Deployment:
-- [ ] Deploy using Helm/Kubernetes manifests
-- [ ] Verify all pods are running
-- [ ] Check ingress endpoints
+
+#### Step 1: Commit and Push Configuration
+```bash
+# Add new tenant configuration files
+git add environments/<new-tenant>-afro-hcm.yaml
+git add helm/charts/argo-cd/<new-tenant>/
+
+# Commit changes
+git commit -m "Add <new-tenant> tenant configuration"
+
+# Push to repository
+git push origin <your-branch>
+```
+
+#### Step 2: Apply ArgoCD Configuration
+```bash
+# Create namespace
+kubectl create namespace <new-tenant>
+
+# Apply ArgoCD project
+kubectl apply -f config-as-code/helm/charts/argo-cd/<new-tenant>/<new-tenant>-app-project.yaml
+
+# Apply ApplicationSets
+kubectl apply -f config-as-code/helm/charts/argo-cd/<new-tenant>/<new-tenant>-app-set-frontend.yaml
+kubectl apply -f config-as-code/helm/charts/argo-cd/<new-tenant>/<new-tenant>-app-set-business.yaml
+kubectl apply -f config-as-code/helm/charts/argo-cd/<new-tenant>/<new-tenant>-app-set-health.yaml
+
+# Verify applications are created
+kubectl get applications -n argocd | grep <new-tenant>
+```
+
+#### Step 3: Sync Applications
+```bash
+# Sync all applications (or use ArgoCD UI)
+argocd app sync -l app.kubernetes.io/instance=<new-tenant>
+
+# Or sync individual applications
+argocd app sync <new-tenant>-<service-name>
+```
+
+#### Verification Checklist:
+- [ ] All ArgoCD applications show "Healthy" status
+- [ ] Verify all pods are running: `kubectl get pods -n <new-tenant>`
+- [ ] Check ingress endpoints: `kubectl get ingress -n <new-tenant>`
 - [ ] Test inter-service communication
 - [ ] Verify Kafka topic creation
 - [ ] Test database connectivity
@@ -205,6 +347,13 @@ Examples:
    - Verify ingress controller is running
    - Check ingress paths and annotations
    - Validate SSL/TLS certificates
+
+5. **ArgoCD Sync Failures**:
+   - Ensure configuration file exists in git repository
+   - Verify branch name in ApplicationSet configuration
+   - Check ArgoCD has repository access permissions
+   - Review application logs: `argocd app logs <new-tenant>-<service>`
+   - Common error: "failed to execute helm template" - usually means values file not found in repo
 
 ## Security Considerations
 
