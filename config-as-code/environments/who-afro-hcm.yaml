@@ -10,13 +10,13 @@ global:
 cluster-configs:
     namespaces:
       create: true
-      values: [ backbone, cert-manager, egov, es-cluster, kafka-kraft, logging, monitoring, playground, zookeeper-cluster, chad ]
+      values: [ backbone, cert-manager, egov, es-cluster, kafka-kraft, logging, monitoring, playground, zookeeper-cluster, chad, chaduat ]
       
     root-ingress:
       cert-issuer: letsencrypt-prod
     configmaps:
         egov-config:
-            namespace: [ egov, es-cluster, monitoring, chad, congob ]
+            namespace: [ egov, es-cluster, monitoring, chad, congob, chaduat ]
             data:
                 db-host: afrohcm-t-euw-server.postgres.database.azure.com ## Add db-host name example: egov-demo.database.azure.com
                 db-name: afrohcm-t-euw-db ## Add db-name
@@ -24,6 +24,7 @@ cluster-configs:
                 db-url-no-schema: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
                 chad-db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db?currentSchema=chad"
                 congob-db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db?currentSchema=congob"
+                chaduat-db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db?currentSchema=chaduat"
                 domain: campaigns.afro.who.int ## Add your Domain Name
                 redis-host: "redis.backbone.svc.cluster.local"
                 redis-downsync-host: ""
@@ -33,7 +34,7 @@ cluster-configs:
                 is-environment-central-instance: "true"
                 egov-state-level-tenant-id: "chad"
                 state-level-tenant-id: "chad"
-                kafka-tenant-id-pattern: "chad-|congob-"
+                kafka-tenant-id-pattern: "chad-|congob-|chaduat-"
                 s3-assets-bucket: "(pg-health-egov-assets|egov-health-playground-assets)"
                 es-host: "elasticsearch-data.es-cluster"
                 es-host-6: "elasticsearch-data.es-cluster"
@@ -54,12 +55,12 @@ cluster-configs:
                 timezone: "UTC"
                 tracer-errors-provideexceptionindetails: "true"
                 egov-internal-microservice-user-uuid: fa0f820c-49df-46bb-8e62-8a0ec5d9af5e
-                db-schema-names: "chad,congob"
+                db-schema-names: "chad,congob,chaduat"
                 kibana-base-path: kibana-upgrade 
                 kibana-host: "http://kibana-v1.es-upgrade:5601/"
 
         egov-service-host:
-            namespace: [ egov, es-cluster, monitoring, chad, congob ]
+            namespace: [ egov, es-cluster, monitoring, chad, congob, chaduat ]
             data:
               asset-services: "http://asset-services:8080/"
               boundary-management: 'http://boundary-management.egov:8080/'
@@ -76,11 +77,21 @@ cluster-configs:
               chad-resource-generator: 'http://resource-generator.chad:8080/'
               chad-plan-service: 'http://plan-service.chad:8080/'
               chad-census-service: 'http://census-service.chad:8080/'
+              chad-project-factory: 'http://project-factory.chad:8080/'
+              chad-transformer: 'http://transformer.chad:8080/'
               excel-ingestion: 'http://internal-gateway-scg.egov:8080/'
               congob-dashboard-analytics: "http://dashboard-analytics.congob:8080/"
               congob-resource-generator: 'http://resource-generator.congob:8080/'
               congob-plan-service: 'http://plan-service.congob:8080/'
               congob-census-service: 'http://census-service.congob:8080/'
+              congob-project-factory: 'http://project-factory.congob:8080/'
+              congob-transformer: 'http://transformer.congob:8080/'
+              chaduat-dashboard-analytics: "http://dashboard-analytics.chaduat:8080/"
+              chaduat-resource-generator: 'http://resource-generator.chaduat:8080/'
+              chaduat-plan-service: 'http://plan-service.chaduat:8080/'
+              chaduat-census-service: 'http://census-service.chaduat:8080/'
+              chaduat-project-factory: 'http://project-factory.chaduat:8080/'
+              chaduat-transformer: 'http://transformer.chaduat:8080/'
               dashboard-ingest: "http://dashboard-ingest.egov:8080/"
               demand-services: "http://demand-services:8080/"
               data-sync-employee: "http://data-sync-employee:8080/"
