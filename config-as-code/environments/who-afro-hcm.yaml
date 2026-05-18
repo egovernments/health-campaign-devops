@@ -305,7 +305,7 @@ oauth2-proxy:
     config:
         configFile: |-
             email_domains = [ "*" ]
-            github_org = "egovernments"
+            github_org = "HCM-WHO-AFRO"
             upstreams = [ "file:///dev/null" ]
 
 egov-filestore:
