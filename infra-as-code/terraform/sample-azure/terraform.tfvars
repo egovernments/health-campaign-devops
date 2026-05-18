@@ -1,4 +1,4 @@
-environment = "<environment>"
-resource_group = "<resource_group>"
-location  = "<location>"
-db_user  = "<db_username>"
+environment = "gha-demo"
+resource_group = "gha-demo-rg"
+location  = "centralus"
+db_user  = "ghaadmin"

@@ -30,10 +30,11 @@ func main() {
 	replaceInFile("../sample-azure/remote-state/variables.tf", data, false)
 	fmt.Println("remote-state/variables.tf file updated successfully!")
 
-	replaceInFile("../sample-azure/remote-state/terraform.tfvars", data, false)
+	// For .tfvars files, we need to strip quotes
+	replaceInFile("../sample-azure/remote-state/terraform.tfvars", data, true)
 	fmt.Println("remote-state/terraform.tfvars file updated successfully!")
 
-	replaceInFile("../sample-azure/terraform.tfvars", data, false)
+	replaceInFile("../sample-azure/terraform.tfvars", data, true)
 	fmt.Println("terraform.tfvars file updated successfully!")
 
 	replaceInFile("../sample-azure/main.tf", data, false)

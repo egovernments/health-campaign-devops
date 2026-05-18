@@ -1,3 +1,3 @@
-environment = "<environment>"
-resource_group = "<resource_group>"
-location  = "<location>"
+environment = "gha-demo"
+resource_group = "gha-demo-rg"
+location  = "centralus"
