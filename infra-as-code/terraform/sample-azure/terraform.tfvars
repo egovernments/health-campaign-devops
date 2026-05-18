@@ -1,4 +1,4 @@
-environment = "gha-demo"
-resource_group = "gha-demo-rg"
-location  = "westeurope"
-db_user  = "ghademo"
+environment = "<environment>"
+resource_group = "<resource_group>"
+location  = "<location>"
+db_user  = "<db_username>"

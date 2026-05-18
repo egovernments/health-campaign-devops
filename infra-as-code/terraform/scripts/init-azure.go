@@ -30,6 +30,12 @@ func main() {
 	replaceInFile("../sample-azure/remote-state/variables.tf", data, false)
 	fmt.Println("remote-state/variables.tf file updated successfully!")
 
+	replaceInFile("../sample-azure/remote-state/terraform.tfvars", data, false)
+	fmt.Println("remote-state/terraform.tfvars file updated successfully!")
+
+	replaceInFile("../sample-azure/terraform.tfvars", data, false)
+	fmt.Println("terraform.tfvars file updated successfully!")
+
 	replaceInFile("../sample-azure/main.tf", data, false)
 	fmt.Println("main.tf file updated successfully!")
 

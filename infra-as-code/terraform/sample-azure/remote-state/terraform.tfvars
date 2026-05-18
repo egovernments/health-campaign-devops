@@ -1,3 +1,3 @@
-environment = "<cluster_name>"
-resource_group = "<cluster_name>-rg"
-location  = "<region>"
+environment = "<environment>"
+resource_group = "<resource_group>"
+location  = "<location>"
