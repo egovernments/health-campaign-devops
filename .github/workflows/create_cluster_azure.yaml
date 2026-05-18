@@ -45,10 +45,8 @@ jobs:
         run: echo "This command is run in the current directory"
         working-directory: infra-as-code/terraform/sample-azure/remote-state
       - name: Updating different files based on parameters provided in input.yaml
-        run: go run init.go
+        run: go run init-azure.go
         working-directory: infra-as-code/terraform/scripts
-        env:
-          CLOUD_PROVIDER: "azure"
       - name: Archive infra-as-code folder
         run: tar -czf infra-as-code.tar.gz infra-as-code/
       - name: Archive config-as-code folder
@@ -167,8 +165,6 @@ jobs:
       - name: Updating the terraform output data in environment.yaml files for deployment
         run: terraform output -json | go run ../scripts/envYAMLUpdater.go
         working-directory: infra-as-code/terraform/sample-azure
-        env:
-          CLOUD_PROVIDER: "azure"
       - name: Archive infra-as-code folder
         run: tar -czf infra-as-code.tar.gz infra-as-code/
       - name: Archive config-as-code folder
@@ -284,10 +280,8 @@ jobs:
         run: echo "This command is run in the current directory"
         working-directory: infra-as-code/terraform/sample-azure/remote-state
       - name: Updating different files based on parameters provided in input.yaml
-        run: go run init.go
+        run: go run init-azure.go
         working-directory: infra-as-code/terraform/scripts
-        env:
-          CLOUD_PROVIDER: "azure"
 
       # Install Azure CLI
       - name: Install Azure CLI

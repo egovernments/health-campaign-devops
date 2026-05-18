@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 	"regexp"
 	"strings"
 )
 
 func main() {
-	// Read the YAML file
-	yamlFile, err := ioutil.ReadFile("../sample-aws/input.yaml")
+	// Read the YAML file for Azure
+	yamlFile, err := ioutil.ReadFile("../sample-azure/input.yaml")
 	if err != nil {
 		log.Fatalf("Failed to read YAML file: %v", err)
 	}
@@ -24,14 +23,14 @@ func main() {
 
 	validateInputs(data)
 
-	// Read the variables.tf file
-	replaceInFile("../sample-aws/variables.tf", data, false)
+	// Read and update Azure-specific files
+	replaceInFile("../sample-azure/variables.tf", data, false)
 	fmt.Println("variables.tf file updated successfully!")
 
-	replaceInFile("../sample-aws/remote-state/variables.tf", data, false)
+	replaceInFile("../sample-azure/remote-state/variables.tf", data, false)
 	fmt.Println("remote-state/variables.tf file updated successfully!")
 
-	replaceInFile("../sample-aws/main.tf", data, false)
+	replaceInFile("../sample-azure/main.tf", data, false)
 	fmt.Println("main.tf file updated successfully!")
 
 	replaceInFile("../../../config-as-code/environments/egov-demo.yaml", data, true)
