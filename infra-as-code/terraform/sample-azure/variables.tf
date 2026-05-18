@@ -1,3 +1,24 @@
+variable "cluster_name" {
+  description = "The name of the AKS cluster"
+  type        = string
+  validation {
+    condition = (
+      length(var.cluster_name) >= 3 &&
+      length(var.cluster_name) <= 40 &&
+      can(regex("^[a-z][a-z0-9-]*[a-z0-9]$", var.cluster_name)) &&
+      !can(regex("--", var.cluster_name)) # no consecutive hyphens
+    )
+    error_message = <<EOT
+Cluster name must:
+- Be 3 to 40 characters long
+- Contain only lowercase letters, numbers, and hyphens
+- Start with a lowercase letter
+- Not start or end with a hyphen
+- Not contain consecutive hyphens
+EOT
+  }
+}
+
 variable "environment" {
   description = "The environment tag for Azure resources"
   type        = string

@@ -1,3 +1,4 @@
+cluster_name = "gha-demo-aks"
 environment = "gha-demo"
 resource_group = "gha-demo-rg"
 location  = "centralus"

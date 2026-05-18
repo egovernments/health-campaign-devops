@@ -100,7 +100,7 @@ module "kubernetes" {
   depends_on = [azurerm_nat_gateway_public_ip_association.nat_assoc]
   source                    = "../modules/kubernetes/azure"
   environment               = var.environment
-  name                      = var.environment
+  name                      = var.cluster_name
   location                  = var.location
   resource_group            = var.resource_group
   vm_size                   = "Standard_D4_v4"
