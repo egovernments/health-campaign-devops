@@ -103,7 +103,7 @@ module "kubernetes" {
   name                      = var.environment
   location                  = var.location
   resource_group            = var.resource_group
-  vm_size                   = "Standard_E4as_v5"
+  vm_size                   = "Standard_D4_v4"
   node_count                = 7
   vnet_subnet_id            = azurerm_subnet.aks.id
   os_disk_size_gb           = 64
