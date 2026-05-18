@@ -116,6 +116,55 @@ jobs:
             --tenant ${{ secrets.ARM_TENANT_ID }}
           az account set --subscription ${{ secrets.ARM_SUBSCRIPTION_ID }}
 
+      # Create Resource Group if it doesn't exist
+      - name: Create Resource Group
+        run: |
+          if ! az group show --name $RESOURCE_GROUP &>/dev/null; then
+            echo "Creating resource group $RESOURCE_GROUP in $LOCATION"
+            az group create --name $RESOURCE_GROUP --location $LOCATION
+          else
+            echo "Resource group $RESOURCE_GROUP already exists"
+          fi
+
+      # Create Storage Account if it doesn't exist
+      - name: Create Storage Account for Terraform Backend
+        run: |
+          if ! az storage account show --name $STORAGE_ACCOUNT_NAME --resource-group $RESOURCE_GROUP &>/dev/null; then
+            echo "Creating storage account $STORAGE_ACCOUNT_NAME"
+            az storage account create \
+              --name $STORAGE_ACCOUNT_NAME \
+              --resource-group $RESOURCE_GROUP \
+              --location $LOCATION \
+              --sku Standard_LRS \
+              --kind StorageV2 \
+              --access-tier Hot
+          else
+            echo "Storage account $STORAGE_ACCOUNT_NAME already exists"
+          fi
+
+      # Create Storage Container if it doesn't exist
+      - name: Create Storage Container for Terraform State
+        run: |
+          # Get storage account key
+          STORAGE_KEY=$(az storage account keys list \
+            --resource-group $RESOURCE_GROUP \
+            --account-name $STORAGE_ACCOUNT_NAME \
+            --query "[0].value" -o tsv)
+
+          # Create container if it doesn't exist
+          if ! az storage container show \
+            --name $STORAGE_CONTAINER_NAME \
+            --account-name $STORAGE_ACCOUNT_NAME \
+            --account-key "$STORAGE_KEY" &>/dev/null; then
+            echo "Creating storage container $STORAGE_CONTAINER_NAME"
+            az storage container create \
+              --name $STORAGE_CONTAINER_NAME \
+              --account-name $STORAGE_ACCOUNT_NAME \
+              --account-key "$STORAGE_KEY"
+          else
+            echo "Storage container $STORAGE_CONTAINER_NAME already exists"
+          fi
+
       # Now, use the env vars in subsequent steps
       - name: Terraform Init - remotestate
         id: init

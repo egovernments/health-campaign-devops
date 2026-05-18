@@ -23,6 +23,16 @@ EOT
 
 variable "location" {}
 
+variable "storage_account_name" {
+  description = "Storage account name for Terraform backend"
+  type        = string
+}
+
+variable "storage_container_name" {
+  description = "Storage container name for Terraform state"
+  type        = string
+}
+
 variable "resource_group" {
   description = "Azure Resource Group name"
   type        = string
