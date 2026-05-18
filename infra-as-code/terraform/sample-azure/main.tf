@@ -112,6 +112,25 @@ module "kubernetes" {
   max_node_count            = 12
 }
 
+# Give AKS system-assigned identity permission to join the subnet
+# This is required for AKS to create LoadBalancer resources
+resource "azurerm_role_assignment" "aks_subnet_network_contributor" {
+  principal_id         = module.kubernetes.aks_principal_id
+  role_definition_name = "Network Contributor"
+  scope                = azurerm_subnet.aks.id
+
+  depends_on = [module.kubernetes]
+}
+
+# Also grant Network Contributor role on the VNet for LoadBalancer operations
+resource "azurerm_role_assignment" "aks_vnet_network_contributor" {
+  principal_id         = module.kubernetes.aks_principal_id
+  role_definition_name = "Network Contributor"
+  scope                = azurerm_virtual_network.vnet.id
+
+  depends_on = [module.kubernetes]
+}
+
 module "postgres-db" {
   source                    = "../modules/db/azure"
   environment               = var.environment
