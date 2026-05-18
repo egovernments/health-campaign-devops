@@ -28,6 +28,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
     type = "SystemAssigned"
   }
 
+  # Enable OIDC issuer (once enabled, it cannot be disabled)
+  oidc_issuer_enabled = true
+
   network_profile {
     network_plugin      = "azure"
     network_plugin_mode = "overlay"  # Enable CNI Overlay mode
