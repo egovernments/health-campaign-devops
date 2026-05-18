@@ -110,11 +110,27 @@ jobs:
       # Azure Login
       - name: Azure Login
         run: |
+          echo "Logging in to Azure..."
           az login --service-principal \
             --username ${{ secrets.ARM_CLIENT_ID }} \
             --password ${{ secrets.ARM_CLIENT_SECRET }} \
-            --tenant ${{ secrets.ARM_TENANT_ID }}
-          az account set --subscription ${{ secrets.ARM_SUBSCRIPTION_ID }}
+            --tenant ${{ secrets.ARM_TENANT_ID }} \
+            || { echo "Azure login failed"; exit 1; }
+
+          echo "Setting subscription..."
+          az account set --subscription ${{ secrets.ARM_SUBSCRIPTION_ID }} \
+            || { echo "Failed to set subscription. Listing available subscriptions:"; az account list --output table; exit 1; }
+
+          echo "Current subscription:"
+          az account show --output table
+
+      # Verify Azure access
+      - name: Verify Azure Access
+        run: |
+          echo "Checking service principal permissions..."
+          az account show
+          echo "Listing resource groups to verify access..."
+          az group list --output table || echo "Warning: Could not list resource groups"
 
       # Create Resource Group if it doesn't exist
       - name: Create Resource Group
@@ -271,11 +287,19 @@ jobs:
       # Azure Login
       - name: Azure Login
         run: |
+          echo "Logging in to Azure..."
           az login --service-principal \
             --username ${{ secrets.ARM_CLIENT_ID }} \
             --password ${{ secrets.ARM_CLIENT_SECRET }} \
-            --tenant ${{ secrets.ARM_TENANT_ID }}
-          az account set --subscription ${{ secrets.ARM_SUBSCRIPTION_ID }}
+            --tenant ${{ secrets.ARM_TENANT_ID }} \
+            || { echo "Azure login failed"; exit 1; }
+
+          echo "Setting subscription..."
+          az account set --subscription ${{ secrets.ARM_SUBSCRIPTION_ID }} \
+            || { echo "Failed to set subscription. Listing available subscriptions:"; az account list --output table; exit 1; }
+
+          echo "Current subscription:"
+          az account show --output table
 
       # Get AKS credentials
       - name: Get AKS credentials
@@ -341,11 +365,19 @@ jobs:
       # Azure Login
       - name: Azure Login
         run: |
+          echo "Logging in to Azure..."
           az login --service-principal \
             --username ${{ secrets.ARM_CLIENT_ID }} \
             --password ${{ secrets.ARM_CLIENT_SECRET }} \
-            --tenant ${{ secrets.ARM_TENANT_ID }}
-          az account set --subscription ${{ secrets.ARM_SUBSCRIPTION_ID }}
+            --tenant ${{ secrets.ARM_TENANT_ID }} \
+            || { echo "Azure login failed"; exit 1; }
+
+          echo "Setting subscription..."
+          az account set --subscription ${{ secrets.ARM_SUBSCRIPTION_ID }} \
+            || { echo "Failed to set subscription. Listing available subscriptions:"; az account list --output table; exit 1; }
+
+          echo "Current subscription:"
+          az account show --output table
 
       # Get AKS credentials
       - name: Get AKS credentials
