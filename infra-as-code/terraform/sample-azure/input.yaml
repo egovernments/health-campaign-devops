@@ -1,0 +1,33 @@
+# Replace with the name which you want to give to your AKS cluster
+# Cluster name can have only lowercase alphanumeric characters and hyphens
+# For example: "digit-demo"
+cluster_name: "<cluster_name>"
+
+# Name of the Azure Resource Group where resources will be created
+# For example: "digit-demo-rg"
+resource_group: "<resource_group>"
+
+# Azure region where resources will be deployed
+# For example: "eastus", "westus2", "centralindia"
+location: "<location>"
+
+# Name you want to give to your Database
+# DB name must contain only alphanumeric characters
+db_name: "<db_name>"
+
+# Replace with DB username you want
+# DB user name must contain only alphanumeric characters
+db_username: "<db_username>"
+
+# Replace with Domain name you want for your web applications
+domain_name: "<domain_name>.digit.org"
+
+# Replace with the storage account name for terraform state
+# Must be globally unique, 3-24 characters, lowercase letters and numbers only
+storage_account_name: "<storage_account_name>"
+
+# Name of the container in storage account for terraform state
+storage_container_name: "<container_name>"
+
+# Environment name for tagging resources
+environment: "<environment>"
