@@ -1,9 +1,8 @@
 provider "azurerm" {
   features {}
-  subscription_id = "8c247e8d-4f67-46e2-b10e-e89fc1a60fbd"
   resource_provider_registrations = "none"
 
-  # Service Principal authentication (uses environment variables if not specified)
+  # Service Principal authentication uses environment variables:
   # ARM_CLIENT_ID, ARM_CLIENT_SECRET, ARM_TENANT_ID, ARM_SUBSCRIPTION_ID
 }
 
