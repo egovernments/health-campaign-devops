@@ -1,5 +1,5 @@
 global:
-   domain: gha-demo.digit.org ## Add your Domain Name "Eg: site.mydomain.com" Do not use the dummy domain 
+   domain: <domain_name> ## Add your Domain Name "Eg: site.mydomain.com" Do not use the dummy domain
    setup: fullsetup
 
 cluster-configs:
@@ -14,11 +14,11 @@ cluster-configs:
             namespace: [ egov, es-cluster, monitoring ]
             data:
                 db-host: <db_host_name> ## Add db-host name eg: egov-demo.database.azure.com
-                db-name: ghadigitdb ## Add db-name
-                db-url: "jdbc:postgresql://<db_host_name>/ghadigitdb" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
-                db-url-no-schema: "jdbc:postgresql://<db_host_name>/ghadigitdb" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
-                domain: gha-demo.digit.org ## Add your Domain Name
-                egov-services-fqdn-name: https://gha-demo.digit.org/ ## Add your Domain Name
+                db-name: <db_name>
+                db-url: "jdbc:postgresql://<db_host_name>/<db_name>" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
+                db-url-no-schema: "jdbc:postgresql://<db_host_name>/<db_name>" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
+                domain: <domain_name>
+                egov-services-fqdn-name: https://<domain_name>/
                 egov-state-level-tenant-id: "mz"
                 s3-assets-bucket: "(pg-health-egov-assets|egov-health-playground-assets)"
                 es-host: "elasticsearch-data.es-cluster"
