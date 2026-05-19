@@ -1,10 +1,23 @@
 variable "name" {}
-variable "nodes" {}
+variable "node_count" {}
 variable "vm_size" {}
-variable "client_id" {}    
-variable "client_secret" {}
 variable "resource_group" {}
 variable "location" {}
 variable "environment" {}
-
-variable "ssh_public_key" {}
+variable "vnet_subnet_id" {}
+variable "os_disk_size_gb" {}
+variable "enable_auto_scaling" {
+  description = "Enable auto scaling for the default node pool"
+  type        = bool
+  default     = false
+}
+variable "min_node_count" {
+  description = "Minimum number of nodes for auto scaling"
+  type        = number
+  default     = 1
+}
+variable "max_node_count" {
+  description = "Maximum number of nodes for auto scaling"
+  type        = number
+  default     = 10
+}

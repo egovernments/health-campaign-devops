@@ -1,0 +1,414 @@
+name: DIGITClusterworkflow-Azure
+# Workflow for Azure deployment
+on:
+  push:
+    branches:
+      - master
+      - release-githubactions-azure
+
+  workflow_dispatch:
+    inputs:
+      destroyCommand:
+        description: 'Type "destroy" to run the terraform_infra_destruction job.'
+        required: true
+        default: ''
+jobs:
+  Input_validation:
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    env:
+      TF_IN_AUTOMATION: "true"
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build project
+        run: echo "GitHub Actions Workflow for Azure has started"
+      - name: Displaying the input parameters provided
+        run: cat input.yaml
+        working-directory: infra-as-code/terraform/sample-azure
+      - name: Convert YAML to ENV
+        uses: dcarbone/yaml-to-env-action@main
+        with:
+          yaml-file: infra-as-code/terraform/sample-azure/input.yaml
+          debug: true # Optional: set to true to output some debug information
+      # Now, use the env vars in subsequent steps
+      - name: Display environment variables
+        run: |
+          echo "Cluster Name: $CLUSTER_NAME"
+          echo "Resource Group: $RESOURCE_GROUP"
+          echo "Location: $LOCATION"
+      - name: Change working directory
+        run: echo "This command is run in the current directory"
+        working-directory: infra-as-code/terraform/sample-azure/remote-state
+      - name: Updating different files based on parameters provided in input.yaml
+        run: go run init-azure.go
+        working-directory: infra-as-code/terraform/scripts
+      - name: Archive infra-as-code folder
+        run: tar -czf infra-as-code.tar.gz infra-as-code/
+      - name: Archive config-as-code folder
+        run: tar -czf config-as-code.tar.gz config-as-code/
+      - name: Upload infra-as-code folder as artifact
+        uses: actions/upload-artifact@v4.4.0
+        with:
+          name: infra-as-code-artifact-input
+          path: infra-as-code.tar.gz
+      - name: Upload config-as-code folder as artifact
+        uses: actions/upload-artifact@v4.4.0
+        with:
+          name: config-as-code-artifact-input
+          path: config-as-code.tar.gz
+
+  Terraform_Infra_Creation:
+    if: ${{ github.event_name == 'push' }}
+    needs: Input_validation
+    runs-on: ubuntu-latest
+    env:
+      TF_IN_AUTOMATION: "true"
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Download infra-as-code folder from artifacts
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: infra-as-code-artifact-input
+          path: .
+      - name: Download config-as-code folder from artifacts
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: config-as-code-artifact-input
+          path: .
+      - name: Extract infra-as-code folder
+        run: tar -xzf infra-as-code.tar.gz
+      - name: Extract config-as-code folder
+        run: tar -xzf config-as-code.tar.gz
+      - name: Convert YAML to ENV
+        uses: dcarbone/yaml-to-env-action@main
+        with:
+          yaml-file: infra-as-code/terraform/sample-azure/input.yaml
+          debug: true # Optional: set to true to output some debug information
+      - name: Download Terraform
+        run: |
+          curl -o terraform.zip https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip
+          unzip terraform.zip
+          sudo mv terraform /usr/local/bin/
+          terraform -version
+
+      # Install Azure CLI
+      - name: Install Azure CLI
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+          az version
+
+      # Azure Login
+      - name: Azure Login
+        run: |
+          echo "Logging in to Azure..."
+          az login --service-principal \
+            --username ${{ secrets.ARM_CLIENT_ID }} \
+            --password ${{ secrets.ARM_CLIENT_SECRET }} \
+            --tenant ${{ secrets.ARM_TENANT_ID }} \
+            || { echo "Azure login failed"; exit 1; }
+
+          echo "Setting subscription..."
+          az account set --subscription ${{ secrets.ARM_SUBSCRIPTION_ID }} \
+            || { echo "Failed to set subscription. Listing available subscriptions:"; az account list --output table; exit 1; }
+
+          echo "Current subscription:"
+          az account show --output table
+
+      # Verify Azure access
+      - name: Verify Azure Access
+        run: |
+          echo "Checking service principal permissions..."
+          az account show
+          echo "Listing resource groups to verify access..."
+          az group list --output table || echo "Warning: Could not list resource groups"
+
+      # Create Resource Group if it doesn't exist
+      - name: Create Resource Group
+        run: |
+          if ! az group show --name $RESOURCE_GROUP &>/dev/null; then
+            echo "Creating resource group $RESOURCE_GROUP in $LOCATION"
+            az group create --name $RESOURCE_GROUP --location $LOCATION
+          else
+            echo "Resource group $RESOURCE_GROUP already exists"
+          fi
+
+      # Create Storage Account if it doesn't exist
+      - name: Create Storage Account for Terraform Backend
+        run: |
+          if ! az storage account show --name $STORAGE_ACCOUNT_NAME --resource-group $RESOURCE_GROUP &>/dev/null; then
+            echo "Creating storage account $STORAGE_ACCOUNT_NAME"
+            az storage account create \
+              --name $STORAGE_ACCOUNT_NAME \
+              --resource-group $RESOURCE_GROUP \
+              --location $LOCATION \
+              --sku Standard_LRS \
+              --kind StorageV2 \
+              --access-tier Hot
+          else
+            echo "Storage account $STORAGE_ACCOUNT_NAME already exists"
+          fi
+
+      # Create Storage Container if it doesn't exist
+      - name: Create Storage Container for Terraform State
+        run: |
+          # Get storage account key
+          STORAGE_KEY=$(az storage account keys list \
+            --resource-group $RESOURCE_GROUP \
+            --account-name $STORAGE_ACCOUNT_NAME \
+            --query "[0].value" -o tsv)
+
+          # Create container if it doesn't exist
+          if ! az storage container show \
+            --name $STORAGE_CONTAINER_NAME \
+            --account-name $STORAGE_ACCOUNT_NAME \
+            --account-key "$STORAGE_KEY" &>/dev/null; then
+            echo "Creating storage container $STORAGE_CONTAINER_NAME"
+            az storage container create \
+              --name $STORAGE_CONTAINER_NAME \
+              --account-name $STORAGE_ACCOUNT_NAME \
+              --account-key "$STORAGE_KEY"
+          else
+            echo "Storage container $STORAGE_CONTAINER_NAME already exists"
+          fi
+
+      # Now, use the env vars in subsequent steps
+      - name: Terraform Init - remotestate
+        id: init
+        run: terraform init
+        working-directory: infra-as-code/terraform/sample-azure/remote-state
+      - name: Terraform Validate - remotestate
+        id: validate
+        run: terraform validate -no-color
+        working-directory: infra-as-code/terraform/sample-azure/remote-state
+      - name: Terraform Plan - remotestate
+        id: plan
+        run: terraform plan -no-color -input=false
+        working-directory: infra-as-code/terraform/sample-azure/remote-state
+      - name: Terraform Apply - remotestate
+        id: apply
+        run: terraform apply -no-color -input=false -auto-approve
+        continue-on-error: true
+        working-directory: infra-as-code/terraform/sample-azure/remote-state
+      - name: Terraform init - Infra creation
+        id: init-Infra
+        run: terraform init
+        working-directory: infra-as-code/terraform/sample-azure
+      - name: Terraform Validate - Infra creation
+        id: validate-Infra
+        run: terraform validate -no-color
+        working-directory: infra-as-code/terraform/sample-azure
+      - name: Terraform Plan - Infra creation
+        id: plan-Infra
+        run: terraform plan -no-color -input=false -var db_password=demo123456 -lock=false
+        working-directory: infra-as-code/terraform/sample-azure
+      - name: Terraform Apply - Infra creation
+        id: apply-Infra
+        run: terraform apply -no-color -input=false -auto-approve -var db_password=demo123456 -lock=false
+        continue-on-error: true
+        working-directory: infra-as-code/terraform/sample-azure
+
+      # Get AKS credentials
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --overwrite-existing
+          cat ~/.kube/config > kubeconfig
+      - name: Verify kubectl configuration
+        run: kubectl config view
+      - name: Verify kubectl get nodes
+        run: |
+          kubectl get nodes
+      - name: Updating the terraform output data in environment.yaml files for deployment
+        run: terraform output -json | go run ../scripts/envYAMLUpdater.go
+        working-directory: infra-as-code/terraform/sample-azure
+      - name: Archive infra-as-code folder
+        run: tar -czf infra-as-code.tar.gz infra-as-code/
+      - name: Archive config-as-code folder
+        run: tar -czf config-as-code.tar.gz config-as-code/
+      - name: Upload infra-as-code folder as artifact
+        uses: actions/upload-artifact@v4.4.0
+        with:
+          name: infra-as-code-artifact-creation
+          path: infra-as-code.tar.gz
+      - name: Upload config-as-code folder as artifact
+        uses: actions/upload-artifact@v4.4.0
+        with:
+          name: config-as-code-artifact-creation
+          path: config-as-code.tar.gz
+
+  DIGIT-deployment:
+    if: ${{ github.event_name == 'push' }}
+    needs: Terraform_Infra_Creation
+    runs-on: ubuntu-latest
+    env:
+      TF_IN_AUTOMATION: "true"
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Download infra-as-code folder from artifacts
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: infra-as-code-artifact-creation
+          path: .
+      - name: Download config-as-code folder from artifacts
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: config-as-code-artifact-creation
+          path: .
+      - name: Extract infra-as-code folder
+        run: tar -xzf infra-as-code.tar.gz
+      - name: Extract config-as-code folder
+        run: tar -xzf config-as-code.tar.gz
+      - name: Convert YAML to ENV
+        uses: dcarbone/yaml-to-env-action@main
+        with:
+          yaml-file: infra-as-code/terraform/sample-azure/input.yaml
+          debug: true # Optional: set to true to output some debug information
+
+      # Install Azure CLI
+      - name: Install Azure CLI
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+          az version
+
+      # Azure Login
+      - name: Azure Login
+        run: |
+          echo "Logging in to Azure..."
+          az login --service-principal \
+            --username ${{ secrets.ARM_CLIENT_ID }} \
+            --password ${{ secrets.ARM_CLIENT_SECRET }} \
+            --tenant ${{ secrets.ARM_TENANT_ID }} \
+            || { echo "Azure login failed"; exit 1; }
+
+          echo "Setting subscription..."
+          az account set --subscription ${{ secrets.ARM_SUBSCRIPTION_ID }} \
+            || { echo "Failed to set subscription. Listing available subscriptions:"; az account list --output table; exit 1; }
+
+          echo "Current subscription:"
+          az account show --output table
+
+      # Get AKS credentials
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --overwrite-existing
+          cat ~/.kube/config > kubeconfig
+      - name: Verify kubectl configuration
+        run: kubectl config view
+      - name: Verify kubectl get nodes
+        run: |
+          kubectl get nodes
+      - name: Install sops
+        run: |
+          sudo apt update
+          sudo apt install -y gnupg
+          wget https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux
+          chmod +x sops-v3.7.1.linux
+          sudo mv sops-v3.7.1.linux /usr/local/bin/sops
+      - name: digit deployment
+        run: go run digit_installer.go
+        working-directory: deploy-as-code/deployer
+      - name: Displaying the Loadbalancer IP
+        run: |
+          LB_IP=$(kubectl get svc nginx-ingress-controller -n egov -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          echo "LoadBalancer IP: $LB_IP"
+          echo "Thank you for installing DIGIT! 🙏 Your installation is complete and ready to roll! 🚀"
+          echo "Please map the LoadBalancer IP ($LB_IP) with the domain provided in input.yaml to access the DIGIT UI"
+
+  terraform_infra_destruction:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.destroyCommand == 'destroy' }}
+    runs-on: ubuntu-latest
+    env:
+      TF_IN_AUTOMATION: "true"
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Convert YAML to ENV
+        uses: dcarbone/yaml-to-env-action@main
+        with:
+          yaml-file: infra-as-code/terraform/sample-azure/input.yaml
+          debug: true # Optional: set to true to output some debug information
+      - name: Display environment variables
+        run: |
+          echo "Cluster Name: $CLUSTER_NAME"
+          echo "Resource Group: $RESOURCE_GROUP"
+      - name: Change working directory
+        run: echo "This command is run in the current directory"
+        working-directory: infra-as-code/terraform/sample-azure/remote-state
+      - name: Updating different files based on parameters provided in input.yaml
+        run: go run init-azure.go
+        working-directory: infra-as-code/terraform/scripts
+
+      # Install Azure CLI
+      - name: Install Azure CLI
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+          az version
+
+      # Azure Login
+      - name: Azure Login
+        run: |
+          echo "Logging in to Azure..."
+          az login --service-principal \
+            --username ${{ secrets.ARM_CLIENT_ID }} \
+            --password ${{ secrets.ARM_CLIENT_SECRET }} \
+            --tenant ${{ secrets.ARM_TENANT_ID }} \
+            || { echo "Azure login failed"; exit 1; }
+
+          echo "Setting subscription..."
+          az account set --subscription ${{ secrets.ARM_SUBSCRIPTION_ID }} \
+            || { echo "Failed to set subscription. Listing available subscriptions:"; az account list --output table; exit 1; }
+
+          echo "Current subscription:"
+          az account show --output table
+
+      # Get AKS credentials
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --overwrite-existing
+          cat ~/.kube/config > kubeconfig
+        continue-on-error: true
+      - name: Deleting Loadbalancer
+        run: kubectl delete svc nginx-ingress-controller -n egov
+        continue-on-error: true
+      - name: Download Terraform
+        run: |
+          curl -o terraform.zip https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip
+          unzip terraform.zip
+          sudo mv terraform /usr/local/bin/
+          terraform -version
+      - name: Terraform Init - remotestate
+        run: terraform init
+        working-directory: infra-as-code/terraform/sample-azure/remote-state
+      - name: Terraform Validate - remotestate
+        run: terraform validate -no-color
+        working-directory: infra-as-code/terraform/sample-azure/remote-state
+      - name: Terraform Init - Infra destruction
+        run: terraform init
+        working-directory: infra-as-code/terraform/sample-azure
+      - name: Terraform Validate - Infra destruction
+        run: terraform validate -no-color
+        working-directory: infra-as-code/terraform/sample-azure
+      - name: Terraform Plan - Infra destruction
+        run: terraform plan -destroy -no-color -input=false -var db_password=demo123456 -lock=false
+        working-directory: infra-as-code/terraform/sample-azure
+      - name: Terraform Destroy - Infra destruction
+        run: terraform destroy -no-color -auto-approve -var db_password=demo123456 -lock=false
+        working-directory: infra-as-code/terraform/sample-azure

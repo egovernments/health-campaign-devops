@@ -1,0 +1,5 @@
+environment = "gha-demo"
+resource_group = "gha-demo-rg"
+location = "centralus"
+storage_account_name = "ghademosa"
+storage_container_name = "ghademosa-container"
