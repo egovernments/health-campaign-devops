@@ -19,6 +19,9 @@ metadata:
   labels:
 {{ include "kibana.labels" . | nindent 4 }}                           
 spec:
+{{- if .Values.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
+{{- end }}
   rules:
 {{- if .Values.ingress.host }}   
   {{- tpl  .Values.ingress.host . | nindent 2 }}
