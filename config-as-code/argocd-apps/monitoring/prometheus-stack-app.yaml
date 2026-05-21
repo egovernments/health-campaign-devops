@@ -22,7 +22,7 @@ spec:
         - values/prometheus.yaml
       values: |
         alertmanager:
-          enabled: false
+          enabled: true
         prometheus:
           prometheusSpec:
             retention: 90d
