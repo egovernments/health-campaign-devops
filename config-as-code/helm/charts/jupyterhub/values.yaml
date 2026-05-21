@@ -658,11 +658,11 @@ prePuller:
 ingress:
   enabled: true
   hosts:
-    - bauchi-hcm.digit.org
+    - campaigns.afro.who.int
   tls:
     - hosts:
-        - bauchi-hcm.digit.org
-      secretName: bauchi-hcm.digit.org-tls-certs
+        - campaigns.afro.who.int
+      secretName: campaigns.afro.who.int-tls-certs
   annotations: {}
   ingressClassName: nginx
   pathSuffix: hub
