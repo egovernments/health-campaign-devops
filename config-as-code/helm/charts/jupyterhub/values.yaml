@@ -339,14 +339,8 @@ proxy:
 # pod, and its spawning of user pods such as jupyter-myusername.
 singleuser:
   podNameTemplate:
-  extraTolerations:
-    - key: arm64-only
-      operator: Equal
-      value: "true"
-      effect: NoSchedule
-  nodeSelector:
-    architecture: arm64
-    kubernetes.io/arch: arm64
+  extraTolerations: []
+  nodeSelector: {}
   extraNodeAffinity:
     required: []
     preferred: []
