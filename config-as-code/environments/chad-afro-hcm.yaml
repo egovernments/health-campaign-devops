@@ -463,9 +463,9 @@ dashboard-analytics:
   initContainers:
     gitSync:
       enabled: true
-      repo: "git@github.com:HCM-KEBBI/health-campaign-config"
-      branch: "CENTRAL-UAT"
-  config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/chad/dashboard-analytics/*.json"
+      repo: "git@github.com:HCM-WHO-AFRO/health-campaign-config"
+      branch: "DEMO"
+  config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/dashboard-analytics/*.json"
 
 auth-proxy:
   image:
