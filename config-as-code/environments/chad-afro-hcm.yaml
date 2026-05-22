@@ -82,6 +82,9 @@ transformer:
   transformer-error-skip-error-messages: "UPLOAD_ERROR_FROM_APP"
   transformer-error-skip-error-codes: "DUPLICATE_ENTITY,INDIVIDUAL_ALREADY_MEMBER_OF_HOUSEHOLD,HOUSEHOLD_ALREADY_HAS_HEAD"
   transformer-error-skip-url-contains: "facility,resource"
+  save-project-beneficiary-topic: "chad-save-project-beneficiary-topic"
+  update-project-beneficiary-topic: "chad-update-project-beneficiary-topic"
+  transformer-producer-project-beneficiary-index-v1-topic: "chad-transformer-producer-project-beneficiary-index-v1-topic"
   state-level-tenantid: "chad"
 
 hcm-digit-ui:
