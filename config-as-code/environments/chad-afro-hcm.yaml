@@ -444,7 +444,7 @@ dashboard-analytics:
 
   namespace: chad
   ingress:
-    name: chad-dashboard-analytics
+    name: dashboard-analytics
     namespace: egov
   healthChecks:
     enabled: true
@@ -465,7 +465,7 @@ dashboard-analytics:
       enabled: true
       repo: "git@github.com:HCM-WHO-AFRO/health-campaign-config"
       branch: "DEMO"
-  config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/dashboard-analytics/*.json"
+  config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/chad/dashboard-analytics/*.json"
 
 auth-proxy:
   image:
