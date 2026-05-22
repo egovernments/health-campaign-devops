@@ -146,10 +146,7 @@ env: |
         name: egov-service-host
         key: service-request
   - name: EGOV_DEVICE_TOKEN_HOST
-    valueFrom:
-      configMapKeyRef:
-        name: egov-service-host
-        key: egov-notification-push
+    value: "http://localhost:8900"
   - name: EGOV_SEARCH_DEVICE_TOKEN_URL
     value: "/egov-notification-push/device-token/v1/_search"
   - name: EGOV_PROJECT_HOST
