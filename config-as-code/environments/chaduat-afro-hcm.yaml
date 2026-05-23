@@ -12,7 +12,7 @@ disableAnnotationTimestamp: true
 transformer:
   image:
     repository: egovio/transformer
-    tag: master-b91815e
+    tag: master-1ffeec1
   namespace: "chaduat"
   ingress:
     name: chaduat-transformer
