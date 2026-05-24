@@ -444,7 +444,7 @@ dashboard-analytics:
 
   namespace: chad
   ingress:
-    name: dashboard-analytics
+    name: chad-dashboard-analytics
     namespace: egov
   healthChecks:
     enabled: true
