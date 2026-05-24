@@ -676,11 +676,11 @@ dashboard-analytics:
     name: dashboard-analytics
     namespace: egov
   heap: "-Xmx512m -Xms256m"
-  replicas: 2
+  replicas: 3
   hpa:
     enabled: false
-    minReplicas: 1
-    maxReplicas: 3
+    minReplicas: 2
+    maxReplicas: 6
   cpu_requests: 200m
   memory_requests: 768Mi
   cpu_limits: 300m

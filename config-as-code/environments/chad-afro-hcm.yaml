@@ -451,7 +451,7 @@ dashboard-analytics:
     livenessProbePath: "/dashboard-analytics/health"
     readinessProbePath: "/dashboard-analytics/health"
   heap: "-Xmx512m -Xms256m"
-  replicas: 2
+  replicas: 0
   hpa:
     enabled: false
     minReplicas: 1
