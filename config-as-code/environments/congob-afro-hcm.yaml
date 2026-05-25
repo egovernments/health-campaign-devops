@@ -406,7 +406,7 @@ dashboard-analytics:
     minReplicas: 1
     maxReplicas: 3
   java-enable-debug: true
-  replicas: 1
+  replicas: 0
   initContainers:
     gitSync:
       enabled: true

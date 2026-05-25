@@ -670,7 +670,26 @@ egov-searcher:
       branch: "DEMO"                                   ##### Change repo branch with Your fork Repo branch
 
 dashboard-analytics:
+  image:
+    repository: egovio/dashboard-analytics
+    tag: analytics-raw-response-transform-dc60b55
+  ingress:
+    name: dashboard-analytics
+    namespace: egov
+  heap: "-Xmx512m -Xms256m"
+  replicas: 3
+  hpa:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 6
+  cpu_requests: 200m
+  memory_requests: 768Mi
+  cpu_limits: 300m
+  memory_limits: 1Gi
   config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/dashboard-analytics/*.json"
+  is-central-instance: "true"
+  central-instance-tenants: "chad,chaduat"
+  central-instance-base-path: "file:///work-dir/health-campaign-config/egov-dss-dashboards"
   initContainers:
     gitSync:
       repo: "git@github.com:HCM-WHO-AFRO/health-campaign-config"      ##### Change repo url with Your fork Repo url
