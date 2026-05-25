@@ -6,6 +6,7 @@ variable "backup_retention_days" {}
 variable "administrator_login" {}
 variable "administrator_password" {}
 variable "environment" {}
+variable "db_name" {}
 variable "db_version" {}
 variable "delegated_subnet_id" {}
 variable "private_dns_zone_id" {}

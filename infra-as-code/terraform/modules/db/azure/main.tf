@@ -26,7 +26,7 @@ resource "azurerm_postgresql_flexible_server" "postgresql_server" {
 }
 
 resource "azurerm_postgresql_flexible_server_database" "db" {
-  name                = "${var.environment}-db"
+  name                = var.db_name
   server_id           = azurerm_postgresql_flexible_server.postgresql_server.id
   charset             = "UTF8"
   collation           = "en_US.utf8"

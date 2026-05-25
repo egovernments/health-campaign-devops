@@ -8,22 +8,22 @@ provider "azurerm" {
 
 terraform {
   backend "azurerm" {
-    resource_group_name  = "gha-demo-rg"
-    storage_account_name = "ghademosa"
-    container_name       = "ghademosa-container"
+    resource_group_name  = "<resource_group>"
+    storage_account_name = "<storage_account_name>"
+    container_name       = "<storage_container_name>"
     key                  = "terraform.tfstate"
   }
 }
 
 resource "azurerm_virtual_network" "vnet" {
-  name                = "vnet-gha-demo"  # Following naming convention
-  address_space       = ["10.20.27.0/24"]    # New allocated range
+  name                = "vnet-${var.environment}"
+  address_space       = ["10.20.27.0/24"]
   location            = var.location
   resource_group_name = var.resource_group
 }
 
 resource "azurerm_subnet" "aks" {
-  name         = "snet-aks-gha-demo"  # Following naming convention
+  name         = "snet-aks-${var.environment}"
   resource_group_name = var.resource_group
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes   = ["10.20.27.0/25"]  # 128 IPs for AKS
@@ -40,7 +40,7 @@ resource "azurerm_subnet" "aks" {
 # }
 
 resource "azurerm_subnet" "postgres" {
-  name         = "snet-postgres-gha-demo"  # Following naming convention
+  name         = "snet-postgres-${var.environment}"
   resource_group_name = var.resource_group
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes   = ["10.20.27.128/26"]  # 64 IPs for PostgreSQL
@@ -104,7 +104,7 @@ module "kubernetes" {
   location                  = var.location
   resource_group            = var.resource_group
   vm_size                   = "Standard_D4_v4"
-  node_count                = 7
+  node_count                = 5
   vnet_subnet_id            = azurerm_subnet.aks.id
   os_disk_size_gb           = 64
   enable_auto_scaling       = false
@@ -134,6 +134,7 @@ resource "azurerm_role_assignment" "aks_vnet_network_contributor" {
 module "postgres-db" {
   source                    = "../modules/db/azure"
   environment               = var.environment
+  db_name                   = var.db_name
   resource_group            = var.resource_group
   location                  = var.location
   sku_name                  = "GP_Standard_D4ads_v5"
