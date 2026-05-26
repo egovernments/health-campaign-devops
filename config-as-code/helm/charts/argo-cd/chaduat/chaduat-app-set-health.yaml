@@ -15,6 +15,7 @@ spec:
           - name: census-service
           - name: auth-proxy
           - name: health-expense-calculator
+          - name: health-expense
 
   template:
     metadata:
