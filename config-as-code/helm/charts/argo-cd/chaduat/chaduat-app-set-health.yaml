@@ -19,6 +19,7 @@ spec:
           - name: health-muster-roll
           - name: health-attendance
           - name: product
+          - name: household
 
   template:
     metadata:
