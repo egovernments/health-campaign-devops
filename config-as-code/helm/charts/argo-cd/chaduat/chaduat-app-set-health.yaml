@@ -18,6 +18,7 @@ spec:
           - name: health-expense
           - name: health-muster-roll
           - name: health-attendance
+          - name: product
 
   template:
     metadata:

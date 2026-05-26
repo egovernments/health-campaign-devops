@@ -624,3 +624,28 @@ health-attendance:
   replicas: 2
   db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db"
   schema-name: "chaduat"
+
+product:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/product-db
+        tag: master-1ffeec1
+  image:
+    repository: egovio/product
+    tag: master-1ffeec1
+  namespace: chaduat
+  heap: "-Xmx512m -Xms256m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  ingress:
+    name: product
+    namespace: egov
+    context: "product"
+  cpu_requests: 200m
+  memory_requests: 512Mi
+  cpu_limits: 600m
+  memory_limits: 512Mi
+  replicas: 2
