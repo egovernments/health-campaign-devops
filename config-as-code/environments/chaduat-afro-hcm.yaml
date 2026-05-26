@@ -744,3 +744,128 @@ beneficiary-idgen:
   idPool:
     validation:
       enabled: "false"
+
+referralmanagement:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/referralmanagement-db
+        tag: master-1ffeec1
+  image:
+    repository: egovio/referralmanagement
+    tag: master-1ffeec1
+  namespace: chaduat
+  heap: "-Xmx256m -Xms256m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  ingress:
+    name: referralmanagement
+    namespace: egov
+    context: "referralmanagement"
+  cpu_requests: 200m
+  memory_requests: 368Mi
+  cpu_limits: 600m
+  memory_limits: 512Mi
+  replicas: 2
+
+individual:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/individual-db
+        tag: master-1ffeec1
+  image:
+    repository: egovio/individual
+    tag: master-1ffeec1
+  namespace: chaduat
+  heap: "-Xmx256m -Xms256m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  ingress:
+    name: individual
+    namespace: egov
+    context: "individual"
+  cpu_requests: 200m
+  memory_requests: 368Mi
+  cpu_limits: 600m
+  memory_limits: 512Mi
+  replicas: 2
+
+stock:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/stock-db
+        tag: master-1ffeec1
+  image:
+    repository: egovio/stock
+    tag: master-1ffeec1
+  namespace: chaduat
+  heap: "-Xmx256m -Xms256m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  ingress:
+    name: stock
+    namespace: egov
+    context: "stock"
+  cpu_requests: 200m
+  memory_requests: 368Mi
+  cpu_limits: 600m
+  memory_limits: 512Mi
+  replicas: 2
+
+service-request:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/service-request-db
+        tag: master-1ffeec1
+  image:
+    repository: egovio/service-request
+    tag: master-1ffeec1
+  namespace: chaduat
+  heap: "-Xmx256m -Xms256m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  ingress:
+    name: service-request
+    namespace: egov
+    context: "service-request"
+  cpu_requests: 200m
+  memory_requests: 368Mi
+  cpu_limits: 600m
+  memory_limits: 512Mi
+  replicas: 2
+
+pgr-services:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/pgr-services-db
+        tag: master-1ffeec1
+  image:
+    repository: egovio/pgr-services
+    tag: master-1ffeec1
+  namespace: chaduat
+  heap: "-Xmx256m -Xms256m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  ingress:
+    name: pgr-services
+    namespace: egov
+    context: "pgr-services"
+  cpu_requests: 200m
+  memory_requests: 368Mi
+  cpu_limits: 600m
+  memory_limits: 512Mi
+  replicas: 2
