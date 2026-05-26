@@ -542,3 +542,28 @@ health-expense-calculator:
   billing-muster-roll-period-aware-enabled: "true"
   egov-musterroll-search-endpoint: "/health-muster-roll/v1/_search"
   project-management-system-kafka-update-topic: chaduat-update-project
+
+health-expense:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/health-expense-db
+        tag: master-f6da516
+  image:
+    repository: egovio/health-expense
+    tag: master-f6da516
+  namespace: chaduat
+  heap: "-Xmx256m -Xms256m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  ingress:
+    name: health-expense
+    namespace: egov
+    context: "health-expense"
+  cpu_requests: 200m
+  memory_requests: 368Mi
+  cpu_limits: 600m
+  memory_limits: 512Mi
+  replicas: 2
