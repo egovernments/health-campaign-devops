@@ -569,3 +569,4 @@ health-expense:
   replicas: 2
   db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db"
   schema-name: "chaduat"
+  business-workflow-status-map: "{'EXPENSE.WAGES':'false'}"
