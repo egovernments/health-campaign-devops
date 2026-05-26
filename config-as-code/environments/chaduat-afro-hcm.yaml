@@ -869,3 +869,54 @@ pgr-services:
   cpu_limits: 600m
   memory_limits: 512Mi
   replicas: 2
+
+facility:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/facility-db
+        tag: master-1ffeec1
+  image:
+    repository: egovio/facility
+    tag: master-1ffeec1
+  namespace: chaduat
+  heap: "-Xmx512m -Xms256m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  ingress:
+    name: facility
+    namespace: egov
+    context: "facility"
+  cpu_requests: 200m
+  memory_requests: 512Mi
+  cpu_limits: 600m
+  memory_limits: 512Mi
+  replicas: 2
+
+egov-hrms:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/egov-hrms-db
+        tag: master-1ffeec1
+  image:
+    repository: egovio/egov-hrms
+    tag: master-1ffeec1
+  namespace: chaduat
+  heap: "-Xmx512m -Xms256m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  ingress:
+    name: egov-hrms
+    namespace: egov
+    context: "egov-hrms"
+  cpu_requests: 200m
+  memory_requests: 512Mi
+  cpu_limits: 600m
+  memory_limits: 512Mi
+  replicas: 2
+  java-args: -Dspring.profiles.active=monitoring
