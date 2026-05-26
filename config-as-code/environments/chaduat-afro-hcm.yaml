@@ -570,3 +570,30 @@ health-expense:
   db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db"
   schema-name: "chaduat"
   business-workflow-status-map: "{'EXPENSE.WAGES':'false'}"
+
+health-muster-roll:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/health-muster-roll-db
+        tag: master-f6da516
+  image:
+    repository: egovio/health-muster-roll
+    tag: master-f6da516
+  namespace: chaduat
+  heap: "-Xmx256m -Xms256m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  ingress:
+    name: health-muster-roll
+    namespace: egov
+    context: "health-muster-roll"
+  cpu_requests: 200m
+  memory_requests: 368Mi
+  cpu_limits: 600m
+  memory_limits: 512Mi
+  replicas: 2
+  db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db"
+  schema-name: "chaduat"

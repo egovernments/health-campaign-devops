@@ -16,6 +16,7 @@ spec:
           - name: auth-proxy
           - name: health-expense-calculator
           - name: health-expense
+          - name: health-muster-roll
 
   template:
     metadata:
