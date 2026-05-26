@@ -567,3 +567,5 @@ health-expense:
   cpu_limits: 600m
   memory_limits: 512Mi
   replicas: 2
+  db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db"
+  schema-name: "chaduat"
