@@ -719,3 +719,28 @@ beneficiary-idgen:
   kafka:
     topics:
       saveInIdPool: "chaduat-save-in-id-pool"
+      updateIdPoolStatus: "chaduat-update-id-pool-status"
+      saveInDispatchLog: "chaduat-save-in-dispatch-log"
+  spring:
+    redis:
+      port: 6379
+      cache:
+        type: "redis"
+        timeToLive: 60
+        autoExpiry: "true"
+  redisson:
+    redis:
+      port: 6379
+      timeout: 3000
+      connectionPoolSize: 10
+      connectionMinimumIdleSize: 5
+      threads: 16
+      nettyThreads: 32
+  idgen:
+    pool:
+      seqCode: "IDPOOL"
+    random:
+      buffer: 5
+  idPool:
+    validation:
+      enabled: "false"
