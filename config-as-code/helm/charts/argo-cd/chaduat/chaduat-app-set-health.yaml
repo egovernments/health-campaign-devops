@@ -17,6 +17,7 @@ spec:
           - name: health-expense-calculator
           - name: health-expense
           - name: health-muster-roll
+          - name: health-attendance
 
   template:
     metadata:
