@@ -24,7 +24,7 @@ transformer:
   cpu_limits: 300m
   memory_limits: 1.5Gi
   java-enable-debug: true
-  replicas: 1
+  replicas: 0
   project-factory-host: "chaduat-project-factory"
   save-attendance-log-topic: "chaduat-save-attendance-log"
   update-attendance-log-topic: "chaduat-update-attendance-log"
