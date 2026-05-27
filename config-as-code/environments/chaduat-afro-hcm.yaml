@@ -228,7 +228,7 @@ census-service:
   memory_requests: 368Mi
   cpu_limits: 300m
   memory_limits: 512Mi
-  replicas: 1
+  replicas: 0
   plan-service-host: "chaduat-plan-service"
   egov-plan-employee-assignment-search-endpoint: "/plan-service/employee/_search"
   census-create-topic: "chaduat-census-create-topic"
@@ -254,7 +254,7 @@ plan-service:
     namespace: egov
     context: "chaduat/plan-service"
   heap: "-Xmx512m -Xms256m"
-  replicas: 1
+  replicas: 0
   hpa:
     enabled: false
     minReplicas: 1
@@ -300,7 +300,7 @@ resource-generator:
   memory_requests: 368Mi
   cpu_limits: 300m
   memory_limits: 512Mi
-  replicas: 1
+  replicas: 0
   egov-mdms-service-host-key: 'mdms-v2'
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
   egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
@@ -329,7 +329,7 @@ project-factory:
   central-instance-build: true
   namespace: chaduat
   heap: "-Xmx768m -Xms512m"
-  replicas: 1
+  replicas: 0
   hpa:
     enabled: false
     minReplicas: 1
@@ -419,7 +419,7 @@ excel-ingestion:
   group-id: "chaduat-excel-ingestion"
   cpu_requests: 200m
   memory_requests: 768Mi
-  replicas: 1
+  replicas: 0
   egov-mdms-service-host-key: 'mdms-v2'
   egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
   defaultLocale: 'en_CHADUAT'
@@ -482,7 +482,7 @@ auth-proxy:
   memory_requests: 256Mi
   cpu_limits: 200m
   memory_limits: 368Mi
-  replicas: 1
+  replicas: 0
   namespace: chaduat
   kibanaBasePath: "/kibana-upgrade"
 
@@ -512,7 +512,7 @@ health-expense-calculator:
   memory_requests: 368Mi
   cpu_limits: 600m
   memory_limits: 512Mi
-  replicas: 1
+  replicas: 0
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
   report-header-title: "Health Campaign Payment Report"
   report-date-time-format: "dd/MM/yyyy HH:mm:ss z"
@@ -566,7 +566,7 @@ health-expense:
   memory_requests: 368Mi
   cpu_limits: 600m
   memory_limits: 512Mi
-  replicas: 1
+  replicas: 0
   db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db"
   schema-name: "chaduat"
   business-workflow-status-map: "{'EXPENSE.WAGES':'false'}"
@@ -594,7 +594,7 @@ health-muster-roll:
   memory_requests: 368Mi
   cpu_limits: 600m
   memory_limits: 512Mi
-  replicas: 1
+  replicas: 0
   db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db"
   schema-name: "chaduat"
 
@@ -621,7 +621,7 @@ health-attendance:
   memory_requests: 368Mi
   cpu_limits: 600m
   memory_limits: 512Mi
-  replicas: 1
+  replicas: 0
   db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db"
   schema-name: "chaduat"
 
@@ -648,7 +648,7 @@ product:
   memory_requests: 512Mi
   cpu_limits: 600m
   memory_limits: 512Mi
-  replicas: 1
+  replicas: 0
 
 household:
   initContainers:
@@ -673,7 +673,7 @@ household:
   memory_requests: 368Mi
   cpu_limits: 600m
   memory_limits: 512Mi
-  replicas: 1
+  replicas: 0
 
 beneficiary-idgen:
   initContainers:
@@ -698,7 +698,7 @@ beneficiary-idgen:
   memory_requests: 368Mi
   cpu_limits: 600m
   memory_limits: 512Mi
-  replicas: 1
+  replicas: 0
   idformat-from-mdms: "true"
   java-args: -Dspring.profiles.active=monitoring
   autocreate-new-seq: "true"
@@ -768,7 +768,7 @@ referralmanagement:
   memory_requests: 368Mi
   cpu_limits: 600m
   memory_limits: 512Mi
-  replicas: 1
+  replicas: 0
 
 individual:
   initContainers:
@@ -793,7 +793,7 @@ individual:
   memory_requests: 368Mi
   cpu_limits: 600m
   memory_limits: 512Mi
-  replicas: 1
+  replicas: 0
 
 stock:
   initContainers:
@@ -818,7 +818,7 @@ stock:
   memory_requests: 368Mi
   cpu_limits: 600m
   memory_limits: 512Mi
-  replicas: 1
+  replicas: 0
 
 service-request:
   initContainers:
@@ -843,7 +843,7 @@ service-request:
   memory_requests: 368Mi
   cpu_limits: 600m
   memory_limits: 512Mi
-  replicas: 1
+  replicas: 0
 
 pgr-services:
   initContainers:
@@ -868,7 +868,7 @@ pgr-services:
   memory_requests: 368Mi
   cpu_limits: 600m
   memory_limits: 512Mi
-  replicas: 1
+  replicas: 0
 
 facility:
   initContainers:
@@ -893,7 +893,7 @@ facility:
   memory_requests: 512Mi
   cpu_limits: 600m
   memory_limits: 512Mi
-  replicas: 1
+  replicas: 0
 
 egov-hrms:
   initContainers:
@@ -918,5 +918,5 @@ egov-hrms:
   memory_requests: 512Mi
   cpu_limits: 600m
   memory_limits: 512Mi
-  replicas: 1
+  replicas: 0
   java-args: -Dspring.profiles.active=monitoring
