@@ -356,10 +356,10 @@ pgr-services:
     dbMigration:
       image:
         repository: egovio/pgr-services-db
-        tag: master-b91815e
+        tag: master-7ce35df
   image:
     repository: egovio/pgr-services
-    tag: master-b91815e
+    tag: master-7ce35df
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: true
