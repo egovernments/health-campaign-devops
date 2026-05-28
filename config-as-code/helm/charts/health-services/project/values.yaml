@@ -280,9 +280,7 @@ env: |
     value: "/boundary-service/boundary/_search"
   - name: EGOV_BOUNDARY_HIERARCHY_NAME
     value: "POLIO_CHAD"
-  
-  - name: JAVA_ENABLE_DEBUG
-    value: {{ index .Values "java-enable-debug" | quote }}
+
   - name: EGOV_USER_CONTEXT_PATH
     value: "/user/users"
   - name: PROJECT_TASK_NO_RESOURCE_VALIDATION_STATUS
