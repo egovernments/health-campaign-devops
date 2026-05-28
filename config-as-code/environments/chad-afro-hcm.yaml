@@ -88,9 +88,9 @@ transformer:
   state-level-tenantid: "chad"
   egov-boundary-hierarchy-name: "POLIO_CHAD"
   egov-localization-module-name: "hcm-boundary-polio_chad"
-  transformer-consumer-create-user-action-topic: "oy-save-user-action-project-topic"
-  transformer-consumer-update-user-action-topic: "oy-update-user-action-project-topic"
-  transformer-producer-user-action-index-v1-topic: "oy-transformer-producer-user-action-index-v1-topic"
+  transformer-consumer-create-user-action-topic: "chad-save-user-action-project-task-topic"
+  transformer-consumer-update-user-action-topic: "chad-update-user-action-project-task-topic"
+  transformer-producer-user-action-index-v1-topic: "chad-transformer-producer-user-action-index-v1-topic"
 
 hcm-digit-ui:
   namespace: chad
