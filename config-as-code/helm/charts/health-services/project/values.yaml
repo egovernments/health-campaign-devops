@@ -32,6 +32,46 @@ java-args: ""
 persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/project-persister.yml"
 indexer-yml-path: "file:///work-dir/health-campaign-config/egov-indexer/project-indexer.yml"
 
+kafka-consumer-group-id: health-project
+project-task-kafka-create-topic: save-project-task-topic
+project-task-consumer-bulk-create-topic: save-project-task-bulk-topic
+project-task-kafka-update-topic: update-project-task-topic
+project-task-consumer-bulk-update-topic: update-project-task-bulk-topic
+project-task-kafka-delete-topic: delete-project-task-topic
+project-task-consumer-bulk-delete-topic: delete-project-task-bulk-topic
+project-beneficiary-kafka-create-topic: save-project-beneficiary-topic
+project-beneficiary-kafka-update-topic: update-project-beneficiary-topic
+project-beneficiary-kafka-delete-topic: delete-project-beneficiary-topic
+project-beneficiary-consumer-bulk-create-topic: project-beneficiary-consumer-bulk-create-topic
+project-beneficiary-consumer-bulk-update-topic: project-beneficiary-consumer-bulk-update-topic
+project-beneficiary-consumer-bulk-delete-topic: project-beneficiary-consumer-bulk-delete-topic
+project-staff-kafka-delete-topic: delete-project-staff-topic
+project-staff-kafka-create-topic: save-project-staff-topic
+project-staff-kafka-update-topic: update-project-staff-topic
+project-staff-consumer-bulk-delete-topic: delete-project-staff-bulk-topic
+project-staff-consumer-bulk-create-topic: create-project-staff-bulk-topic
+project-staff-consumer-bulk-update-topic: update-project-staff-bulk-topic
+project-management-system-kafka-create-topic: save-project
+project-management-system-kafka-update-topic: update-project
+project-resource-kafka-create-topic: save-project-resource-topic
+project-resource-kafka-update-topic: update-project-resource-topic
+project-resource-kafka-delete-topic: delete-project-resource-topic
+project-resource-consumer-bulk-create-topic: save-project-resource-bulk-topic
+project-resource-consumer-bulk-update-topic: update-project-resource-bulk-topic
+project-resource-consumer-bulk-delete-topic: delete-project-resource-bulk-topic
+project-facility-kafka-delete-topic: delete-project-facility-topic
+project-facility-kafka-create-topic: save-project-facility-topic
+project-facility-kafka-update-topic: update-project-facility-topic
+project-facility-consumer-bulk-delete-topic: delete-project-facility-bulk-topic
+project-facility-consumer-bulk-create-topic: create-project-facility-bulk-topic
+project-facility-consumer-bulk-update-topic: update-project-facility-bulk-topic
+project-user-action-kafka-create-topic: save-user-action-project-task-topic
+project-user-action-kafka-update-topic: update-user-action-project-task-topic
+project-user-action-task-consumer-bulk-create-topic: save-user-action-project-task-bulk-topic
+project-user-action-task-consumer-bulk-update-topic: update-user-action-project-task-bulk-topic
+project-location-capture-kafka-create-topic: save-location-capture-project-topic
+project-location-capture-consumer-bulk-create-topic: save-location-capture-project-bulk-topic
+
 # Additional Container Envs
 env: |
   - name: SPRING_KAFKA_CONSUMER_GROUP_ID
@@ -228,7 +268,7 @@ env: |
   - name: PROJECT_MDMS_MODULE
     value: "HCM-PROJECT-TYPES"
   - name: EGOV_LOCATION_HIERARCHY_TYPE
-    value: "ADMIN"
+    value: "POLIO_CHAD"
   - name: EGOV_LOCATION_CODE_QUERY_PARAM
     value: "code"
   - name: EGOV_BOUNDARY_HOST
@@ -239,4 +279,25 @@ env: |
   - name: EGOV_BOUNDARY_SEARCH_URL
     value: "/boundary-service/boundary/_search"
   - name: EGOV_BOUNDARY_HIERARCHY_NAME
-    value: "ADMIN"
+    value: "POLIO_CHAD"
+  
+  - name: JAVA_ENABLE_DEBUG
+    value: {{ index .Values "java-enable-debug" | quote }}
+  - name: EGOV_USER_CONTEXT_PATH
+    value: "/user/users"
+  - name: PROJECT_TASK_NO_RESOURCE_VALIDATION_STATUS
+    value: ADMINISTRATION_FAILED,BENEFICIARY_REFUSED,CLOSED_HOUSEHOLD,NOT_ADMINISTERED,BENEFICIARY_REFERRED,BENEFICIARY_INELIGIBLE,NOT_DELIVERED,BENEFICIARY_MIGRATED,BENEFICIARY_DIED,BENEFICIARY_ABSENT,INELIGIBLE
+  - name: EGOV_PERSISTER_BULK_PROCESSING_ENABLED
+    value: "false"
+  - name: PROJECT_USER_ACTION_KAFKA_CREATE_TOPIC
+    value: {{ index .Values "project-user-action-kafka-create-topic" | quote }}
+  - name: PROJECT_USER_ACTION_KAFKA_UPDATE_TOPIC
+    value: {{ index .Values "project-user-action-kafka-update-topic" | quote }}
+  - name: PROJECT_USER_ACTION_CONSUMER_BULK_CREATE_TOPIC
+    value: {{ index .Values "project-user-action-task-consumer-bulk-create-topic" | quote }}
+  - name: PROJECT_USER_ACTION_CONSUMER_BULK_UPDATE_TOPIC
+    value: {{ index .Values "project-user-action-task-consumer-bulk-update-topic" | quote }}
+  - name: PROJECT_LOCATION_CAPTURE_KAFKA_CREATE_TOPIC
+    value: {{ index .Values "project-location-capture-kafka-create-topic" | quote }}
+  - name: PROJECT_LOCATION_CAPTURE_CONSUMER_BULK_CREATE_TOPIC
+    value: {{ index .Values "project-location-capture-consumer-bulk-create-topic" | quote }}
