@@ -1045,6 +1045,7 @@ user-otp:
   central-instance-build: true
   central-instance-enabled: true
 inbox:
+  replicas: 0
   image:
     repository: egovio/inbox
     tag: inbox-workflow-fix-b6205e2
@@ -1248,6 +1249,7 @@ project-factory:
   notCreateUserIfAlreadyThere: 'true'
 
 plan-service:
+  replicas: 0
   initContainers:
     dbMigration:
       image:
@@ -1597,6 +1599,7 @@ health-attendance:
   central-instance-enabled: true
 
 health-expense:
+  replicas: 0
   initContainers:
     dbMigration:
       image:
