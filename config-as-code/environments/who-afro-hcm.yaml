@@ -873,10 +873,10 @@ egov-workflow-v2:
     dbMigration:
       image:
         repository: egovio/egov-workflow-v2-db
-        tag: parallel-workflows-lazy-injection-1ace233
+        tag: central-instance-1248cc50e5-38
   image:
     repository: egovio/egov-workflow-v2
-    tag: parallel-workflows-lazy-injection-1ace233
+    tag: central-instance-1248cc50e5-38
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
