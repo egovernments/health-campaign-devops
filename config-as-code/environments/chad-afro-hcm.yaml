@@ -86,6 +86,11 @@ transformer:
   update-project-beneficiary-topic: "chad-update-project-beneficiary-topic"
   transformer-producer-project-beneficiary-index-v1-topic: "chad-transformer-producer-project-beneficiary-index-v1-topic"
   state-level-tenantid: "chad"
+  egov-boundary-hierarchy-name: "POLIO_CHAD"
+  egov-localization-module-name: "hcm-boundary-polio_chad"
+  transformer-consumer-create-user-action-topic: "oy-save-user-action-project-topic"
+  transformer-consumer-update-user-action-topic: "oy-update-user-action-project-topic"
+  transformer-producer-user-action-index-v1-topic: "oy-transformer-producer-user-action-index-v1-topic"
 
 hcm-digit-ui:
   namespace: chad
