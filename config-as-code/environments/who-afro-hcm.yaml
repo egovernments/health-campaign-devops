@@ -273,12 +273,14 @@ elasticsearch-data:
             - diskName: "pvc-9f7f6336-14fc-44e2-acfe-885a00de309b" ## add your respective volume id eg. vol-0085073c65f76dre5
               diskUri: "/subscriptions/8c247e8d-4f67-46e2-b10e-e89fc1a60fbd/resourceGroups/MC_AFROHCM-T-EUW-RG01_afrohcm-t-euw_westeurope/providers/Microsoft.Compute/disks/pvc-9f7f6336-14fc-44e2-acfe-885a00de309b" ## add your respective zone eg. ap-south-1b
 
-    esJavaOpts: "-Xmx3500M -Xms3500M"
+    esJavaOpts: "-Xmx6g -Xms6g"
     resources:
         requests:
-            memory: "4Gi"
+            memory: "8Gi"
+            cpu: "2000m"
         limits:
-            memory: "4Gi"
+            memory: "8Gi"
+            cpu: "4000m"
 
 elasticsearch-master:
     namespace: es-cluster
@@ -295,12 +297,28 @@ elasticsearch-master:
             - diskName: "pvc-c5889d4c-8e90-4f4c-ac1b-11e486da8dc7" ## add your respective volume id eg. vol-0085073c65f76dre5
               diskUri: "/subscriptions/8c247e8d-4f67-46e2-b10e-e89fc1a60fbd/resourceGroups/MC_AFROHCM-T-EUW-RG01_afrohcm-t-euw_westeurope/providers/Microsoft.Compute/disks/pvc-c5889d4c-8e90-4f4c-ac1b-11e486da8dc7" ## add your respective zone eg. ap-south-1b
 
-    esJavaOpts: "-Xmx448m -Xms448m"
+    esJavaOpts: "-Xmx1536m -Xms1536m"
     resources:
         requests:
-            memory: "896Mi"
+            memory: "2Gi"
+            cpu: "1000m"
         limits:
-            memory: "896Mi"
+            memory: "2Gi"
+            cpu: "2000m"
+
+kibana:
+    namespace: es-cluster
+    replicas: 2
+    extraEnvs:
+      - name: "NODE_OPTIONS"
+        value: "--max-old-space-size=2560"
+    resources:
+        limits:
+            memory: "3Gi"
+            cpu: "2000m"
+        requests:
+            memory: "2Gi"
+            cpu: "1000m"
 
 oauth2-proxy:
     config:
