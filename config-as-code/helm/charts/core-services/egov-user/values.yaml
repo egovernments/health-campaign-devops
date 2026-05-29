@@ -212,10 +212,9 @@ env: |
     value: /boundary-service/boundary-hierarchy-definition/_search
   - name: EGOV_BOUNDARY_RELATIONSHIPS_SEARCH_URL
     value: /boundary-service/boundary-relationships/_search
-  {{- if index .Values "sso-enabled" }}
-  - name: GRAPH_CLIENT_SECRET_MZ_OIDC_AZURE
-    valueFrom:
-      secretKeyRef:
-        key: graph-client-secret-mz-oidc-azure
-        name: sso
-  {{- end }}
+  # Commented out - requires 'sso' secret to be created
+  # - name: GRAPH_CLIENT_SECRET_MZ_OIDC_AZURE
+  #   valueFrom:
+  #     secretKeyRef:
+  #       key: graph-client-secret-mz-oidc-azure
+  #       name: sso
