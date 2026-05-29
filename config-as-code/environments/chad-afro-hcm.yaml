@@ -12,7 +12,7 @@ disableAnnotationTimestamp: true
 transformer:
   image:
     repository: egovio/transformer
-    tag: chad-polio-admin-console-changes-bc5df68
+    tag: chad-polio-admin-console-changes-101b93e
   namespace: "chad"
   ingress:
     name: chad-transformer
