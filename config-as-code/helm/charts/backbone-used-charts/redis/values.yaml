@@ -14,3 +14,9 @@ image:
   tag: "7.2.4"
 replicas: "1"
 httpPort: 6379
+
+# Resource Configuration for Production
+cpu_requests: "1"
+memory_requests: "4Gi"
+cpu_limits: "2"
+memory_limits: "8Gi"
