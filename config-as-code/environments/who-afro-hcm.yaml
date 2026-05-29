@@ -340,6 +340,10 @@ egov-filestore:
   central-instance-build: true
   central-instance-enabled: true
   volume: /opt/eGov/filestore
+  memory_requests: 256Mi
+  memory_limits: 512Mi
+  cpu_requests: 100m
+  cpu_limits: 300m
   hpa:
     enabled: true
     minReplicas: 2
