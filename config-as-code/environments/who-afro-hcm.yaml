@@ -1007,10 +1007,10 @@ mdms-v2:
     dbMigration:
       image:
         repository: egovio/mdms-v2-db
-        tag: central-instance-6fae5fdefc-96
+        tag: central-instance-mdms-2-944672d
   image:
     repository: egovio/mdms-v2
-    tag: central-instance-6fae5fdefc-96
+    tag: central-instance-mdms-2-944672d
   ingress:
     replenishRate: "10"
     burstCapacity: "60"
