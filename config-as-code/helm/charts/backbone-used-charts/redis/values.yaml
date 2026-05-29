@@ -17,6 +17,6 @@ httpPort: 6379
 
 # Resource Configuration for Production
 cpu_requests: "500m"
-memory_requests: "4Gi"
+memory_requests: "8Gi"
 cpu_limits: "2"
-memory_limits: "8Gi"
+memory_limits: "16Gi"
