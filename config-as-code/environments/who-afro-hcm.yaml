@@ -340,6 +340,12 @@ egov-filestore:
   central-instance-build: true
   central-instance-enabled: true
   volume: /opt/eGov/filestore
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 80
   is-bucket-fixed: "true"
   minio.url : "http://minio.backbone:9000/"
   aws.s3.url : "https://s3.amazonaws.com"
@@ -366,6 +372,12 @@ egov-idgen:
   idformat-from-mdms: "true"
   java-args: -Dspring.profiles.active=monitoring
   heap: "-Xmx512m -Xms256m"
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 80
   memory_limits: 512Mi
   autocreate-new-seq: "true"
 
@@ -648,6 +660,12 @@ egov-indexer:
   memory_requests: 512Mi
   cpu_limits: 300m
   memory_limits: 768Mi
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 6
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 80
   replicas: 2
   initContainers:
     dbMigration:
@@ -1131,6 +1149,12 @@ egov-accesscontrol:
   central-instance-enabled: true
   replicas : 1
   heap: "-Xmx512m -Xms256m"
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 80
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Health Services
 
