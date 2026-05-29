@@ -491,6 +491,12 @@ egov-user:
   replicas: 2
   heap: "-Xmx512m -Xms256m"
   memory_limits: 512Mi
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 80
   otp-validation: "true"
   citizen-otp-enabled: "true"
   employee-otp-enabled: "false"
