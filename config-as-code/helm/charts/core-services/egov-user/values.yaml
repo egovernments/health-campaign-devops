@@ -179,8 +179,6 @@ env: |
     value: "false" 
   - name: EGOV_USER_PWD_PATTERN
     value: ((?=.*\d)(?=.*[a-z])(?=.*[@#$%])(?=\S+$).*$)
-  - name: STATE_SCHEMA_INDEX_POSITION_TENANTID
-    value: "1"
   - name: LOGGING_LEVEL_WEB
     value: DEBUG
   - name: LOGGING_LEVEL_ORG_EGOV_USER
@@ -189,8 +187,6 @@ env: |
     value: DEBUG
   - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY
     value: DEBUG
-  - name: IS_ENVIRONMENT_CENTRAL_INSTANCE
-    value: "false"
   - name: AUTH_OIDC_PROVIDERS_SOURCE
     value: mdms
   - name: JAVA_TOOL_OPTIONS
