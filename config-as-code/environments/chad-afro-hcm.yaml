@@ -24,7 +24,7 @@ transformer:
   cpu_limits: 300m
   memory_limits: 1.5Gi
   java-enable-debug: true
-  replicas: 1
+  replicas: 3
   project-factory-host: "chad-project-factory"
   save-attendance-log-topic: "chad-save-attendance-log"
   update-attendance-log-topic: "chad-update-attendance-log"
