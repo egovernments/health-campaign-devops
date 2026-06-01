@@ -159,7 +159,7 @@ dashboard-ui:
   namespace: chad  
   image:
     repository: egovio/dashboard-ui
-    tag: HDDF-4931-6873013
+    tag: HDDF-4931-7794204
   ingress:
     enabled: true
     context: "dashboard-ui"
