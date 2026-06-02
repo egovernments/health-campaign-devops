@@ -1156,6 +1156,13 @@ egov-accesscontrol:
   central-instance-enabled: true
   replicas : 1
   heap: "-Xmx512m -Xms256m"
+  resources:
+    requests:
+      memory: "384Mi"
+      cpu: "100m"
+    limits:
+      memory: "768Mi"
+      cpu: "500m"
   hpa:
     enabled: true
     minReplicas: 2
