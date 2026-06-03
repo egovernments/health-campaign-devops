@@ -340,16 +340,16 @@ egov-filestore:
   central-instance-build: true
   central-instance-enabled: true
   volume: /opt/eGov/filestore
-  memory_requests: 320Mi
+  memory_requests: 384Mi
   memory_limits: 640Mi
-  cpu_requests: 100m
-  cpu_limits: 500m
+  cpu_requests: 150m
+  cpu_limits: 600m
   hpa:
     enabled: true
-    minReplicas: 2
-    maxReplicas: 5
+    minReplicas: 3
+    maxReplicas: 8
     cpuTargetPercentage: 70
-    memoryTargetPercentage: 80
+    memoryTargetPercentage: 85
   is-bucket-fixed: "true"
   minio.url : "http://minio.backbone:9000/"
   aws.s3.url : "https://s3.amazonaws.com"
@@ -378,14 +378,14 @@ egov-idgen:
   heap: "-Xmx384m -Xms256m"
   hpa:
     enabled: true
-    minReplicas: 2
-    maxReplicas: 5
-    cpuTargetPercentage: 70
-    memoryTargetPercentage: 75
+    minReplicas: 3
+    maxReplicas: 8
+    cpuTargetPercentage: 75
+    memoryTargetPercentage: 85
   memory_requests: 384Mi
   memory_limits: 512Mi
-  cpu_requests: 100m
-  cpu_limits: 400m
+  cpu_requests: 150m
+  cpu_limits: 500m
   autocreate-new-seq: "true"
 
 pgr-services:
