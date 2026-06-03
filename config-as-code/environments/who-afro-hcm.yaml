@@ -1033,7 +1033,7 @@ mdms-v2:
   redis-host: redis.backbone.svc.cluster.local
   spring-redis-host: redis.backbone.svc.cluster.local
   spring-redis-port: "6379"
-  spring-data-redis-host: redis.backbone.svc.cluster.local
+  spring-data-redis-host: redis.backbone
   spring-data-redis-port: "6379"
   resources: |
     limits:
