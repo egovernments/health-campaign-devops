@@ -1113,6 +1113,17 @@ transformer:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
+  replicas: 3
+  memory_requests: 1Gi
+  memory_limits: 1536Mi
+  cpu_requests: 200m
+  cpu_limits: 300m
+  hpa:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 75
 
 user-otp:
   image:
