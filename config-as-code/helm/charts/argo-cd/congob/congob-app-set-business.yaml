@@ -29,6 +29,12 @@ spec:
         server: https://kubernetes.default.svc
         namespace: '*'
 
+      ignoreDifferences:
+        - group: apps
+          kind: Deployment
+          jsonPointers:
+            - /spec/replicas
+
       syncPolicy:
         automated:
           prune: false
