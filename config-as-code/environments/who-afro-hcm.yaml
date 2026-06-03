@@ -413,6 +413,18 @@ household:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
+  replicas: 2
+  heap: '-Xmx768m -Xms512m'
+  memory_requests: 768Mi
+  memory_limits: 1Gi
+  cpu_requests: 200m
+  cpu_limits: 400m
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 8
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 75
 
 
 service-request:
@@ -1241,9 +1253,18 @@ individual:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
-  replicas: 1
-  heap: '-Xmx512m -Xms256m'
-  memory_limits: 512Mi
+  replicas: 2
+  heap: '-Xmx768m -Xms512m'
+  memory_requests: 768Mi
+  memory_limits: 1Gi
+  cpu_requests: 200m
+  cpu_limits: 400m
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 8
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 75
   egov-beneficiary-idgen-host-key: "beneficiary-idgen"
   egov-idgen-generate-path: "egov-idgen/id/_generate"
   egov-beneficiary-idgen-idpool-search-path: "beneficiary-idgen/id/id_pool/_search"
