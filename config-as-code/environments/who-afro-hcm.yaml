@@ -375,17 +375,17 @@ egov-idgen:
   replicas : 1
   idformat-from-mdms: "true"
   java-args: -Dspring.profiles.active=monitoring
-  heap: "-Xmx512m -Xms256m"
+  heap: "-Xmx384m -Xms256m"
   hpa:
     enabled: true
     minReplicas: 2
     maxReplicas: 5
     cpuTargetPercentage: 70
-    memoryTargetPercentage: 80
-  memory_requests: 256Mi
+    memoryTargetPercentage: 75
+  memory_requests: 384Mi
   memory_limits: 512Mi
   cpu_requests: 100m
-  cpu_limits: 300m
+  cpu_limits: 400m
   autocreate-new-seq: "true"
 
 pgr-services:
