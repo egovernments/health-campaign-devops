@@ -855,16 +855,16 @@ gateway:
   image:
     repository: egovio/gateway
     tag: gatewat-rate-limit-per-route-f808ba0
-  replicas: 1
+  replicas: 4
   custom-filter-property: "false"
   cpu_requests: 200m
   cpu_limits: 400m
-  memory_requests: 512Mi
-  memory_limits: 768Mi
+  memory_requests: 768Mi
+  memory_limits: 1Gi
   hpa:
     enabled: true
-    minReplicas: 2
-    maxReplicas: 6
+    minReplicas: 4
+    maxReplicas: 10
     cpuTargetPercentage: 70
     memoryTargetPercentage: 80
   tracing-enabled: "true"
