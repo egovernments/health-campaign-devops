@@ -25,6 +25,12 @@ transformer:
   memory_limits: 1.5Gi
   java-enable-debug: true
   replicas: 3
+  hpa:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 75
   project-factory-host: "chad-project-factory"
   save-attendance-log-topic: "chad-save-attendance-log"
   update-attendance-log-topic: "chad-update-attendance-log"

@@ -676,11 +676,11 @@ egov-indexer:
   memory_limits: 768Mi
   hpa:
     enabled: true
-    minReplicas: 2
-    maxReplicas: 6
+    minReplicas: 4
+    maxReplicas: 10
     cpuTargetPercentage: 70
     memoryTargetPercentage: 80
-  replicas: 2
+  replicas: 4
   initContainers:
     dbMigration:
       image:
@@ -703,11 +703,11 @@ egov-persister:
   memory_requests: 512Mi
   cpu_limits: 300m
   memory_limits: 768Mi
-  replicas: 2
+  replicas: 4
   hpa:
     enabled: true
-    minReplicas: 2
-    maxReplicas: 6
+    minReplicas: 4
+    maxReplicas: 10
     cpuTargetPercentage: 70
     memoryTargetPercentage: 80
   images:
@@ -991,6 +991,17 @@ egov-localization:
   image:
     repository: egovio/egov-localization
     tag: redis-localization-key-5c0a4c4
+  replicas: 4
+  memory_requests: 512Mi
+  memory_limits: 768Mi
+  cpu_requests: 200m
+  cpu_limits: 300m
+  hpa:
+    enabled: true
+    minReplicas: 4
+    maxReplicas: 10
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 80
 
 egov-url-shortening:
   initContainers:
@@ -1113,17 +1124,6 @@ transformer:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
-  replicas: 3
-  memory_requests: 1Gi
-  memory_limits: 1536Mi
-  cpu_requests: 200m
-  cpu_limits: 300m
-  hpa:
-    enabled: true
-    minReplicas: 3
-    maxReplicas: 10
-    cpuTargetPercentage: 70
-    memoryTargetPercentage: 75
 
 user-otp:
   image:
