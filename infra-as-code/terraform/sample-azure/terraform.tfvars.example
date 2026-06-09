@@ -1,0 +1,5 @@
+environment = "hcm-demo"
+resource_group = "hcm-demo-rg"
+location  = "centralus"
+db_user  = "your_db_username"
+db_password = "your_secure_password_here"

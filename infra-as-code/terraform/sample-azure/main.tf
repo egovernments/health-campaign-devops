@@ -1,6 +1,6 @@
 provider "azurerm" {
   features {}
-  subscription_id = "8c247e8d-4f67-46e2-b10e-e89fc1a60fbd"
+  subscription_id = "777e3e4b-0998-4759-adc2-e7b5b19a6b28"
   resource_provider_registrations = "none"
 
   # Service Principal authentication (uses environment variables if not specified)
@@ -9,22 +9,22 @@ provider "azurerm" {
 
 terraform {
   backend "azurerm" {
-    resource_group_name  = "AFROHCM-T-EUW-RG01"
-    storage_account_name = "afrohcmteuwstg"
-    container_name       = "afrohcm-t-euw-container"
+    resource_group_name  = "hcm-demo-rg"
+    storage_account_name = "tfstate6fryx"
+    container_name       = "hcm-demo-container"
     key                  = "terraform.tfstate"
   }
 }
 
 resource "azurerm_virtual_network" "vnet" {
-  name                = "vnet-afrohcm-t-01"  # Following naming convention
+  name                = "vnet-hcm-demo-01"  # Following naming convention
   address_space       = ["10.20.27.0/24"]    # New allocated range
   location            = var.location
   resource_group_name = var.resource_group
 }
 
 resource "azurerm_subnet" "aks" {
-  name         = "snet-aks-afrohcm-t-01"  # Following naming convention
+  name         = "snet-aks-hcm-demo-01"  # Following naming convention
   resource_group_name = var.resource_group
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes   = ["10.20.27.0/25"]  # 128 IPs for AKS
@@ -41,7 +41,7 @@ resource "azurerm_subnet" "aks" {
 # }
 
 resource "azurerm_subnet" "postgres" {
-  name         = "snet-postgres-afrohcm-t-01"  # Following naming convention
+  name         = "snet-postgres-hcm-demo-01"  # Following naming convention
   resource_group_name = var.resource_group
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes   = ["10.20.27.128/26"]  # 64 IPs for PostgreSQL
@@ -104,7 +104,7 @@ module "kubernetes" {
   name                      = var.environment
   location                  = var.location
   resource_group            = var.resource_group
-  vm_size                   = "Standard_E2as_v5"
+  vm_size                   = "Standard_D2s_v3"
   node_count                = 4
   vnet_subnet_id            = azurerm_subnet.aks.id
   os_disk_size_gb           = 64
