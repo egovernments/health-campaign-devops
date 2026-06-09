@@ -104,10 +104,13 @@ module "kubernetes" {
   name                      = var.environment
   location                  = var.location
   resource_group            = var.resource_group
-  vm_size                   = "Standard_E2as_v5"
-  node_count                = 4
+  vm_size                   = "Standard_E4as_v5"
+  node_count                = 7
   vnet_subnet_id            = azurerm_subnet.aks.id
   os_disk_size_gb           = 64
+  enable_auto_scaling       = false
+  min_node_count            = 1
+  max_node_count            = 12
 }
 
 module "postgres-db" {
@@ -115,12 +118,13 @@ module "postgres-db" {
   environment               = var.environment
   resource_group            = var.resource_group
   location                  = var.location
-  sku_name                  = "B_Standard_B2ms"
+  sku_name                  = "GP_Standard_D4ads_v5"
   storage_mb                = "65536"
-  backup_retention_days     = "7"
+  backup_retention_days     = "30"
   administrator_login       = var.db_user
   administrator_password    = var.db_password
   db_version                = var.db_version
   delegated_subnet_id       = azurerm_subnet.postgres.id
   private_dns_zone_id       = azurerm_private_dns_zone.db.id
+  auto_grow_enabled         = true
 }

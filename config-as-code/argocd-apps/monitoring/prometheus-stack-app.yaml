@@ -18,11 +18,13 @@ spec:
     chart: kube-prometheus-stack
     targetRevision: 56.6.2
     helm:
-      valuesFiles:
-        - values/prometheus.yaml
       values: |
         alertmanager:
-          enabled: false
+          enabled: true
+          config:
+            existingSecret: alertmanager-main
+          alertmanagerSpec:
+            configSecret: alertmanager-main
         prometheus:
           prometheusSpec:
             retention: 90d

@@ -10,13 +10,13 @@ global:
 cluster-configs:
     namespaces:
       create: true
-      values: [ backbone, cert-manager, egov, es-cluster, kafka-kraft, logging, monitoring, playground, zookeeper-cluster, chad ]
+      values: [ backbone, cert-manager, egov, es-cluster, kafka-kraft, logging, monitoring, playground, zookeeper-cluster, chad, chaduat ]
       
     root-ingress:
       cert-issuer: letsencrypt-prod
     configmaps:
         egov-config:
-            namespace: [ egov, es-cluster, monitoring, chad, congob ]
+            namespace: [ egov, es-cluster, monitoring, chad, congob, chaduat ]
             data:
                 db-host: afrohcm-t-euw-server.postgres.database.azure.com ## Add db-host name example: egov-demo.database.azure.com
                 db-name: afrohcm-t-euw-db ## Add db-name
@@ -24,8 +24,9 @@ cluster-configs:
                 db-url-no-schema: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
                 chad-db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db?currentSchema=chad"
                 congob-db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db?currentSchema=congob"
+                chaduat-db-url: "jdbc:postgresql://afrohcm-t-euw-server.postgres.database.azure.com:5432/afrohcm-t-euw-db?currentSchema=chaduat"
                 domain: campaigns.afro.who.int ## Add your Domain Name
-                redis-host: "redis.backbone"
+                redis-host: "redis.backbone.svc.cluster.local"
                 redis-downsync-host: ""
                 egov-services-fqdn-name: https://campaigns.afro.who.int/ ## Add your Domain Name
                 state-level-tenantid-length: "1"
@@ -33,7 +34,7 @@ cluster-configs:
                 is-environment-central-instance: "true"
                 egov-state-level-tenant-id: "chad"
                 state-level-tenant-id: "chad"
-                kafka-tenant-id-pattern: "chad-|congob-"
+                kafka-tenant-id-pattern: "chad-|congob-|chaduat-"
                 s3-assets-bucket: "(pg-health-egov-assets|egov-health-playground-assets)"
                 es-host: "elasticsearch-data.es-cluster"
                 es-host-6: "elasticsearch-data.es-cluster"
@@ -54,12 +55,12 @@ cluster-configs:
                 timezone: "UTC"
                 tracer-errors-provideexceptionindetails: "true"
                 egov-internal-microservice-user-uuid: fa0f820c-49df-46bb-8e62-8a0ec5d9af5e
-                db-schema-names: "chad,congob"
+                db-schema-names: "chad,congob,chaduat"
                 kibana-base-path: kibana-upgrade 
                 kibana-host: "http://kibana-v1.es-upgrade:5601/"
 
         egov-service-host:
-            namespace: [ egov, es-cluster, monitoring, chad, congob ]
+            namespace: [ egov, es-cluster, monitoring, chad, congob, chaduat ]
             data:
               asset-services: "http://asset-services:8080/"
               boundary-management: 'http://boundary-management.egov:8080/'
@@ -72,15 +73,25 @@ cluster-configs:
               citizen-indexer: "http://citizen-indexer:8080/"
               citizen-services: "http://citizen-services:8080/"
               chad-dashboard-analytics: "http://dashboard-analytics.chad:8080/"
-              project-factory: 'http://internal-gateway.egov:8080/'
+              project-factory: 'http://internal-gateway-scg.egov:8080/'
               chad-resource-generator: 'http://resource-generator.chad:8080/'
               chad-plan-service: 'http://plan-service.chad:8080/'
               chad-census-service: 'http://census-service.chad:8080/'
-              excel-ingestion: 'http://internal-gateway.egov:8080/'
+              chad-project-factory: 'http://project-factory.chad:8080/'
+              chad-transformer: 'http://transformer.chad:8080/'
+              excel-ingestion: 'http://internal-gateway-scg.egov:8080/'
               congob-dashboard-analytics: "http://dashboard-analytics.congob:8080/"
               congob-resource-generator: 'http://resource-generator.congob:8080/'
               congob-plan-service: 'http://plan-service.congob:8080/'
               congob-census-service: 'http://census-service.congob:8080/'
+              congob-project-factory: 'http://project-factory.congob:8080/'
+              congob-transformer: 'http://transformer.congob:8080/'
+              chaduat-dashboard-analytics: "http://dashboard-analytics.chaduat:8080/"
+              chaduat-resource-generator: 'http://resource-generator.chaduat:8080/'
+              chaduat-plan-service: 'http://plan-service.chaduat:8080/'
+              chaduat-census-service: 'http://census-service.chaduat:8080/'
+              chaduat-project-factory: 'http://project-factory.chaduat:8080/'
+              chaduat-transformer: 'http://transformer.chaduat:8080/'
               dashboard-ingest: "http://dashboard-ingest.egov:8080/"
               demand-services: "http://demand-services:8080/"
               data-sync-employee: "http://data-sync-employee:8080/"
@@ -109,7 +120,8 @@ cluster-configs:
               egov-indexer: "http://egov-indexer.egov:8080/"
               egov-hrms: "http://egov-hrms.egov:8080/"
               es-client: "http://elasticsearch-data-v1.es-cluster:9200"
-              health-attendance: "http://attendance.egov:8080/"
+              health-attendance: "http://health-attendance.egov:8080/"
+              attendance-service: "http://health-attendance.egov:8080/"
               location: "http://location:8080/"
               performance-assessment: "http://performance-assessment:8080/"
               pdf-service: "http://pdf-service.egov:8080/"
@@ -130,7 +142,7 @@ cluster-configs:
               service-request: "http://service-request.egov:8080/"
               mdms-service-v2: 'http://mdms-v2.egov:8080/'
               health-expense: 'http://expense.egov:8080/'
-              health-expense-calculator: 'http://internal-gateway.egov:8080/'
+              health-expense-calculator: 'http://internal-gateway-scg.egov:8080/'
               health-muster-roll: 'http://muster-roll.egov:8080/'
               beneficiary-idgen: 'http://beneficiary-idgen.egov:8080/'
 disableAnnotationTimestamp: true
@@ -261,12 +273,14 @@ elasticsearch-data:
             - diskName: "pvc-9f7f6336-14fc-44e2-acfe-885a00de309b" ## add your respective volume id eg. vol-0085073c65f76dre5
               diskUri: "/subscriptions/8c247e8d-4f67-46e2-b10e-e89fc1a60fbd/resourceGroups/MC_AFROHCM-T-EUW-RG01_afrohcm-t-euw_westeurope/providers/Microsoft.Compute/disks/pvc-9f7f6336-14fc-44e2-acfe-885a00de309b" ## add your respective zone eg. ap-south-1b
 
-    esJavaOpts: "-Xmx3500M -Xms3500M"
+    esJavaOpts: "-Xmx4g -Xms4g"
     resources:
         requests:
-            memory: "4Gi"
+            memory: "7Gi"
+            cpu: "1000m"
         limits:
-            memory: "4Gi"
+            memory: "8Gi"
+            cpu: "2000m"
 
 elasticsearch-master:
     namespace: es-cluster
@@ -283,18 +297,34 @@ elasticsearch-master:
             - diskName: "pvc-c5889d4c-8e90-4f4c-ac1b-11e486da8dc7" ## add your respective volume id eg. vol-0085073c65f76dre5
               diskUri: "/subscriptions/8c247e8d-4f67-46e2-b10e-e89fc1a60fbd/resourceGroups/MC_AFROHCM-T-EUW-RG01_afrohcm-t-euw_westeurope/providers/Microsoft.Compute/disks/pvc-c5889d4c-8e90-4f4c-ac1b-11e486da8dc7" ## add your respective zone eg. ap-south-1b
 
-    esJavaOpts: "-Xmx448m -Xms448m"
+    esJavaOpts: "-Xmx1536m -Xms1536m"
     resources:
         requests:
-            memory: "896Mi"
+            memory: "2Gi"
+            cpu: "1000m"
         limits:
-            memory: "896Mi"
+            memory: "2Gi"
+            cpu: "2000m"
+
+kibana:
+    namespace: es-cluster
+    replicas: 2
+    extraEnvs:
+      - name: "NODE_OPTIONS"
+        value: "--max-old-space-size=2560"
+    resources:
+        limits:
+            memory: "3Gi"
+            cpu: "2000m"
+        requests:
+            memory: "2Gi"
+            cpu: "1000m"
 
 oauth2-proxy:
     config:
         configFile: |-
             email_domains = [ "*" ]
-            github_org = "egovernments"
+            github_org = "HCM-WHO-AFRO"
             upstreams = [ "file:///dev/null" ]
 
 egov-filestore:
@@ -310,6 +340,16 @@ egov-filestore:
   central-instance-build: true
   central-instance-enabled: true
   volume: /opt/eGov/filestore
+  memory_requests: 384Mi
+  memory_limits: 640Mi
+  cpu_requests: 150m
+  cpu_limits: 600m
+  hpa:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 8
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 85
   is-bucket-fixed: "true"
   minio.url : "http://minio.backbone:9000/"
   aws.s3.url : "https://s3.amazonaws.com"
@@ -318,7 +358,7 @@ egov-filestore:
   allowed-file-formats-map: "{jpg:{'image/jpg','image/jpeg'},jpeg:{'image/jpeg','image/jpg'},png:{'image/png'},pdf:{'application/pdf'},odt:{'application/vnd.oasis.opendocument.text'},ods:{'application/vnd.oasis.opendocument.spreadsheet'},docx:{'application/x-tika-msoffice','application/x-tika-ooxml','application/vnd.oasis.opendocument.text','application/msword'},doc:{'application/x-tika-msoffice','application/x-tika-ooxml','application/vnd.oasis.opendocument.text','application/msword'},dxf:{'text/plain','application/dxf','application/octet-stream','image/vnd.dxf','image/vnd.dxf; format=ascii','image/vnd.dxf; format=binary','image/vnd.dxb'},csv:{'text/plain'},txt:{'text/plain'},xlsx:{'application/x-tika-ooxml','application/x-tika-msoffice','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/zip','multipart/form-data'},xls:{'application/x-tika-ooxml','application/x-tika-msoffice','application/vnd.ms-excel','multipart/form-data'},zip:{'application/zip','application/octet-stream'},geojson:{'application/json','text/plain','application/geo+json','multipart/form-data'},json:{'application/json','text/plain'}}"
   allowed-file-formats: "jpg,jpeg,png,doc,docx,pdf,odt,ods,text,dxf,xls,xlsx,zip,geojson,json"
   filestore-url-validity: 3600
-  fixed-bucketname: egov-demo-filestore  ## Add filestore bucket name
+  fixed-bucketname: egov-rainmaker  ## Add filestore bucket name
 
 egov-idgen:
   initContainers:
@@ -335,8 +375,17 @@ egov-idgen:
   replicas : 1
   idformat-from-mdms: "true"
   java-args: -Dspring.profiles.active=monitoring
-  heap: "-Xmx512m -Xms256m"
+  heap: "-Xmx384m -Xms256m"
+  hpa:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 8
+    cpuTargetPercentage: 75
+    memoryTargetPercentage: 85
+  memory_requests: 384Mi
   memory_limits: 512Mi
+  cpu_requests: 150m
+  cpu_limits: 500m
   autocreate-new-seq: "true"
 
 pgr-services:
@@ -344,10 +393,10 @@ pgr-services:
     dbMigration:
       image:
         repository: egovio/pgr-services-db
-        tag: master-b91815e
+        tag: master-7ce35df
   image:
     repository: egovio/pgr-services
-    tag: master-b91815e
+    tag: master-7ce35df
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: true
@@ -364,6 +413,18 @@ household:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
+  replicas: 2
+  heap: '-Xmx768m -Xms512m'
+  memory_requests: 768Mi
+  memory_limits: 1Gi
+  cpu_requests: 200m
+  cpu_limits: 400m
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 8
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 75
 
 
 service-request:
@@ -378,6 +439,10 @@ service-request:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
+  memory_requests: 224Mi
+  memory_limits: 512Mi
+  cpu_requests: 100m
+  cpu_limits: 300m
 
 referralmanagement:
   initContainers:
@@ -460,7 +525,16 @@ egov-user:
   central-instance-enabled: true
   replicas: 2
   heap: "-Xmx512m -Xms256m"
+  memory_requests: 384Mi
   memory_limits: 512Mi
+  cpu_requests: 100m
+  cpu_limits: 300m
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 80
   otp-validation: "true"
   citizen-otp-enabled: "true"
   employee-otp-enabled: "false"
@@ -612,7 +686,13 @@ egov-indexer:
   memory_requests: 512Mi
   cpu_limits: 300m
   memory_limits: 768Mi
-  replicas: 2
+  hpa:
+    enabled: true
+    minReplicas: 4
+    maxReplicas: 10
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 80
+  replicas: 4
   initContainers:
     dbMigration:
       image:
@@ -635,7 +715,13 @@ egov-persister:
   memory_requests: 512Mi
   cpu_limits: 300m
   memory_limits: 768Mi
-  replicas: 2
+  replicas: 4
+  hpa:
+    enabled: true
+    minReplicas: 4
+    maxReplicas: 10
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 80
   images:
     - egovio/egov-persister
   persist-yml-path: "/work-dir/health-campaign-config/egov-persister/chad,/work-dir/health-campaign-config/egov-persister/congob,/work-dir/health-campaign-config/egov-persister/common"
@@ -658,7 +744,26 @@ egov-searcher:
       branch: "DEMO"                                   ##### Change repo branch with Your fork Repo branch
 
 dashboard-analytics:
+  image:
+    repository: egovio/dashboard-analytics
+    tag: analytics-raw-response-transform-dc60b55
+  ingress:
+    name: dashboard-analytics
+    namespace: egov
+  heap: "-Xmx512m -Xms256m"
+  replicas: 3
+  hpa:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 6
+  cpu_requests: 200m
+  memory_requests: 768Mi
+  cpu_limits: 300m
+  memory_limits: 1Gi
   config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/dashboard-analytics/*.json"
+  is-central-instance: "true"
+  central-instance-tenants: "chad,chaduat"
+  central-instance-base-path: "file:///work-dir/health-campaign-config/egov-dss-dashboards"
   initContainers:
     gitSync:
       repo: "git@github.com:HCM-WHO-AFRO/health-campaign-config"      ##### Change repo url with Your fork Repo url
@@ -762,10 +867,18 @@ gateway:
   image:
     repository: egovio/gateway
     tag: gatewat-rate-limit-per-route-f808ba0
-  replicas: 1
+  replicas: 4
   custom-filter-property: "false"
   cpu_requests: 200m
+  cpu_limits: 400m
   memory_requests: 768Mi
+  memory_limits: 1Gi
+  hpa:
+    enabled: true
+    minReplicas: 4
+    maxReplicas: 10
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 80
   tracing-enabled: "true"
   heap: "-Xmx768m -Xms512m"
   server-tomcat-max-threads: "350"
@@ -842,10 +955,10 @@ egov-workflow-v2:
     dbMigration:
       image:
         repository: egovio/egov-workflow-v2-db
-        tag: parallel-workflows-lazy-injection-1ace233
+        tag: central-instance-1248cc50e5-38
   image:
     repository: egovio/egov-workflow-v2
-    tag: parallel-workflows-lazy-injection-1ace233
+    tag: central-instance-1248cc50e5-38
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -890,6 +1003,17 @@ egov-localization:
   image:
     repository: egovio/egov-localization
     tag: redis-localization-key-5c0a4c4
+  replicas: 4
+  memory_requests: 512Mi
+  memory_limits: 768Mi
+  cpu_requests: 200m
+  cpu_limits: 300m
+  hpa:
+    enabled: true
+    minReplicas: 4
+    maxReplicas: 10
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 80
 
 egov-url-shortening:
   initContainers:
@@ -913,14 +1037,15 @@ egov-notification-mail:
   central-instance-enabled: true
 
 mdms-v2:
+  replicas: 1
   initContainers:
     dbMigration:
       image:
         repository: egovio/mdms-v2-db
-        tag: central-instance-6fae5fdefc-96
+        tag: central-instance-mdms-2-944672d
   image:
     repository: egovio/mdms-v2
-    tag: central-instance-6fae5fdefc-96
+    tag: central-instance-mdms-2-944672d
   ingress:
     replenishRate: "10"
     burstCapacity: "60"
@@ -928,6 +1053,11 @@ mdms-v2:
   central-instance-enabled: true
   heap: "-Xmx2048m -Xms1024m"
   replicas: 2
+  redis-host: redis.backbone.svc.cluster.local
+  spring-redis-host: redis.backbone.svc.cluster.local
+  spring-redis-port: "6379"
+  spring-data-redis-host: redis.backbone
+  spring-data-redis-port: "6379"
   resources: |
     limits:
       cpu: 1000m
@@ -1014,6 +1144,7 @@ user-otp:
   central-instance-build: true
   central-instance-enabled: true
 inbox:
+  replicas: 0
   image:
     repository: egovio/inbox
     tag: inbox-workflow-fix-b6205e2
@@ -1062,6 +1193,19 @@ egov-accesscontrol:
   central-instance-enabled: true
   replicas : 1
   heap: "-Xmx512m -Xms256m"
+  resources: |
+    requests:
+      memory: 384Mi
+      cpu: 100m
+    limits:
+      memory: 768Mi
+      cpu: 500m
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 80
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Health Services
 
@@ -1109,9 +1253,18 @@ individual:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
-  replicas: 1
-  heap: '-Xmx512m -Xms256m'
-  memory_limits: 512Mi
+  replicas: 2
+  heap: '-Xmx768m -Xms512m'
+  memory_requests: 768Mi
+  memory_limits: 1Gi
+  cpu_requests: 200m
+  cpu_limits: 400m
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 8
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 75
   egov-beneficiary-idgen-host-key: "beneficiary-idgen"
   egov-idgen-generate-path: "egov-idgen/id/_generate"
   egov-beneficiary-idgen-idpool-search-path: "beneficiary-idgen/id/id_pool/_search"
@@ -1217,6 +1370,7 @@ project-factory:
   notCreateUserIfAlreadyThere: 'true'
 
 plan-service:
+  replicas: 0
   initContainers:
     dbMigration:
       image:
@@ -1566,6 +1720,7 @@ health-attendance:
   central-instance-enabled: true
 
 health-expense:
+  replicas: 0
   initContainers:
     dbMigration:
       image:

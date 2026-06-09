@@ -20,7 +20,7 @@ initContainers:
 # Container Configs
 image:
   repository: "egov-user"
-replicas: "2"
+replicas: "3"
 healthChecks:
   enabled: true
   livenessProbePath: "/user/health"
@@ -179,8 +179,6 @@ env: |
     value: "false" 
   - name: EGOV_USER_PWD_PATTERN
     value: ((?=.*\d)(?=.*[a-z])(?=.*[@#$%])(?=\S+$).*$)
-  - name: STATE_SCHEMA_INDEX_POSITION_TENANTID
-    value: "1"
   - name: LOGGING_LEVEL_WEB
     value: DEBUG
   - name: LOGGING_LEVEL_ORG_EGOV_USER
@@ -189,8 +187,6 @@ env: |
     value: DEBUG
   - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY
     value: DEBUG
-  - name: IS_ENVIRONMENT_CENTRAL_INSTANCE
-    value: "false"
   - name: AUTH_OIDC_PROVIDERS_SOURCE
     value: mdms
   - name: JAVA_TOOL_OPTIONS
@@ -216,8 +212,9 @@ env: |
     value: /boundary-service/boundary-hierarchy-definition/_search
   - name: EGOV_BOUNDARY_RELATIONSHIPS_SEARCH_URL
     value: /boundary-service/boundary-relationships/_search
-  - name: GRAPH_CLIENT_SECRET_MZ_OIDC_AZURE
-    valueFrom:
-      secretKeyRef:
-        key: graph-client-secret-mz-oidc-azure
-        name: sso
+  # Commented out - requires 'sso' secret to be created
+  # - name: GRAPH_CLIENT_SECRET_MZ_OIDC_AZURE
+  #   valueFrom:
+  #     secretKeyRef:
+  #       key: graph-client-secret-mz-oidc-azure
+  #       name: sso

@@ -14,6 +14,7 @@ resource "azurerm_postgresql_flexible_server" "postgresql_server" {
   backup_retention_days            = "${var.backup_retention_days}"
   geo_redundant_backup_enabled     = false
   public_network_access_enabled    = false
+  auto_grow_enabled                = var.auto_grow_enabled
 
   delegated_subnet_id       = "${var.delegated_subnet_id}"
   private_dns_zone_id       = "${var.private_dns_zone_id}"

@@ -7,12 +7,16 @@ resource "azurerm_kubernetes_cluster" "aks" {
   
   default_node_pool {
     name       = "nodepool1"
+    temporary_name_for_rotation = "temprotate"
     node_count = "${var.node_count}"
     max_pods   = "100"
     vm_size    = "${var.vm_size}"
     vnet_subnet_id = "${var.vnet_subnet_id}"
     node_public_ip_enabled = false
     os_disk_size_gb = var.os_disk_size_gb
+    auto_scaling_enabled = var.enable_auto_scaling
+    min_count = var.enable_auto_scaling ? var.min_node_count : null
+    max_count = var.enable_auto_scaling ? var.max_node_count : null
     upgrade_settings {
       drain_timeout_in_minutes      = 0
       max_surge                     = "10%"

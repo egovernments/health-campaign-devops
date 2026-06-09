@@ -20,7 +20,7 @@ initContainers:
 # Container Configs
 image:
   repository: "egov-localization"
-replicas: "1"
+replicas: "4"
 appType: "java-spring"
 tracing-enabled: true
 heap: "-Xmx256m -Xms256m"

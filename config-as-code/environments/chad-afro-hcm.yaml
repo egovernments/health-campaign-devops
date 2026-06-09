@@ -12,7 +12,7 @@ disableAnnotationTimestamp: true
 transformer:
   image:
     repository: egovio/transformer
-    tag: master-b91815e
+    tag: chad-polio-admin-console-changes-6d79850
   namespace: "chad"
   ingress:
     name: chad-transformer
@@ -24,7 +24,13 @@ transformer:
   cpu_limits: 300m
   memory_limits: 1.5Gi
   java-enable-debug: true
-  replicas: 1
+  replicas: 3
+  hpa:
+    enabled: true
+    minReplicas: 3
+    maxReplicas: 10
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 75
   project-factory-host: "chad-project-factory"
   save-attendance-log-topic: "chad-save-attendance-log"
   update-attendance-log-topic: "chad-update-attendance-log"
@@ -82,7 +88,15 @@ transformer:
   transformer-error-skip-error-messages: "UPLOAD_ERROR_FROM_APP"
   transformer-error-skip-error-codes: "DUPLICATE_ENTITY,INDIVIDUAL_ALREADY_MEMBER_OF_HOUSEHOLD,HOUSEHOLD_ALREADY_HAS_HEAD"
   transformer-error-skip-url-contains: "facility,resource"
+  save-project-beneficiary-topic: "chad-save-project-beneficiary-topic"
+  update-project-beneficiary-topic: "chad-update-project-beneficiary-topic"
+  transformer-producer-project-beneficiary-index-v1-topic: "chad-transformer-producer-project-beneficiary-index-v1-topic"
   state-level-tenantid: "chad"
+  egov-boundary-hierarchy-name: "POLIO_CHAD"
+  egov-localization-module-name: "hcm-boundary-polio_chad"
+  transformer-consumer-create-user-action-topic: "chad-save-user-action-project-task-topic"
+  transformer-consumer-update-user-action-topic: "chad-update-user-action-project-task-topic"
+  transformer-producer-user-action-index-v1-topic: "chad-transformer-producer-user-action-index-v1-topic"
 
 hcm-digit-ui:
   namespace: chad
@@ -92,6 +106,11 @@ hcm-digit-ui:
   image:
     repository: egovio/hcm-digit-ui
     tag: single-web-app-hcm-digit-ui-5e235e9
+  env: |
+    - name: COUNTRY_PREFIX
+      value: "chad"
+    - name: BUILD_VARIANT
+      value: "hcm-digit-ui"
   custom-js-injection: |
     sub_filter.conf: "
       sub_filter  '<head>' '<head>
@@ -146,7 +165,7 @@ dashboard-ui:
   namespace: chad  
   image:
     repository: egovio/dashboard-ui
-    tag: HDDF-4931-6873013
+    tag: HDDF-4931-61e2862
   ingress:
     enabled: true
     context: "dashboard-ui"
@@ -443,7 +462,7 @@ dashboard-analytics:
     livenessProbePath: "/dashboard-analytics/health"
     readinessProbePath: "/dashboard-analytics/health"
   heap: "-Xmx512m -Xms256m"
-  replicas: 2
+  replicas: 0
   hpa:
     enabled: false
     minReplicas: 1
@@ -455,8 +474,8 @@ dashboard-analytics:
   initContainers:
     gitSync:
       enabled: true
-      repo: "git@github.com:HCM-KEBBI/health-campaign-config"
-      branch: "CENTRAL-UAT"
+      repo: "git@github.com:HCM-WHO-AFRO/health-campaign-config"
+      branch: "DEMO"
   config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/chad/dashboard-analytics/*.json"
 
 auth-proxy:
