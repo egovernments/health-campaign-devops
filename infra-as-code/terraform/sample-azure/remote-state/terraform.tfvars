@@ -1,3 +1,3 @@
-environment = "<cluster_name>"
-resource_group = "<cluster_name>-rg"
-location  = "<region>"
+environment = "hcm-demo"
+resource_group = "hcm-demo-rg"
+location  = "centralus"
