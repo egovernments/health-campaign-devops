@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: who-afro-egov-appset-core
+  name: hcm-demo-egov-appset-core
   namespace: argocd
 spec:
   generators:
@@ -40,13 +40,13 @@ spec:
       project: egov-project
 
       source:
-        repoURL: git@github.com:HCM-WHO-AFRO/health-campaign-devops.git
-        targetRevision: azure-install-who-test
+        repoURL: git@github.com:egovernments/health-campaign-devops.git
+        targetRevision: azure-install-hcm-demo
         path: config-as-code/helm/charts/core-services/{{name}}
         helm:
           valueFiles:
             - values.yaml
-            - ../../../../environments/who-afro-hcm.yaml
+            - ../../../../environments/hcm-demo-azure.yaml
 
       destination:
         server: https://kubernetes.default.svc

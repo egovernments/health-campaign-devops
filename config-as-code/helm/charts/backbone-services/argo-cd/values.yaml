@@ -42,7 +42,7 @@ crds:
 global:
   # -- Default domain used by all components
   ## Used for ingresses, certificates, SSO, notifications, etc.
-  domain: campaigns.afro.who.int
+  domain: hcm-demo.digit.org
 
   # -- Runtime class name for all components
   runtimeClassName: ""
