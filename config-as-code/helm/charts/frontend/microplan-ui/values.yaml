@@ -1,9 +1,7 @@
 # Common Labels
 labels:
   app: "microplan-ui"
-  group: "web"
-
-namespace: egov    
+  group: "web"    
 
 # Ingress Configs
 ingress:
