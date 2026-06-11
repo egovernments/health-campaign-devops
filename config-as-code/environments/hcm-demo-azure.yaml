@@ -911,7 +911,7 @@ egov-enc-service:
     tag: central-instance-e346023dcb-26
   central-instance-name: egov
   central-instance-build: true
-  central-instance-enabled: true
+  # central-instance-enabled: true
   initContainers:
     dbMigration:
       image:
