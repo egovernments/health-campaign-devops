@@ -2,7 +2,7 @@
 elasticsearchHosts: "https://elasticsearch-data:9200"
 elasticsearchCertificateSecret: elasticsearch-master-certs
 elasticsearchCertificateAuthoritiesFile: ca.crt
-elasticsearchCredentialSecret: elasticsearch-data-credentials
+elasticsearchCredentialSecret: elasticsearch-master-credentials
 
 replicas: 1
 namespace: es-cluster
@@ -160,13 +160,13 @@ ingress:
     nginx.ingress.kubernetes.io/lua-resty-waf-score-threshold: "10"
     nginx.ingress.kubernetes.io/use-regex: "true"
   hosts:
-    - host: campaigns.afro.who.int
+    - host: hcm-demo.digit.org
       paths:
         - path: /kibana
   tls: 
-   - secretName: campaigns.afro.who.int-tls-certs
+   - secretName: hcm-demo.digit.org-tls-certs
      hosts:
-       - campaigns.afro.who.int
+       - hcm-demo.digit.org
 #  hosts:
 #    - host: salama.digit.org
 #      paths:
