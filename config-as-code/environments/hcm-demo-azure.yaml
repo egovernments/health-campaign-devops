@@ -21,11 +21,11 @@ cluster-configs:
         egov-config:
             namespace: [ egov, monitoring, es-cluster, demo ]
             data:
-                db-host: hcm-demo-server.postgres.database.azure.com ## Add db-host name eg: egov-demo.database.azure.com
-                db-name: hcm-demo-db ## Add db-name
-                db-url: "jdbc:postgresql://hcm-demo-server.postgres.database.azure.com:5432/hcm-demo-db" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
-                db-url-no-schema: "jdbc:postgresql://hcm-demo-server.postgres.database.azure.com:5432/hcm-demo-db"
-                demo-db-url: "jdbc:postgresql://hcm-demo-server.postgres.database.azure.com:5432/hcm-demo-db?currentSchema=demo"
+                db-host: hcm-demo-server-v2.postgres.database.azure.com ## Add db-host name eg: egov-demo.database.azure.com
+                db-name: healthdemo ## Add db-name
+                db-url: "jdbc:postgresql://hcm-demo-server-v2.postgres.database.azure.com:5432/healthdemo" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
+                db-url-no-schema: "jdbc:postgresql://hcm-demo-server-v2.postgres.database.azure.com:5432/healthdemo"
+                demo-db-url: "jdbc:postgresql://hcm-demo-server-v2.postgres.database.azure.com:5432/healthdemo?currentSchema=demo"
                 domain: hcm-demo.digit.org ## Add your Domain Name
                 redis-host: "redis.backbone.svc.cluster.local"
                 redis-downsync-host: ""
