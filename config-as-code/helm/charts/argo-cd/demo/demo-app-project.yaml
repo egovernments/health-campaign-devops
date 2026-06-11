@@ -1,11 +1,11 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: chaduat-project
+  name: demo-project
   namespace: argocd
 spec:
   sourceRepos:
-    - git@github.com:HCM-WHO-AFRO/health-campaign-devops.git
+    - git@github.com:egovernments/health-campaign-devops.git
 
   destinations:
     - namespace: '*'

@@ -1,40 +1,39 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: who-afro-chad-appset-frontend
+  name: hcm-demo-demo-appset-frontend
   namespace: argocd
 spec:
   generators:
     - list:
         elements:
           - name: workbench-ui
-          - name: hcm-digit-ui
+          - name: digit-ui
           - name: dashboard-ui
           - name: payments-ui
-          - name: dss-dashboard
           - name: core-ui
           - name: console
           - name: microplan-ui
 
   template:
     metadata:
-      name: 'chad-{{name}}'
+      name: 'demo-{{name}}'
 
     spec:
-      project: chad-project
+      project: demo-project
 
       source:
-        repoURL: git@github.com:HCM-WHO-AFRO/health-campaign-devops.git
-        targetRevision: azure-install-who-test
+        repoURL: git@github.com:egovernments/health-campaign-devops.git
+        targetRevision: azure-install-hcm-demo
         path: config-as-code/helm/charts/frontend/{{name}}
         helm:
           valueFiles:
             - values.yaml
-            - ../../../../environments/chad-afro-hcm.yaml
+            - ../../../../environments/demo-tenant.yaml
 
       destination:
         server: https://kubernetes.default.svc
-        namespace: chad
+        namespace: demo
 
       ignoreDifferences:
         - group: apps
