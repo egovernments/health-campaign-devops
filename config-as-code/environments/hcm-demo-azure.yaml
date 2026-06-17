@@ -1066,37 +1066,77 @@ stock:
 
 
 project-factory:
-  image:
-    repository: egovio/project-factory
-    tag: master-aa57e79
   initContainers:
     dbMigration:
       image:
-        repository: egovio/project-factory-db
+        repository: "project-factory-db"
         tag: master-aa57e79
-  central-instance-name: egov
+  image:
+    repository: egovio/project-factory
+    tag: master-aa57e79
+  central-instance-enabled: false
   central-instance-build: true
-  central-instance-enabled: true
+  namespace: egov
+  heap: "-Xmx2048m -Xms512m"
+  replicas: 1
+  cpu_requests: 200m
+  memory_requests: 768Mi
+  cpu_limits: 1000m
+  memory_limits: 2.5Gi
+  groupId: "egov-project-factory"
   logLevel: 'debug'
-  defaultLocale: 'en_MZ'
-  splitBoundariesOn: 'CAMPAIGN_DISTRICT'
-  replicas: 3
-  namespace: 'egov'
-  egov-mdms-service-host-key: 'mdms-service-v2'
+  maxDebugChar: '2000'
   mdmsV2SearchEndpoint: 'mdms-v2/v2/_search'
   mdmsV1SearchEndpoint: 'mdms-v2/v1/_search'
-  mdmsV2CreateEndpoint: 'mdms-v2/v2/_create'
-  mdmsV2UpdateEndpoint: 'mdms-v2/v2/_update'
-  validateCampaignIdInMetadata: 'false'
-  notCreateUserIfAlreadyThere: 'false'
-  formConfigTemplateName: 'FormConfigTemplate'
-  formConfigName: 'FormConfig'
-  excelIngestionProcess: 'excel-ingestion/v1/data/process/_create'
-  excelIngestionGenerate: 'excel-ingestion/v1/data/generate/_init'
-  emailNotificationId: 'support@egov.org.in'
-  egovLogoLink: 'https://egov-qa-assets.s3.ap-south-1.amazonaws.com/egovLogo.png'
-  mdmsV1SchemaSearchEndpoint: 'mdms-v2/schema/v1/_search'
-  excelIngestionGenerateSearch: 'excel-ingestion/v1/data/generate/_search'
+  plan-service: plan-service
+  census-service: census-service
+  excel-ingestion-host: excel-ingestion
+  IS_ENVIRONMENT_CENTRAL_INSTANCE: true
+  DB_SCHEMA: public
+  defaultTenantId: mz
+  saveCampaignDetails: "save-campaign-details"
+  updateCampaignDetails: "update-campaign-details"
+  saveProjectCampaignDetailsTopic: "save-project-campaign-details"
+  updateProjectCampaignDetailsTopic: "update-project-campaign-details"
+  startCampaignMappingTopic: "start-campaign-mapping"
+  createResourceDetailsTopic: "create-resource-details"
+  updateResourceDetailsTopic: "update-resource-details"
+  createResourceActivityTopic: "create-resource-activity"
+  updateGeneratedResourceDetailsTopic: "update-generated-resource-details"
+  createGeneratedResourceDetailsTopic: "create-generated-resource-details"
+  savePlanFacilityTopic: "project-factory-save-plan-facility"
+  saveSheetDataTopic: "save-sheet-data"
+  updateSheetDataTopic: "update-sheet-data"
+  saveMappingDataTopic: "save-mapping-data"
+  updateMappingDataTopic: "update-mapping-data"
+  deleteMappingDataTopic: "delete-mapping-data"
+  saveProcessDataTopic: "save-process-data"
+  updateProcessDataTopic: "update-process-data"
+  startAdminConsoleTaskTopic: "start-admin-console-task"
+  startAdminConsoleMappingTaskTopic: "start-admin-console-mapping-task"
+  notificationEmailTopic: "egov.core.notification.email"
+  testTopic: "test-topic-project-factory"
+  hcmProcessingResultTopic: "hcm-processing-result"
+  facilityCreateBatchTopic: "hcm-facility-create-batch"
+  userCreateBatchTopic: "hcm-user-create-batch"
+  mappingBatchTopic: "hcm-mapping-batch"
+  campaignMarkFailedTopic: "hcm-campaign-mark-failed"
+  userMainBoundary: "ADMIN"
+  userMainBoundaryType: "Country"
+  maxResourceCreationAttempts: "200"
+  waitTimeOfEachAttemptMs: "20000"
+  retryTillResourceCreationCompletes: "50"
+  serverTimezone: "UTC"
+  attendanceAttendeeSearchPageSize: "100"
+  attendanceStaffSearchPageSize: "100"
+  centralInstanceTenantIds: "mz"
+  command: |
+    - sh
+    - -c
+  args: |
+    - |
+      sed -i 's/--max-old-space-size=3072/--max-old-space-size=2048/g' package.json
+      yarn prod
 
 boundary-management:
   image:
