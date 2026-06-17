@@ -101,6 +101,7 @@ cluster-configs:
               egov-data-uploader: "http://egov-data-uploader:8080/"
               egov-indexer: "http://egov-indexer:8080/"
               egov-hrms: "http://egov-hrms:8080/"
+              worker-registry-host: "http://worker-registry.egov:8080/"
               es-client: "http://elasticsearch-data-v1.es-cluster:9200"
               health-attendance: "http://health-attendance:8080/"
               location: "http://location:8080/"
@@ -133,6 +134,7 @@ cluster-configs:
               inbox: 'http://inbox.egov:8080/'
               boundary-management: 'http://boundary-management:8080/'
               excel-ingestion: 'http://excel-ingestion:8080/'
+              health-notification-service: 'http://health-notification-service.egov:8080/'
 
 disableAnnotationTimestamp: true
 
@@ -1178,6 +1180,42 @@ excel-ingestion:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
+
+worker-registry:
+  namespace: egov
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/worker-registry-db
+        tag: customize-2.0-worker-registry-8fce267
+  image:
+    repository: egovio/worker-registry
+    tag: customize-2.0-worker-registry-8fce267
+  central-instance-build: true
+  central-instance-enabled: true
+  central-instance-name: egov
+  heap: "-Xmx512m -Xms256m"
+  cpu_requests: 200m
+  memory_requests: 368Mi
+
+health-notification-service:
+  namespace: egov
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/health-notification-service-db
+        tag: health-notification-service-b83cc15
+  image:
+    repository: egovio/health-notification-service
+    tag: health-notification-service-b83cc15
+  replicas: 1
+  central-instance-build: true
+  central-instance-enabled: true
+  heap: "-Xmx256m -Xms256m"
+  cpu_requests: 100m
+  memory_requests: 256Mi
+  cpu_limits: 200m
+  memory_limits: 512Mi
 
   
 transformer:

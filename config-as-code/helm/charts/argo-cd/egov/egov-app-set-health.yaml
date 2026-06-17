@@ -19,6 +19,10 @@ spec:
           - name: household
           - name: facility
           - name: beneficiary-idgen
+          - name: project-factory
+          - name: excel-ingestion
+          - name: worker-registry
+          - name: health-notification-service
 
   template:
     metadata:
