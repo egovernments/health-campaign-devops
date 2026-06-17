@@ -253,7 +253,10 @@ extraEnv:
             name: egov-config
             key: spring-jpa-show-sql  
       - name: STATE_LEVEL_TENANTID_LENGTH
-        value: "1"            
+        valueFrom:
+          configMapKeyRef:
+            name: egov-config
+            key: state-level-tenantid-length
       - name: IS_ENVIRONMENT_CENTRAL_INSTANCE
       {{- if and (index .Values "central-instance-build" | default false) (index .Values "central-instance-enabled" | default false) }}
         value: "true"
