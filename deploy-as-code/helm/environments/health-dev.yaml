@@ -272,6 +272,9 @@ bpa-calculator:
   java-debug: true
   tracing-enabled: "true"
 
+household:
+  memory_limits: 768Mi  
+
 sw-services:
   scid-format: "SW/[CITY.CODE]/[fy:yyyy-yy]/[SEQ_EGOV_COMMON]"
 
