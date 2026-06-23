@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu
+  labels:
+    app: ubuntu
+spec:
+  containers:
+  - image: ubuntu
+    command:
+      - "sleep"
+      - "6480000"
+    imagePullPolicy: IfNotPresent
+    name: ubuntu
+  imagePullSecrets:
+    - name: rate-limit-secret
+  restartPolicy: Always

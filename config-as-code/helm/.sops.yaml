@@ -1,0 +1,4 @@
+# creation rules are evaluated sequentially, the first match wins
+creation_rules:
+  - path: environments/burundi-uat-secrets.yaml
+    kms: 'arn:aws:kms:af-south-1:522814725084:key/56aa4f1c-ba75-4854-9631-2423a6260830'

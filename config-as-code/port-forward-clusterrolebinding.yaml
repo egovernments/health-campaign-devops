@@ -1,0 +1,36 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: eks-readonly-with-portforward
+rules:
+  # Read-only permissions
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+  # Port-forward permissions
+  - apiGroups: [""]
+    resources: ["pods/portforward"]
+    verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: eks-readonly-with-portforward-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: eks-readonly-with-portforward
+subjects:
+  - kind: User
+    name: "eks-readonly"  # Ensure this matches the name or ARN of your IAM user as recognized by your EKS cluster
+    apiGroup: rbac.authorization.k8s.io
+
+
+
+
+
+
+
+
+
+

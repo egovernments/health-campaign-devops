@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-ingress-metrics
+  namespace: default
+  labels:  # <-- Add this labels section
+    app.kubernetes.io/name: ingress-nginx
+spec:
+  selector:
+    app: nginx-ingress
+  ports:
+    - name: metrics
+      port: 10254
+      targetPort: 10254
+
