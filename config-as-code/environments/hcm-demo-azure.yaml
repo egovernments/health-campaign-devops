@@ -35,8 +35,8 @@ cluster-configs:
                 state-level-tenantid-length: "1"
                 state-schema-index-position-tenantid: "0"
                 is-environment-central-instance: "true"
-                egov-state-level-tenant-id: "mz"
-                state-level-tenant-id: "mz"
+                egov-state-level-tenant-id: "demo"
+                state-level-tenant-id: "demo"
                 kafka-tenant-id-pattern: "demo-"
                 s3-assets-bucket: "(pg-health-egov-assets|egov-health-playground-assets)"
                 es-host: "elasticsearch-data.es-cluster"
@@ -59,6 +59,7 @@ cluster-configs:
                 tracer-errors-provideexceptionindetails: "true"
                 egov-internal-microservice-user-uuid: fa0f820c-49df-46bb-8e62-8a0ec5d9af5e
                 db-schema-names: "demo"
+                boundary-hierarchy: "ADMIN"
 
         egov-service-host:
             namespace: [ egov, es-cluster, monitoring, demo ]

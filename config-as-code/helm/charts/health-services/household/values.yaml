@@ -5,6 +5,7 @@ labels:
 
 # Ingress Configs
 ingress:
+  namespace: egov
   enabled: true
   zuul: true
   context: "household"
@@ -31,11 +32,26 @@ heap: "-Xmx1024m -Xms192m"
 java-args: ""
 persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/household-persister.yml"
 indexer-yml-path: "file:///work-dir/health-campaign-config/egov-persister/household-indexer.yml"
+egov-mdms-service-host-key: "mdms-v2"
+egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
+kafka-consumer-group-id: health-household
+household-member-kafka-create-topic: save-household-member-topic
+household-member-kafka-update-topic: update-household-member-topic
+household-member-kafka-delete-topic: delete-household-member-topic
+household-member-cosumer-bulk-create-topic: household-member-consumer-bulk-create-topic
+household-member-cosumer-bulk-update-topic: household-member-consumer-bulk-update-topic
+household-member-cosumer-bulk-delete-topic: household-member-consumer-bulk-delete-topic
+household-consumer-bulk-delete-topic: delete-household-bulk-topic
+household-cosumer-bulk-create-topic: create-household-bulk-topic
+household-consumer-bulk-update-topic: update-household-bulk-topic
+household-kafka-create-topic: save-household-topic
+household-kafka-update-topic: update-household-topic
+household-kafka-delete-topic: delete-household-topic
 
 # Additional Container Envs
 env: |
   - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-    value: health-household
+    value: {{ index .Values "kafka-consumer-group-id" | quote }}
   - name: SPRING_KAFKA_PRODUCER_KEY_SERIALIZER
     value: org.apache.kafka.common.serialization.StringSerializer
   {{- if index .Values "global" "tracer-errors-provideexceptionindetails" }}
@@ -52,6 +68,13 @@ env: |
         key: egov-idgen
   - name: EGOV_IDGEN_PATH
     value: "egov-idgen/id/_generate"
+  - name: MDMS_SERVICE_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: {{ index .Values "egov-mdms-service-host-key" | quote }}
+  - name: MDMS_SERVICE_SEARCH_URI
+    value: {{ index .Values "egov-mdms-service-endpoint-key" | quote }}
   - name: EGOV_IDGEN_INTEGRATION_ENABLED
     value: "true"
   - name: HOUSEHOLD.IDGEN.ID.FORMAT
@@ -89,30 +112,33 @@ env: |
   - name: EGOV_BOUNDARY_SEARCH_URL
     value: "/boundary-service/boundary/_search"
   - name: EGOV_BOUNDARY_HIERARCHY_NAME
-    value: "ADMIN"
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: boundary-hierarchy
   - name: HOUSEHOLD_MEMBER_KAFKA_CREATE_TOPIC
-    value: "save-household-member-topic"
+    value: {{ index .Values "household-member-kafka-create-topic" | quote }}
   - name: HOUSEHOLD_MEMBER_KAFKA_UPDATE_TOPIC
-    value: "update-household-member-topic"
+    value: {{ index .Values "household-member-kafka-update-topic" | quote }}
   - name: HOUSEHOLD_MEMBER_KAFKA_DELETE_TOPIC
-    value: "delete-household-member-topic"
+    value: {{ index .Values "household-member-kafka-delete-topic" | quote }}
   - name: HOUSEHOLD.MEMBER.CONSUMER.BULK.CREATE.TOPIC
-    value: "household-member-consumer-bulk-create-topic"
+    value: {{ index .Values "household-member-cosumer-bulk-create-topic" | quote }}
   - name: HOUSEHOLD.MEMBER.CONSUMER.BULK.UPDATE.TOPIC
-    value: "household-member-consumer-bulk-update-topic"
+    value: {{ index .Values "household-member-cosumer-bulk-update-topic" | quote }}
   - name: HOUSEHOLD.MEMBER.CONSUMER.BULK.DELETE.TOPIC
-    value: "household-member-consumer-bulk-delete-topic"
+    value: {{ index .Values "household-member-cosumer-bulk-delete-topic" | quote }}
   - name: MANAGEMENT_SECURITY_ENABLED
-    value: "false" 
+    value: "false"
   - name: HOUSEHOLD.CONSUMER.BULK.DELETE.TOPIC
-    value: "delete-household-bulk-topic"
+    value: {{ index .Values "household-consumer-bulk-delete-topic" | quote }}
   - name: HOUSEHOLD.CONSUMER.BULK.CREATE.TOPIC
-    value: "create-household-bulk-topic"
+    value: {{ index .Values "household-cosumer-bulk-create-topic" | quote }}
   - name: HOUSEHOLD.CONSUMER.BULK.UPDATE.TOPIC
-    value: "update-household-bulk-topic"
+    value: {{ index .Values "household-consumer-bulk-update-topic" | quote }}
   - name: HOUSEHOLD.KAFKA.CREATE.TOPIC
-    value: "save-household-topic"
+    value: {{ index .Values "household-kafka-create-topic" | quote }}
   - name: HOUSEHOLD.KAFKA.UPDATE.TOPIC
-    value: "update-household-topic"
+    value: {{ index .Values "household-kafka-update-topic" | quote }}
   - name: HOUSEHOLD.KAFKA.DELETE.TOPIC
-    value: "delete-household-topic"
+    value: {{ index .Values "household-kafka-delete-topic" | quote }}

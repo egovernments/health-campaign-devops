@@ -144,13 +144,16 @@ env: |
   - name: DB_PORT
     value: "5432"
   - name: DB_SCHEMA
-    value: public
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: db-schema-names
   - name: SPLIT_BOUNDARIES_ON_LENGTH 
     value: "2"
   - name: BOUNDARY_TAB_NAME
     value: "HCM_ADMIN_CONSOLE_BOUNDARY_DATA"
   - name: LOCALE
-    value: {{ .Values.defaultLocale | default "en_MZ" }} 
+    value: {{ .Values.defaultLocale | default "en_DEMO" }} 
   - name: LOCALIZATION_MODULE
     value: "hcm-admin-schemas"
   - name: LOCALIZATION_WAIT_TIME_IN_BOUNDARY_CREATION
