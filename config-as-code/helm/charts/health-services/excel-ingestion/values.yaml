@@ -39,13 +39,25 @@ egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
 defaultLocale: "en_MZ"
 java-enable-debug: false
 java-debug-port: 5005
+egov-hrms-employee-search-path: "egov-hrms/employees/_search"
+egov-hrms-employee-search-parallel-calls: "100"
+egov-worker-registry-search-path: "worker/v1/_search"
+egov-worker-registry-search-batch-size: "100"
+egov-attendance-attendee-search-path: "health-attendance/attendee/v1/_search"
+egov-attendance-attendee-search-page-size: "100"
+egov-attendance-staff-search-path: "health-attendance/staff/v1/_search"
+egov-attendance-staff-search-page-size: "100"
+egov-attendance-register-search-batch-size: "100"
+egov-attendance-register-search-parallel-calls: "10"
+excel-sheet-name-max-length: "31"
+egov-excel-sheet-password: "passwordhere"
+egov-excel-sheet-zoom: "90"
+egov-excel-validation-error-color: "#ff0000"
 
 # Additional Container Envs
 env: |
   - name: SERVER_PORT
     value: "8080"
-  - name: JAVA_OPTS
-    value: {{ index .Values "heap" | quote }}
   - name: SPRING_KAFKA_CONSUMER_GROUP_ID
     value: {{ index .Values "group-id" | default "excel-ingestion" }}
   - name: SERVER_SERVLET_CONTEXT_PATH
@@ -64,7 +76,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: {{ index .Values "project-factory-host" | default "project-factory" | quote }}
+        key: project-factory
   - name: EGOV_HEALTH_INDIVIDUAL_HOST
     valueFrom:
       configMapKeyRef:
@@ -84,14 +96,54 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: {{ index .Values "egov-mdms-service-host-key" | quote }}
+        key: egov-mdms-service
+  - name: EGOV_HRMS_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: egov-hrms
+  - name: EGOV_HRMS_EMPLOYEE_SEARCH_PATH
+    value: "egov-hrms/employees/_search"
+  - name: EGOV_HRMS_EMPLOYEE_SEARCH_PARALLEL_CALLS
+    value: "100"
   - name: EGOV_ATTENDANCE_HOST
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
         key: health-attendance
   - name: EGOV_ATTENDANCE_REGISTER_SEARCH_PATH
-    value: health-attendance/v1/_search
+    value: "health-attendance/v1/_search"
+  - name: EGOV_ATTENDANCE_REGISTER_SEARCH_BATCH_SIZE
+    value: "100"
+  - name: EGOV_ATTENDANCE_REGISTER_SEARCH_PARALLEL_CALLS
+    value: "10"
+  - name: EGOV_ATTENDANCE_ATTENDEE_SEARCH_PATH
+    value: "health-attendance/attendee/v1/_search"
+  - name: EGOV_ATTENDANCE_ATTENDEE_SEARCH_PAGE_SIZE
+    value: "100"
+  - name: EGOV_ATTENDANCE_STAFF_SEARCH_PATH
+    value: "health-attendance/staff/v1/_search"
+  - name: EGOV_ATTENDANCE_STAFF_SEARCH_PAGE_SIZE
+    value: "100"
+  - name: EGOV_WORKER_REGISTRY_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: worker-registry-host
+  - name: EGOV_WORKER_REGISTRY_SEARCH_PATH
+    value: "worker/v1/_search"
+  - name: EGOV_WORKER_REGISTRY_SEARCH_BATCH_SIZE
+    value: "100"
+  - name: EXCEL_SHEET_NAME_MAX_LENGTH
+    value: "31"
+  - name: EXCEL_ROW_LIMIT
+    value: {{ index .Values "excel-row-limit" | default "5000" | quote }}
+  - name: EGOV_EXCEL_SHEET_PASSWORD
+    value: {{ index .Values "egov-excel-sheet-password" | default "passwordhere" | quote }}
+  - name: EGOV_EXCEL_SHEET_ZOOM
+    value: {{ index .Values "egov-excel-sheet-zoom" | default "90" | quote }}
+  - name: EGOV_EXCEL_VALIDATION_ERROR_COLOR
+    value: {{ index .Values "egov-excel-validation-error-color" | default "#ff0000" | quote }}
   - name: EGOV_CAMPAIGN_DATA_SEARCH_PATH
     value: "project-factory/v1/data/campaign/_search"
   - name: EGOV_CAMPAIGN_CRYPTO_BULK_DECRYPT_PATH
@@ -135,3 +187,11 @@ env: |
     value: {{ index .Values "excel-ingestion-sheet-data-delete-topic" | default "delete-sheet-data-temp" | quote }}
   - name: EXCEL_INGESTION_PROCESSING_RESULT_TOPIC
     value: {{ index .Values "excel-ingestion-processing-result-topic" | default "hcm-processing-result" | quote }}
+  - name: EXCEL_INGESTION_GENERATION_INIT_TOPIC
+    value: {{ index .Values "excel-ingestion-generation-init-topic" | default "excel-ingestion-generation-init" | quote }}
+  - name: SPRING_KAFKA_CONSUMER_PROPERTIES_MAX_POLL_INTERVAL_MS
+    value: {{ index .Values "excel-ingestion-consumer-max-poll-interval-ms" | default "900000" | quote }}
+  - name: SPRING_KAFKA_CONSUMER_PROPERTIES_SESSION_TIMEOUT_MS
+    value: {{ index .Values "excel-ingestion-consumer-session-timeout-ms" | default "120000" | quote }}
+  - name: EXCEL_INGESTION_GENERATION_ROW_WAIT_TIMEOUT_MS
+    value: {{ index .Values "excel-ingestion-generation-row-wait-timeout-ms" | default "10000" | quote }}

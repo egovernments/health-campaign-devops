@@ -31,14 +31,6 @@ tracing-enabled: true
 data-config-urls: "file:///work-dir/configs/pdf-service/data-config/firenoc-receipt.json,file:///work-dir/configs/pdf-service/data-config/pt-receipt.json,file:///work-dir/configs/pdf-service/data-config/tl-receipt.json,file:///work-dir/configs/pdf-service/data-config/consolidatedbill.json,file:///work-dir/configs/pdf-service/data-config/consolidatedreceipt.json,file:///work-dir/configs/pdf-service/data-config/tlapplication.json,file:///work-dir/configs/pdf-service/data-config/ws-consolidatedacknowlegment.json,file:///work-dir/configs/pdf-service/data-config/ws-consolidatedsewerageconnection.json,file:///work-dir/configs/pdf-service/data-config/tlcertificate.json"
 format-config-urls: "file:///work-dir/configs/pdf-service/format-config/firenoc-receipt.json,file:///work-dir/configs/pdf-service/format-config/pt-receipt.json,file:///work-dir/configs/pdf-service/format-config/tl-receipt.json,file:///work-dir/configs/pdf-service/format-config/consolidatedbill.json,file:///work-dir/configs/pdf-service/format-config/consolidatedreceipt.json,file:///work-dir/configs/pdf-service/format-config/tlapplication.json,file:///work-dir/configs/pdf-service/format-config/ws-consolidatedacknowlegment.json,file:///work-dir/configs/pdf-service/format-config/ws-consolidatedsewerageconnection.json,file:///work-dir/configs/pdf-service/format-config/tlcertificate.json"
 
-# Persistence Configs
-persistence:
-    enabled: false
-    accessMode: ReadWriteOnce
-    size: "1Gi"
-
-
-
 # Additional Container Envs
 env: |
   - name: NODE_ENV
@@ -94,9 +86,16 @@ env: |
         name: egov-service-host
         key: egov-localization
   - name: EGOV_FILESTORE_SERVICE_HOST
-    value: "  http://egov-filestore:8080"
+    value: "http://egov-filestore:8080"
   - name: EGOV_HOST
     valueFrom:
       configMapKeyRef:
         name: egov-config
         key: egov-services-fqdn-name
+  - name: EGOV_LOCALISATION_SEARCH
+    value: "localization/messages/v2/_search"
+  - name: STATE_LEVEL_TENANT_ID
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: egov-state-level-tenant-id

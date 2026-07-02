@@ -1,13 +1,15 @@
 # Common Labels
 labels:
-  app: "individual"
+  app: "individual-referral"
   group: "core"
+
+db-read-url-enabled: true
 
 # Ingress Configs
 ingress:
   enabled: true
   zuul: true
-  context: "individual"
+  context: "individual-referral"
 
 # Init Containers Configs
 initContainers:
@@ -23,13 +25,14 @@ image:
 replicas: "1"
 healthChecks:
   enabled: true
-  livenessProbePath: "/individual/health"
-  readinessProbePath: "/individual/health"
+  livenessProbePath: "/individual-referral/health"
+  readinessProbePath: "/individual-referral/health"
 appType: "java-spring"
 tracing-enabled: true
-heap: "-Xmx384m -Xms384m"
-memory_limits: 512Mi
+heap: "-Xmx192m -Xms192m"
 java-args: ""
+persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/individual-persister.yml"
+indexer-yml-path: "file:///work-dir/health-campaign-config/egov-persister/individual-indexer.yml"
 
 kafka-consumer-group-id: health-individual
 individual-consumer-bulk-create-topic: individual-consumer-bulk-create-topic
@@ -38,11 +41,22 @@ individual-consumer-bulk-delete-topic: individual-consumer-bulk-delete-topic
 individual-producer-create-topic: save-individual-topic
 individual-producer-update-topic: update-individual-topic
 individual-producer-delete-topic: delete-individual-topic
+individual-producer-update-user-id-topic: update-user-id-topic
+
+egov-beneficiary-idgen-integration-enabled: "false"
+egov-beneficiary-idgen-idpool-search-path: "beneficiary-idgen/id/id_pool/_search"
+egov-beneficiary-idgen-idpool-update-path: "beneficiary-idgen/id/id_pool/_update"
+individual-beneficiary-id-validation-enabled: "false"
+individual-beneficiary-id-update-enabled: "false"
+individual-beneficiary-id-length: "12"
+notification-sms-disabled-roles: "ORG_ADMIN"
 
 # Additional Container Envs
 env: |
   - name: SPRING_KAFKA_CONSUMER_GROUP_ID
     value: {{ index .Values "kafka-consumer-group-id" | quote }}
+  - name: SERVER_SERVLET_CONTEXT_PATH
+    value: /individual-referral
   - name: SPRING_KAFKA_PRODUCER_KEY_SERIALIZER
     value: org.apache.kafka.common.serialization.StringSerializer
   {{- if index .Values "global" "tracer-errors-provideexceptionindetails" }}
@@ -57,30 +71,34 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: egov-idgen
+  - name: EGOV_IDGEN_PATH
+    value: "egov-idgen/id/_generate"
+  - name: EGOV_IDGEN_INTEGRATION_ENABLED
+    value: "true"
+  - name: EGOV_BENEFICIARY_IDGEN_INTEGRATION_ENABLED
+    value: {{ index .Values "egov-beneficiary-idgen-integration-enabled" | quote }}
   - name: EGOV_BENEFICIARY_IDGEN_HOST
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
         key: beneficiary-idgen
-  - name: EGOV_IDGEN_PATH
-    value: "egov-idgen/id/_generate"
   - name: EGOV_BENEFICIARY_IDGEN_IDPOOL_SEARCH_PATH
-    value: "beneficiary-idgen/id/id_pool/_search"
+    value: {{ index .Values "egov-beneficiary-idgen-idpool-search-path" | quote }}
   - name: EGOV_BENEFICIARY_IDGEN_IDPOOL_UPDATE_PATH
-    value: "beneficiary-idgen/id/id_pool/_update"
-  - name: EGOV_IDGEN_INTEGRATION_ENABLED
-    value: "true"
-  - name: EGOV_BENEFICIARY_IDGEN_INTEGRATION_ENABLED
-    value: "true"
+    value: {{ index .Values "egov-beneficiary-idgen-idpool-update-path" | quote }}
   - name: INDIVIDUAL_BENEFICIARY_ID_VALIDATION_ENABLED
-    value: "true"
+    value: {{ index .Values "individual-beneficiary-id-validation-enabled" | quote }}
+  - name: INDIVIDUAL_BENEFICIARY_ID_UPDATE_ENABLED
+    value: {{ index .Values "individual-beneficiary-id-update-enabled" | quote }}
+  - name: INDIVIDUAL_BENEFICIARY_ID_LENGTH
+    value: {{ index .Values "individual-beneficiary-id-length" | quote }}
   - name: IDGEN.INDIVIDUAL.ID.FORMAT
     value: "individual.id"
   - name: SPRING_REDIS_HOST
     valueFrom:
       configMapKeyRef:
         name: egov-config
-        key: redis-host
+        key: redis-downsync-host
   - name: SPRING_REDIS_PORT
     value: "6379"
   - name: SPRING_CACHE_TYPE
@@ -179,6 +197,8 @@ env: |
   - name: USER_SERVICE_ACCOUNT_LOCKED
     value: "false"
   - name: INDIVIDUAL_PRODUCER_UPDATE_USER_ID_TOPIC
-    value: "update-user-id-topic"
+    value: {{ index .Values "individual-producer-update-user-id-topic" | quote }}
   - name: NOTIFICATION_SMS_ENABLED
     value: "false"
+  - name: NOTIFICATION_SMS_DISABLED_ROLES
+    value: {{ index .Values "notification-sms-disabled-roles" | quote }}

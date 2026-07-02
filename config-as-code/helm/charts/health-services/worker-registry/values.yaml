@@ -82,7 +82,10 @@ env: |
   - name: EGOV_ENC_DECRYPT_ENDPOINT
     value: "/egov-enc-service/crypto/v1/_decrypt"
   - name: EGOV_ENC_STATE_LEVEL_TENANT_IDS
-    value: "mz"
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: egov-state-level-tenant-id
   - name: KAFKA_TOPIC_AUDIT
     value: "audit-logs"
   - name: EGOV_MDMS_HOST
@@ -92,6 +95,11 @@ env: |
         key: mdms-v2
   - name: EGOV_MDMS_SEARCH_ENDPOINT
     value: "mdms-v2/v1/_search"
+  - name: STATE_LEVEL_TENANTID_LENGTH
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: state-level-tenantid-length
   - name: SPRING_DATA_REDIS_HOST
     valueFrom:
       configMapKeyRef:
