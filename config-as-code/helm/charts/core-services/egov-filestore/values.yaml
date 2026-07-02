@@ -13,6 +13,8 @@ initContainers:
 
 # Ingress Configs
 ingress:
+  namespace: egov
+  enabled: true
   zuul: true
   context: "filestore"
 
@@ -38,14 +40,22 @@ cpu_limits: "300m"
 persistence:
   enabled: false
 
+# HPA Configuration
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
 # Additional Container Envs
 env: |
   - name: SERVER_PORT
     value: "8080"
   - name: SECURITY_BASIC_ENABLED
-    value: "false"  
+    value: "false"
   - name: MANAGEMENT_SECURITY_ENABLED
-    value: "false" 
+    value: "false"
   - name: FILE_STORAGE_MOUNT_PATH
     value: {{ index .Values "file-storage-mount-path" | quote }}
   - name: TEMP_FOLDER_PATH
@@ -70,7 +80,7 @@ env: |
   {{- if index .Values "is-s3-enabled" }}
   - name: ISS3ENABLED
     value: "false"
-  {{- end }}  
+  {{- end }}
   {{- if index .Values "minio-enabled" }}
   - name: AWS_KEY
     valueFrom:
@@ -108,14 +118,18 @@ env: |
     value: {{ index .Values "heap" | quote }}
   - name: ALLOWED_FORMATS_MAP
     value: {{ index .Values "allowed-file-formats-map" | quote }}
-  {{- if index .Values "minio-enabled" }}  
+  {{- if index .Values "minio-enabled" }}
   - name: MINIO_URL
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
         key: minio-url
   {{- end }}
-  {{- if index .Values "filestore-url-validity" }}   
-  - name: PRESIGNED_URL_EXPIRY_TIME_IN_SECS     
-    value: {{ index .Values "filestore-url-validity" | quote }}   
+  {{- if index .Values "filestore-url-validity" }}
+  - name: PRESIGNED_URL_EXPIRY_TIME_IN_SECS
+    value: {{ index .Values "filestore-url-validity" | quote }}
   {{- end }}
+  - name: KAFKA_MALWARE_SCAN_ENABLED
+    value: {{ index .Values "kafka-malware-scan-enabled" | quote }}
+  - name: KAFKA_TOPICS_MALWARE_SCAN_REQUEST
+    value: {{ index .Values "kafka-topics-malware-scan-request" | quote }}
