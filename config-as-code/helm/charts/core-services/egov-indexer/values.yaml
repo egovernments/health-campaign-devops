@@ -77,3 +77,7 @@ env: |
       secretKeyRef:
         name: elasticsearch-master-credentials
         key: password
+  - name: EGOV_INFRA_INDEXER_LEGACY_VERSION
+    value: "false"
+  - name: SPRING_KAFKA_CONSUMER_GROUP
+    value: {{ index .Values "kafka-consumer-group-id" | quote }}

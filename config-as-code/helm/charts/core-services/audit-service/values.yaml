@@ -11,6 +11,10 @@ ingress:
 
 # Init Containers Configs
 initContainers:
+  gitSync:
+    enabled: true
+    repo: "git@github.com:egovernments/configs"
+    branch: "master"
   dbMigration:
     enabled: true
     schemaTable: "audit_service_schema"
@@ -51,7 +55,7 @@ env: |
   - name: JAVA_ARGS
     value: {{ index .Values "java-args" | quote }}
   - name: SECURITY_BASIC_ENABLED
-    value: "false"  
+    value: "false"
   - name: MANAGEMENT_SECURITY_ENABLED
     value: "false"
   - name: EGOV_ENC_SIGN_HOST

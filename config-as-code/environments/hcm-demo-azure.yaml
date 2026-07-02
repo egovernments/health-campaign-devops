@@ -35,8 +35,8 @@ cluster-configs:
                 state-level-tenantid-length: "1"
                 state-schema-index-position-tenantid: "0"
                 is-environment-central-instance: "true"
-                egov-state-level-tenant-id: "mz"
-                state-level-tenant-id: "mz"
+                egov-state-level-tenant-id: "demo"
+                state-level-tenant-id: "demo"
                 kafka-tenant-id-pattern: "demo-"
                 s3-assets-bucket: "(pg-health-egov-assets|egov-health-playground-assets)"
                 es-host: "elasticsearch-data.es-cluster"
@@ -136,6 +136,7 @@ cluster-configs:
               boundary-management: 'http://boundary-management:8080/'
               excel-ingestion: 'http://excel-ingestion:8080/'
               health-notification-service: 'http://health-notification-service.egov:8080/'
+              egov-malware-detection: "http://egov-malware-detection.egov:8080/"
 
 disableAnnotationTimestamp: true
 
@@ -296,6 +297,8 @@ egov-filestore:
   allowed-file-formats: "jpg,jpeg,png,doc,docx,pdf,odt,ods,text,dxf,xls,xlsx"
   filestore-url-validity: 3600
   fixed-bucketname: pb-health-egov-assets  ## Add filestore bucket name
+  kafka-malware-scan-enabled: false
+  kafka-topics-malware-scan-request: "egov.malware.file-scan-request"
 
 egov-idgen:
   image:
@@ -476,8 +479,8 @@ egov-user:
   citizen-registration-withlogin: "true"
   citizen-otp-fixed: "123456"
   citizen-otp-fixed-enabled: "true"
-  egov-state-level-tenant-id: "mz"
-  state-level-tenant-id: "mz"
+  egov-state-level-tenant-id: "demo"
+  state-level-tenant-id: "demo"
   decryption-abac-enabled: "false"
 
 chatbot:
@@ -485,7 +488,6 @@ chatbot:
   kafka-topics-replication-factor: 2
   kafka-consumer-poll-ms: 10
   kafka-producer-linger-ms: 5
-
   contact-card-whatsapp-number: "+918744960111"
   contact-card-whatsapp-name: "mSeva Punjab"
   valuefirst-whatsapp-number: "918744960111"
@@ -497,8 +499,42 @@ chatbot:
   valuefirst-notification-welcome-templateid: "194791"
   valuefirst-notification-root-templateid: "194795"
   valuefirst-send-message-url: "https://api.myvaluefirst.com/psms/servlet/psms.JsonEservice"
-
   user-service-chatbot-citizen-passwrord: "123456"
+
+egov-malware-detection:
+  image:
+    repository: egovio/egov-malware-detection
+    tag: master-d69ce29
+  # ClamAV Configuration
+  clamav-host: "clamav.security"
+  clamav-port: "3310"
+  clamav-timeout: "60000"
+  clamav-chunk-size: "2048"
+  # S3 Configuration (uses same AWS credentials from egov-filestore secret)
+  is-s3-enabled: true
+  minio-enabled: false
+  fixed-bucketname: "" #add bucket name
+  fixed-bucket-region: "" #add bucket region
+  quarantine-bucketname: "" #add quarantine bucket name
+  # Slack Notification (optional - enable and provide webhook URL to use)
+  slack-enabled: true
+  # slack-webhook-url: "https://hooks.slack.com/services/xxx/xxx/xxx"
+  slack-channel: "#filestore-malware-alerts"
+  slack-username: "MalwareBot"
+  slack-icon-emoji: ":warning:"
+  # Email Notification (uses egov-notification-mail via Kafka)
+  mail-enabled: true
+  mail-notification-mode: "kafka"
+  mail-alert-recipients: "security-team@example.com"
+  mail-alert-subject: "DIGIT Security Alert - Malware Detected"
+  # Scan Settings
+  scan-max-file-size-mb: "50"
+  # Quarantine Settings
+  quarantine-enabled: true
+  quarantine-delete-original: true
+  # JVM Settings
+  heap: "-Xmx512m -Xms512m"
+  memory_limits: "768Mi"
 
 
 ws-services:
@@ -532,7 +568,7 @@ audit-service:
         tag: DIGIT-2.9-LTS-07f47790b8-12
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.0-DEMO"  
+      branch: "HCM-v2.1-DEMO"  
   central-instance-build: true
   central-instance-enabled: true
 
@@ -576,7 +612,7 @@ egov-indexer:
         tag: 2.9.1-c781a2f714-65
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"        ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.0-DEMO"                                      ##### Change repo branch with Your fork Repo branch
+      branch: "HCM-v2.1-DEMO"                                      ##### Change repo branch with Your fork Repo branch
   egov-indexer-yaml-repo-path: "/work-dir/health-campaign-config/egov-indexer/demo,file:///work-dir/health-campaign-config/egov-indexer/egov-error-queue-indexer.yml"
 
 egov-persister:
@@ -597,11 +633,10 @@ egov-persister:
   images:
     - egovio/egov-persister
   persist-yml-path: "/work-dir/health-campaign-config/egov-persister/common,/work-dir/health-campaign-config/egov-persister/demo"
-
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.0-DEMO"                                    ##### Change repo branch with Your fork Repo branch
+      branch: "HCM-v2.1-DEMO"                                    ##### Change repo branch with Your fork Repo branch
 
 egov-data-uploader:
   initContainers:
@@ -614,7 +649,7 @@ egov-searcher:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.0-DEMO"                                   ##### Change repo branch with Your fork Repo branch
+      branch: "HCM-v2.1-DEMO"                                   ##### Change repo branch with Your fork Repo branch
 
 dashboard-analytics:
   image:
@@ -624,7 +659,7 @@ dashboard-analytics:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.0-DEMO"                                    ##### Change repo branch with Your fork Repo branch
+      branch: "HCM-v2.1-DEMO"                                    ##### Change repo branch with Your fork Repo branch
 
 dashboard-ingest:
   image:
@@ -634,7 +669,7 @@ dashboard-ingest:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.0-DEMO"
+      branch: "HCM-v2.1-DEMO"
 
 # reportinfra >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 report:
@@ -644,7 +679,7 @@ report:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.0-DEMO"                                   ##### Change repo branch with Your fork Repo branch
+      branch: "HCM-v2.1-DEMO"                                   ##### Change repo branch with Your fork Repo branch
   report-locationsfile-path: "file:///work-dir/health-campaign-config/reports/reportFileLocationsv1.txt"
 
 pdf-service:
@@ -657,7 +692,7 @@ pdf-service:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.0-DEMO"                                   ##### Change repo branch with Your fork Repo branch
+      branch: "HCM-v2.1-DEMO"                                   ##### Change repo branch with Your fork Repo branch
   data-config-urls: "file:///work-dir/health-campaign-config/pdf-service/data-config/health-bill-payment.json"
   format-config-urls: "file:///work-dir/health-campaign-config/pdf-service/format-config/health-bill-payment.json"
 
@@ -1130,7 +1165,7 @@ project-factory:
   serverTimezone: "UTC"
   attendanceAttendeeSearchPageSize: "100"
   attendanceStaffSearchPageSize: "100"
-  centralInstanceTenantIds: "mz"
+  centralInstanceTenantIds: "demo"
   command: |
     - sh
     - -c
@@ -1313,7 +1348,7 @@ health-expense-calculator:
   bill-generation-async-topic: "bill-generation-async-topic"
   egov-musterroll-search-endpoint: "/health-muster-roll/v1/_search"
   billing-frequency-custom-minimum-days: 1
-  excell-state-level-tenant-id: "mz"
+  excell-state-level-tenant-id: "demo"
 
 health-expense:
   image:
