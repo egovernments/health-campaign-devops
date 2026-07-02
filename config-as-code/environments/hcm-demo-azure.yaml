@@ -399,14 +399,6 @@ household:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
-  hpa:
-    enabled: true
-    minReplicas: 1
-    maxReplicas: 3
-    cpuTargetPercentage: 70
-    memoryTargetPercentage: 80
-  egov-mdms-service-host-key: 'mdms-service-v2'
-  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
 
 service-request:
   image:
@@ -976,6 +968,8 @@ project:
   replicas: 3
   memory_limits: 1Gi
   heap: '-Xmx768m -Xms512m'
+  project-task-no-resource-validation-status: "ADMINISTRATION_FAILED,BENEFICIARY_REFUSED,CLOSED_HOUSEHOLD,NOT_ADMINISTERED,BENEFICIARY_DIED,BENEFICIARY_MIGRATED,BENEFICIARY_ABSENT,BENEFICIARY_INELIGIBLE,INELIGIBLE"
+  tracer-request-logging-enabled: "true"
 
 
 individual:
@@ -993,17 +987,8 @@ individual:
   replicas: 2
   heap: '-Xmx512m -Xms256m'
   memory_limits: 512Mi
-  hpa:
-    enabled: true
-    minReplicas: 1
-    maxReplicas: 3
-    cpuTargetPercentage: 70
-    memoryTargetPercentage: 80
-  egov-idgen-host-key: "egov-idgen"
-  egov-beneficiary-idgen-host-key: "beneficiary-idgen"
-  egov-idgen-generate-path: "egov-idgen/id/_generate"
-  egov-beneficiary-idgen-idpool-search-path: "beneficiary-idgen/id/id_pool/_search"
-  egov-beneficiary-idgen-idpool-update-path: "beneficiary-idgen/id/id_pool/_update"
+  egov-beneficiary-idgen-integration-enabled: "true"
+  individual-beneficiary-id-validation-enabled: "false"
 
 product:
   image:
@@ -1036,8 +1021,27 @@ referralmanagement:
   central-instance-enabled: true
   heap: "-Xmx512m -Xms512m"
   memory_limits: 1024Mi
-  egov-mdms-service-host-key: 'mdms-service-v2'
-  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
+  egov-s3-bucket: "" #TODO: Add S3 bucket name for referral management
+  egov-s3-region: "" #TODO: Add S3 region for referral management
+  healthChecks:
+    enabled: true
+    livenessProbePath: "/referralmanagement/health"
+    readinessProbePath: "/referralmanagement/health"
+    livenessProbeInitialDelaySeconds: 30
+    readinessProbeInitialDelaySeconds: 30
+    livenessProbeTimeoutSeconds: 30
+    readinessProbeTimeoutSeconds: 30
+    livenessProbePeriodSeconds: 120
+    readinessProbePeriodSeconds: 60
+  spring-datasource-tomcat-max-active: "30"
+  server-tomcat-max-threads: "40"
+  spring-datasource-hikari-minimum-idle: "5"
+  spring-datasource-hikari-connection-timeout: "45000"
+  spring-datasource-hikari-idle-timeout: "300000"
+  spring-datasource-hikari-max-lifetime: "900000"
+  spring-datasource-hikari-leak-detection-threshold: "60000"
+  egov-wardfilegen-ward-pool-size: "8"
+  egov-wardfilegen-file-pool-size: "32"
 
 
 pgr-services:
@@ -1095,7 +1099,7 @@ project-factory:
   excel-ingestion-host: excel-ingestion
   IS_ENVIRONMENT_CENTRAL_INSTANCE: true
   DB_SCHEMA: public
-  defaultTenantId: mz
+  defaultTenantId: demo
   saveCampaignDetails: "save-campaign-details"
   updateCampaignDetails: "update-campaign-details"
   saveProjectCampaignDetailsTopic: "save-project-campaign-details"
@@ -1128,10 +1132,9 @@ project-factory:
   maxResourceCreationAttempts: "200"
   waitTimeOfEachAttemptMs: "20000"
   retryTillResourceCreationCompletes: "50"
-  serverTimezone: "UTC"
   attendanceAttendeeSearchPageSize: "100"
   attendanceStaffSearchPageSize: "100"
-  centralInstanceTenantIds: "mz"
+  centralInstanceTenantIds: "demo"
   command: |
     - sh
     - -c
@@ -1152,7 +1155,7 @@ boundary-management:
   DEBUG: 'true'
   namespace: 'egov'
   logLevel: 'debug'
-  defaultLocale: 'en_MZ'
+  defaultLocale: 'en_DEMO'
   mdmsV2SearchEndpoint: 'mdms-v2/v2/_search'
   mdmsV1SearchEndpoint: 'mdms-v2/v1/_search'
   defaultTenantId: 'mz'
@@ -1161,51 +1164,51 @@ boundary-management:
   central-instance-build: true
   central-instance-enabled: true
 
-plan-service:
-  image:
-    repository: egovio/plan-service
-    tag: v1.0.2-0ea4104b4b-303
-  central-instance-name: egov
-  central-instance-build: true
-  central-instance-enabled: true
-  initContainers:
-    dbMigration:
-      image:
-        repository: egovio/plan-service-db
-        tag: v1.0.2-0ea4104b4b-303
-  egov-mdms-service-host-key: 'mdms-service-v2'
-  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
-  egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
-  kafka-producer-max-request-size: "4000000"
-  heap: "-Xmx1536m -Xms512m"
-  memory_limits: 1740Mi
+# plan-service:
+#   image:
+#     repository: egovio/plan-service
+#     tag: v1.0.2-0ea4104b4b-303
+#   central-instance-name: egov
+#   central-instance-build: true
+#   central-instance-enabled: true
+#   initContainers:
+#     dbMigration:
+#       image:
+#         repository: egovio/plan-service-db
+#         tag: v1.0.2-0ea4104b4b-303
+#   egov-mdms-service-host-key: 'mdms-service-v2'
+#   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
+#   egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
+#   kafka-producer-max-request-size: "4000000"
+#   heap: "-Xmx1536m -Xms512m"
+#   memory_limits: 1740Mi
 
-census-service:
-  image:
-    repository: egovio/census-service
-    tag: v1.0.1-ddae2629dc-105
-  initContainers:
-    dbMigration:
-      image:
-        repository: egovio/census-service-db
-        tag: v1.0.1-ddae2629dc-105
-  kafka-producer-max-request-size: "4000000"
+# census-service:
+#   image:
+#     repository: egovio/census-service
+#     tag: v1.0.1-ddae2629dc-105
+#   initContainers:
+#     dbMigration:
+#       image:
+#         repository: egovio/census-service-db
+#         tag: v1.0.1-ddae2629dc-105
+#   kafka-producer-max-request-size: "4000000"
 
-resource-estimation-service:
-  egov-mdms-service-host-key: 'mdms-service-v2'
-  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
-  egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
+# resource-estimation-service:
+#   egov-mdms-service-host-key: 'mdms-service-v2'
+#   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
+#   egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
 
-resource-generator:
-  image:
-    repository: egovio/resource-generator
-    tag: v1.0.2-b8bfac27c7-142
-  central-instance-name: egov
-  central-instance-build: true
-  central-instance-enabled: true
-  egov-mdms-service-host-key: 'mdms-service-v2'
-  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
-  egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
+# resource-generator:
+#   image:
+#     repository: egovio/resource-generator
+#     tag: v1.0.2-b8bfac27c7-142
+#   central-instance-name: egov
+#   central-instance-build: true
+#   central-instance-enabled: true
+#   egov-mdms-service-host-key: 'mdms-service-v2'
+#   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
+#   egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
 
 excel-ingestion:
   image:
@@ -1218,10 +1221,19 @@ excel-ingestion:
         tag: master-25a90a3
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
-  defaultLocale: 'en_MZ'
+  defaultLocale: 'en_DEMO'
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
+  excel-row-limit: "20000"
+  excel-ingestion-generation-save-topic: "save-generated-file"
+  excel-ingestion-generation-update-topic: "update-generated-file"
+  excel-ingestion-processing-save-topic: "save-processing-file"
+  excel-ingestion-processing-update-topic: "update-processing-file"
+  excel-ingestion-sheet-data-save-topic: "save-sheet-data-temp"
+  excel-ingestion-sheet-data-delete-topic: "delete-sheet-data-temp"
+  excel-ingestion-processing-result-topic: "hcm-processing-result"
+  java-enable-debug: true
 
 worker-registry:
   namespace: egov
@@ -1314,7 +1326,35 @@ health-expense-calculator:
   bill-generation-async-topic: "bill-generation-async-topic"
   egov-musterroll-search-endpoint: "/health-muster-roll/v1/_search"
   billing-frequency-custom-minimum-days: 1
-  excell-state-level-tenant-id: "mz"
+  excell-state-level-tenant-id: "demo"
+  central-instance-build: false
+  spring-kafka-consumer-group-id: "demo-health-expense-calculator"
+  tenantId: "demo"
+  excell-state-level-tenant-id: "demo"
+  boundary-hierarchy-name: "boundary-hierarchy"
+  calculate-musterroll-health: demo-calculate-musterroll-health
+  calculate-error-health: demo-calculate-error-health
+  calculate-billmeta-health: demo-calculate-billmeta-health
+  report-error-queue-topic: demo-report-error-queue-topic
+  report-retry-queue-topic: demo-report-retry-queue-topic
+  report-generation-trigger-topic: demo-report-generation-trigger
+  report-generation-retry-trigger-topic: demo-report-generation-retry-trigger
+  bill-generation-async-topic: demo-bill-generation-async-topic
+  bill-generation-async-enabled: "true"
+  expense-bill-create-topic: demo-expense-bill-create-health
+  expense-bill-update-topic: demo-expense-bill-update-health
+  expense-bill-index-topic: demo-expense-bill-index-health
+  payment-pdf-key: "health-bill-payment-demo"
+  billing-frequency-custom-minimum-days: "1"
+  billing-config-v2-enabled: "true"
+  billing-config-create-topic: demo-billing-config-create
+  billing-config-update-topic: demo-billing-config-update
+  billing-period-status-update-topic: demo-billing-period-status-update
+  billing-period-generation-enabled: "true"
+  billing-muster-roll-period-aware-enabled: "true"
+  egov-musterroll-search-endpoint: "/health-muster-roll/v1/_search"
+  project-management-system-kafka-update-topic: demo-update-project
+  project-management-system-kafka-update-date-topic: demo-update-project-date
 
 health-expense:
   image:
@@ -1330,12 +1370,8 @@ health-expense:
   central-instance-enabled: true
   tracing-enabled: true
   java-enable-debug: true
-  business-workflow-status-map: "{'EXPENSE.WAGES':'false'}"
-  expense-billing-default-offset: 0
-  expense-billing-default-limit: 100
-  expense-billing-search-max-limit: 200
-  spring-kafka-producer-properties-max-request-size: "10485760"
-  egov-mdms-v2-search-endpoint: "/mdms-v2/v1/_search"
+  business-workflow-status-map: "{'EXPENSE.WAGES':'false','EXPENSE.PURCHASE':'false','EXPENSE.SUPERVISION':'false','PAYMENTS.BILL':'true','PAYMENTS.BILLDETAILS':'true'}"
+  expense-v2-periodic-billing-enabled: true
 
 health-muster-roll:
   image:
@@ -1351,28 +1387,6 @@ health-muster-roll:
   central-instance-enabled: true
   tracing-enabled: true
   java-enable-debug: true
-  musterroll-default-offset: 0
-  musterroll-default-limit: 100
-  musterroll-search-max-limit: 200
-  musterroll-workflow-business-service: "HCMMUSTERROLL"
-  attendance-log-search-endpoint: "health-attendance/log/v1/_search"
-  attendance-register-search-endpoint: "health-attendance/v1/_search"
-  attendance-register-update-endpoint: "health-attendance/v1/_update"
-  attendance-register-search-limit: 100
-  individual-search-endpoint: "individual/v1/_search"
-  expense-calculator-endpoint: "health-expense-calculator/v1/_estimate"
-  muster-restricted-search-roles: "PLACEHOLDER_ROLE"
-  notification-sms-enabled: "false"
-  musterroll-update-recompute-attendance-enabled: "false"
-  musterroll-individual-entry-roles-enabled: "false"
-  musterroll-validate-start-date-monday-enabled: "false"
-  musterroll-add-bank-account-details-enabled: "false"
-  musterroll-update-attendance-register-review-status-enabled: "true"
-  musterroll-workflow-enabled: "true"
-  musterroll-set-default-duration-enabled: "false"
-  musterroll-validate-attendance-register-enabled: "true"
-  egov-mdms-service-host-key: 'mdms-service-v2'
-  egov-mdms-service-endpoint-key: "mdms-v2/v1/_search"
 
 boundary-service:
   image:
