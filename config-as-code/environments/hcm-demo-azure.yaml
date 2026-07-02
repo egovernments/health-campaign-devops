@@ -35,8 +35,8 @@ cluster-configs:
                 state-level-tenantid-length: "1"
                 state-schema-index-position-tenantid: "0"
                 is-environment-central-instance: "true"
-                egov-state-level-tenant-id: "demo"
-                state-level-tenant-id: "demo"
+                egov-state-level-tenant-id: "mz"
+                state-level-tenant-id: "mz"
                 kafka-tenant-id-pattern: "demo-"
                 s3-assets-bucket: "(pg-health-egov-assets|egov-health-playground-assets)"
                 es-host: "elasticsearch-data.es-cluster"
@@ -59,7 +59,6 @@ cluster-configs:
                 tracer-errors-provideexceptionindetails: "true"
                 egov-internal-microservice-user-uuid: fa0f820c-49df-46bb-8e62-8a0ec5d9af5e
                 db-schema-names: "demo"
-                boundary-hierarchy: "ADMIN"
 
         egov-service-host:
             namespace: [ egov, es-cluster, monitoring, demo ]
@@ -137,10 +136,6 @@ cluster-configs:
               boundary-management: 'http://boundary-management:8080/'
               excel-ingestion: 'http://excel-ingestion:8080/'
               health-notification-service: 'http://health-notification-service.egov:8080/'
-              egov-notification-push: "http://egov-notification-push.egov:8080/"
-              household-referral: "http://household-referral.egov:8080/"
-              individual-referral: "http://individual-referral.egov:8080/"
-              egov-malware-detection: "http://egov-malware-detection.egov:8080/"
 
 disableAnnotationTimestamp: true
 
@@ -301,8 +296,6 @@ egov-filestore:
   allowed-file-formats: "jpg,jpeg,png,doc,docx,pdf,odt,ods,text,dxf,xls,xlsx"
   filestore-url-validity: 3600
   fixed-bucketname: pb-health-egov-assets  ## Add filestore bucket name
-  kafka-malware-scan-enabled: false
-  kafka-topics-malware-scan-request: "egov.malware.file-scan-request"
 
 egov-idgen:
   image:
@@ -405,6 +398,14 @@ household:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
+  hpa:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 80
+  egov-mdms-service-host-key: 'mdms-service-v2'
+  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
 
 service-request:
   image:
@@ -656,20 +657,7 @@ pdf-service:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.0-DEMO"
-      env: |
-        - name: "GITSYNC_REPO"
-          value: "{{ .Values.initContainers.gitSync.repo }}"
-        - name: "GITSYNC_REF"
-          value: "{{ .Values.initContainers.gitSync.branch }}"
-        - name: "GITSYNC_DEPTH"
-          value: "1"
-        - name: "GITSYNC_ONE_TIME"
-          value: "true"
-        - name: "GITSYNC_SSH"
-          value: "true"
-        - name: "GITSYNC_ROOT"
-          value: "/work-dir"                                  
+      branch: "HCM-v2.0-DEMO"                                   ##### Change repo branch with Your fork Repo branch
   data-config-urls: "file:///work-dir/health-campaign-config/pdf-service/data-config/health-bill-payment.json"
   format-config-urls: "file:///work-dir/health-campaign-config/pdf-service/format-config/health-bill-payment.json"
 
@@ -987,8 +975,6 @@ project:
   replicas: 3
   memory_limits: 1Gi
   heap: '-Xmx768m -Xms512m'
-  project-task-no-resource-validation-status: "ADMINISTRATION_FAILED,BENEFICIARY_REFUSED,CLOSED_HOUSEHOLD,NOT_ADMINISTERED,BENEFICIARY_DIED,BENEFICIARY_MIGRATED,BENEFICIARY_ABSENT,BENEFICIARY_INELIGIBLE,INELIGIBLE"
-  tracer-request-logging-enabled: "true"
 
 
 individual:
@@ -1006,8 +992,17 @@ individual:
   replicas: 2
   heap: '-Xmx512m -Xms256m'
   memory_limits: 512Mi
-  egov-beneficiary-idgen-integration-enabled: "true"
-  individual-beneficiary-id-validation-enabled: "false"
+  hpa:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 80
+  egov-idgen-host-key: "egov-idgen"
+  egov-beneficiary-idgen-host-key: "beneficiary-idgen"
+  egov-idgen-generate-path: "egov-idgen/id/_generate"
+  egov-beneficiary-idgen-idpool-search-path: "beneficiary-idgen/id/id_pool/_search"
+  egov-beneficiary-idgen-idpool-update-path: "beneficiary-idgen/id/id_pool/_update"
 
 product:
   image:
@@ -1040,27 +1035,8 @@ referralmanagement:
   central-instance-enabled: true
   heap: "-Xmx512m -Xms512m"
   memory_limits: 1024Mi
-  egov-s3-bucket: "" #TODO: Add S3 bucket name for referral management
-  egov-s3-region: "" #TODO: Add S3 region for referral management
-  healthChecks:
-    enabled: true
-    livenessProbePath: "/referralmanagement/health"
-    readinessProbePath: "/referralmanagement/health"
-    livenessProbeInitialDelaySeconds: 30
-    readinessProbeInitialDelaySeconds: 30
-    livenessProbeTimeoutSeconds: 30
-    readinessProbeTimeoutSeconds: 30
-    livenessProbePeriodSeconds: 120
-    readinessProbePeriodSeconds: 60
-  spring-datasource-tomcat-max-active: "30"
-  server-tomcat-max-threads: "40"
-  spring-datasource-hikari-minimum-idle: "5"
-  spring-datasource-hikari-connection-timeout: "45000"
-  spring-datasource-hikari-idle-timeout: "300000"
-  spring-datasource-hikari-max-lifetime: "900000"
-  spring-datasource-hikari-leak-detection-threshold: "60000"
-  egov-wardfilegen-ward-pool-size: "8"
-  egov-wardfilegen-file-pool-size: "32"
+  egov-mdms-service-host-key: 'mdms-service-v2'
+  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
 
 
 pgr-services:
@@ -1118,7 +1094,7 @@ project-factory:
   excel-ingestion-host: excel-ingestion
   IS_ENVIRONMENT_CENTRAL_INSTANCE: true
   DB_SCHEMA: public
-  defaultTenantId: demo
+  defaultTenantId: mz
   saveCampaignDetails: "save-campaign-details"
   updateCampaignDetails: "update-campaign-details"
   saveProjectCampaignDetailsTopic: "save-project-campaign-details"
@@ -1151,9 +1127,10 @@ project-factory:
   maxResourceCreationAttempts: "200"
   waitTimeOfEachAttemptMs: "20000"
   retryTillResourceCreationCompletes: "50"
+  serverTimezone: "UTC"
   attendanceAttendeeSearchPageSize: "100"
   attendanceStaffSearchPageSize: "100"
-  centralInstanceTenantIds: "demo"
+  centralInstanceTenantIds: "mz"
   command: |
     - sh
     - -c
@@ -1174,7 +1151,7 @@ boundary-management:
   DEBUG: 'true'
   namespace: 'egov'
   logLevel: 'debug'
-  defaultLocale: 'en_DEMO'
+  defaultLocale: 'en_MZ'
   mdmsV2SearchEndpoint: 'mdms-v2/v2/_search'
   mdmsV1SearchEndpoint: 'mdms-v2/v1/_search'
   defaultTenantId: 'mz'
@@ -1183,51 +1160,51 @@ boundary-management:
   central-instance-build: true
   central-instance-enabled: true
 
-# plan-service:
-#   image:
-#     repository: egovio/plan-service
-#     tag: v1.0.2-0ea4104b4b-303
-#   central-instance-name: egov
-#   central-instance-build: true
-#   central-instance-enabled: true
-#   initContainers:
-#     dbMigration:
-#       image:
-#         repository: egovio/plan-service-db
-#         tag: v1.0.2-0ea4104b4b-303
-#   egov-mdms-service-host-key: 'mdms-service-v2'
-#   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
-#   egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
-#   kafka-producer-max-request-size: "4000000"
-#   heap: "-Xmx1536m -Xms512m"
-#   memory_limits: 1740Mi
+plan-service:
+  image:
+    repository: egovio/plan-service
+    tag: v1.0.2-0ea4104b4b-303
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/plan-service-db
+        tag: v1.0.2-0ea4104b4b-303
+  egov-mdms-service-host-key: 'mdms-service-v2'
+  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
+  egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
+  kafka-producer-max-request-size: "4000000"
+  heap: "-Xmx1536m -Xms512m"
+  memory_limits: 1740Mi
 
-# census-service:
-#   image:
-#     repository: egovio/census-service
-#     tag: v1.0.1-ddae2629dc-105
-#   initContainers:
-#     dbMigration:
-#       image:
-#         repository: egovio/census-service-db
-#         tag: v1.0.1-ddae2629dc-105
-#   kafka-producer-max-request-size: "4000000"
+census-service:
+  image:
+    repository: egovio/census-service
+    tag: v1.0.1-ddae2629dc-105
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/census-service-db
+        tag: v1.0.1-ddae2629dc-105
+  kafka-producer-max-request-size: "4000000"
 
-# resource-estimation-service:
-#   egov-mdms-service-host-key: 'mdms-service-v2'
-#   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
-#   egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
+resource-estimation-service:
+  egov-mdms-service-host-key: 'mdms-service-v2'
+  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
+  egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
 
-# resource-generator:
-#   image:
-#     repository: egovio/resource-generator
-#     tag: v1.0.2-b8bfac27c7-142
-#   central-instance-name: egov
-#   central-instance-build: true
-#   central-instance-enabled: true
-#   egov-mdms-service-host-key: 'mdms-service-v2'
-#   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
-#   egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
+resource-generator:
+  image:
+    repository: egovio/resource-generator
+    tag: v1.0.2-b8bfac27c7-142
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
+  egov-mdms-service-host-key: 'mdms-service-v2'
+  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
+  egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
 
 excel-ingestion:
   image:
@@ -1240,19 +1217,10 @@ excel-ingestion:
         tag: master-25a90a3
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
-  defaultLocale: 'en_DEMO'
+  defaultLocale: 'en_MZ'
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
-  excel-row-limit: "20000"
-  excel-ingestion-generation-save-topic: "save-generated-file"
-  excel-ingestion-generation-update-topic: "update-generated-file"
-  excel-ingestion-processing-save-topic: "save-processing-file"
-  excel-ingestion-processing-update-topic: "update-processing-file"
-  excel-ingestion-sheet-data-save-topic: "save-sheet-data-temp"
-  excel-ingestion-sheet-data-delete-topic: "delete-sheet-data-temp"
-  excel-ingestion-processing-result-topic: "hcm-processing-result"
-  java-enable-debug: true
 
 worker-registry:
   namespace: egov
@@ -1345,35 +1313,7 @@ health-expense-calculator:
   bill-generation-async-topic: "bill-generation-async-topic"
   egov-musterroll-search-endpoint: "/health-muster-roll/v1/_search"
   billing-frequency-custom-minimum-days: 1
-  excell-state-level-tenant-id: "demo"
-  central-instance-build: false
-  spring-kafka-consumer-group-id: "demo-health-expense-calculator"
-  tenantId: "demo"
-  excell-state-level-tenant-id: "demo"
-  boundary-hierarchy-name: "boundary-hierarchy"
-  calculate-musterroll-health: demo-calculate-musterroll-health
-  calculate-error-health: demo-calculate-error-health
-  calculate-billmeta-health: demo-calculate-billmeta-health
-  report-error-queue-topic: demo-report-error-queue-topic
-  report-retry-queue-topic: demo-report-retry-queue-topic
-  report-generation-trigger-topic: demo-report-generation-trigger
-  report-generation-retry-trigger-topic: demo-report-generation-retry-trigger
-  bill-generation-async-topic: demo-bill-generation-async-topic
-  bill-generation-async-enabled: "true"
-  expense-bill-create-topic: demo-expense-bill-create-health
-  expense-bill-update-topic: demo-expense-bill-update-health
-  expense-bill-index-topic: demo-expense-bill-index-health
-  payment-pdf-key: "health-bill-payment-demo"
-  billing-frequency-custom-minimum-days: "1"
-  billing-config-v2-enabled: "true"
-  billing-config-create-topic: demo-billing-config-create
-  billing-config-update-topic: demo-billing-config-update
-  billing-period-status-update-topic: demo-billing-period-status-update
-  billing-period-generation-enabled: "true"
-  billing-muster-roll-period-aware-enabled: "true"
-  egov-musterroll-search-endpoint: "/health-muster-roll/v1/_search"
-  project-management-system-kafka-update-topic: demo-update-project
-  project-management-system-kafka-update-date-topic: demo-update-project-date
+  excell-state-level-tenant-id: "mz"
 
 health-expense:
   image:
@@ -1389,8 +1329,12 @@ health-expense:
   central-instance-enabled: true
   tracing-enabled: true
   java-enable-debug: true
-  business-workflow-status-map: "{'EXPENSE.WAGES':'false','EXPENSE.PURCHASE':'false','EXPENSE.SUPERVISION':'false','PAYMENTS.BILL':'true','PAYMENTS.BILLDETAILS':'true'}"
-  expense-v2-periodic-billing-enabled: true
+  business-workflow-status-map: "{'EXPENSE.WAGES':'false'}"
+  expense-billing-default-offset: 0
+  expense-billing-default-limit: 100
+  expense-billing-search-max-limit: 200
+  spring-kafka-producer-properties-max-request-size: "10485760"
+  egov-mdms-v2-search-endpoint: "/mdms-v2/v1/_search"
 
 health-muster-roll:
   image:
@@ -1406,6 +1350,28 @@ health-muster-roll:
   central-instance-enabled: true
   tracing-enabled: true
   java-enable-debug: true
+  musterroll-default-offset: 0
+  musterroll-default-limit: 100
+  musterroll-search-max-limit: 200
+  musterroll-workflow-business-service: "HCMMUSTERROLL"
+  attendance-log-search-endpoint: "health-attendance/log/v1/_search"
+  attendance-register-search-endpoint: "health-attendance/v1/_search"
+  attendance-register-update-endpoint: "health-attendance/v1/_update"
+  attendance-register-search-limit: 100
+  individual-search-endpoint: "individual/v1/_search"
+  expense-calculator-endpoint: "health-expense-calculator/v1/_estimate"
+  muster-restricted-search-roles: "PLACEHOLDER_ROLE"
+  notification-sms-enabled: "false"
+  musterroll-update-recompute-attendance-enabled: "false"
+  musterroll-individual-entry-roles-enabled: "false"
+  musterroll-validate-start-date-monday-enabled: "false"
+  musterroll-add-bank-account-details-enabled: "false"
+  musterroll-update-attendance-register-review-status-enabled: "true"
+  musterroll-workflow-enabled: "true"
+  musterroll-set-default-duration-enabled: "false"
+  musterroll-validate-attendance-register-enabled: "true"
+  egov-mdms-service-host-key: 'mdms-service-v2'
+  egov-mdms-service-endpoint-key: "mdms-v2/v1/_search"
 
 boundary-service:
   image:
@@ -1418,68 +1384,7 @@ boundary-service:
         tag: master-1e8d2bb
   central-instance-build: true
   central-instance-enabled: true
-
-airflow-trigger:
-  initContainers:
-    extraInitContainers: |
-      - name: run-migration
-        image: bhanuprakashmegov/airflow-custom-trigger:central4
-        command: [ "python", "migrate.py" ]
-        env:
-          - name: DB_HOST
-            valueFrom:
-              configMapKeyRef:
-                name: egov-config
-                key: db-host
-          - name: DB_PORT
-            value: "5432"
-          - name: DB_NAME
-            valueFrom:
-              configMapKeyRef:
-                name: egov-config
-                key: db-name
-          - name: DB_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: db
-                key: username
-          - name: DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: db
-                key: password
-          - name: DB_SCHEMAS
-            value: "demo,"
-  image:
-    repository: "bhanuprakashmegov/airflow-custom-trigger"
-    tag: "central4"
-  hpa:
-    enabled: true
-    minReplicas: 1
-    maxReplicas: 3
-  cpu_requests: 100m
-  memory_requests: 128Mi
-  cpu_limits: 150m
-  memory_limits: 256Mi
-
-egov-notification-push:
-  namespace: egov
-  initContainers:
-    dbMigration:
-      image:
-        repository: egovio/egov-notification-push-db
-        tag: nigeria-go-deep-push-notification-batch-7d2ba39
-  image:
-    repository: egovio/egov-notification-push
-    tag: nigeria-go-deep-push-notification-batch-7d2ba39
-  replicas: 4
-  central-instance-build: true
-  central-instance-enabled: true
-  heap: "-Xmx1296m -Xms1024m"
-  cpu_requests: 200m
-  memory_requests: 1.5Gi
-  cpu_limits: 600m
-  memory_limits: 2Gi
+  
 
 dss-dashboard:
   image:
@@ -1535,103 +1440,6 @@ user-otp:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
-
-household-referral:
-  image:
-    repository: egovio/household
-    tag: HCMPRE-2656-HCM-Services-Household-5717dde
-  spring-datasource-tomcat-max-active: "30"
-  server-tomcat-max-threads: "40"
-  central-instance-build: true
-  central-instance-enabled: true
-  initContainers:
-    dbMigration:
-      enabled: false
-  heap: "-Xmx1536m -Xms768m"
-  hpa:
-    enabled: true
-    minReplicas: 7
-    maxReplicas: 11
-  cpu_requests: 300m
-  memory_requests: 1.5Gi
-  cpu_limits: 400m
-  memory_limits: 2Gi
-
-
-individual-referral:
-  image:
-    repository: egovio/individual
-    tag: customize-2.0-individual-6d6d26b
-  spring-datasource-tomcat-max-active: "30"
-  server-tomcat-max-threads: "40"
-  central-instance-build: true
-  central-instance-enabled: true
-  initContainers:
-    dbMigration:
-      enabled: false
-  heap: "-Xmx1536m -Xms768m"
-  hpa:
-    enabled: true
-    minReplicas: 7
-    maxReplicas: 11
-  cpu_requests: 300m
-  memory_requests: 1.5Gi
-  cpu_limits: 400m
-  memory_limits: 2Gi
-  egov-beneficiary-idgen-integration-enabled: "true"
-  individual-beneficiary-id-validation-enabled: "false"
-
-health-pgr-services:
-  central-instance-build: true
-  central-instance-name: egov
-  central-instance-enabled: true
-  db-schema-names: "demo,"
-  notification-sms-enabled: "true"
-  notification-email-enabled: "false"
-  new-complaint-enabled: "true"
-  reassign-complaint-enabled: "true"
-  reopen-complaint-enabled: "true"
-  comment-by-employee-notif-enabled: "false"
-  notification-allowed-status: "open,assigned,rejected,resolved"
-  java-enable-debug: "true"
-  time-before-closing-complaint: "3600000"
-  heap: "-Xmx512m -Xms512m"          
-  memory_limits: 1024Mi
-
-egov-malware-detection:
-  image:
-    repository: egovio/egov-malware-detection
-    tag: master-d69ce29
-  # ClamAV Configuration
-  clamav-host: "clamav.security"
-  clamav-port: "3310"
-  clamav-timeout: "60000"
-  clamav-chunk-size: "2048"
-  # S3 Configuration (uses same AWS credentials from egov-filestore secret)
-  is-s3-enabled: true
-  minio-enabled: false
-  fixed-bucketname: "" #add bucket name
-  fixed-bucket-region: "" #add bucket region
-  quarantine-bucketname: "" #add quarantine bucket name
-  # Slack Notification (optional - enable and provide webhook URL to use)
-  slack-enabled: true
-  # slack-webhook-url: "https://hooks.slack.com/services/xxx/xxx/xxx"
-  slack-channel: "#filestore-malware-alerts"
-  slack-username: "MalwareBot"
-  slack-icon-emoji: ":warning:"
-  # Email Notification (uses egov-notification-mail via Kafka)
-  mail-enabled: true
-  mail-notification-mode: "kafka"
-  mail-alert-recipients: "security-team@example.com"
-  mail-alert-subject: "DIGIT Security Alert - Malware Detected"
-  # Scan Settings
-  scan-max-file-size-mb: "50"
-  # Quarantine Settings
-  quarantine-enabled: true
-  quarantine-delete-original: true
-  # JVM Settings
-  heap: "-Xmx512m -Xms512m"
-  memory_limits: "768Mi" 
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 kafka-config:

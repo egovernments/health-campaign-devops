@@ -16,6 +16,7 @@ initContainers:
     schemaTable: "egov_indexer_schema"
     image:
       repository: "egov-indexer-db"
+      tag: "latest"
   gitSync:
     enabled: true
     repo: "git@github.com:egovernments/configs"
@@ -34,7 +35,7 @@ tracing-enabled: true
 egov-indexer-yaml-repo-path: "file:///work-dir/configs/egov-indexer/billingservices-indexer.yml,file:///work-dir/configs/egov-indexer/collection-indexer.yml,file:///work-dir/configs/egov-indexer/egov-telemetry-indexer.yml,file:///work-dir/configs/egov-indexer/egov-uploader-indexer.yml,file:///work-dir/configs/egov-indexer/error-queue.yml,file:///work-dir/configs/egov-indexer/finance-rolloutadotpion-indexer.yml,file:///work-dir/configs/egov-indexer/payment-indexer.yml,file:///work-dir/configs/egov-indexer/rainmaker-pgr-indexer.yml,file:///work-dir/configs/egov-indexer/rainmaker-pt-indexer.yml,file:///work-dir/configs/egov-indexer/tradelicense-indexer.yml,file:///work-dir/configs/egov-indexer/rainmaker-tl-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/product-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/project-indexer.yml"
 heap: "-Xmx192m -Xms192m"
 
-kafka-consumer-group-id: egov-indexer-consumer-grp
+
 # Additional Container Envs
 env: |
   - name: EGOV_SERVICES_INFRA_INDEXER_HOST
@@ -46,7 +47,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-config
-        key: es-indexer-host
+        key: es-indexer-host-8
   - name: EGOV_INDEXER_YML_REPO_PATH
     value: {{ index .Values "egov-indexer-yaml-repo-path" | quote }}
   {{- if index .Values "global" "serializers-timezone-in-ist" }}
@@ -69,14 +70,10 @@ env: |
   - name: EGOV_INDEXER_ES_USERNAME
     valueFrom:
       secretKeyRef:
-        name: elastic
+        name: elasticsearch-master-credentials
         key: username
   - name: EGOV_INDEXER_ES_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: elastic
+        name: elasticsearch-master-credentials
         key: password
-  - name: EGOV_INFRA_INDEXER_LEGACY_VERSION
-    value: "false"
-  - name: SPRING_KAFKA_CONSUMER_GROUP
-    value: {{ index .Values "kafka-consumer-group-id" | quote }}

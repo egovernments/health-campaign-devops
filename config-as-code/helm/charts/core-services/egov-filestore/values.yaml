@@ -13,8 +13,6 @@ initContainers:
 
 # Ingress Configs
 ingress:
-  namespace: egov
-  enabled: true
   zuul: true
   context: "filestore"
 
@@ -39,14 +37,6 @@ cpu_limits: "300m"
 
 persistence:
   enabled: false
-
-# HPA Configuration
-hpa:
-  enabled: true
-  minReplicas: 1
-  maxReplicas: 5
-  targetCPUUtilizationPercentage: 80
-  targetMemoryUtilizationPercentage: 80
 
 # Additional Container Envs
 env: |
@@ -129,7 +119,3 @@ env: |
   - name: PRESIGNED_URL_EXPIRY_TIME_IN_SECS     
     value: {{ index .Values "filestore-url-validity" | quote }}   
   {{- end }}
-  - name: KAFKA_MALWARE_SCAN_ENABLED
-    value: {{ index .Values "kafka-malware-scan-enabled" | quote }}
-  - name: KAFKA_TOPICS_MALWARE_SCAN_REQUEST
-    value: {{ index .Values "kafka-topics-malware-scan-request" | quote }}  

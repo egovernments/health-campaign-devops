@@ -11,10 +11,6 @@ ingress:
 
 # Init Containers Configs
 initContainers:
-  gitSync:
-    enabled: true
-    repo: "git@github.com:egovernments/configs"
-    branch: "master"
   dbMigration:
     enabled: true
     schemaTable: "audit_service_schema"
