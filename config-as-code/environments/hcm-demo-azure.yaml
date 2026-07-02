@@ -138,6 +138,8 @@ cluster-configs:
               excel-ingestion: 'http://excel-ingestion:8080/'
               health-notification-service: 'http://health-notification-service.egov:8080/'
               egov-notification-push: "http://egov-notification-push.egov:8080/"
+              household-referral: "http://household-referral.egov:8080/"
+              individual-referral: "http://individual-referral.egov:8080/"
 
 disableAnnotationTimestamp: true
 
@@ -1530,6 +1532,51 @@ user-otp:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
+
+household-referral:
+  image:
+    repository: egovio/household
+    tag: HCMPRE-2656-HCM-Services-Household-5717dde
+  spring-datasource-tomcat-max-active: "30"
+  server-tomcat-max-threads: "40"
+  central-instance-build: true
+  central-instance-enabled: true
+  initContainers:
+    dbMigration:
+      enabled: false
+  heap: "-Xmx1536m -Xms768m"
+  hpa:
+    enabled: true
+    minReplicas: 7
+    maxReplicas: 11
+  cpu_requests: 300m
+  memory_requests: 1.5Gi
+  cpu_limits: 400m
+  memory_limits: 2Gi
+
+
+individual-referral:
+  image:
+    repository: egovio/individual
+    tag: customize-2.0-individual-6d6d26b
+  spring-datasource-tomcat-max-active: "30"
+  server-tomcat-max-threads: "40"
+  central-instance-build: true
+  central-instance-enabled: true
+  initContainers:
+    dbMigration:
+      enabled: false
+  heap: "-Xmx1536m -Xms768m"
+  hpa:
+    enabled: true
+    minReplicas: 7
+    maxReplicas: 11
+  cpu_requests: 300m
+  memory_requests: 1.5Gi
+  cpu_limits: 400m
+  memory_limits: 2Gi
+  egov-beneficiary-idgen-integration-enabled: "true"
+  individual-beneficiary-id-validation-enabled: "false"
 
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 kafka-config:

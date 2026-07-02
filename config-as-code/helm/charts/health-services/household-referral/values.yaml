@@ -1,0 +1,143 @@
+# Common Labels
+labels:
+  app: "household-referral"
+  group: "core"
+
+db-read-url-enabled: true
+
+# Ingress Configs
+ingress:
+  enabled: true
+  zuul: true
+  context: "household-referral"
+
+# Init Containers Configs
+initContainers:
+  dbMigration:
+    enabled: true
+    schemaTable: "household_schema"
+    image:
+      repository: "household-db"
+
+# Container Configs
+image:
+  repository: "household"
+replicas: "1"
+healthChecks:
+  enabled: true
+  livenessProbePath: "/household-referral/health"
+  readinessProbePath: "/household-referral/health"
+appType: "java-spring"
+tracing-enabled: true
+heap: "-Xmx1024m -Xms192m"
+java-args: ""
+persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/household-persister.yml"
+indexer-yml-path: "file:///work-dir/health-campaign-config/egov-persister/household-indexer.yml"
+kafka-consumer-group-id: health-household
+household-member-kafka-create-topic: save-household-member-topic
+household-member-kafka-update-topic: update-household-member-topic
+household-member-kafka-delete-topic: delete-household-member-topic
+household-member-cosumer-bulk-create-topic: household-member-consumer-bulk-create-topic
+household-member-cosumer-bulk-update-topic: household-member-consumer-bulk-update-topic
+household-member-cosumer-bulk-delete-topic: household-member-consumer-bulk-delete-topic
+household-consumer-bulk-delete-topic: delete-household-bulk-topic
+household-cosumer-bulk-create-topic: create-household-bulk-topic
+household-consumer-bulk-update-topic: update-household-bulk-topic
+household-kafka-create-topic: save-household-topic
+household-kafka-update-topic: update-household-topic
+household-kafka-delete-topic: delete-household-topic
+
+# Additional Container Envs
+env: |
+  - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+    value: {{ index .Values "kafka-consumer-group-id" | quote }}
+  - name: SERVER_SERVLET_CONTEXT_PATH
+    value: /household-referral
+  - name: SPRING_KAFKA_PRODUCER_KEY_SERIALIZER
+    value: org.apache.kafka.common.serialization.StringSerializer
+  {{- if index .Values "global" "tracer-errors-provideexceptionindetails" }}
+  - name: TRACER_ERRORS_PROVIDEEXCEPTIONINDETAILS
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: tracer-errors-provideexceptionindetails
+  {{- end }}
+  - name: EGOV_IDGEN_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: egov-idgen
+  - name: EGOV_IDGEN_PATH
+    value: "egov-idgen/id/_generate"
+  - name: EGOV_IDGEN_INTEGRATION_ENABLED
+    value: "true"
+  - name: HOUSEHOLD.IDGEN.ID.FORMAT
+    value: "household.id"
+  - name: SPRING_REDIS_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: redis-downsync-host
+  - name: SPRING_REDIS_PORT
+    value: "6379"
+  - name: SPRING_CACHE_TYPE
+    value: "redis"
+  - name: SPRING_CACHE_REDIS_TIME-TO-LIVE
+    value: "60"
+  - name: SPRING_CACHE_AUTOEXPIRY
+    value: "true"
+  - name: JAVA_OPTS
+    value: {{ index .Values "heap" | quote }}
+  - name: JAVA_ARGS
+    value: {{ index .Values "java-args" | quote }}
+  - name: JAVA_ENABLE_DEBUG
+    value: {{ index .Values "java-enable-debug" | quote }}
+  - name: SERVER_PORT
+    value: "8080"
+  - name: SECURITY_BASIC_ENABLED
+    value: "false"
+  - name: EGOV_INDIVIDUAL_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: individual
+  - name: EGOV_INDIVIDUAL_SEARCH_URL
+    value: "/individual/v1/_search"
+  - name: EGOV_BOUNDARY_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: boundary-service
+  - name: EGOV_BOUNDARY_SEARCH_URL
+    value: "/boundary-service/boundary/_search"
+  - name: EGOV_BOUNDARY_HIERARCHY_NAME
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: boundary-hierarchy
+  - name: HOUSEHOLD_MEMBER_KAFKA_CREATE_TOPIC
+    value: {{ index .Values "household-member-kafka-create-topic" | quote }}
+  - name: HOUSEHOLD_MEMBER_KAFKA_UPDATE_TOPIC
+    value: {{ index .Values "household-member-kafka-update-topic" | quote }}
+  - name: HOUSEHOLD_MEMBER_KAFKA_DELETE_TOPIC
+    value: {{ index .Values "household-member-kafka-delete-topic" | quote }}
+  - name: HOUSEHOLD.MEMBER.CONSUMER.BULK.CREATE.TOPIC
+    value: {{ index .Values "household-member-cosumer-bulk-create-topic" | quote }}
+  - name: HOUSEHOLD.MEMBER.CONSUMER.BULK.UPDATE.TOPIC
+    value: {{ index .Values "household-member-cosumer-bulk-update-topic" | quote }}
+  - name: HOUSEHOLD.MEMBER.CONSUMER.BULK.DELETE.TOPIC
+    value: {{ index .Values "household-member-cosumer-bulk-delete-topic" | quote }}
+  - name: MANAGEMENT_SECURITY_ENABLED
+    value: "false" 
+  - name: HOUSEHOLD.CONSUMER.BULK.DELETE.TOPIC
+    value: {{ index .Values "household-consumer-bulk-delete-topic" | quote }}
+  - name: HOUSEHOLD.CONSUMER.BULK.CREATE.TOPIC
+    value: {{ index .Values "household-cosumer-bulk-create-topic" | quote }}
+  - name: HOUSEHOLD.CONSUMER.BULK.UPDATE.TOPIC
+    value: {{ index .Values "household-consumer-bulk-update-topic" | quote }}
+  - name: HOUSEHOLD.KAFKA.CREATE.TOPIC
+    value: {{ index .Values "household-kafka-create-topic" | quote }}
+  - name: HOUSEHOLD.KAFKA.UPDATE.TOPIC
+    value: {{ index .Values "household-kafka-update-topic" | quote }}
+  - name: HOUSEHOLD.KAFKA.DELETE.TOPIC
+    value: {{ index .Values "household-kafka-delete-topic" | quote }}
