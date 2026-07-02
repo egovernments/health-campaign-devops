@@ -52,7 +52,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: egov-mdms-service
+        key: mdms-v2
   - name: EGOV_MDMS_V2_HOST
     valueFrom:
       configMapKeyRef:
@@ -215,9 +215,9 @@ env: |
   - name: EXCEL_INGESTION_GENERATE
     value: {{ .Values.excelIngestionGenerate | default "excel-ingestion/v1/data/generate/_init" }}
   - name: EGOV_SERVICE_DEFINITION_SEARCH_PATH
-    value: health-service-request/service/definition/v1/_search
+    value: service-request/service/definition/v1/_search
   - name: EGOV_SERVICE_DEFINITION_CREATE_PATH
-    value: health-service-request/service/definition/v1/_create
+    value: service-request/service/definition/v1/_create
   - name: EGOV_HOST
     valueFrom:
       configMapKeyRef:
