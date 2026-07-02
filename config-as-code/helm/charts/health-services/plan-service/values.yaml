@@ -23,7 +23,7 @@ initContainers:
 # Container Configs
 image:
   repository: "plan-service"
-replicas: "1"
+replicas: "2"
 healthChecks:
   enabled: true
   livenessProbePath: "/plan-service/health"
@@ -74,7 +74,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: project-factory
+        key: {{ index .Values "project-factory" | default "project-factory" | quote }}
   - name: EGOV_FACILITY_HOST
     valueFrom:
       configMapKeyRef:
@@ -94,7 +94,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: census-service
+        key: {{ index .Values "census-service" | default "census-service" | quote }}
   - name: WORKFLOW_INITIATE_ACTION
     value: "INITIATE"
   - name: WORKFLOW_INTERMEDIATE_ACTION
@@ -117,10 +117,6 @@ env: |
     value: "false"
   - name: MANAGEMENT_SECURITY_ENABLED
     value: "false"
-  {{- if index .Values "tracing-enabled" }}
-  - name: TRACER_OPENTRACING_ENABLED
-    value: "true" 
-  {{- end }}
   - name: RESOURCE_CONFIG_CONSUMER_PLAN_CREATE_TOPIC
     value: "resource-microplan-create-topic"
   - name: PLAN_DEFAULT_LIMIT

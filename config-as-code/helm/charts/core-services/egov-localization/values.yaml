@@ -20,7 +20,7 @@ initContainers:
 # Container Configs
 image:
   repository: "egov-localization"
-replicas: "2"
+replicas: "4"
 appType: "java-spring"
 tracing-enabled: true
 heap: "-Xmx256m -Xms256m"
@@ -36,10 +36,7 @@ env: |
   - name: JAVA_OPTS
     value: {{ index .Values "heap" | quote }}
   - name: SPRING_REDIS_HOST
-    valueFrom:
-      configMapKeyRef:
-        name: egov-config
-        key: redis-downsync-host
+    value: redis.backbone
   - name: SPRING_REDIS_PORT
     value: "6379"
   - name: JAEGER_SAMPLER_PARAM

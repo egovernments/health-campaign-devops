@@ -34,10 +34,6 @@ java-args: ""
 env: |
   - name: SPRING_KAFKA_CONSUMER_GROUP_ID
     value: health-notification-service
-  - name: SPRING_KAFKA_CONSUMER_MAX_POLL_RECORDS
-    value: "50"
-  - name: SPRING_KAFKA_CONSUMER_PROPERTIES_MAX_POLL_INTERVAL_MS
-    value: "600000"
   - name: SPRING_KAFKA_PRODUCER_KEY_SERIALIZER
     value: org.apache.kafka.common.serialization.StringSerializer
   {{- if index .Values "global" "tracer-errors-provideexceptionindetails" }}
@@ -51,8 +47,6 @@ env: |
     value: {{ index .Values "heap" | quote }}
   - name: JAVA_ARGS
     value: {{ index .Values "java-args" | quote }}
-  - name: JAVA_ENABLE_DEBUG
-    value: {{ index .Values "java-enable-debug" | quote }}
   - name: SERVER_PORT
     value: "8080"
   - name: SECURITY_BASIC_ENABLED
@@ -84,7 +78,7 @@ env: |
   - name: EGOV_LOCALIZATION_NOTIFICATION_MODULE
     value: "health-notification"
   - name: EGOV_LOCALIZATION_SUPPORTED_LOCALES
-    value: "en_DEMO,fr_DEMO"
+    value: "en_NG,fr_NG"
   - name: EGOV_HOUSEHOLD_HOST
     valueFrom:
       configMapKeyRef:
@@ -198,11 +192,6 @@ env: |
       configMapKeyRef:
         name: egov-config
         key: egov-state-level-tenant-id
-  - name: STATE_LEVEL_TENANTID_LENGTH
-    valueFrom:
-      configMapKeyRef:
-        name: egov-config
-        key: state-level-tenantid-length
   - name: KAFKA_TENANT_ID_PATTERN
     valueFrom:
       configMapKeyRef:
