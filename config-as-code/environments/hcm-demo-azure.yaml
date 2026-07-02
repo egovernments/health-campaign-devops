@@ -137,6 +137,7 @@ cluster-configs:
               boundary-management: 'http://boundary-management:8080/'
               excel-ingestion: 'http://excel-ingestion:8080/'
               health-notification-service: 'http://health-notification-service.egov:8080/'
+              egov-notification-push: "http://egov-notification-push.egov:8080/"
 
 disableAnnotationTimestamp: true
 
@@ -650,7 +651,20 @@ pdf-service:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.0-DEMO"                                   ##### Change repo branch with Your fork Repo branch
+      branch: "HCM-v2.0-DEMO"
+      env: |
+        - name: "GITSYNC_REPO"
+          value: "{{ .Values.initContainers.gitSync.repo }}"
+        - name: "GITSYNC_REF"
+          value: "{{ .Values.initContainers.gitSync.branch }}"
+        - name: "GITSYNC_DEPTH"
+          value: "1"
+        - name: "GITSYNC_ONE_TIME"
+          value: "true"
+        - name: "GITSYNC_SSH"
+          value: "true"
+        - name: "GITSYNC_ROOT"
+          value: "/work-dir"                                  
   data-config-urls: "file:///work-dir/health-campaign-config/pdf-service/data-config/health-bill-payment.json"
   format-config-urls: "file:///work-dir/health-campaign-config/pdf-service/format-config/health-bill-payment.json"
 
@@ -1399,7 +1413,68 @@ boundary-service:
         tag: master-1e8d2bb
   central-instance-build: true
   central-instance-enabled: true
-  
+
+airflow-trigger:
+  initContainers:
+    extraInitContainers: |
+      - name: run-migration
+        image: bhanuprakashmegov/airflow-custom-trigger:central4
+        command: [ "python", "migrate.py" ]
+        env:
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: egov-config
+                key: db-host
+          - name: DB_PORT
+            value: "5432"
+          - name: DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: egov-config
+                key: db-name
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: db
+                key: username
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db
+                key: password
+          - name: DB_SCHEMAS
+            value: "demo,"
+  image:
+    repository: "bhanuprakashmegov/airflow-custom-trigger"
+    tag: "central4"
+  hpa:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+  cpu_requests: 100m
+  memory_requests: 128Mi
+  cpu_limits: 150m
+  memory_limits: 256Mi
+
+egov-notification-push:
+  namespace: egov
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/egov-notification-push-db
+        tag: nigeria-go-deep-push-notification-batch-7d2ba39
+  image:
+    repository: egovio/egov-notification-push
+    tag: nigeria-go-deep-push-notification-batch-7d2ba39
+  replicas: 4
+  central-instance-build: true
+  central-instance-enabled: true
+  heap: "-Xmx1296m -Xms1024m"
+  cpu_requests: 200m
+  memory_requests: 1.5Gi
+  cpu_limits: 600m
+  memory_limits: 2Gi
 
 dss-dashboard:
   image:
