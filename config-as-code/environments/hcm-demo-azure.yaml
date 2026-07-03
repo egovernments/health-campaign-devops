@@ -727,7 +727,7 @@ redoc:
 gateway:
   image:
     repository: egovio/gateway
-    tag: gateway-2.9.2-39e3a96
+    tag: gatewat-rate-limit-per-route-7713c5c
   replicas: 2
   custom-filter-property: "false"
   tracing-enabled: "true"
