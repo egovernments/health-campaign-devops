@@ -89,8 +89,8 @@ cluster-configs:
               egov-user: "http://egov-user:8080/"
               egov-user-egov: "http://egov-user.egov:8080/"
               egov-location: "http://egov-location:8080/"
-              egov-filestore: "http://egov-filestore:8080/"
-              egov-localization: "http://egov-localization:8080/"
+              egov-filestore: "http://egov-filestore.egov:8080/"
+              egov-localization: "http://egov-localization.egov:8080/"
               egov-idgen: "http://egov-idgen:8080/"
               beneficiary-idgen: 'http://beneficiary-idgen:8080/'
               attendance-service: "http://health-attendance.egov:8080/"
@@ -796,6 +796,7 @@ egov-localization:
         repository: egovio/egov-localization-db
         tag: redis-localization-key-5c0a4c4
   replicas: 4
+  namespace: "egov"
   heap: '-Xmx4000m -Xms1024m'
   memory_limits: 4500Mi
   cpu_limits: 1200m
