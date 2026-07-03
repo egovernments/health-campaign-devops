@@ -138,7 +138,7 @@ cluster-configs:
               excel-ingestion: 'http://excel-ingestion:8080/'
               health-notification-service: 'http://health-notification-service.egov:8080/'
               egov-malware-detection: "http://egov-malware-detection.egov:8080/"
-              redis-host: "redis.backbone"
+              redis-host: "redis.backbone.svc.cluster.local"
 
 disableAnnotationTimestamp: true
 

@@ -138,10 +138,10 @@ env: |
         key: home-isolation-chatbot
   {{- end }}
   - name: SPRING_DATA_REDIS_HOST
-  {{- if index .Values "cluster-configs" "configmaps" "egov-service-host" "data" "redis-host" }}
+  {{- if index .Values "cluster-configs" "configmaps" "egov-config" "data" "redis-host" }}
     valueFrom:
       configMapKeyRef:
-        name: egov-service-host
+        name: egov-config
         key: redis-host
   {{- else }}
     value: "redis.backbone"
