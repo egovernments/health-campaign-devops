@@ -1254,7 +1254,7 @@ egov-notification-push:
   image:
     repository: egovio/egov-notification-push
     tag: master-7f8a6b8
-  replicas: 4
+  replicas: 1
   central-instance-build: true
   central-instance-enabled: true
   heap: "-Xmx1296m -Xms1024m"
