@@ -138,6 +138,7 @@ cluster-configs:
               excel-ingestion: 'http://excel-ingestion:8080/'
               health-notification-service: 'http://health-notification-service.egov:8080/'
               egov-malware-detection: "http://egov-malware-detection.egov:8080/"
+              egov-notification-push: "http://egov-notification-push.egov:8080/"
 
 disableAnnotationTimestamp: true
 
@@ -392,12 +393,12 @@ beneficiary-idgen:
 household:
   image:
     repository: egovio/household
-    tag: master-61631c4
+    tag: master-7f8a6b8
   initContainers:
     dbMigration:
       image:
         repository: egovio/household-db
-        tag: master-61631c4
+        tag: master-7f8a6b8
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -930,12 +931,12 @@ egov-accesscontrol:
 facility:
   image:
     repository: egovio/facility
-    tag: master-eb25d83
+    tag: master-7f8a6b8
   initContainers:
     dbMigration:
       image:
         repository: egovio/facility-db
-        tag: master-eb25d83
+        tag: master-7f8a6b8
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: true
@@ -946,12 +947,12 @@ facility:
 project:
   image:
     repository: egovio/project
-    tag: master-61631c4
+    tag: master-7f8a6b8
   initContainers:
     dbMigration:
       image:
         repository: egovio/project-db
-        tag: master-61631c4
+        tag: master-7f8a6b8
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -963,12 +964,12 @@ project:
 individual:
   image:
     repository: egovio/individual
-    tag: master-25a90a3
+    tag: master-7f8a6b8
   initContainers:
     dbMigration:
       image:
         repository: egovio/individual-db
-        tag: master-25a90a3
+        tag: master-7f8a6b8
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -990,12 +991,12 @@ individual:
 product:
   image:
     repository: egovio/product
-    tag: master-eb25d83
+    tag: master-7f8a6b8
   initContainers:
     dbMigration:
       image:
         repository: egovio/product-db
-        tag: master-eb25d83
+        tag: master-7f8a6b8
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1007,12 +1008,12 @@ product:
 referralmanagement:
   image:
     repository: egovio/referralmanagement
-    tag: master-0590cb7
+    tag: master-7f8a6b8
   initContainers:
     dbMigration:
       image:
         repository: egovio/referralmanagement-db
-        tag: master-0590cb7
+        tag: master-7f8a6b8
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: true
@@ -1038,12 +1039,12 @@ pgr-services:
 stock:
   image:
     repository: egovio/stock
-    tag: master-eb25d83
+    tag: master-7f8a6b8
   initContainers:
     dbMigration:
       image:
         repository: egovio/stock-db
-        tag: master-eb25d83
+        tag: master-7f8a6b8
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1054,10 +1055,10 @@ project-factory:
     dbMigration:
       image:
         repository: "project-factory-db"
-        tag: master-aa57e79
+        tag: master-7f8a6b8
   image:
     repository: egovio/project-factory
-    tag: master-aa57e79
+    tag: master-7f8a6b8
   central-instance-enabled: false
   central-instance-build: true
   namespace: egov
@@ -1192,12 +1193,12 @@ resource-generator:
 excel-ingestion:
   image:
     repository: egovio/excel-ingestion
-    tag: master-25a90a3
+    tag: master-7f8a6b8
   initContainers:
     dbMigration:
       image:
         repository: egovio/excel-ingestion-db
-        tag: master-25a90a3
+        tag: master-7f8a6b8
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
   defaultLocale: 'en_MZ'
@@ -1211,10 +1212,10 @@ worker-registry:
     dbMigration:
       image:
         repository: egovio/worker-registry-db
-        tag: customize-2.0-worker-registry-8fce267
+        tag: master-7f8a6b8
   image:
     repository: egovio/worker-registry
-    tag: customize-2.0-worker-registry-8fce267
+    tag: master-7f8a6b8
   central-instance-build: true
   central-instance-enabled: true
   central-instance-name: egov
@@ -1228,10 +1229,10 @@ health-notification-service:
     dbMigration:
       image:
         repository: egovio/health-notification-service-db
-        tag: health-notification-service-b83cc15
+        tag: master-7f8a6b8
   image:
     repository: egovio/health-notification-service
-    tag: health-notification-service-b83cc15
+    tag: master-7f8a6b8
   replicas: 1
   central-instance-build: true
   central-instance-enabled: true
@@ -1241,7 +1242,25 @@ health-notification-service:
   cpu_limits: 200m
   memory_limits: 512Mi
 
-  
+egov-notification-push:
+  namespace: egov
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/egov-notification-push-db
+        tag: master-7f8a6b8
+  image:
+    repository: egovio/egov-notification-push
+    tag: master-7f8a6b8
+  replicas: 1
+  central-instance-build: true
+  central-instance-enabled: true
+  heap: "-Xmx1296m -Xms1024m"
+  cpu_requests: 200m
+  memory_requests: 1.5Gi
+  cpu_limits: 600m
+  memory_limits: 2Gi
+
 transformer:
   image:
     repository: egovio/transformer
