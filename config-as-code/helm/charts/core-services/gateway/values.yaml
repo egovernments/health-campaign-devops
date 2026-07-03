@@ -148,7 +148,7 @@ env: |
         name: egov-service-host
         key: redis-host
   {{- else }}
-    value: "redis.backbone"
+    value: "redis.backbone.svc.cluster.local"
   {{- end }}
   - name: SPRING_CODEC_MAX_IN_MEMORY_SIZE
     value: "4194304"
