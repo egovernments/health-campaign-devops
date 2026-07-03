@@ -1135,7 +1135,7 @@ boundary-management:
   DEBUG: 'true'
   namespace: 'egov'
   logLevel: 'debug'
-  defaultLocale: 'en_MZ'
+  defaultLocale: 'en_DEMO'
   mdmsV2SearchEndpoint: 'mdms-v2/v2/_search'
   mdmsV1SearchEndpoint: 'mdms-v2/v1/_search'
   defaultTenantId: 'mz'
@@ -1201,7 +1201,7 @@ excel-ingestion:
         tag: master-7f8a6b8
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
-  defaultLocale: 'en_MZ'
+  defaultLocale: 'en_DEMO'
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
