@@ -35,7 +35,7 @@ heap: "-Xmx256m -Xms256m"
 java-args: "-Dspring.profiles.active=monitoring"
 
 master-password-provider: software
-
+secret-name: "egov-enc-service"
 # Additional Container Envs
 env: |
   - name: SERVER_PORT
@@ -48,7 +48,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: egov-mdms-service
+        key: mdms-v2
   - name: EGOV_MDMS_SEARCH_ENDPOINT
     value: "/mdms-v2/v1/_search"
   - name: EGOV_MDMS_PATH
@@ -76,17 +76,17 @@ env: |
   - name: MASTER_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: egov-enc-service
+        name: {{ index .Values "secret-name" | quote }}
         key: master.password    
   - name: MASTER_SALT
     valueFrom:
       secretKeyRef:
-        name: egov-enc-service
+        name: {{ index .Values "secret-name" | quote }}
         key: master.salt
   - name: MASTER_INITIALVECTOR
     valueFrom:
       secretKeyRef:
-        name: egov-enc-service
+        name: {{ index .Values "secret-name" | quote }}
         key: master.initialvector
   {{- end }}
   {{- if eq (index .Values "master-password-provider") "awskms" }}
@@ -95,12 +95,12 @@ env: |
   - name: AWS_KMS_ACCESS_KEY
     valueFrom:
       secretKeyRef:
-        name: egov-enc-service
+        name: {{ index .Values "secret-name" | quote }}
         key: aws-kms-access-key
   - name: AWS_KMS_SECRET_KEY
     valueFrom:
       secretKeyRef:
-        name: egov-enc-service
+        name: {{ index .Values "secret-name" | quote }}
         key: aws-kms-secret-key
   - name: AWS_KMS_MASTER_PASSWORD_KEY_ID
     value: {{ index .Values "aws-kms-master-password-key-id" | quote }}
