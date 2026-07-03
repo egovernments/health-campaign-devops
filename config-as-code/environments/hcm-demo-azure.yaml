@@ -38,7 +38,7 @@ cluster-configs:
                 is-environment-central-instance: "true"
                 egov-state-level-tenant-id: "mz"
                 state-level-tenant-id: "mz"
-                kafka-tenant-id-pattern: "demo-"
+                kafka-tenant-id-pattern: "(mz|demo)-"
                 s3-assets-bucket: "(pg-health-egov-assets|egov-health-playground-assets)"
                 es-host: "elasticsearch-data.es-cluster"
                 es-host-6: "elasticsearch-data.es-cluster"
@@ -59,7 +59,7 @@ cluster-configs:
                 timezone: "UTC"
                 tracer-errors-provideexceptionindetails: "true"
                 egov-internal-microservice-user-uuid: fa0f820c-49df-46bb-8e62-8a0ec5d9af5e
-                db-schema-names: "demo"
+                db-schema-names: "mz,demo"
 
         egov-service-host:
             namespace: [ egov, es-cluster, monitoring, demo ]
@@ -205,7 +205,6 @@ core-ui:
       <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript ></script>
       ';" 
 
-      
 
 digit-ui:
   image:
@@ -460,7 +459,7 @@ egov-user:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
-  db-schema-names: "kano,kebbi"
+  db-schema-names: "mz,demo"
   replicas: 3
   heap: "-Xmx512m -Xms256m"
   memory_limits: 512Mi
@@ -539,30 +538,11 @@ egov-malware-detection:
   memory_limits: "768Mi"
 
 
-ws-services:
-  wcid-format: "WS/[CITY.CODE]/[fy:yyyy-yy]/[SEQ_EGOV_COMMON]"
-
-bpa-services:
-  memory_limits: 384Mi
-  java-args: -Dspring.profiles.active=monitoring
-  java-debug: true
-  tracing-enabled: "true"
-  egov.idgen.bpa.applicationNum.format: PB-BP-[cy:yyyy-MM-dd]-[SEQ_EG_BP_APN]
-
-bpa-calculator:
-  memory_limits: 384Mi
-  java-args: -Dspring.profiles.active=monitoring
-  java-debug: true
-  tracing-enabled: "true"
-
-sw-services:
-  scid-format: "SW/[CITY.CODE]/[fy:yyyy-yy]/[SEQ_EGOV_COMMON]"
-
 audit-service:
   image:
     repository: egovio/audit-service
     tag: DIGIT-2.9-LTS-07f47790b8-12
-  persist-yml-path: "https://raw.githubusercontent.com/egovernments/health-campaign-config/HCM-v1.7-DEMO/egov-persister/mdms-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/HCM-v1.7-DEMO/egov-persister/boundary-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/HCM-v1.7-DEMO/egov-persister/project-factory-persister.yml"
+  persist-yml-path: "https://raw.githubusercontent.com/egovernments/health-campaign-config/HCM-v2.1-DEMO/egov-persister/mdms-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/HCM-v2.1-DEMO/egov-persister/boundary-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/HCM-v2.1-DEMO/egov-persister/project-factory-persister.yml"
   initContainers:
     dbMigration:
       image:
@@ -587,7 +567,7 @@ egov-mdms-service:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-mdms"   ##### Change repo url with Your fork Repo url
-      branch: "HCM-v1.7-DEMO"                                        ##### Change repo branch with Your fork Repo branch
+      branch: "HCM-v2.1-DEMO"                                        ##### Change repo branch with Your fork Repo branch
   mdms-folder: "health-campaign-mdms"
   masters-config-url: "file:///work-dir/health-campaign-mdms/master-config.json"
   java-args: -Dspring.profiles.active=monitoring
@@ -644,7 +624,7 @@ egov-data-uploader:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
-      branch: "HCM-v1.7-DEMO"                                    ##### Change repo branch with Your fork Repo branch
+      branch: "HCM-v2.1-DEMO"                                    ##### Change repo branch with Your fork Repo branch
 
 egov-searcher:
   search-yaml-path: ""
@@ -814,45 +794,11 @@ collection-services:
   receipt-search-defaultsize: 30
   user-create-enabled: "true"
 
-collection-receipt-voucher-consumer:
-  jalandhar-erp-host: "https://jalandhar-qa.egovernments.org/"
-  mohali-erp-host: "https://mohali-qa.egovernments.org/"
-  nayagaon-erp-host: "https://nayagaon-qa.egovernments.org/"
-  amritsar-erp-host: "https://amritsar-qa.egovernments.org/"
-  kharar-erp-host: "https://kharar-qa.egovernments.org/"
-  zirakpur-erp-host: "https://zirakpur-qa.egovernments.org/"
 
 finance-collections-voucher-consumer:
   erp-env-name: "demo"
   erp-domain-name: "egovernments.org"
 
-# rainmaker-pgr >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-rainmaker-pgr:
-  notification-sms-enabled: "true"
-  notification-email-enabled: "false"
-  new-complaint-enabled: "true"
-  reassign-complaint-enabled: "true"
-  reopen-complaint-enabled: "true"
-  comment-by-employee-notif-enabled: "false"
-  notification-allowed-status: "open,assigned,rejected,resolved"
-
-pt-services-v2:
-  pt-userevents-pay-link: "/citizen/otpLogin?mobileNo=$mobile&redirectTo=egov-common/pay?consumerCode=$consumerCode&tenantId=$tenantId"
-
-pt-calculator-v2:
-  logging-level: "DEBUG"
-
-tl-services:
-  heap: "-Xmx128m -Xms64m"
-  memory_limits: 384Mi
-  java-args: -Dspring.profiles.active=monitoring
-  tl-application-num-format: "APP-[SEQ_EG_TL_APL]"
-  tl-license-num-format: "MP-LEP-[SEQ_EG_PT_LN]"
-  tl-userevents-pay-link: "citizen/otpLogin?mobileNo=$mobile&redirectTo=egov-common/pay?consumerCode=$applicationNo&tenantId=$tenantId"
-  tl-payment-topic-name: "egov.collection.payment-create"
-  host-link: "https://egov-demo.egovernments.org/citizen/"
-  pdf-link: "https://egov-demo.egovernments.org/egov-pdf/download/epass?tenantId={TENANTID}&uuid={UUID}"
-  tl-search-default-limit: "100"
 
 
 egov-workflow-v2:
