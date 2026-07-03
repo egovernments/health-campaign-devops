@@ -10,21 +10,19 @@ namespace: egov
 initContainers:
   extraInitContainers: |
     - name: "gateway-kubernetes-discovery"
-      image: {{ .Values.global.containerRegistry }}/gateway-kubernetes-discovery:master-gateway-kubernetes-discovery-host-259fe06659-14
-      env: 
+      image: {{ .Values.global.containerRegistry }}/gateway-kubernetes-discovery:master-gateway-kubernetes-discovery-host-76493aa615-13
+      env:
       - name: "OUTPUT_FILE_PATH"
-        value: "/etc/zuul/routes.properties" 
+        value: "/etc/zuul/routes.properties"
       - name: "NAMESPACE"
-        value: "egov,chad,congob"
-      - name: DEFAULT_INTERNAL_GATEWAY_SERVICE
-        value: internal-gateway-scg.egov         
+        value: "egov,demo"
       volumeMounts:
       - name: zuul-routes
         mountPath: /etc/zuul
 
 extraVolumes: |
   - name: zuul-routes
-    emptyDir: {}  
+    emptyDir: {}
 
 extraVolumeMounts: |
   - name: zuul-routes
@@ -68,7 +66,7 @@ env: |
     value: "true"
   - name: URL_POSTHOOK_LISTS
     value: {{ index .Values "posthook-config" | quote }}
-  - name: URL_PREHOOK_LISTS        
+  - name: URL_PREHOOK_LISTS
     value: {{ index .Values "prehook-config" | quote }}
   - name: SERVER_PORT
     value: "8080"
@@ -83,15 +81,15 @@ env: |
   - name: EGOV_CUSTOM_ASYNC_FILTER_TOPIC
     value: res-custom-filter
   - name: EGOV_OPEN_ENDPOINTS_WHITELIST
-    value: {{ index .Values "egov-open-endpoints-whitelist" | quote }}  
+    value: {{ index .Values "egov-open-endpoints-whitelist" | quote }}
   - name: EGOV_MIXED_MODE_ENDPOINTS_WHITELIST
-    value: {{ index .Values "egov-mixed-mode-endpoints-whitelist" | quote }}    
+    value: {{ index .Values "egov-mixed-mode-endpoints-whitelist" | quote }}
   - name: EVENTLOG_ENABLED
-    value: {{ index .Values "eventlog-enabled" | quote }}   
+    value: {{ index .Values "eventlog-enabled" | quote }}
   - name: EVENTLOG_TOPIC
-    value: {{ index .Values "eventlog-topic" | quote }}   
+    value: {{ index .Values "eventlog-topic" | quote }}
   - name: EVENTLOG_URLS_WHITELIST
-    value: {{ index .Values "eventlog-whitelist" | quote }}   
+    value: {{ index .Values "eventlog-whitelist" | quote }}
   - name: EGOV_AUTHORIZE_ACCESS_CONTROL_HOST
     valueFrom:
       configMapKeyRef:
@@ -101,11 +99,15 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: egov-user     
+        key: egov-user
   - name: GATEWAY_HOST_CONNECT_TIMEOUT_MILLIS
     value: "20000"
   - name: GATEWAY_HOST_SOCKET_TIMEOUT_MILLIS
     value: "60000"
+  {{- if index .Values "tracing-enabled" }}
+  - name: TRACER_OPENTRACING_ENABLED
+    value: "true"
+  {{- end }}
   - name: SECURITY_BASIC_ENABLED
     value: "false"
   - name: MANAGEMENT_SECURITY_ENABLED
@@ -116,16 +118,16 @@ env: |
     valueFrom:
       configMapKeyRef:
         key: egov-state-level-tenant-id
-        name: egov-config    
+        name: egov-config
   - name: SPRING_DATA_REDIS_DEFAULT_REPLENISHRATE
     value: "10"
   - name: SPRING_DATA_REDIS_DEFAULT_BURSTCAPACITY
     value: "10"
   - name: SPRING_ROUTES_FILEPATH
-    value: "file:/etc/zuul/routes.properties"   
+    value: "file:/etc/zuul/routes.properties"
   {{- if index .Values "home-isolation-chatbot-router-enabled" }}
   - name: HOME_ISOLATION_CHATBOT_ROUTER_ENABLED
-    value: {{ index .Values "home-isolation-chatbot-router-enabled" | quote }}  
+    value: {{ index .Values "home-isolation-chatbot-router-enabled" | quote }}
   - name: CHATBOT_CONTEXT_PATH
     value: "/whatsapp-webhook"
   - name: EGOV_USER_ISOLATION_SERVICE_HOST
@@ -139,18 +141,16 @@ env: |
         name: egov-service-host
         key: home-isolation-chatbot
   {{- end }}
-  - name: SPRING_DATA_REDIS_HOST     
-  {{- if index .Values "cluster-configs" "configmaps" "egov-service-host" "data" "redis-host" }}   
+  - name: SPRING_DATA_REDIS_HOST
+  {{- if index .Values "cluster-configs" "configmaps" "egov-service-host" "data" "redis-host" }}
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: redis-host   
+        key: redis-host
   {{- else }}
     value: "redis.backbone"
   {{- end }}
   - name: SPRING_CODEC_MAX_IN_MEMORY_SIZE
     value: "4194304"
-  - name: SPRING_CLOUD_GATEWAY_DEFAULT_FILTERS_0_NAME
-    value: RequestRateLimiter
   - name: SPRING_DATA_REDIS_RATELIMIT_ENABLED
     value: {{ index .Values "spring-data-redis-ratelimit-enabled" | quote }}
