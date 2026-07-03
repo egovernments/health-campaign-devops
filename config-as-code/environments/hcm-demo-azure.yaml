@@ -29,7 +29,7 @@ cluster-configs:
                 demo-db-url: "jdbc:postgresql://hcm-demo-server-v2.postgres.database.azure.com:5432/healthdemo?currentSchema=demo"
                 domain: hcm-demo.digit.org ## Add your Domain Name
                 redis-host: "redis.backbone.svc.cluster.local"
-                redis-downsync-host: ""
+                redis-downsync-host: "redis.backbone.svc.cluster.local"
                 egov-services-fqdn-name: https://hcm-demo.digit.org/ ## Add your Domain Name
                 kibana-host: http://release-name-kibana.es-cluster:5601/
                 kibana-base-path: kibana
