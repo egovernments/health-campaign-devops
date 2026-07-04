@@ -13,10 +13,14 @@ initContainers:
 
 # Ingress Configs
 ingress:
-  namespace: egov
-  enabled: true
   zuul: true
+  enabled: true
   context: "filestore"
+  waf:
+    enabled: false
+  additionalAnnotations: |
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/proxy-body-size: 8m
 
 # Container Configs
 image:
@@ -34,19 +38,14 @@ heap: "-Xmx192m -Xms192m"
 file-storage-mount-path: "/filestore"
 is-nfs-enabled: false
 is-s3-enabled: true
-memory_limits: "512Mi"
-cpu_limits: "300m"
+
+# Malware Scanning Configuration
+# Publishes uploaded files to the scan topic consumed by egov-malware-detection
+kafka-malware-scan-enabled: true
+kafka-topics-malware-scan-request: "egov.malware.file-scan-request"
 
 persistence:
   enabled: false
-
-# HPA Configuration
-hpa:
-  enabled: true
-  minReplicas: 1
-  maxReplicas: 5
-  targetCPUUtilizationPercentage: 80
-  targetMemoryUtilizationPercentage: 80
 
 # Additional Container Envs
 env: |
@@ -61,9 +60,7 @@ env: |
   - name: TEMP_FOLDER_PATH
     value: "/tmp"
   - name: SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE
-    value: "6MB"
-  - name: ISAZURESTORAGEENABLED
-    value: "true"
+    value: "50MB"
   - name: ISNFSSTORAGEENABLED
     value: {{ index .Values "is-nfs-enabled" | quote }}
   {{- if index .Values "is-nfs-enabled" }}
@@ -79,7 +76,7 @@ env: |
   {{- end }}
   {{- if index .Values "is-s3-enabled" }}
   - name: ISS3ENABLED
-    value: "false"
+    value: "true"
   {{- end }}
   {{- if index .Values "minio-enabled" }}
   - name: AWS_KEY
@@ -93,19 +90,17 @@ env: |
         key: secretkey
         name: minio
   {{else}}
-  - name: AZURE_ACCOUNTNAME
+  - name: AWS_KEY
     valueFrom:
       secretKeyRef:
         name: egov-filestore
         key: awskey
-  - name: AZURE_ACCOUNTKEY
+  - name: AWS_SECRETKEY
     valueFrom:
       secretKeyRef:
         name: egov-filestore
         key: awssecretkey
   {{- end }}
-  - name: AZURE_DEFAULTENDPOINTSPROTOCOL
-    value: https
   {{- if index .Values "is-bucket-fixed" }}
   - name: IS_BUCKET_FIXED
     value: {{ index .Values "is-bucket-fixed" | quote }}
