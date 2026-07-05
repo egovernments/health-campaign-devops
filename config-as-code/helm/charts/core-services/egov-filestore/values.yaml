@@ -13,19 +13,15 @@ initContainers:
 
 # Ingress Configs
 ingress:
-  zuul: true
+  namespace: egov
   enabled: true
+  zuul: true
   context: "filestore"
-  waf:
-    enabled: false
-  additionalAnnotations: |
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/proxy-body-size: 8m
 
 # Container Configs
 image:
   repository: "egov-filestore"
-replicas: "1"
+replicas: "2"
 healthChecks:
   enabled: true
   livenessProbePath: "/filestore/health"
@@ -34,38 +30,51 @@ appType: "java-spring"
 tracing-enabled: true
 is-bucket-fixed: "true"
 fixed-bucketname: "egov-rainmaker"
-heap: "-Xmx192m -Xms192m"
+heap: "-Xmx512m -Xms512m"
 file-storage-mount-path: "/filestore"
 is-nfs-enabled: false
 is-s3-enabled: true
-
-# Malware Scanning Configuration
-# Publishes uploaded files to the scan topic consumed by egov-malware-detection
-kafka-malware-scan-enabled: true
-kafka-topics-malware-scan-request: "egov.malware.file-scan-request"
+memory_limits: "1Gi"
+cpu_limits: "500m"
+memory_requests: "512Mi"
+cpu_requests: "250m"
 
 persistence:
   enabled: false
+
+# HPA Configuration
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
 
 # Additional Container Envs
 env: |
   - name: SERVER_PORT
     value: "8080"
   - name: SECURITY_BASIC_ENABLED
-    value: "false"
+    value: "false"  
   - name: MANAGEMENT_SECURITY_ENABLED
-    value: "false"
+    value: "false" 
   - name: FILE_STORAGE_MOUNT_PATH
     value: {{ index .Values "file-storage-mount-path" | quote }}
   - name: TEMP_FOLDER_PATH
     value: "/tmp"
   - name: SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE
-    value: "50MB"
+    value: "150MB"
+  - name: SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE
+    value: "180MB"
   - name: ISNFSSTORAGEENABLED
     value: {{ index .Values "is-nfs-enabled" | quote }}
   {{- if index .Values "is-nfs-enabled" }}
+  - name: MINIO_ENABLED
+    value: "false"
   - name: ISNFSSTORAGEENABLED
     value: "true"
+  - name: FIXED_BUCKET_REGION
+    value: "af-south-1"
   - name: DISK_STORAGE_HOST_URL
     valueFrom:
       configMapKeyRef:
@@ -77,7 +86,7 @@ env: |
   {{- if index .Values "is-s3-enabled" }}
   - name: ISS3ENABLED
     value: "true"
-  {{- end }}
+  {{- end }}  
   {{- if index .Values "minio-enabled" }}
   - name: AWS_KEY
     valueFrom:
@@ -113,18 +122,14 @@ env: |
     value: {{ index .Values "heap" | quote }}
   - name: ALLOWED_FORMATS_MAP
     value: {{ index .Values "allowed-file-formats-map" | quote }}
-  {{- if index .Values "minio-enabled" }}
+  {{- if index .Values "minio-enabled" }}  
   - name: MINIO_URL
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
         key: minio-url
   {{- end }}
-  {{- if index .Values "filestore-url-validity" }}
-  - name: PRESIGNED_URL_EXPIRY_TIME_IN_SECS
-    value: {{ index .Values "filestore-url-validity" | quote }}
+  {{- if index .Values "filestore-url-validity" }}   
+  - name: PRESIGNED_URL_EXPIRY_TIME_IN_SECS     
+    value: {{ index .Values "filestore-url-validity" | quote }}   
   {{- end }}
-  - name: KAFKA_MALWARE_SCAN_ENABLED
-    value: {{ index .Values "kafka-malware-scan-enabled" | quote }}
-  - name: KAFKA_TOPICS_MALWARE_SCAN_REQUEST
-    value: {{ index .Values "kafka-topics-malware-scan-request" | quote }}
