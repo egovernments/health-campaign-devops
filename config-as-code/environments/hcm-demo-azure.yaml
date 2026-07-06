@@ -1080,7 +1080,7 @@ project-factory:
   excel-ingestion-host: excel-ingestion
   IS_ENVIRONMENT_CENTRAL_INSTANCE: true
   DB_SCHEMA: public
-  defaultTenantId: mz
+  defaultTenantId: demo
   saveCampaignDetails: "save-campaign-details"
   updateCampaignDetails: "update-campaign-details"
   saveProjectCampaignDetailsTopic: "save-project-campaign-details"
@@ -1140,7 +1140,7 @@ boundary-management:
   defaultLocale: 'en_DEMO'
   mdmsV2SearchEndpoint: 'mdms-v2/v2/_search'
   mdmsV1SearchEndpoint: 'mdms-v2/v1/_search'
-  defaultTenantId: 'mz'
+  defaultTenantId: 'demo'
   validateCampaignIdInMetadata: 'false'
   central-instance-name: egov
   central-instance-build: true
