@@ -1065,7 +1065,7 @@ project-factory:
   central-instance-build: true
   namespace: egov
   heap: "-Xmx2048m -Xms512m"
-  replicas: 1
+  replicas: 3
   cpu_requests: 200m
   memory_requests: 768Mi
   cpu_limits: 1000m
