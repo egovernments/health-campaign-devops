@@ -336,6 +336,8 @@ env: |
     value: {{ .Values.ExcludeHierarchyTypeFromBoundaryCodes | default "false" | quote }}
   - name: EXCLUDE_BOUNDARY_NAME_AT_LAST_FROM_BOUNDARY_CODES
     value: {{ .Values.ExcludeBoundaryTypeFromLastBoundaryCodes | default "false" | quote }}
+  - name: IS_ENVIRONMENT_CENTRAL_INSTANCE
+    value: {{ .Values.IS_ENVIRONMENT_CENTRAL_INSTANCE | default "false" | quote }}
   - name: KAFKA_START_CAMPAIGN_MAPPING_TOPIC
     value: {{ .Values.startCampaignMappingTopic | default "start-campaign-mapping" }}
   - name: KAFKA_CREATE_RESOURCE_DETAILS_TOPIC
