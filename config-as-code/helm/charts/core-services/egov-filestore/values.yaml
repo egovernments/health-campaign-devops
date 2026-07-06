@@ -29,7 +29,7 @@ healthChecks:
 appType: "java-spring"
 tracing-enabled: true
 is-bucket-fixed: "true"
-fixed-bucketname: "egov-filestore"
+fixed-bucketname: "egov-rainmaker"
 heap: "-Xmx512m -Xms512m"
 file-storage-mount-path: "/filestore"
 is-nfs-enabled: false
