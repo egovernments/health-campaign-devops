@@ -460,7 +460,7 @@ env: |
         name: egov-config
         key: timezone
   - name: KAFKA_CONSUMER_TOPIC_PREFIX
-      valueFrom:
+    valueFrom:
       configMapKeyRef:
         name: egov-config
         key: kafka-tenant-id-pattern
