@@ -93,13 +93,13 @@ env: |
   - name: AZURE_ACCOUNTNAME
     valueFrom:
       secretKeyRef:
-        name: egov-filestore-azure
-        key: azurestorageaccountname
+        name: egov-filestore
+        key: awskey
   - name: AZURE_ACCOUNTKEY
     valueFrom:
       secretKeyRef:
-        name: egov-filestore-azure
-        key: azurestorageaccountkey
+        name: egov-filestore
+        key: awssecretkey
   - name: AZURE_DEFAULTENDPOINTSPROTOCOL
     value: "https"
   {{- else if index .Values "is-s3-enabled" }}
