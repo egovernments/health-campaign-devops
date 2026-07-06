@@ -1079,7 +1079,7 @@ project-factory:
   census-service: census-service
   excel-ingestion-host: excel-ingestion
   IS_ENVIRONMENT_CENTRAL_INSTANCE: true
-  DB_SCHEMA: public
+  DB_SCHEMA: demo
   defaultTenantId: demo
   saveCampaignDetails: "save-campaign-details"
   updateCampaignDetails: "update-campaign-details"
