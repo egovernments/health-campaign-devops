@@ -288,14 +288,18 @@ egov-filestore:
     targetMemoryUtilizationPercentage: 80
   volume: /opt/eGov/filestore
   is-bucket-fixed: "true"
-  minio.url: "https://s3.amazonaws.com"
-  aws.s3.url: "https://s3.amazonaws.com"
-  is-s3-enabled: "true"
+  # Azure Blob Storage Configuration
+  is-azure-storage-enabled: "true"
+  azure-blob-container: "egov-filestore"
+  azure-defaultEndpointsProtocol: "https"
+  azure-blob-endpoint: "https://egovfilestorehcm.blob.core.windows.net/"
+  # Disable S3
+  is-s3-enabled: "false"
   minio-enabled: false
   allowed-file-formats-map: "{jpg:{'image/jpg','image/jpeg'},jpeg:{'image/jpeg','image/jpg'},png:{'image/png'},pdf:{'application/pdf'},odt:{'application/vnd.oasis.opendocument.text'},ods:{'application/vnd.oasis.opendocument.spreadsheet'},docx:{'application/x-tika-msoffice','application/x-tika-ooxml','application/vnd.oasis.opendocument.text','application/msword'},doc:{'application/x-tika-msoffice','application/x-tika-ooxml','application/vnd.oasis.opendocument.text','application/msword'},dxf:{'text/plain','application/dxf','application/octet-stream','image/vnd.dxf','image/vnd.dxf;format=ascii','image/vnd.dxf;format=binary','image/vnd.dxb'},csv:{'text/plain'},txt:{'text/plain'},xlsx:{'application/x-tika-ooxml','application/x-tika-msoffice','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/zip','multipart/form-data'},xls:{'application/x-tika-ooxml','application/x-tika-msoffice','application/vnd.ms-excel','multipart/form-data'},zip:{'application/zip','application/octet-stream'},geojson:{'application/json','text/plain','application/geo+json','multipart/form-data'}}"
   allowed-file-formats: "jpg,jpeg,png,doc,docx,pdf,odt,ods,text,dxf,xls,xlsx"
   filestore-url-validity: 3600
-  fixed-bucketname: pb-health-egov-assets  ## Add filestore bucket name
+  fixed-bucketname: egov-filestore  ## Azure container name
   kafka-malware-scan-enabled: false
   kafka-topics-malware-scan-request: "egov.malware.file-scan-request"
 

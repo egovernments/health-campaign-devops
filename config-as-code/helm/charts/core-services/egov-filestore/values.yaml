@@ -86,7 +86,26 @@ env: |
   {{- if index .Values "is-s3-enabled" }}
   - name: ISS3ENABLED
     value: "true"
-  {{- end }}  
+  {{- end }}
+  {{- if index .Values "is-azure-storage-enabled" }}
+  - name: ISAZURESTORAGEENABLED
+    value: "true"
+  - name: AZURE_STORAGE_ACCOUNT_NAME
+    valueFrom:
+      secretKeyRef:
+        name: egov-filestore-azure
+        key: azurestorageaccountname
+  - name: AZURE_STORAGE_ACCOUNT_KEY
+    valueFrom:
+      secretKeyRef:
+        name: egov-filestore-azure
+        key: azurestorageaccountkey
+  - name: AZURE_BLOB_CONTAINER_NAME
+    valueFrom:
+      secretKeyRef:
+        name: egov-filestore-azure
+        key: azurecontainername
+  {{- end }}
   {{- if index .Values "minio-enabled" }}
   - name: AWS_KEY
     valueFrom:
