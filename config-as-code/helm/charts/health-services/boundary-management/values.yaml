@@ -27,11 +27,10 @@ image:
   repository: "boundary-management"
 replicas: "1"
 appType: "java-spring"
-tracing-enabled: true
 heap: '-Xmx768m -Xms512m'
 memory_limits: '1Gi'
 cpu_limits: '300m'
-
+defaultLocale: 'en_DEMO'
 # Additional Container Envs
 env: |
   - name: KAFKA_BROKER_HOST
@@ -150,7 +149,7 @@ env: |
   - name: BOUNDARY_TAB_NAME
     value: "HCM_ADMIN_CONSOLE_BOUNDARY_DATA"
   - name: LOCALE
-    value: {{ .Values.defaultLocale | default "en_MZ" }} 
+    value: {{ .Values.defaultLocale | default "en_DEMO" }} 
   - name: LOCALIZATION_MODULE
     value: "hcm-admin-schemas"
   - name: LOCALIZATION_WAIT_TIME_IN_BOUNDARY_CREATION
@@ -164,7 +163,7 @@ env: |
   - name: DEBUG
     value: "{{ .Values.DEBUG | default "false" }}" 
   - name: DEFAULT_TENANT_ID
-    value: {{ .Values.defaultTenantId | default "mz" }} 
+    value: {{ .Values.defaultTenantId | default "demo" }} 
   - name: CACHE_ENABLED
     value: "true"
   - name: RESET_CACHE
@@ -172,7 +171,14 @@ env: |
   - name: REDIS_PORT
     value: "6379"
   - name: REDIS_HOST
+  {{- if index .Values "cluster-configs" "configmaps" "egov-config" "data" "redis-host" }}
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: redis-host
+  {{- else }}
     value: "redis.backbone"
+  {{- end }}
   - name: AUTO_RETRY_IF_HTTP_ERROR
     value: "socket hang up"
   - name: EXCLUDE_HIERARCHY_TYPE_FROM_BOUNDARY_CODES
