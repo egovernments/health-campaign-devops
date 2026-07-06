@@ -105,6 +105,10 @@ env: |
       secretKeyRef:
         name: egov-filestore-azure
         key: azurecontainername
+  - name: FILE_STORE_PROVIDER
+    value: "AZURE"
+  - name: MINIO_ENABLED
+    value: "false"
   {{- end }}
   {{- if index .Values "minio-enabled" }}
   - name: AWS_KEY
