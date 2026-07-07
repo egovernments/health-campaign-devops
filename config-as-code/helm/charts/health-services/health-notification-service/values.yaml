@@ -178,10 +178,6 @@ env: |
     value: "10000"
   - name: STATE_LEVEL_TENANT_ID
     value: {{ index .Values "tenantId" | default "demo" | quote }}
-  - name: STATE_LEVEL_TENANTID_LENGTH
-    value: "1"
-  - name: STATE_SCHEMA_INDEX_POSITION_TENANTID
-    value: "0"
   - name: EGOV_STATE_TENANT_ID
     valueFrom:
       configMapKeyRef:
