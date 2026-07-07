@@ -3,7 +3,7 @@ labels:
   app: "excel-ingestion"
   group: "health"
 
-namespace: health
+namespace: egov
 
 # Ingress Configs
 ingress:
@@ -36,7 +36,7 @@ heap: "-Xmx2900m -Xms256m"
 java-args: ""
 egov-mdms-service-host-key: "egov-mdms-service"
 egov-mdms-service-endpoint-key: "egov-mdms-service/v2/_search"
-defaultLocale: "en_IN"
+defaultLocale: "en_DEMO"
 java-enable-debug: false
 java-debug-port: 5005
 egov-hrms-employee-search-path: "egov-hrms/employees/_search"
@@ -103,9 +103,9 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: health-hrms
+        key: egov-hrms
   - name: EGOV_HRMS_EMPLOYEE_SEARCH_PATH
-    value: "health-hrms/employees/_search"
+    value: "egov-hrms/employees/_search"
   - name: EGOV_HRMS_EMPLOYEE_SEARCH_PARALLEL_CALLS
     value: "100"
   
@@ -155,7 +155,7 @@ env: |
   - name: EGOV_CAMPAIGN_CRYPTO_BULK_DECRYPT_PATH
     value: "project-factory/v1/crypto/_bulkDecrypt"
   - name: EGOV_HEALTH_INDIVIDUAL_SEARCH_PATH
-    value: "health-individual/v1/_search"
+    value: "individual/v1/_search"
   - name: EGOV_HIERARCHY_SEARCH_URL
     value: "boundary-service/boundary-hierarchy-definition/_search"
   - name: EGOV_BOUNDARY_RELATIONSHIP_SEARCH_URL
@@ -177,7 +177,7 @@ env: |
     value: "false"
   
   - name: SPRING_DATASOURCE_URL
-  {{- if eq .Values.namespace "health" }}
+  {{- if eq .Values.namespace "egov" }}
     valueFrom:
       configMapKeyRef:
         name: egov-config
