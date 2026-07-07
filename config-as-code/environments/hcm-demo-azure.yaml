@@ -60,6 +60,8 @@ cluster-configs:
                 tracer-errors-provideexceptionindetails: "true"
                 egov-internal-microservice-user-uuid: fa0f820c-49df-46bb-8e62-8a0ec5d9af5e
                 db-schema-names: "mz,demo"
+                boundary-hierarchy: 'MICROPLAN'
+                
 
         egov-service-host:
             namespace: [ egov, es-cluster, monitoring, demo ]
