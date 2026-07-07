@@ -10,7 +10,7 @@ ingress:
   namespace: egov
   enabled: true
   zuul: true
-  context: "health-muster-roll"
+  context: "muster-roll"
 
 # Init Containers Configs
 initContainers:
@@ -18,7 +18,7 @@ initContainers:
     enabled: true
     schemaTable: "muster_roll_schema"
     image:
-      repository: "health-muster-roll-db"
+      repository: "muster-roll-db"
 
 # Container Configs
 image:
