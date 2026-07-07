@@ -3,8 +3,11 @@ labels:
   app: "health-notification-service"
   group: "health"
 
+namespace: egov
+
 # Ingress Configs
 ingress:
+  namespace: egov
   enabled: true
   zuul: true
   context: "health-notification-service"
@@ -27,17 +30,16 @@ healthChecks:
   readinessProbePath: "/health-notification-service/health"
 appType: "java-spring"
 tracing-enabled: true
-heap: "-Xmx192m -Xms192m"
+memory_limits: 512Mi
+heap: "-Xmx384m -Xms384m"
 java-args: ""
+egov-mdms-service-host-key: "mdms-v2"
+egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
 
 # Additional Container Envs
 env: |
   - name: SPRING_KAFKA_CONSUMER_GROUP_ID
     value: health-notification-service
-  - name: SPRING_KAFKA_CONSUMER_MAX_POLL_RECORDS
-    value: "50"
-  - name: SPRING_KAFKA_CONSUMER_PROPERTIES_MAX_POLL_INTERVAL_MS
-    value: "600000"
   - name: SPRING_KAFKA_PRODUCER_KEY_SERIALIZER
     value: org.apache.kafka.common.serialization.StringSerializer
   {{- if index .Values "global" "tracer-errors-provideexceptionindetails" }}
@@ -65,9 +67,9 @@ env: |
         name: egov-service-host
         key: mdms-v2
   - name: EGOV_MDMS_SEARCH_ENDPOINT
-    value: "/mdms-v2/v1/_search"
+    value: {{ .Values.mdmsV1SearchEndpoint | default "mdms-v2/v1/_search" }}
   - name: EGOV_MDMS_SEARCH_V2_ENDPOINT
-    value: "/mdms-v2/v2/_search"
+    value: {{ .Values.mdmsV2SearchEndpoint | default "mdms-v2/v2/_search" }}
   - name: EGOV_LOCALIZATION_HOST
     valueFrom:
       configMapKeyRef:
@@ -82,7 +84,7 @@ env: |
   - name: EGOV_LOCALIZATION_NOTIFICATION_MODULE
     value: "health-notification"
   - name: EGOV_LOCALIZATION_SUPPORTED_LOCALES
-    value: "en_DEMO,fr_DEMO"
+    value: "en_DEMO,fr_DEMO,pt_DEMO"
   - name: EGOV_HOUSEHOLD_HOST
     valueFrom:
       configMapKeyRef:
@@ -92,19 +94,6 @@ env: |
     value: "/household/v1/_search"
   - name: EGOV_HOUSEHOLD_MEMBER_SEARCH_URL
     value: "/household/member/v1/_search"
-  - name: EGOV_USER_HOST
-    valueFrom:
-      configMapKeyRef:
-        name: egov-service-host
-        key: egov-user
-  - name: EGOV_USER_SEARCH_URL
-    value: "/user/_search"
-  - name: EGOV_CREATE_USER_URL
-    value: "/user/_create"
-  - name: EGOV_UPDATE_USER_URL
-    value: "/user/_update"
-  - name: EGOV_USER_INTEGRATION_ENABLED
-    value: "true"
   - name: EGOV_INDIVIDUAL_HOST
     valueFrom:
       configMapKeyRef:
@@ -119,8 +108,6 @@ env: |
         key: project
   - name: EGOV_PROJECT_SEARCH_URL
     value: "/project/v1/_search"
-  - name: EGOV_PROJECT_FACILITY_SEARCH_URL
-    value: "/project/facility/v1/_search"
   - name: EGOV_PROJECT_BENEFICIARY_SEARCH_URL
     value: "/project/beneficiary/v1/_search"
   - name: EGOV_ENC_HOST
@@ -171,8 +158,6 @@ env: |
     value: "save-hfreferral-topic"
   - name: HFREFERRAL_CONSUMER_UPDATE_TOPIC
     value: "update-hfreferral-topic"
-  - name: KAFKA_TOPICS_SAVE_FINAL_SMS_MESSAGE
-    value: "save-final-sms-message"
   - name: MDMS_NOTIFICATION_MODULE
     value: "HCM-NOTIFICATION-CONFIG"
   - name: MDMS_PROJECT_MODULE
@@ -192,12 +177,13 @@ env: |
   - name: NOTIFICATION_SCHEDULER_MAX_FETCH
     value: "10000"
   - name: STATE_LEVEL_TENANT_ID
+    value: {{ index .Values "tenantId" | default "demo" | quote }}
+  - name: STATE_LEVEL_TENANTID_LENGTH
+    value: "1"
+  - name: STATE_SCHEMA_INDEX_POSITION_TENANTID
+    value: "0"
+  - name: EGOV_STATE_TENANT_ID
     valueFrom:
       configMapKeyRef:
         name: egov-config
         key: egov-state-level-tenant-id
-  - name: KAFKA_TENANT_ID_PATTERN
-    valueFrom:
-      configMapKeyRef:
-        name: egov-config
-        key: kafka-tenant-id-pattern
