@@ -255,9 +255,15 @@ inbox-v2:
 
 
 inbox:
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/inbox-db
+        tag: inbox-parallel-workflow-b5cd4a6
+  image:
   image:
     repository: egovio/inbox
-    tag: v1.4.0-bd52511479-19
+    tag: inbox-parallel-workflow-b5cd4a6
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -275,10 +281,10 @@ egov-filestore:
     dbMigration:
       image:
         repository: egovio/egov-filestore-db
-        tag: master-filestore-fix-5e0acbc
+        tag: master-1e8d2bb
   image:
     repository: egovio/egov-filestore
-    tag: master-filestore-fix-5e0acbc
+    tag: master-1e8d2bb
   replicas: 2
   hpa:
     enabled: true
@@ -306,7 +312,7 @@ egov-filestore:
 egov-idgen:
   image:
     repository: egovio/egov-idgen
-    tag: DIGIT-2.9-LTS-07f47790b8-8
+    tag: master-1e8d2bb
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -320,7 +326,7 @@ egov-idgen:
     dbMigration:
       image:
         repository: egovio/egov-idgen-db
-        tag: DIGIT-2.9-LTS-07f47790b8-8
+        tag: master-1e8d2bb
   replicas : 1
   idformat-from-mdms: "true"
   java-args: -Dspring.profiles.active=monitoring
@@ -543,13 +549,13 @@ egov-malware-detection:
 audit-service:
   image:
     repository: egovio/audit-service
-    tag: DIGIT-2.9-LTS-07f47790b8-12
+    tag: master-1e8d2bb
   persist-yml-path: "https://raw.githubusercontent.com/egovernments/health-campaign-config/HCM-v2.1-DEMO/egov-persister/mdms-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/HCM-v2.1-DEMO/egov-persister/boundary-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/HCM-v2.1-DEMO/egov-persister/project-factory-persister.yml"
   initContainers:
     dbMigration:
       image:
         repository: egovio/audit-service-db
-        tag: DIGIT-2.9-LTS-07f47790b8-12
+        tag: master-1e8d2bb
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
       branch: "HCM-v2.1-DEMO"  
@@ -577,7 +583,7 @@ egov-mdms-service:
 egov-indexer:
   image:
     repository: egovio/egov-indexer
-    tag: 2.9.1-c781a2f714-65
+    tag: master-1e8d2bb
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -593,7 +599,7 @@ egov-indexer:
     dbMigration:
       image:
         repository: egovio/egov-indexer-db
-        tag: 2.9.1-c781a2f714-65
+        tag: master-1e8d2bb
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"        ##### Change repo url with Your fork Repo url
       branch: "HCM-v2.1-DEMO"                                      ##### Change repo branch with Your fork Repo branch
@@ -602,7 +608,7 @@ egov-indexer:
 egov-persister:
   image:
     repository: egovio/egov-persister
-    tag: DIGIT-2.9-LTS-07f47790b8-8
+    tag: master-3b238aa
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -614,10 +620,12 @@ egov-persister:
     maxReplicas: 3
     cpuTargetPercentage: 70
     memoryTargetPercentage: 80
-  images:
-    - egovio/egov-persister
   persist-yml-path: "/work-dir/health-campaign-config/egov-persister/common,/work-dir/health-campaign-config/egov-persister/demo"
   initContainers:
+    dbMigration:
+      image:
+        repository: egovio/egov-persister-db
+        tag: master-3b238aa
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
       branch: "HCM-v2.1-DEMO"                                    ##### Change repo branch with Your fork Repo branch
@@ -669,7 +677,7 @@ report:
 pdf-service:
   image:
     repository: egovio/pdf-service
-    tag: multiarch-master-99a308d
+    tag: central-instance-pdf-7b3064f
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -913,7 +921,7 @@ egov-enc-service:
 egov-accesscontrol:
   image:
     repository: egovio/egov-accesscontrol
-    tag: DIGIT-2.9-LTS-237578ce80-10
+    tag: master-1e8d2bb
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1238,6 +1246,7 @@ health-notification-service:
   replicas: 1
   central-instance-build: true
   central-instance-enabled: true
+  central-instance-name: egov
   heap: "-Xmx256m -Xms256m"
   cpu_requests: 100m
   memory_requests: 256Mi
@@ -1255,6 +1264,7 @@ egov-notification-push:
     repository: egovio/egov-notification-push
     tag: master-7f8a6b8
   replicas: 1
+  central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
   heap: "-Xmx1296m -Xms1024m"
@@ -1281,12 +1291,12 @@ transformer:
 health-attendance:
   image:
     repository: egovio/health-attendance
-    tag: master-89c74d7
+    tag: nigeria-go-deep-3df8cd8
   initContainers:
     dbMigration:
       image:
         repository: egovio/health-attendance-db
-        tag: master-89c74d7
+        tag: nigeria-go-deep-3df8cd8
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1300,12 +1310,12 @@ health-attendance:
 health-expense-calculator:
   image:
     repository: egovio/health-expense-calculator
-    tag: master-89c74d7
+    tag: nigeria-go-deep-3fa1c21
   initContainers:
     dbMigration:
       image:
         repository: egovio/health-expense-calculator-db
-        tag: master-89c74d7
+        tag: nigeria-go-deep-3fa1c21
   tracing-enabled: true
   java-enable-debug: true
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
@@ -1322,12 +1332,12 @@ health-expense-calculator:
 health-expense:
   image:
     repository: egovio/health-expense
-    tag: master-89c74d7
+    tag: nigeria-go-deep-payments-expense-15b5a23
   initContainers:
     dbMigration:
       image:
         repository: egovio/health-expense-db
-        tag: master-89c74d7
+        tag: nigeria-go-deep-payments-expense-15b5a23
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1343,12 +1353,12 @@ health-expense:
 health-muster-roll:
   image:
     repository: egovio/health-muster-roll
-    tag: master-89c74d7
+    tag: nigeria-go-deep-c562cdf
   initContainers:
     dbMigration:
       image:
         repository: egovio/health-muster-roll-db
-        tag: master-89c74d7
+        tag: nigeria-go-deep-c562cdf
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1386,6 +1396,7 @@ boundary-service:
       image:
         repository: egovio/boundary-service-db
         tag: master-1e8d2bb
+  central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
   
