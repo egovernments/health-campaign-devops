@@ -643,15 +643,35 @@ egov-searcher:
       repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
       branch: "HCM-v2.1-DEMO"                                   ##### Change repo branch with Your fork Repo branch
 
+
 dashboard-analytics:
+  namespace: egov
   image:
     repository: egovio/dashboard-analytics
     tag: analytics-es8-auth-6a40b6e
-  config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/dashboard-analytics/*.json"
+  ingress:
+    name: dashboard-analytics
+    namespace: egov
+  healthChecks:
+    enabled: true
+    livenessProbePath: "/dashboard-analytics/health"
+    readinessProbePath: "/dashboard-analytics/health"
+  heap: "-Xmx512m -Xms256m"
+  replicas: 1
+  hpa:
+    enabled: false
+    minReplicas: 3
+    maxReplicas: 5
+  cpu_requests: 200m
+  memory_requests: 768Mi
+  cpu_limits: 300m
+  memory_limits: 1Gi
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
       branch: "HCM-v2.1-DEMO"                                    ##### Change repo branch with Your fork Repo branch
+  config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/dashboard-analytics/*.json"
+is-central-instance: "true"
 
 dashboard-ingest:
   image:
