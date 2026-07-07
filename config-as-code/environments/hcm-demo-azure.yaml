@@ -422,12 +422,12 @@ household:
 service-request:
   image:
     repository: egovio/service-request
-    tag: v1.2.0-01c2b65440-4
+    tag: master-7f8a6b8
   initContainers:
     dbMigration:
       image:
         repository: egovio/service-request-db
-        tag: v1.2.0-01c2b65440-4
+        tag: master-7f8a6b8
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
