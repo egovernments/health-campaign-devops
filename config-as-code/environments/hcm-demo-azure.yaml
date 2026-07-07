@@ -452,12 +452,12 @@ egov-notification-sms:
 egov-user:
   image:
     repository: egovio/egov-user
-    tag: feature-sso-impl-1e23b63
+    tag: sandbox-log-f4a87d0
   initContainers:
     dbMigration:
       image:
         repository: egovio/egov-user-db
-        tag: feature-sso-impl-1e23b63
+        tag: sandbox-log-f4a87d0
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
