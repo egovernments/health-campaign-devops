@@ -410,6 +410,7 @@ household:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
+  egov-boundary-hierarchy-name: "MICROPLAN"
   hpa:
     enabled: true
     minReplicas: 1
@@ -1078,6 +1079,7 @@ stock:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
+  egov-boundary-hierarchy-name: "MICROPLAN"
 
 
 project-factory:
