@@ -1105,10 +1105,10 @@ project-factory:
     dbMigration:
       image:
         repository: "project-factory-db"
-        tag: master-7f8a6b8
+        tag: master-aa57e79
   image:
     repository: egovio/project-factory
-    tag: master-7f8a6b8
+    tag: master-aa57e79
   central-instance-enabled: true
   central-instance-build: true
   namespace: egov
