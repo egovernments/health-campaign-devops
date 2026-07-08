@@ -114,7 +114,7 @@ transformer:
   memory_limits: 1.5Gi
   java-enable-debug: true
   replicas: 1
-  project-factory-host: "demo-project-factory"
+  project-factory-host: "project-factory"
   save-attendance-log-topic: "demo-save-attendance-log"
   update-attendance-log-topic: "demo-update-attendance-log"
   transformer-save-attendance-log-topic: "demo-transformer-save-attendance-log"
