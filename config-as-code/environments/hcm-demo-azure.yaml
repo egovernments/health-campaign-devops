@@ -555,6 +555,10 @@ airflow-trigger-service:
   namespace: egov
   initContainerImage: "egovio/airflow-trigger-service:master-nigeria-go-deep-2-19579e5"
   is-central-instance-enabled: "true"
+  hpa:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
   cpu_requests: 50m
   memory_requests: 256Mi
   cpu_limits: 200m
