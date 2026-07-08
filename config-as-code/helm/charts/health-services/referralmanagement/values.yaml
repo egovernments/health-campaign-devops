@@ -48,6 +48,8 @@ referralmanagement-referral-consumer-bulk-delete-topic: delete-referral-bulk-top
 referralmanagement-hfreferral-consumer-bulk-create-topic: save-hfreferral-bulk-topic
 referralmanagement-hfreferral-consumer-bulk-update-topic: update-hfreferral-bulk-topic
 referralmanagement-hfreferral-consumer-bulk-delete-topic: delete-hfreferral-bulk-topic
+egov-mdms-service-host-key: "mdms-v2"
+egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
 
 # Additional Container Envs
 env: |
@@ -129,7 +131,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: mdms-v2
+        key: {{ index .Values "egov-mdms-service-host-key" | quote }}
   - name: EGOV_MDMS_SEARCH_ENDPOINT
     value: "/mdms-v2/v1/_search"
   - name: EGOV_MDMS_PATH
@@ -257,8 +259,8 @@ env: |
   - name: EGOV_S3_SECRET_KEY
     valueFrom:
       secretKeyRef:
-        name: egov-s3
-        key: secret-key
+        name: referralmanagement
+        key: s3-secret-key
   - name: EGOV_S3_ENDPOINT
     value: {{ index .Values "egov-s3-endpoint" | quote }}
   # CRITICAL: This controls the URL used in presigned S3 URLs
