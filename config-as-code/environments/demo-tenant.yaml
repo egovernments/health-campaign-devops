@@ -97,3 +97,90 @@ console:
       <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/demo/globalConfigsConsoleDemo.js type=text/javascript defer></script>
       <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript async></script>
       ';"
+
+transformer:
+  image:
+    repository: egovio/transformer
+    tag: HDDF-5226-5989d1b6f8-416
+  namespace: "demo"
+  heap: "-Xmx768m -Xms512m"
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+  cpu_requests: 200m
+  memory_requests: 1Gi
+  cpu_limits: 300m
+  memory_limits: 1.5Gi
+  java-enable-debug: true
+  replicas: 1
+  project-factory-host: "demo-project-factory"
+  save-attendance-log-topic: "demo-save-attendance-log"
+  update-attendance-log-topic: "demo-update-attendance-log"
+  transformer-save-attendance-log-topic: "demo-transformer-save-attendance-log"
+  transformer-save-attendance-register-topic: "demo-transformer-save-attendance-register"
+  save-project-task-topic: "demo-save-project-task-topic"
+  update-project-task-topic: "demo-update-project-task-topic"
+  transformer-producer-bulk-project-task-index-v1-topic: "demo-transformer-producer-bulk-project-task-index-v1-topic"
+  save-project-staff-topic: "demo-save-project-staff-topic"
+  update-project-staff-topic: "demo-update-project-staff-topic"
+  transformer-producer-bulk-project-staff-index-v1-topic: "demo-transformer-producer-bulk-project-staff-index-v1-topic"
+  transformer-producer-bulk-project-index-v1-topic: "demo-transformer-producer-bulk-project-index-v1-topic"
+  save-project: "demo-save-project"
+  update-project: "demo-update-project"
+  save-household-member-topic: "demo-save-household-member-topic"
+  transformer-producer-household-member-index-v1-topic: "demo-transformer-producer-household-member-index-v1-topic"
+  save-household-topic: "demo-save-household-topic"
+  update-household-topic: "demo-update-household-topic"
+  transformer-producer-household-index-v1-topic: "demo-transformer-producer-household-index-v1-topic"
+  transformer-producer-service-index-v2-topic: "demo-transformer-producer-service-index-v2-topic"
+  save-stock-topic: "demo-save-stock-topic"
+  update-stock-topic: "demo-update-stock-topic"
+  transformer-producer-bulk-stock-index-v1-topic: "demo-transformer-producer-bulk-stock-index-v1-topic"
+  save-facility-topic: "demo-save-facility-topic"
+  update-facility-topic: "demo-update-facility-topic"
+  save-service: "demo-save-service"
+  transformer-producer-service-request-index-v1-topic: "demo-transformer-producer-service-request-index-v1-topic"
+  save-referral-topic: "demo-save-referral-topic"
+  transformer-producer-referral-index-v1-topic: "demo-transformer-producer-referral-index-v1-topic"
+  update-referral-topic: "demo-update-referral-topic"
+  save-side-effect-topic: "demo-save-side-effect-topic"
+  update-side-effect-topic: "demo-update-side-effect-topic"
+  transformer-producer-side-effect-index-v1-topic: "demo-transformer-producer-side-effect-index-v1-topic"
+  save-pgr-request: "demo-save-pgr-request"
+  transformer-save-pgr-request: "demo-transformer-save-pgr-request"
+  update-pgr-request: "demo-update-pgr-request"
+  save-hfreferral-topic: "demo-save-hfreferral-topic"
+  update-hfreferral-topic: "demo-update-hfreferral-topic"
+  transformer-producer-hfreferral-index-v1-topic: "demo-transformer-producer-hfreferral-index-v1-topic"
+  transformer-producer-hfreferral-service-index-topic: "demo-transformer-producer-hfreferral-service-index-topic"
+  transformer-producer-finance-checklist-index-v1-topic: "demo-transformer-producer-finance-checklist-index-v1-topic"
+  transformer-producer-special-spraying-index-topic: "demo-transformer-producer-special-spraying-index-topic"
+  save-attendance-log: "demo-save-attendance-log"
+  update-attendance-log: "demo-update-attendance-log"
+  transformer-save-attendance-log: "demo-transformer-save-attendance-log"
+  transformer-save-attendance-register: "demo-transformer-save-attendance-register"
+  transformer-producer-extra-transformed-checklist-index-topic: "demo-transformer-producer-extra-transformed-checklist-index-topic"
+  update-household-member-topic: "demo-update-household-member-topic"
+  save-stock-reconciliation-topic: "demo-save-stock-reconciliation-topic"
+  update-stock-reconciliation-topic: "demo-update-stock-reconciliation-topic"
+  transformer-producer-stock-recon-index-v1-topic: "demo-transformer-producer-stock-recon-index-v1-topic"
+  health-transformer: "demo-health-transformer"
+  transformer-consumer-error-tracer-topic: "error-details-indexer-topic"
+  transformer-producer-error-details-index-v1-topic: "demo-transformed-errors-topic"
+  transformer-error-skip-error-messages: "UPLOAD_ERROR_FROM_APP"
+  transformer-error-skip-error-codes: "DUPLICATE_ENTITY,INDIVIDUAL_ALREADY_MEMBER_OF_HOUSEHOLD,HOUSEHOLD_ALREADY_HAS_HEAD"
+  transformer-error-skip-url-contains: "facility,resource"
+  state-level-tenantid: "demo"
+  expense-bill-create-health-topic: "demo-expense-bill-create-health"
+  expense-bill-update-health-topic: "demo-expense-bill-update-health"
+  transformer-bill-index-topic: "demo-transformer-bill-index-topic"
+  transformer-billdetail-index-topic: "demo-transformer-billdetail-index-topic"
+  expense-bill-report-save-topic: "demo-expense-bill-report-save"
+  expense-bill-report-update-topic: "demo-expense-bill-report-update"
+  transformer-billreport-index-topic: "demo-transformer-billreport-index-topic"
+  save-musterroll-health-topic: "demo-save-musterroll-health"
+  update-musterroll-health-topic: "demo-update-musterroll-health"
+  transformer-producer-muster-roll-index-v1-topic: "demo-transformer-producer-muster-roll-index-v1-topic"
+  expense-bill-detail-create-topic: "demo-expense-bill-detail-create"
+  expense-bill-detail-update-topic: "demo-expense-bill-detail-update"
