@@ -23,6 +23,7 @@ spec:
           - name: excel-ingestion
           - name: worker-registry
           - name: health-notification-service
+          - name: airflow-trigger-service
 
   template:
     metadata:

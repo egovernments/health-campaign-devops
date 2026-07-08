@@ -548,6 +548,18 @@ egov-malware-detection:
   heap: "-Xmx512m -Xms512m"
   memory_limits: "768Mi"
 
+airflow-trigger-service:
+  image:
+    repository: egovio/airflow-trigger-service
+    tag: master-nigeria-go-deep-2-19579e5
+  namespace: egov
+  initContainerImage: "egovio/airflow-trigger-service:master-nigeria-go-deep-2-19579e5"
+  is-central-instance-enabled: "true"
+  cpu_requests: 50m
+  memory_requests: 256Mi
+  cpu_limits: 200m
+  memory_limits: 512Mi
+
 
 audit-service:
   image:

@@ -3,8 +3,6 @@ labels:
   app: "airflow-trigger-api"
   group: "digit-health"
 
-namespace: health
-
 # Ingress Configs
 ingress:
   namespace: egov
@@ -18,7 +16,7 @@ ingress:
 initContainers:
   extraInitContainers: |
     - name: run-migration
-      image: {{ include "common.image" (dict "Values" $.Values "repository" $.Values.image.repository "tag" $.Values.image.tag) }}
+      image: {{ index .Values "initContainerImage" | quote }}
       command: [ "python", "migrate.py" ]
       env:
         - name: DB_HOST
@@ -44,7 +42,10 @@ initContainers:
               name: db
               key: password
         - name: DB_SCHEMAS
-          value: "health"
+          valueFrom:
+            configMapKeyRef:
+              name: egov-config
+              key: db-schema-names
 
 httpPort: 8000
 
@@ -103,14 +104,9 @@ env: |
         name: db
         key: password
   - name: IS_CENTRAL_INSTANCE_ENABLED
-    value: "false"
+    value: {{ index .Values "is-central-instance-enabled" | quote | default "true" }}
   - name: DB_SCHEMA
-    value: "health"
-
-resources: |
-  requests:
-    cpu: "50m"
-    memory: "256Mi"
-  limits:
-    cpu: "200m"
-    memory: "512Mi"
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: db-schema-names
