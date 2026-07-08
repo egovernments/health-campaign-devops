@@ -928,7 +928,7 @@ egov-weekly-impact-notifier:
 egov-enc-service:
   image:
     repository: egovio/egov-enc-service
-    tag: central-instance-e346023dcb-26
+    tag: HCMPRE-2741-encryption-664a4e7
   central-instance-name: egov
   central-instance-build: true
   # central-instance-enabled: true
@@ -936,7 +936,7 @@ egov-enc-service:
     dbMigration:
       image:
         repository: egovio/egov-enc-service-db
-        tag: central-instance-e346023dcb-26
+        tag: HCMPRE-2741-encryption-664a4e7
   replicas: 1
   heap: '-Xmx512m -Xms256m'
   memory_limits: 512Mi
