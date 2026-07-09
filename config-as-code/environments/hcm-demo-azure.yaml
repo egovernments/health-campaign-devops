@@ -690,6 +690,9 @@ dashboard-analytics:
       repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
       branch: "HCM-v2.1-DEMO"                                    ##### Change repo branch with Your fork Repo branch
   config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/dashboard-analytics/*.json"
+  env: |
+    - name: MANAGEMENT_HEALTH_ELASTICSEARCH_ENABLED
+      value: "false"
 is-central-instance: "true"
 
 dashboard-ingest:
