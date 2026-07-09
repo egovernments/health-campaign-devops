@@ -167,3 +167,34 @@ env: |
     value: {{ index .Values "task-scheduler-bootstrap-tenants" | default "demo" | quote}}
   - name: REPORT_GENERATION_TRIGGER_TOPIC
     value: {{ index .Values "report-generation-trigger-topic" | quote}}
+   - name: EXPENSE_BILLING_BILL_DETAIL_CREATE
+    value: "expense-bill-detail-create"
+  - name: EXPENSE_BILLING_BILL_DETAIL_UPDATE
+    value: "expense-bill-detail-update"
+  - name: EXPENSE_BILL_TASK
+    value: "expense-bill-task"
+  - name: EXPENSE_BILL_TASK_DETAILS
+    value: "expense-bill-task-details"
+  - name: EXPENSE_TASK_STATUS_UPDATE
+    value: "expense-task-status-update"
+  - name: EXPENSE_TASK_DETAILS_UPDATE
+    value: "expense-task-details-update"
+  - name: EXPENSE_BILLING_PAYMENT_CREATE
+    value: "expense-payment-create"
+  - name: EXPENSE_BILLING_PAYMENT_UPDATE
+    value: "expense-payment-update"
+  - name: EGOV_HRMS_SEARCH_ENDPOINT
+    value: "/egov-hrms/employees/_search"
+  - name: WORKS_INDIVIDUAL_ENDPOINT
+    value: "/individual/v1/_search"
+  - name: EGOV_MDMS_SEARCH_ENDPOINT
+    value: "mdms-v2/v1/_search"
+  - name: EGOV_MDMS_V2_SEARCH_V2_ENDPOINT
+    value: "mdms-v2/v2/_search"
+  - name: PROJECT_SERVICE_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: project
+  - name: PROJECT_SEARCH_PATH
+    value: "project/v1/_search"
