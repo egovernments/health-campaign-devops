@@ -1397,12 +1397,12 @@ health-expense:
 health-muster-roll:
   image:
     repository: egovio/health-muster-roll
-    tag: nigeria-go-deep-c562cdf
+    tag: nigeria-go-deep-report-fix-efa6316
   initContainers:
     dbMigration:
       image:
         repository: egovio/health-muster-roll-db
-        tag: nigeria-go-deep-c562cdf
+        tag: nigeria-go-deep-report-fix-efa6316
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
