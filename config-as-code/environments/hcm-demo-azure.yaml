@@ -1110,10 +1110,10 @@ project-factory:
     dbMigration:
       image:
         repository: "project-factory-db"
-        tag: master-excelIngestionInitPattern-f9fe038
+        tag: master-8dd6c3d
   image:
     repository: egovio/project-factory
-    tag: master-excelIngestionInitPattern-f9fe038
+    tag: master-8dd6c3d
   central-instance-enabled: true
   central-instance-build: true
   namespace: egov
