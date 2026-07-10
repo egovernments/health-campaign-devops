@@ -88,7 +88,7 @@ cluster-configs:
               egov-enc-service: "http://egov-enc-service.egov:8080/"
               egf-voucher-workflow: "http://egf-voucher-workflow:8080/"
               egov-accesscontrol: "http://egov-accesscontrol:8080/"
-              egov-user: "http://egov-user:8080/"
+              egov-user: "http://egov-user.egov:8080/"
               egov-user-egov: "http://egov-user.egov:8080/"
               egov-location: "http://egov-location:8080/"
               egov-filestore: "http://egov-filestore.egov:8080/"
