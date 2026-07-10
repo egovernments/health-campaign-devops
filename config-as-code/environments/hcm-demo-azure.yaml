@@ -1323,7 +1323,7 @@ egov-notification-push:
 transformer:
   image:
     repository: egovio/transformer
-    tag: HDDF-1277-8d30a8e
+    tag: HDDF-5226-ERROR-PATCH-TRANSFORMER-acbd7ef
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
