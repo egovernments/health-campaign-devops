@@ -603,6 +603,7 @@ egov-indexer:
   image:
     repository: egovio/egov-indexer
     tag: master-1e8d2bb
+  kafka-consumer-group-id: "egov-indexer-consumer-grp"
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
