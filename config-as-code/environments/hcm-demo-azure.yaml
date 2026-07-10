@@ -695,7 +695,7 @@ dashboard-analytics:
     app: |
       - name: MANAGEMENT_HEALTH_ELASTICSEARCH_ENABLED
         value: "false"
-is-central-instance: "true"
+is-central-instance: "false"
 
 dashboard-ingest:
   image:
