@@ -1377,12 +1377,12 @@ health-expense-calculator:
 health-expense:
   image:
     repository: egovio/health-expense
-    tag: nigeria-go-deep-payments-expense-15b5a23
+    tag: nigeria-go-deep-verify-fix-7d34fd7
   initContainers:
     dbMigration:
       image:
         repository: egovio/health-expense-db
-        tag: nigeria-go-deep-payments-expense-15b5a23
+        tag: nigeria-go-deep-verify-fix-7d34fd7
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
