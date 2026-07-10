@@ -1317,6 +1317,7 @@ egov-notification-push:
   memory_requests: 1.5Gi
   cpu_limits: 600m
   memory_limits: 2Gi
+  java-enable-debug: false
 
 transformer:
   image:
