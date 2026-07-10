@@ -1375,6 +1375,7 @@ health-expense-calculator:
   egov-musterroll-search-endpoint: "/health-muster-roll/v1/_search"
   billing-frequency-custom-minimum-days: 1
   excell-state-level-tenant-id: "demo"
+  spring-kafka-consumer-group-id: "health-expense-calculator-group"
 
 health-expense:
   image:
