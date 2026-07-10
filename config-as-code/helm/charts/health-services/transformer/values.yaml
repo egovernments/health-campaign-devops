@@ -107,6 +107,12 @@ env: |
     value: {{ index .Values "health-transformer" | quote }}
   - name: SPRING_KAFKA_PRODUCER_KEY_SERIALIZER
     value: org.apache.kafka.common.serialization.StringSerializer
+  - name: SPRING_KAFKA_CONSUMER_PROPERTIES_SESSION_TIMEOUT_MS
+    value: "240000"
+  - name: SPRING_KAFKA_CONSUMER_PROPERTIES_HEARTBEAT_INTERVAL_MS
+    value: "30000"
+  - name: SPRING_KAFKA_CONSUMER_PROPERTIES_MAX_POLL_INTERVAL_MS
+    value: "600000" 
   {{- if index .Values "global" "tracer-errors-provideexceptionindetails" }}
   - name: TRACER_ERRORS_PROVIDEEXCEPTIONINDETAILS
     valueFrom:
@@ -215,6 +221,8 @@ env: |
     value: {{ index .Values "update-stock-topic" | quote }}
   - name: TRANSFORMER_PRODUCER_BULK_STOCK_INDEX_V1_TOPIC
     value: {{ index .Values "transformer-producer-bulk-stock-index-v1-topic" | quote }}
+  - name: TRANSFORMER_PRODUCER_BULK_STOCK_INDEX_UPDATE_V1_TOPIC
+    value: {{ index .Values "transformer-producer-bulk-stock-index-updated-v1-topic" | quote }} 
   - name: EGOV_FACILITY_HOST
     valueFrom:
       configMapKeyRef:
