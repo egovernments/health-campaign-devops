@@ -94,12 +94,12 @@ java-enable-debug: false
 save-project-beneficiary-topic: "save-project-beneficiary-topic"
 update-project-beneficiary-topic: "update-project-beneficiary-topic"
 transformer-producer-project-beneficiary-index-v1-topic: "transformer-producer-project-beneficiary-index-v1-topic"
-egov-boundary-hierarchy-name: "POLIO_CHAD"
-egov-localization-module-name: "hcm-boundary-polio_chad"
+egov-boundary-hierarchy-name: "MICROPLAN"
+egov-localization-module-name: "hcm-boundary-microplan"
 transformer-consumer-create-user-action-topic: "save-user-action-project-task-topic"
 transformer-consumer-update-user-action-topic: "update-user-action-project-task-topic"
 transformer-producer-user-action-index-v1-topic: "transformer-producer-user-action-index-v1-topic"
-egov_localization_locale_code: "en_CHAD"
+egov_localization_locale_code: "en_DEMO"
 
 # Additional Container Envs
 env: |
@@ -227,15 +227,15 @@ env: |
   - name: TRANSFORMER_CONSUMER_UPDATE_FACILITY_TOPIC
     value: {{ index .Values "update-facility-topic" | quote }}
   - name: BOUNDARY_LABEL_NAME_PROVINCE
-    value: "Provincia"
+    value: "province"
   - name: BOUNDARY_LABEL_NAME_DISTRICT
-    value: "Distrito"
+    value: "district"
   - name: BOUNDARY_LABEL_NAME_ADMINISTRATIVEPROVINCE
-    value: "Posto Administrativo"
+    value: "administrativeProvince"
   - name: BOUNDARY_LABEL_NAME_LOCALITY
-    value: "Localidade"
+    value: "locality"
   - name: BOUNDARY_LABEL_NAME_VILLAGE
-    value: "Aldeia"
+    value: "village"
   - name: EGOV_SEARCH_SERVICEDEFINITION_URL
     value: "/service-request/service/definition/v1/_search"
   - name: TRANSFORMER_CONSUMER_CREATE_SERVICE_TOPIC
