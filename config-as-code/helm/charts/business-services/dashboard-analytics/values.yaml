@@ -23,8 +23,6 @@ replicas: "1"
 tracing-enabled: true
 config-schema-paths: "file:///work-dir/configs/egov-dss-dashboards/dashboard-analytics/*.json"
 is-central-instance: "false"
-central-instance-tenants: "demo"
-central-instance-base-path: "file:///work-dir/health-campaign-config/egov-dss-dashboards"
 heap: "-Xmx1024m -Xms256m"
 memory_limits: "1024Mi"
 # Additional Container Envs
