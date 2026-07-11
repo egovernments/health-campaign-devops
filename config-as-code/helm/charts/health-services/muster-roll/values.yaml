@@ -227,6 +227,10 @@ env: |
       secretKeyRef:
         name: elastic
         key: password
+  - name: ELASTICSEARCH_QUERIES_MDMS_MODULE
+    value: "AttendanceReportDetail"
+  - name: ELASTICSEARCH_QUERIES_MDMS_MASTER
+    value: "ElasticSearchQuery"
   - name: EGOV_WORKER_REGISTRY_ENABLED
     value: "true"
   - name: EGOV_WORKER_REGISTRY_HOST
