@@ -10,7 +10,7 @@ ingress:
   namespace: egov
   enabled: true
   zuul: true
-  context: "muster-roll"
+  context: "health-muster-roll"
 
 # Init Containers Configs
 initContainers:
