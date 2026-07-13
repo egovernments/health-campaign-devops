@@ -1284,10 +1284,10 @@ health-notification-service:
     dbMigration:
       image:
         repository: egovio/health-notification-service-db
-        tag: master-7f8a6b8
+        tag: nigeria-finalpull-bf650e1
   image:
     repository: egovio/health-notification-service
-    tag: master-7f8a6b8
+    tag: nigeria-finalpull-bf650e1
   replicas: 1
   central-instance-build: true
   central-instance-enabled: true
