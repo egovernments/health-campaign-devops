@@ -106,7 +106,7 @@ cluster-configs:
               egov-indexer: "http://egov-indexer:8080/"
               egov-hrms: "http://egov-hrms.egov:8080/"
               worker-registry-host: "http://worker-registry.egov:8080/"
-              es-client: "http://elasticsearch-data-v1.es-cluster:9200"
+              es-client: "http://elasticsearch-data.es-cluster:9200"
               health-attendance: "http://health-attendance:8080/"
               location: "http://location:8080/"
               performance-assessment: "http://performance-assessment:8080/"
