@@ -180,3 +180,5 @@ env: |
     value: {{ index .Values "tenantId" | default "demo" | quote }}
   - name: EGOV_STATE_TENANT_ID
     value: {{ index .Values "tenantId" | default "demo" | quote }}
+  - name: KAFKA_TENANT_ID_PATTERN
+    value: "demo"
