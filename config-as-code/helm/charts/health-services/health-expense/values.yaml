@@ -167,7 +167,7 @@ env: |
     value: {{ index .Values "task-scheduler-bootstrap-tenants" | default "demo" | quote}}
   - name: REPORT_GENERATION_TRIGGER_TOPIC
     value: {{ index .Values "report-generation-trigger-topic" | quote}}
-   - name: EXPENSE_BILLING_BILL_DETAIL_CREATE
+  - name: EXPENSE_BILLING_BILL_DETAIL_CREATE
     value: "expense-bill-detail-create"
   - name: EXPENSE_BILLING_BILL_DETAIL_UPDATE
     value: "expense-bill-detail-update"
