@@ -179,7 +179,4 @@ env: |
   - name: STATE_LEVEL_TENANT_ID
     value: {{ index .Values "tenantId" | default "demo" | quote }}
   - name: EGOV_STATE_TENANT_ID
-    valueFrom:
-      configMapKeyRef:
-        name: egov-config
-        key: egov-state-level-tenant-id
+    value: {{ index .Values "tenantId" | default "demo" | quote }}
