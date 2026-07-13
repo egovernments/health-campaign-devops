@@ -181,4 +181,7 @@ env: |
   - name: EGOV_STATE_TENANT_ID
     value: {{ index .Values "tenantId" | default "demo" | quote }}
   - name: KAFKA_TENANT_ID_PATTERN
-    value: "demo"
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: kafka-tenant-id-pattern
