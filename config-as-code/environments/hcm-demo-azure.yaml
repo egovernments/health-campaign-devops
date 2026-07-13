@@ -1297,6 +1297,7 @@ health-notification-service:
   memory_requests: 256Mi
   cpu_limits: 200m
   memory_limits: 512Mi
+  egov-state-tenant-id: "demo"
 
 egov-notification-push:
   namespace: egov
