@@ -133,6 +133,8 @@ env: |
         key: facility
   - name: EGOV_FACILITY_SEARCH_URL
     value: "/facility/v1/_search"
+  - name: EGOV_PROJECT_FACILITY_SEARCH_URL
+    value: "/project/facility/v1/_search"
   - name: EGOV_PUSH_NOTIFICATION_HOST
     valueFrom:
       configMapKeyRef:
