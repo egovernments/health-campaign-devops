@@ -1393,7 +1393,7 @@ health-expense:
   central-instance-build: true
   central-instance-enabled: true
   tracing-enabled: true
-  business-workflow-status-map: "{'EXPENSE.WAGES':'false'}"
+  business-workflow-status-map: "{'EXPENSE.WAGES':'false','EXPENSE.PURCHASE':'false','EXPENSE.SUPERVISION':'false','PAYMENTS.BILL':'true','PAYMENTS.BILLDETAILS':'true'}"
   expense-billing-default-offset: 0
   expense-billing-default-limit: 100
   expense-billing-search-max-limit: 200
@@ -1404,6 +1404,7 @@ health-expense:
   expense-bill-update-topic: update-expense-bill-db
   expense-billing-bill-create: expense-bill-create
   expense-billing-bill-update: expense-bill-update
+  expense-v2-periodic-billing-enabled: "true"
 
 health-muster-roll:
   image:
