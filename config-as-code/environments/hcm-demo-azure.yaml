@@ -1400,8 +1400,8 @@ health-expense:
   expense-v2-periodic-billing-enabled: "true"
   expense-bill-create-topic: save-expense-bill-db
   expense-bill-update-topic: update-expense-bill-db
-  expense-billing-bill-create: save-expense-bill-db
-  expense-billing-bill-update: update-expense-bill-db
+  expense-billing-bill-create: expense-bill-create
+  expense-billing-bill-update: expense-bill-update
 
 health-muster-roll:
   image:
