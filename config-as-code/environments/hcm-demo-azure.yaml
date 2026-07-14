@@ -1075,6 +1075,8 @@ referralmanagement:
   memory_limits: 1024Mi
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
+  spring-datasource-tomcat-max-active: "25"
+  spring-datasource-hikari-maximum-pool-size: "25"
 
 
 pgr-services:
