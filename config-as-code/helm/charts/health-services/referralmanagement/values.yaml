@@ -246,24 +246,3 @@ env: |
     value: "code"
   - name: EGOV_ENABLE_MATVIEW_SEARCH
     value: "true"
-  # S3 Configuration for file storage and presigned URLs
-  - name: EGOV_S3_BUCKET
-    value: {{ index .Values "egov-s3-bucket" | quote }}
-  - name: EGOV_S3_REGION
-    value: {{ index .Values "egov-s3-region" | quote }}
-  - name: EGOV_S3_ACCESS_KEY
-    valueFrom:
-      secretKeyRef:
-        name: egov-s3
-        key: access-key
-  - name: EGOV_S3_SECRET_KEY
-    valueFrom:
-      secretKeyRef:
-        name: referralmanagement
-        key: s3-secret-key
-  - name: EGOV_S3_ENDPOINT
-    value: {{ index .Values "egov-s3-endpoint" | quote }}
-  # CRITICAL: This controls the URL used in presigned S3 URLs
-  # Without this, the application returns localhost:9000 URLs
-  - name: EGOV_S3_PRESIGN_ENDPOINT
-    value: {{ index .Values "egov-s3-presign-endpoint" | quote }}
