@@ -517,6 +517,11 @@ egov-malware-detection:
   image:
     repository: egovio/egov-malware-detection
     tag: master-d69ce29
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/egov-malware-detection-db
+        tag: master-d69ce29  
   # ClamAV Configuration
   clamav-host: "clamav.security"
   clamav-port: "3310"
