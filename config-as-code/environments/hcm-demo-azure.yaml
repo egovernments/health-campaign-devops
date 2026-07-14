@@ -1457,6 +1457,12 @@ boundary-service:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
+  hpa:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    cpuTargetPercentage: 70
+    memoryTargetPercentage: 80
   
 
 dss-dashboard:
