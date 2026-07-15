@@ -97,9 +97,9 @@ env: |
     valueFrom:
       secretKeyRef:
         key: password
-        name: elastic
+        name: elasticsearch-master-credentials
   - name: SERVICES_ESINDEXER_PASSWORD
     valueFrom:
       secretKeyRef:
         key: password
-        name: elastic
+        name: elasticsearch-master-credentials
