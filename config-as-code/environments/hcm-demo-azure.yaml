@@ -1070,12 +1070,12 @@ product:
 referralmanagement:
   image:
     repository: egovio/referralmanagement
-    tag: master-0590cb7
+    tag: master-7f8a6b8
   initContainers:
     dbMigration:
       image:
         repository: egovio/referralmanagement-db
-        tag: master-0590cb7
+        tag: master-7f8a6b8
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: true
