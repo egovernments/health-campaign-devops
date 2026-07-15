@@ -33,3 +33,6 @@ Session.vim
 .history
 *.terraform
 *.tfstate
+
+# Graphify output
+graphify-out/

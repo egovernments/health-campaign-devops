@@ -46,6 +46,10 @@ cluster-configs:
     egov-filestore: 
       namespace: egov
       name: egov-filestore     
+
+    egov-malware-detection:
+      namespace: [ egov ]
+      name: egov-malware-detection
       
     egov-location: 
       namespace: egov
