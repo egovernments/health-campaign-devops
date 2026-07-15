@@ -257,26 +257,31 @@ inbox-v2:
 
 
 inbox:
-  initContainers:
-    dbMigration:
-      image:
-        repository: egovio/inbox-db
-        tag: inbox-parallel-workflow-b5cd4a6
-  image:
+  namespace: egov
   image:
     repository: egovio/inbox
-    tag: inbox-parallel-workflow-b5cd4a6
-  central-instance-name: egov
+    tag: v1.4.0-bd52511479-19
+  replicas: 1
+  hpa:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+  cpu_requests: 200m
+  memory_requests: 512Mi
+  cpu_limits: 300m
+  memory_limits: 768Mi
+  healthChecks:
+    enabled: true
+    livenessProbePath: "/inbox/health"
+    readinessProbePath: "/inbox/health"
+  heap: "-Xmx368m -Xms256m"
+  tracing-enabled: true
+  service-map: '{}'
+  bs-service-map: '{}'
+  dashboard-analytics-host: "dashboard-analytics"
+  egov-internal-microservice-user-uuid: "egov-internal-microservice-user-uuid"
   central-instance-build: true
   central-instance-enabled: true
-  namespace: egov
-  memory_limits: 512Mi
-  heap: "-Xmx512m -Xms256m"
-  java-debug: true
-  tracing-enabled: "true"
-  service-map : '{}'
-  bs-service-map : '{}'
-
       
 egov-filestore:
   initContainers:

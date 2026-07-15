@@ -32,6 +32,7 @@ spec:
           - name: egov-malware-detection
           - name: internal-gateway-scg
           - name: gateway
+          - name: inbox
 
   template:
     metadata:
