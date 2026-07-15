@@ -528,7 +528,7 @@ egov-malware-detection:
   clamav-timeout: "60000"
   clamav-chunk-size: "2048"
   # S3 Configuration (uses same AWS credentials from egov-filestore secret)
-  is-s3-enabled: true
+  is-s3-enabled: false
   minio-enabled: false
   fixed-bucketname: "" #add bucket name
   fixed-bucket-region: "" #add bucket region
