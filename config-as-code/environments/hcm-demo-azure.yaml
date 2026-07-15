@@ -516,12 +516,12 @@ chatbot:
 egov-malware-detection:
   image:
     repository: egovio/egov-malware-detection
-    tag: master-d69ce29
+    tag: master-malware-fix-77a437a
   initContainers:
     dbMigration:
       image:
         repository: egovio/egov-malware-detection-db
-        tag: master-d69ce29  
+        tag: master-malware-fix-77a437a  
   # ClamAV Configuration
   clamav-host: "clamav.security"
   clamav-port: "3310"
@@ -533,6 +533,9 @@ egov-malware-detection:
   fixed-bucketname: "" #add bucket name
   fixed-bucket-region: "" #add bucket region
   quarantine-bucketname: "" #add quarantine bucket name
+   # Azure Blob Storage Configuration
+  is-azure-storage-enabled: "true"
+  azure-blob-container: "egov-filestore"
   # Slack Notification (optional - enable and provide webhook URL to use)
   slack-enabled: true
   # slack-webhook-url: "https://hooks.slack.com/services/xxx/xxx/xxx"
