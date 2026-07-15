@@ -530,9 +530,9 @@ egov-malware-detection:
   # S3 Configuration (uses same AWS credentials from egov-filestore secret)
   is-s3-enabled: false
   minio-enabled: false
-  fixed-bucketname: "" #add bucket name
-  fixed-bucket-region: "" #add bucket region
-  quarantine-bucketname: "" #add quarantine bucket name
+  fixed-bucketname: "egov-filestore" #add bucket name
+  fixed-bucket-region: "ap-south-1" #add bucket region
+  quarantine-bucketname: "egov-quarantine" #add quarantine bucket name
    # Azure Blob Storage Configuration
   is-azure-storage-enabled: "true"
   azure-blob-container: "egov-filestore"
