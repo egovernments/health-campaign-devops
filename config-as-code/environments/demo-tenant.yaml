@@ -101,7 +101,7 @@ console:
 transformer:
   image:
     repository: egovio/transformer
-    tag: HDDF-5226-1403ae9 
+    tag: HDDF-5226-5989d1b6f8-416
   namespace: "demo"
   heap: "-Xmx768m -Xms512m"
   hpa:
