@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hcm-demo-cluster-configs
+  namespace: argocd
+spec:
+  project: cluster-configs-project
+  sources:
+    - repoURL: git@github.com:egovernments/health-campaign-devops.git
+      targetRevision: azure-install-hcm-demo
+      path: "config-as-code/helm/charts/cluster-configs"
+      helm:
+        valueFiles:
+          - values.yaml
+          - ../../../environments/hcm-demo-azure.yaml
+          - secrets://../../../environments/hcm-demo-azure-secrets.yaml
+  destination:
+    server: https://kubernetes.default.svc
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
+      - ServerSideApply=true
+    retry:
+      limit: 100
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
