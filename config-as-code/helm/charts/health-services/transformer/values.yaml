@@ -394,9 +394,9 @@ env: |
     value: {{ index .Values "transformer-error-skip-url-contains" | default "facility,resource" | quote }}
 
   - name: TRANSFORMER_CONSUMER_SAVE_BILL_TOPIC
-    value: {{ index .Values "expense-bill-create-health-topic" | default "expense-bill-create" | quote }}
+    value: {{ index .Values "expense-bill-create-health-topic" | default "expense-bill-create-health" | quote }}
   - name: TRANSFORMER_CONSUMER_UPDATE_BILL_TOPIC
-    value: {{ index .Values "expense-bill-update-health-topic" | default "expense-bill-update" | quote }}
+    value: {{ index .Values "expense-bill-update-health-topic" | default "expense-bill-update-health" | quote }}
   - name: TRANSFORMER_PRODUCER_BILL_INDEX_V1_TOPIC
     value: {{ index .Values "transformer-bill-index-topic" | default "transformer-bill-index-topic" | quote }}
   - name: TRANSFORMER_PRODUCER_BILLDETAIL_INDEX_V1_TOPIC
@@ -409,9 +409,9 @@ env: |
     value: {{ index .Values "transformer-billreport-index-topic" | default "transformer-billreport-index-topic" | quote }}
   
   - name: TRANSFORMER_CONSUMER_SAVE_MUSTERROLL_TOPIC
-    value: {{ index .Values "save-musterroll-health-topic" | default "save-musterroll" | quote }}
+    value: {{ index .Values "save-musterroll-health-topic" | default "save-musterroll-health" | quote }}
   - name: TRANSFORMER_CONSUMER_UPDATE_MUSTERROLL_TOPIC
-    value: {{ index .Values "update-musterroll-health-topic" | default "update-musterroll" | quote }}
+    value: {{ index .Values "update-musterroll-health-topic" | default "update-musterroll-health" | quote }}
   - name: TRANSFORMER_PRODUCER_MUSTERROLL_INDEX_V1_TOPIC
     value: {{ index .Values "transformer-producer-muster-roll-index-v1-topic" | default "transformer-producer-muster-roll-index-v1-topic" | quote }}
   - name: TRANSFORMER_CONSUMER_SAVE_BILLDETAIL_TOPIC
@@ -448,8 +448,8 @@ env: |
     value: "60"
   
   - name: TRANSFORMER_CONSUMER_CREATE_USER_ACTION_TOPIC
-    value: {{ index .Values "transformer-consumer-create-user-action-topic" | default "demo-save-user-action-project-task-topic" | quote }}
+    value: {{ index .Values "transformer-consumer-create-user-action-topic" | default "save-user-action-project-topic" | quote }}
   - name: TRANSFORMER_CONSUMER_UPDATE_USER_ACTION_TOPIC
-    value: {{ index .Values "transformer-consumer-update-user-action-topic" | default "demo-update-user-action-project-task-topic" | quote }}
+    value: {{ index .Values "transformer-consumer-update-user-action-topic" | default "update-user-action-project-topic" | quote }}
   - name: TRANSFORMER_PRODUCER_USER_ACTION_INDEX_V1_TOPIC
     value: {{ index .Values "transformer-producer-user-action-index-v1-topic" | default "transformer-producer-user-action-index-v1-topic" | quote }}
