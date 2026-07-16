@@ -67,6 +67,7 @@ spec:
         syncOptions:
           - ApplyOutOfSyncOnly=true
           - ServerSideApply=true
+          - Replace=true
         retry:
           limit: 10
           backoff:
