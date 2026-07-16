@@ -86,8 +86,6 @@ env: |
     value: "true"
   - name: ISS3ENABLED
     value: "false"
-  - name: ISNFSSTORAGEENABLED
-    value: "false"
   - name: AZURE_ACCOUNTNAME
     valueFrom:
       secretKeyRef:
