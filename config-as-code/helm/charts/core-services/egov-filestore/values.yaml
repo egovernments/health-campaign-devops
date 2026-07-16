@@ -71,8 +71,6 @@ env: |
   {{- if index .Values "is-nfs-enabled" }}
   - name: MINIO_ENABLED
     value: "false"
-  - name: ISNFSSTORAGEENABLED
-    value: "true"
   - name: FIXED_BUCKET_REGION
     value: "af-south-1"
   - name: DISK_STORAGE_HOST_URL
