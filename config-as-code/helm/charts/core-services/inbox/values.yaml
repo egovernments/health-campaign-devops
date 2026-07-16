@@ -103,3 +103,5 @@ env: |
       secretKeyRef:
         key: password
         name: elasticsearch-master-credentials
+  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB_CLIENT
+    value: "DEBUG"
