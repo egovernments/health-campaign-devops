@@ -12,7 +12,7 @@ disableAnnotationTimestamp: true
 workbench-ui:
   image:
     repository: egovio/workbench-ui
-    tag: master-2d83e1d
+    tag: master-1ff404a
   namespace: demo
   custom-js-injection: |
     sub_filter.conf: "
@@ -24,7 +24,7 @@ workbench-ui:
 dashboard-ui:
   image:
     repository: egovio/dashboard-ui
-    tag: HCMPRE-4161-7ed6dce
+    tag: master-2d83e1d
   namespace: demo
   custom-js-injection: |
     sub_filter.conf: "
