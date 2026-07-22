@@ -27,6 +27,7 @@ healthChecks:
   readinessProbePath: "/project/health"
 appType: "java-spring"
 tracing-enabled: true
+kafka-mdc-enabled: "true"
 heap: "-Xmx192m -Xms192m"
 java-args: ""
 
@@ -306,3 +307,5 @@ env: |
     value: {{ index .Values "project-location-capture-consumer-bulk-create-topic" | quote }}
   - name: PROJECT_RELATIONSHIP_VALIDATION
     value: "false"
+  - name: TRACER_KAFKA_MDC_ENABLED
+    value: {{ index .Values "kafka-mdc-enabled" | quote }}
