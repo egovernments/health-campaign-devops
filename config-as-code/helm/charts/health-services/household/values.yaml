@@ -28,6 +28,7 @@ healthChecks:
   readinessProbePath: "/household/health"
 appType: "java-spring"
 tracing-enabled: true
+kafka-mdc-enabled: "true"
 heap: "-Xmx1024m -Xms192m"
 java-args: ""
 persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/household-persister.yml"
@@ -144,3 +145,5 @@ env: |
     value: {{ index .Values "household-kafka-delete-topic" | quote }}
   - name: HOUSEHOLD_MEMBER_RELATIONSHIP_VALIDATION
     value: "false"
+  - name: TRACER_KAFKA_MDC_ENABLED
+    value: {{ index .Values "kafka-mdc-enabled" | quote }}
