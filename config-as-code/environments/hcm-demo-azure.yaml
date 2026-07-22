@@ -131,7 +131,7 @@ cluster-configs:
               project-factory: 'http://project-factory.egov:8080/'
               mdms-service-v2: 'http://mdms-v2.egov:8080/'
               health-expense: 'http://health-expense.egov:8080/'
-              health-expense-calculator: 'http://health-expense-calculator.egov:8080/'
+              health-expense-calculator: 'http://health-expense-calculator.demo:8080/'
               health-muster-roll: 'http://health-muster-roll.egov:8080/'
               referralmanagement: 'http://referralmanagement.egov:8080/'
               inbox-v2: 'http://inbox-v2.egov:8080/'
@@ -1371,33 +1371,7 @@ health-attendance:
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
   egov-expense-calculator-billing-period-search-endpoint: "health-expense-calculator/billing-config/v1/periods/_search"
-  egov-muster-roll-search-endpoint: "health-muster-roll/v1/_search"
-
-health-expense-calculator:
-  image:
-    repository: egovio/health-expense-calculator
-    tag: master-cdc5957
-  initContainers:
-    dbMigration:
-      image:
-        repository: egovio/health-expense-calculator-db
-        tag: master-cdc5957
-  tracing-enabled: true
-  java-enable-debug: true
-  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
-  report-header-title: "Health Campaign Payment Report"
-  report-date-time-format: "dd/MM/yyyy HH:mm:ss z"
-  is-attendance-approval-required: "true"
-  register-batch-size: 15
-  bill-generation-async-enabled: "true"
-  bill-generation-async-topic: "demo-bill-generation-async-topic"
-  egov-musterroll-search-endpoint: "/health-muster-roll/v1/_search"
-  billing-frequency-custom-minimum-days: 1
-  tenantId: "demo"
-  excell-state-level-tenant-id: "demo"
-  spring-kafka-consumer-group-id: "health-expense-calculator-group"
-  
-
+  egov-muster-roll-search-endpoint: "health-muster-roll/v1/_search"  
 
 health-expense:
   image:
