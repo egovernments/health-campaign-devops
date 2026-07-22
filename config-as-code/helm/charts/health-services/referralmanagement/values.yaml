@@ -246,3 +246,5 @@ env: |
     value: "code"
   - name: EGOV_ENABLE_MATVIEW_SEARCH
     value: "false"
+  - name: REFERRALMANAGEMENT_RELATIONSHIP_VALIDATION
+    value: "false"
