@@ -142,3 +142,5 @@ env: |
     value: {{ index .Values "household-kafka-update-topic" | quote }}
   - name: HOUSEHOLD.KAFKA.DELETE.TOPIC
     value: {{ index .Values "household-kafka-delete-topic" | quote }}
+  - name: HOUSEHOLD_MEMBER_RELATIONSHIP_VALIDATION
+    value: "false"
