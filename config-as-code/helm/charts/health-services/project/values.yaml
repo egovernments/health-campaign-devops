@@ -304,3 +304,5 @@ env: |
     value: {{ index .Values "project-location-capture-kafka-create-topic" | quote }}
   - name: PROJECT_LOCATION_CAPTURE_CONSUMER_BULK_CREATE_TOPIC
     value: {{ index .Values "project-location-capture-consumer-bulk-create-topic" | quote }}
+  - name: PROJECT_RELATIONSHIP_VALIDATION
+    value: "false"
