@@ -27,6 +27,7 @@ healthChecks:
   readinessProbePath: "/product/health"
 appType: "java-spring"
 tracing-enabled: true
+kafka-mdc-enabled: "true"
 heap: "-Xmx192m -Xms192m"
 java-args: ""
 persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/product-persister.yml"
@@ -91,3 +92,5 @@ env: |
     value: {{ index .Values "product-variant-kafka-create-topic" | quote}}
   - name: PRODUCT_VARIANT_KAFKA_UPDATE_TOPIC
     value: {{ index .Values "product-variant-kafka-update-topic" | quote}}
+  - name: TRACER_KAFKA_MDC_ENABLED
+    value: {{ index .Values "kafka-mdc-enabled" | quote }}
