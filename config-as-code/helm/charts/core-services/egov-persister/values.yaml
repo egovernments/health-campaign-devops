@@ -37,3 +37,7 @@ env: |
     value: "8080"
   - name: JAEGER_SAMPLER_PARAM
     value: "1"
+  - name: PERSISTER_BULK_ENABLED
+    value: "true"
+  - name: PERSISTER_BATCH_TOPICS
+    value: "boundary-relationship-bulk-create-job"
