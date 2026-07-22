@@ -25,7 +25,6 @@ spec:
           - name: health-notification-service
           - name: airflow-trigger-service
           - name: egov-notification-push
-          - name: health-expense-calculator
 
   template:
     metadata:

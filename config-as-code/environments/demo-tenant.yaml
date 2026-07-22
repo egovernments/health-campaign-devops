@@ -184,3 +184,47 @@ transformer:
   transformer-producer-muster-roll-index-v1-topic: "demo-transformer-producer-muster-roll-index-v1-topic"
   expense-bill-detail-create-topic: "demo-expense-bill-detail-create"
   expense-bill-detail-update-topic: "demo-expense-bill-detail-update"
+
+
+health-expense-calculator:
+  image:
+    repository: egovio/health-expense-calculator
+    tag: master-cdc5957
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/health-expense-calculator-db
+        tag: master-cdc5957
+  tracing-enabled: true
+  java-enable-debug: true
+  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
+  report-header-title: "Health Campaign Payment Report"
+  report-date-time-format: "dd/MM/yyyy HH:mm:ss z"
+  is-attendance-approval-required: "true"
+  register-batch-size: 15
+  bill-generation-async-enabled: "true"
+  bill-generation-async-topic: "demo-bill-generation-async-topic"
+  egov-musterroll-search-endpoint: "/health-muster-roll/v1/_search"
+  billing-frequency-custom-minimum-days: 1
+  tenantId: "demo"
+  excell-state-level-tenant-id: "demo"
+  spring-kafka-consumer-group-id: "health-expense-calculator-group"
+  calculate-musterroll-health: demo-calculate-musterroll
+  calculate-error-health: demo-calculate-error
+  calculate-billmeta-health: demo-calculate-billmeta
+  billing-config-create-topic: demo-billing-config-create
+  billing-config-update-topic: demo-billing-config-update
+  billing-config-v2-enabled: "true"
+  billing-muster-roll-period-aware-enabled: "true"
+  billing-period-generation-enabled: "true"
+  billing-period-status-update-topic: demo-billing-period-status-update
+  expense-bill-create-topic: demo-expense-bill-create
+  expense-bill-index-topic: demo-expense-bill-index
+  expense-bill-update-topic: demo-expense-bill-update
+  payment-pdf-key: "health-bill-payment"
+  project-management-system-kafka-update-date-topic: demo-update-project-date
+  project-management-system-kafka-update-topic: demo-update-project
+  report-error-queue-topic: demo-report-error-queue-topic
+  report-generation-retry-trigger-topic: demo-report-generation-retry-trigger
+  report-generation-trigger-topic: demo-report-generation-trigger
+  report-retry-queue-topic: demo-report-retry-queue-topic

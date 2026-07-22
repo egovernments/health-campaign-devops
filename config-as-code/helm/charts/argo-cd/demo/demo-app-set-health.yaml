@@ -8,6 +8,7 @@ spec:
     - list:
         elements:
           - name: transformer
+          - name: health-expense-calculator
 
   template:
     metadata:
