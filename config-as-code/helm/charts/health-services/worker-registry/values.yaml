@@ -30,6 +30,7 @@ healthChecks:
   readinessProbePath: "/worker/health"
 appType: "java-spring"
 tracing-enabled: true
+kafka-mdc-enabled: "true"
 central-instance-build: true
 heap: "-Xmx256m -Xms256m"
 memory_limits: 512Mi
@@ -114,3 +115,5 @@ env: |
       configMapKeyRef:
         name: egov-config
         key: kafka-tenant-id-pattern
+  - name: TRACER_KAFKA_MDC_ENABLED
+    value: {{ index .Values "kafka-mdc-enabled" | quote }}
