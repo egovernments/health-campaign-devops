@@ -113,4 +113,5 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-config
+  
         key: kafka-tenant-id-pattern
