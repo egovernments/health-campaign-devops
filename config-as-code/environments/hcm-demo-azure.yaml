@@ -479,7 +479,7 @@ egov-user:
   central-instance-build: true
   central-instance-enabled: true
   db-schema-names: "mz,demo"
-  replicas: 4
+  replicas: 3
   heap: "-Xmx512m -Xms256m"
   memory_limits: 768Mi
   hpa:
