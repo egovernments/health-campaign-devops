@@ -20,7 +20,7 @@ initContainers:
 # Container Configs
 image:
   repository: "egov-user"
-replicas: "3"
+replicas: "4"
 healthChecks:
   enabled: true
   livenessProbePath: "/user/health"
