@@ -149,3 +149,5 @@ env: |
     value: "ADMIN"
   - name: EGOV_HRMS_USER_SERVICE_QUALIFIER
     value: "individualService"
+  - name: EGOV.INDIVIDUAL.CREATE.BULK.ENDPOINT
+    value: /individual/v1/bulk/_create

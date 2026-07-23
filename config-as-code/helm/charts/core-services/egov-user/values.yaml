@@ -27,6 +27,9 @@ healthChecks:
   readinessProbePath: "/user/health"
 appType: "java-spring"
 tracing-enabled: true
+cpu_limits: 4000m
+cpu_requests: 250m
+memory_requests: 768Mi
 
 decryption-abac-enabled: "false"
 account-unlock-cool-down-period-minutes: "30"
@@ -41,7 +44,7 @@ roles-state-level: "true"
 citizen-registration-withlogin: "true"
 citizen-otp-fixed: "123456"
 citizen-otp-fixed-enabled: "true"
-heap: "-Xmx192m -Xms192m"
+heap: "-Xmx512m -Xms256m"
 java-args: ""
 java-enable-debug: "true"
 
