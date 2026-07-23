@@ -1017,7 +1017,7 @@ facility:
   central-instance-name: egov
   central-instance-enabled: true
   replicas: 3
-  heap: '-Xmx512m -Xms256m'
+  heap: '-Xmx512m -Xms384m'
   memory_limits: 512Mi
 
 project:
