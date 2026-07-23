@@ -896,12 +896,12 @@ egov-workflow-v2:
 egov-hrms:
   image:
     repository: egovio/egov-hrms
-    tag: master-c5dff1d
+    tag: master-bulk-user-create-update-577ac93
   initContainers:
     dbMigration:
       image:
         repository: egovio/egov-hrms-db
-        tag: master-c5dff1d
+        tag: master-bulk-user-create-update-577ac93
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1040,12 +1040,12 @@ project:
 individual:
   image:
     repository: egovio/individual
-    tag: master-7f8a6b8
+    tag: master-bulk-user-create-update-577ac93
   initContainers:
     dbMigration:
       image:
         repository: egovio/individual-db
-        tag: master-7f8a6b8
+        tag: master-bulk-user-create-update-577ac93
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
