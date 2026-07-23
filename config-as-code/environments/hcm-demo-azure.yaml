@@ -652,7 +652,7 @@ egov-persister:
   central-instance-enabled: true
   replicas: 3
   heap: '-Xmx256m -Xms256m'
-  memory_limits: 256Mi
+  memory_limits: 1Gi
   hpa:
     enabled: true
     minReplicas: 1
