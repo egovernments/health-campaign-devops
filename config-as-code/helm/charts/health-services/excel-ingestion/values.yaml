@@ -32,6 +32,8 @@ appType: "java-spring"
 tracing-enabled: true
 memory_limits: "3072Mi"
 cpu_limits: "500m"
+cpu_requests: 100m
+memory_requests: 64Mi
 heap: "-Xmx2900m -Xms256m"
 java-args: ""
 egov-mdms-service-host-key: "egov-mdms-service"

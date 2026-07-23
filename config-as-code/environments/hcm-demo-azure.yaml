@@ -479,9 +479,9 @@ egov-user:
   central-instance-build: true
   central-instance-enabled: true
   db-schema-names: "mz,demo"
-  replicas: 3
+  replicas: 4
   heap: "-Xmx512m -Xms256m"
-  memory_limits: 512Mi
+  memory_limits: 768Mi
   hpa:
     enabled: true
     minReplicas: 1
@@ -502,6 +502,8 @@ egov-user:
   egov-state-level-tenant-id: "demo"
   state-level-tenant-id: "demo"
   decryption-abac-enabled: "false"
+  server-tomcat-max-threads: "200"
+  bulk-bcrypt-threads: "4"
 
 chatbot:
   kafka-topics-partition-count: 3
@@ -650,6 +652,7 @@ egov-persister:
   central-instance-enabled: true
   replicas: 3
   heap: '-Xmx256m -Xms256m'
+  memory_limits: 256Mi
   hpa:
     enabled: true
     minReplicas: 1
@@ -903,12 +906,15 @@ egov-hrms:
   central-instance-build: true
   central-instance-enabled: true
   java-args: -Dspring.profiles.active=monitoring
-  replicas : 1
+  replicas : 4
   heap: '-Xmx512m -Xms256m'
-  memory_limits: 512Mi
+  memory_limits: 1Gi
+  memory_requests: 768Mi
   employee-applink: "https://egov-demo.egovernments.org/employee/user/login"
   microplanWebsiteLink: "https://health-demo.digit.org/console/employee/user/login"
   microplanImplementationPartner: "Console Team"
+  spring-datasource-tomcat-max-active: "10"
+  server-tomcat-max-threads: "20"
 
 
 mdms-v2:
@@ -1043,9 +1049,10 @@ individual:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
-  replicas: 2
+  replicas: 3
   heap: '-Xmx512m -Xms256m'
-  memory_limits: 512Mi
+  memory_limits: 1Gi
+  cpu_limits: 1000m
   hpa:
     enabled: true
     minReplicas: 1
@@ -1057,6 +1064,8 @@ individual:
   egov-idgen-generate-path: "egov-idgen/id/_generate"
   egov-beneficiary-idgen-idpool-search-path: "beneficiary-idgen/id/id_pool/_search"
   egov-beneficiary-idgen-idpool-update-path: "beneficiary-idgen/id/id_pool/_update"
+  spring-datasource-tomcat-max-active: "10"
+  server-tomcat-max-threads: "20"
 
 product:
   image:
@@ -1128,18 +1137,18 @@ project-factory:
     dbMigration:
       image:
         repository: "project-factory-db"
-        tag: master-c5dff1d
+        tag: master-perf-27551e9
   image:
     repository: egovio/project-factory
-    tag: master-c5dff1d
+    tag: master-perf-27551e9
   central-instance-enabled: true
   central-instance-build: true
   namespace: egov
   heap: "-Xmx2048m -Xms512m"
   replicas: 3
   cpu_requests: 200m
-  memory_requests: 768Mi
-  cpu_limits: 1000m
+  memory_requests: 1500Mi
+  cpu_limits: 1500m
   memory_limits: 2.5Gi
   groupId: "egov-project-factory"
   logLevel: 'debug'
@@ -1179,7 +1188,7 @@ project-factory:
   userCreateBatchTopic: "hcm-user-create-batch"
   mappingBatchTopic: "hcm-mapping-batch"
   campaignMarkFailedTopic: "hcm-campaign-mark-failed"
-  userMainBoundary: "ADMIN"
+  userMainBoundary: "DEMO"
   userMainBoundaryType: "Country"
   maxResourceCreationAttempts: "200"
   waitTimeOfEachAttemptMs: "20000"
@@ -1188,6 +1197,14 @@ project-factory:
   attendanceAttendeeSearchPageSize: "100"
   attendanceStaffSearchPageSize: "100"
   centralInstanceTenantIds: "demo"
+  userKafkaCreateBatchSize: '100'
+  mappingBulkCreateChunkSize: '150'
+  projectBulkCreateChunkSize: '100'
+  projectCreatePaceDelayMs: '100'
+  userWorkerCreateBatchLag: '15'
+  userIndividualConsistencyMaxPollAttempts: '25'
+  userIndividualSearchBatchSize: '150'
+  mappingKafkaBatchSize: '300'
   command: |
     - sh
     - -c
@@ -1266,12 +1283,12 @@ resource-generator:
 excel-ingestion:
   image:
     repository: egovio/excel-ingestion
-    tag: master-c5dff1d
+    tag: master-perf-76869fc
   initContainers:
     dbMigration:
       image:
         repository: egovio/excel-ingestion-db
-        tag: master-c5dff1d
+        tag: master-perf-76869fc
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
   defaultLocale: 'en_DEMO'
@@ -1281,6 +1298,7 @@ excel-ingestion:
 
 worker-registry:
   namespace: egov
+  replicas: 2
   initContainers:
     dbMigration:
       image:
@@ -1490,12 +1508,12 @@ egov-url-shortening:
 egov-user-event:
   image:
     repository: egovio/egov-user-event
-    tag: core-2.9-lts-mvn-check-57ef3ac8dd-4
+    tag: user-bulk-upgrade-960226f
   initContainers:
     dbMigration:
       image:
         repository: egovio/egov-user-event-db
-        tag: core-2.9-lts-mvn-check-57ef3ac8dd-4
+        tag: user-bulk-upgrade-960226f
 
 error-handler:
   image:

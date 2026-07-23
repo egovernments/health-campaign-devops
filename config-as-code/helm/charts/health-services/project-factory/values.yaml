@@ -580,3 +580,13 @@ env: |
     value: {{ .Values.hrmsSearchByUsernameBatchSize | default "50" | quote }}
   - name: KAFKA_CONSUMER_MAX_CONCURRENT
     value: {{ .Values.kafkaConsumerMaxConcurrent | default "5" | quote }}
+  - name: MAPPING_BULK_CREATE_CHUNK_SIZE
+    value: {{ .Values.mappingBulkCreateChunkSize | default "100" | quote }}
+  - name: PROJECT_BULK_CREATE_CHUNK_SIZE
+    value: {{ .Values.projectBulkCreateChunkSize | default "100" | quote }}
+  - name: PROJECT_CREATE_PACE_DELAY_MS
+    value: {{ .Values.projectCreatePaceDelayMs | default "0" | quote }}
+  - name: USER_WORKER_CREATE_BATCH_LAG
+    value: {{ .Values.userWorkerCreateBatchLag | default "2" | quote }}
+  - name: STAFF_MAPPING_BULK
+    value: {{ .Values.staffMappingBulk | default "true" | quote }}

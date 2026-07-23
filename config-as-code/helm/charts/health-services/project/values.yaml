@@ -29,6 +29,7 @@ appType: "java-spring"
 tracing-enabled: true
 heap: "-Xmx192m -Xms192m"
 java-args: ""
+memory_requests: 256Mi
 
 kafka-consumer-group-id: health-project
 project-task-kafka-create-topic: save-project-task-topic
