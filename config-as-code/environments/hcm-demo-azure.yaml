@@ -484,7 +484,7 @@ egov-user:
   memory_limits: 768Mi
   hpa:
     enabled: true
-    minReplicas: 3
+    minReplicas: 4
     maxReplicas: 5
     cpuTargetPercentage: 70
     memoryTargetPercentage: 80
