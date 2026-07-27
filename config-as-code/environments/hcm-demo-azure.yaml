@@ -469,12 +469,12 @@ egov-notification-sms:
 egov-user:
   image:
     repository: egovio/egov-user
-    tag: sandbox-log-f4a87d0
+    tag: user-bulk-upgrade-960226f
   initContainers:
     dbMigration:
       image:
         repository: egovio/egov-user-db
-        tag: sandbox-log-f4a87d0
+        tag: user-bulk-upgrade-960226f
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1043,12 +1043,12 @@ project:
 individual:
   image:
     repository: egovio/individual
-    tag: master-perf-ea56eb0
+    tag: master-bulk-user-create-update-577ac93
   initContainers:
     dbMigration:
       image:
         repository: egovio/individual-db
-        tag: master-perf-ea56eb0
+        tag: master-bulk-user-create-update-577ac93
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
