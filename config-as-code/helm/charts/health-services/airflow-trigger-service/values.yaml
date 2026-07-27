@@ -2,7 +2,7 @@
 labels:
   app: "airflow-trigger-api"
   group: "digit-health"
-
+namespace: egov
 # Ingress Configs
 ingress:
   namespace: egov
@@ -11,12 +11,11 @@ ingress:
   rewriteEnable: false
   rewritePath: ""
   context: "airflow-trigger-api"
-
 # Init Containers Configs
 initContainers:
   extraInitContainers: |
     - name: run-migration
-      image: {{ index .Values "initContainerImage" | quote }}
+      image: {{ include "common.image" (dict "Values" $.Values "repository" $.Values.image.repository "tag" $.Values.image.tag) }}
       command: [ "python", "migrate.py" ]
       env:
         - name: DB_HOST
@@ -42,13 +41,8 @@ initContainers:
               name: db
               key: password
         - name: DB_SCHEMAS
-          valueFrom:
-            configMapKeyRef:
-              name: egov-config
-              key: db-schema-names
-
+          value: "demo"
 httpPort: 8000
-
 # Container Configs
 image:
   repository: "airflow-trigger-service"
@@ -64,7 +58,6 @@ imagePullSecrets: |
 #heap: "-Xmx192m -Xms192m"
 #java-args: ""
 #egov-mdms-service-host-key: "mdms-v2"
-
 # Additional Container Envs
 env: |
   - name: AIRFLOW_BASE_URL
@@ -104,9 +97,20 @@ env: |
         name: db
         key: password
   - name: IS_CENTRAL_INSTANCE_ENABLED
-    value: {{ index .Values "is-central-instance-enabled" | quote | default "true" }}
+    value: "true"
   - name: DB_SCHEMA
+    value: "demo"
+  - name: EGOV_DASHBOARD_ANALYTICS_HOST
     valueFrom:
       configMapKeyRef:
-        name: egov-config
-        key: db-schema-names
+        name: egov-service-host
+        key: dashboard-analytics
+  - name: CUSTOM_REPORT_RETRY_COOLDOWN_SECONDS
+    value: "3600"
+resources: |
+  requests:
+    cpu: "50m"
+    memory: "256Mi"
+  limits:
+    cpu: "200m"
+    memory: "512Mi"
