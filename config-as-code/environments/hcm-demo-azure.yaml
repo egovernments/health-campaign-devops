@@ -659,7 +659,7 @@ egov-persister:
     maxReplicas: 3
     cpuTargetPercentage: 70
     memoryTargetPercentage: 80
-  persist-yml-path: "/work-dir/health-campaign-config/egov-persister/common,/work-dir/health-campaign-config/egov-persister/demo"
+  persist-yml-path: "/work-dir/health-campaign-config/egov-persister/common,/work-dir/health-campaign-config/egov-persister/demo,/work-dir/health-campaign-config/egov-persister"
   initContainers:
     dbMigration:
       image:
