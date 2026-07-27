@@ -322,7 +322,7 @@ egov-filestore:
 egov-idgen:
   image:
     repository: egovio/egov-idgen
-    tag: master-1e8d2bb
+    tag: 2.9-LTS-IDgen-mdmsDatacache-ddf1845
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -336,7 +336,7 @@ egov-idgen:
     dbMigration:
       image:
         repository: egovio/egov-idgen-db
-        tag: master-1e8d2bb
+        tag: 2.9-LTS-IDgen-mdmsDatacache-ddf1845
   replicas : 1
   idformat-from-mdms: "true"
   java-args: -Dspring.profiles.active=monitoring
@@ -646,7 +646,7 @@ egov-indexer:
 egov-persister:
   image:
     repository: egovio/egov-persister
-    tag: master-perf-fe334d2
+    tag: master-perf-ad568fb
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -664,7 +664,7 @@ egov-persister:
     dbMigration:
       image:
         repository: egovio/egov-persister-db
-        tag: master-perf-fe334d2
+        tag: master-perf-ad568fb
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
       branch: "HCM-v2.1-DEMO"                                    ##### Change repo branch with Your fork Repo branch
@@ -922,12 +922,12 @@ egov-hrms:
 mdms-v2:
   image:
     repository: egovio/mdms-v2
-    tag: central-instance-6fae5fdefc-96
+    tag: central-instance-tracerNew-eb7ff05
   initContainers:
     dbMigration:
       image:
         repository: egovio/mdms-v2-db
-        tag: central-instance-6fae5fdefc-96
+        tag: central-instance-tracerNew-eb7ff05
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -973,7 +973,7 @@ egov-weekly-impact-notifier:
 egov-enc-service:
   image:
     repository: egovio/egov-enc-service
-    tag: central-instance-e346023dcb-26
+    tag: central-instance-tracerNew-eb7ff05
   central-instance-name: egov
   central-instance-build: true
   # central-instance-enabled: true
@@ -981,7 +981,7 @@ egov-enc-service:
     dbMigration:
       image:
         repository: egovio/egov-enc-service-db
-        tag: central-instance-e346023dcb-26
+        tag: central-instance-tracerNew-eb7ff05
   replicas: 1
   heap: '-Xmx512m -Xms256m'
   memory_limits: 512Mi
@@ -1463,12 +1463,12 @@ health-muster-roll:
 boundary-service:
   image:
     repository: egovio/boundary-service
-    tag: master-perf-7c8d3ea
+    tag: master-perf-ad568fb
   initContainers:
     dbMigration:
       image:
         repository: egovio/boundary-service-db
-        tag: master-perf-7c8d3ea
+        tag: master-perf-ad568fb
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
