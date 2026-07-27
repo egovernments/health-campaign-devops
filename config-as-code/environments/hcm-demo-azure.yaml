@@ -1299,6 +1299,7 @@ excel-ingestion:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
+  memory_limits: 4Gi
 
 worker-registry:
   namespace: egov
