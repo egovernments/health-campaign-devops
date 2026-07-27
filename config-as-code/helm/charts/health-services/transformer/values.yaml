@@ -27,6 +27,7 @@ healthChecks:
   readinessProbePath: "/transformer/health"
 appType: "java-spring"
 tracing-enabled: true
+kafka-mdc-enabled: "true"
 heap: "-Xmx1024m -Xms1024m"
 java-args: ""
 memory_limits: "1Gi"
@@ -453,3 +454,5 @@ env: |
     value: {{ index .Values "transformer-consumer-update-user-action-topic" | default "update-user-action-project-topic" | quote }}
   - name: TRANSFORMER_PRODUCER_USER_ACTION_INDEX_V1_TOPIC
     value: {{ index .Values "transformer-producer-user-action-index-v1-topic" | default "transformer-producer-user-action-index-v1-topic" | quote }}
+  - name: TRACER_KAFKA_MDC_ENABLED
+    value: {{ index .Values "kafka-mdc-enabled" | quote }}

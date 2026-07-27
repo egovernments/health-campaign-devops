@@ -30,6 +30,7 @@ healthChecks:
   readinessProbePath: "/excel-ingestion/health"
 appType: "java-spring"
 tracing-enabled: true
+kafka-mdc-enabled: "true"
 memory_limits: "3072Mi"
 cpu_limits: "500m"
 cpu_requests: 100m
@@ -130,6 +131,8 @@ env: |
     value: "health-attendance/staff/v1/_search"
   - name: EGOV_ATTENDANCE_STAFF_SEARCH_PAGE_SIZE
     value: "100"
+  - name: TRACER_KAFKA_MDC_ENABLED
+    value: {{ index .Values "kafka-mdc-enabled" | quote }}
   
   
   - name: EGOV_WORKER_REGISTRY_HOST

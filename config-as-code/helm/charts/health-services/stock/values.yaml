@@ -28,6 +28,7 @@ healthChecks:
   readinessProbePath: "/stock/health"
 appType: "java-spring"
 tracing-enabled: true
+kafka-mdc-enabled: "true"
 heap: "-Xmx192m -Xms192m"
 java-args: ""
 egov-mdms-service-host-key: "mdms-v2"
@@ -172,3 +173,5 @@ env: |
     value: ""
   - name: EGOV_MDMS_INTEGRATION_ENABLED
     value: "false"
+  - name: TRACER_KAFKA_MDC_ENABLED
+    value: {{ index .Values "kafka-mdc-enabled" | quote }}

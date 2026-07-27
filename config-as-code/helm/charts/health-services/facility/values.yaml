@@ -27,6 +27,7 @@ healthChecks:
   readinessProbePath: "/facility/health"
 appType: "java-spring"
 tracing-enabled: true
+kafka-mdc-enabled: "true"
 cpu_limits: 500m
 cpu_requests: 100m
 memory_requests: 256Mi
@@ -103,3 +104,5 @@ env: |
     value: "create-facility-bulk-topic"
   - name: FACILITY.CONSUMER.BULK.UPDATE.TOPIC
     value: "update-facility-bulk-topic"
+  - name: TRACER_KAFKA_MDC_ENABLED
+    value: {{ index .Values "kafka-mdc-enabled" | quote }}

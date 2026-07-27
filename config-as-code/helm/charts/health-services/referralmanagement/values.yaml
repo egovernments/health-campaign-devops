@@ -27,6 +27,7 @@ healthChecks:
   readinessProbePath: "/referralmanagement/health"
 appType: "java-spring"
 tracing-enabled: true
+kafka-mdc-enabled: "true"
 heap: "-Xmx192m -Xms192m"
 java-args: ""
 persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/referral-management-persister.yml"
@@ -246,3 +247,7 @@ env: |
     value: "code"
   - name: EGOV_ENABLE_MATVIEW_SEARCH
     value: "false"
+  - name: REFERRALMANAGEMENT_RELATIONSHIP_VALIDATION
+    value: "false"
+  - name: TRACER_KAFKA_MDC_ENABLED
+    value: {{ index .Values "kafka-mdc-enabled" | quote }}

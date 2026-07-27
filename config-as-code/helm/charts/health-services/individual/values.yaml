@@ -27,6 +27,7 @@ healthChecks:
   readinessProbePath: "/individual/health"
 appType: "java-spring"
 tracing-enabled: true
+kafka-mdc-enabled: "true"
 heap: "-Xmx384m -Xms384m"
 cpu_requests: 200m
 memory_requests: 768Mi
@@ -181,3 +182,5 @@ env: |
     value: "update-user-id-topic"
   - name: NOTIFICATION_SMS_ENABLED
     value: "false"
+  - name: TRACER_KAFKA_MDC_ENABLED
+    value: {{ index .Values "kafka-mdc-enabled" | quote }}
