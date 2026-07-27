@@ -101,7 +101,7 @@ console:
 transformer:
   image:
     repository: egovio/transformer
-    tag: HDDF-5226-8723057
+    tag: HDDF-5226-ERROR-CATCH-acbd7ef
   namespace: "demo"
   heap: "-Xmx768m -Xms512m"
   hpa:
