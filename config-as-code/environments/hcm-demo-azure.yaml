@@ -288,10 +288,10 @@ egov-filestore:
     dbMigration:
       image:
         repository: egovio/egov-filestore-db
-        tag: master-filestore-fix-5e0acbc
+        tag: master-1e8d2bb 
   image:
     repository: egovio/egov-filestore
-    tag: master-filestore-fix-5e0acbc
+    tag: master-1e8d2bb 
   replicas: 2
   hpa:
     enabled: true
