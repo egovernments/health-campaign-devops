@@ -150,6 +150,6 @@ env: |
     value: "redis.backbone"
   {{- end }}
   - name: SPRING_CODEC_MAX_IN_MEMORY_SIZE
-    value: "4194304"
+    value: "20971520"
   - name: SPRING_DATA_REDIS_RATELIMIT_ENABLED
     value: {{ index .Values "spring-data-redis-ratelimit-enabled" | quote }}
