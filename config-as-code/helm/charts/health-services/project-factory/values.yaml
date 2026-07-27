@@ -594,5 +594,5 @@ env: |
     value: project/staff/v1/bulk/_create
   - name: EGOV_PROJECT_RESOURCE_BULK_CREATE_PATH
     value: project/resource/v1/bulk/_create
-  - name: EGOV_HEALTH_PROJECT_FACILITY_BULK_CREATE_PATH
+  - name: EGOV_PROJECT_FACILITY_BULK_CREATE_PATH
     value: project/facility/v1/bulk/_create
