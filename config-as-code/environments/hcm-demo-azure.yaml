@@ -1216,12 +1216,12 @@ project-factory:
 boundary-management:
   image:
     repository: egovio/boundary-management
-    tag: master-aa57e79
+    tag: master-perf-ea56eb0
   initContainers:
     dbMigration:
       image:
         repository: egovio/boundary-management-db
-        tag: master-aa57e79
+        tag: master-perf-ea56eb0
   DEBUG: 'true'
   namespace: 'egov'
   logLevel: 'debug'
@@ -1459,12 +1459,12 @@ health-muster-roll:
 boundary-service:
   image:
     repository: egovio/boundary-service
-    tag: master-1e8d2bb
+    tag: master-perf-7c8d3ea
   initContainers:
     dbMigration:
       image:
         repository: egovio/boundary-service-db
-        tag: master-1e8d2bb
+        tag: master-perf-7c8d3ea
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
