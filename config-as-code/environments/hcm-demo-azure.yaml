@@ -1287,12 +1287,12 @@ resource-generator:
 excel-ingestion:
   image:
     repository: egovio/excel-ingestion
-    tag: master-perf-76869fc
+    tag: master-perf-2b71623
   initContainers:
     dbMigration:
       image:
         repository: egovio/excel-ingestion-db
-        tag: master-perf-76869fc
+        tag: master-perf-2b71623
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
   defaultLocale: 'en_DEMO'
