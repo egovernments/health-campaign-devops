@@ -20,7 +20,7 @@ initContainers:
 # Container Configs
 image:
   repository: "individual"
-replicas: "1"
+replicas: "3"
 healthChecks:
   enabled: true
   livenessProbePath: "/individual/health"
@@ -29,7 +29,8 @@ appType: "java-spring"
 tracing-enabled: true
 kafka-mdc-enabled: "true"
 heap: "-Xmx384m -Xms384m"
-memory_limits: 512Mi
+cpu_requests: 200m
+memory_requests: 768Mi
 java-args: ""
 
 kafka-consumer-group-id: health-individual
