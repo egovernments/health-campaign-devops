@@ -1300,6 +1300,7 @@ excel-ingestion:
   central-instance-build: true
   central-instance-enabled: true
   memory_limits: 4Gi
+  heap: "-Xmx2900m -Xms256m"
 
 worker-registry:
   namespace: egov
