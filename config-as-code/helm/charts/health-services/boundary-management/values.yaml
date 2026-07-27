@@ -27,9 +27,10 @@ image:
   repository: "boundary-management"
 replicas: "1"
 appType: "java-spring"
-heap: '-Xmx768m -Xms512m'
-memory_limits: '1Gi'
-cpu_limits: '300m'
+heap: '-Xmx1000m -Xms756m'
+memory_limits: '3Gi'
+cpu_limits: '756m'
+memory_requests: 256Mi
 defaultLocale: 'en_DEMO'
 # Additional Container Envs
 env: |
