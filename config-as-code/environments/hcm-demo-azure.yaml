@@ -1156,7 +1156,6 @@ project-factory:
   cpu_limits: 1500m
   memory_limits: 2.5Gi
   groupId: "egov-project-factory"
-  logLevel: 'debug'
   maxDebugChar: '2000'
   mdmsV2SearchEndpoint: 'mdms-v2/v2/_search'
   mdmsV1SearchEndpoint: 'mdms-v2/v1/_search'
