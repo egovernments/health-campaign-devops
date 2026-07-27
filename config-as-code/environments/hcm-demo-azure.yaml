@@ -912,6 +912,7 @@ egov-hrms:
   heap: '-Xmx512m -Xms256m'
   memory_limits: 1Gi
   memory_requests: 768Mi
+  cpu_requests: 200m
   employee-applink: "https://egov-demo.egovernments.org/employee/user/login"
   microplanWebsiteLink: "https://health-demo.digit.org/console/employee/user/login"
   microplanImplementationPartner: "Console Team"
