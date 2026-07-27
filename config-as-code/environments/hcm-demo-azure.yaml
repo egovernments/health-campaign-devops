@@ -411,12 +411,12 @@ beneficiary-idgen:
 household:
   image:
     repository: egovio/household
-    tag: master-7f8a6b8
+    tag: master-perf-2d35084
   initContainers:
     dbMigration:
       image:
         repository: egovio/household-db
-        tag: master-7f8a6b8
+        tag: master-perf-2d35084
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -780,7 +780,7 @@ redoc:
 gateway:
   image:
     repository: egovio/gateway
-    tag: gatewat-rate-limit-per-route-f808ba0
+    tag: HCMPRE-2023-corrfix-tenantId-11a40a1
   replicas: 2
   custom-filter-property: "false"
   tracing-enabled: "true"
@@ -1009,12 +1009,12 @@ egov-accesscontrol:
 facility:
   image:
     repository: egovio/facility
-    tag: master-7f8a6b8
+    tag: master-perf-2d35084
   initContainers:
     dbMigration:
       image:
         repository: egovio/facility-db
-        tag: master-7f8a6b8
+        tag: master-perf-2d35084
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: true
@@ -1025,12 +1025,12 @@ facility:
 project:
   image:
     repository: egovio/project
-    tag: master-7f8a6b8
+    tag: master-perf-ea56eb0
   initContainers:
     dbMigration:
       image:
         repository: egovio/project-db
-        tag: master-7f8a6b8
+        tag: master-perf-ea56eb0
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1043,12 +1043,12 @@ project:
 individual:
   image:
     repository: egovio/individual
-    tag: master-bulk-user-create-update-577ac93
+    tag: master-perf-ea56eb0
   initContainers:
     dbMigration:
       image:
         repository: egovio/individual-db
-        tag: master-bulk-user-create-update-577ac93
+        tag: master-perf-ea56eb0
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1074,12 +1074,12 @@ individual:
 product:
   image:
     repository: egovio/product
-    tag: master-7f8a6b8
+    tag: master-perf-2d35084
   initContainers:
     dbMigration:
       image:
         repository: egovio/product-db
-        tag: master-7f8a6b8
+        tag: master-perf-2d35084
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1091,12 +1091,12 @@ product:
 referralmanagement:
   image:
     repository: egovio/referralmanagement
-    tag: master-7f8a6b8
+    tag: master-perf-2d35084
   initContainers:
     dbMigration:
       image:
         repository: egovio/referralmanagement-db
-        tag: master-7f8a6b8
+        tag: master-perf-2d35084
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: true
@@ -1124,12 +1124,12 @@ pgr-services:
 stock:
   image:
     repository: egovio/stock
-    tag: master-7f8a6b8
+    tag: master-perf-2d35084
   initContainers:
     dbMigration:
       image:
         repository: egovio/stock-db
-        tag: master-7f8a6b8
+        tag: master-perf-2d35084
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1307,10 +1307,10 @@ worker-registry:
     dbMigration:
       image:
         repository: egovio/worker-registry-db
-        tag: master-7f8a6b8
+        tag: master-perf-1de0742
   image:
     repository: egovio/worker-registry
-    tag: master-7f8a6b8
+    tag: master-perf-1de0742
   central-instance-build: true
   central-instance-enabled: true
   central-instance-name: egov
@@ -1324,10 +1324,10 @@ health-notification-service:
     dbMigration:
       image:
         repository: egovio/health-notification-service-db
-        tag: master-7f8a6b8
+        tag: master-perf-2d35084
   image:
     repository: egovio/health-notification-service
-    tag: master-7f8a6b8
+    tag: master-perf-2d35084
   replicas: 1
   central-instance-build: true
   central-instance-enabled: true
