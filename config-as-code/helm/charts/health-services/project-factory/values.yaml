@@ -590,3 +590,9 @@ env: |
     value: {{ .Values.userWorkerCreateBatchLag | default "2" | quote }}
   - name: STAFF_MAPPING_BULK
     value: {{ .Values.staffMappingBulk | default "true" | quote }}
+  - name: EGOV_PROJECT_STAFF_BULK_CREATE_PATH
+    value: project/staff/v1/bulk/_create
+  - name: EGOV_PROJECT_RESOURCE_BULK_CREATE_PATH
+    value: project/resource/v1/bulk/_create
+  - name: EGOV_HEALTH_PROJECT_FACILITY_BULK_CREATE_PATH
+    value: project/facility/v1/bulk/_create
