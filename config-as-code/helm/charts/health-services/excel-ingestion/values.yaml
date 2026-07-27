@@ -32,10 +32,9 @@ appType: "java-spring"
 tracing-enabled: true
 kafka-mdc-enabled: "true"
 memory_limits: "3072Mi"
-cpu_limits: "500m"
-cpu_requests: 100m
-memory_requests: 64Mi
-heap: "-Xmx2900m -Xms256m"
+cpu_limits: "2000m"
+cpu_requests: "500m"
+heap: "-Xmx2900m -Xms256m -XX:+ExitOnOutOfMemoryError"
 java-args: ""
 egov-mdms-service-host-key: "egov-mdms-service"
 egov-mdms-service-endpoint-key: "egov-mdms-service/v2/_search"
