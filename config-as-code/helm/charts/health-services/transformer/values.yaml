@@ -456,5 +456,5 @@ env: |
     value: {{ index .Values "transformer-producer-user-action-index-v1-topic" | default "transformer-producer-user-action-index-v1-topic" | quote }}
   - name: TRACER_KAFKA_MDC_ENABLED
     value: {{ index .Values "kafka-mdc-enabled" | quote }}
-  - name: TRANSFORMER_ERROR_TOPIC:
+  - name: TRANSFORMER_ERROR_TOPIC
     value: demo-transformer-error-topic
