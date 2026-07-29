@@ -1142,10 +1142,10 @@ project-factory:
     dbMigration:
       image:
         repository: "project-factory-db"
-        tag: master-perf-27551e9
+        tag: master-perf-checklist-clone-3cc3f79
   image:
     repository: egovio/project-factory
-    tag: master-perf-27551e9
+    tag: master-perf-checklist-clone-3cc3f79
   central-instance-enabled: true
   central-instance-build: true
   namespace: egov
