@@ -784,7 +784,9 @@ gateway:
   replicas: 2
   custom-filter-property: "false"
   tracing-enabled: "true"
-  heap: "-Xmx704m -Xms512m"
+  heap: "-Xms768m -Xmx768m"
+  memory_limits: 1Gi
+  memory_requests: 768Mi
   hpa:
     enabled: true
     minReplicas: 1
@@ -1481,6 +1483,7 @@ boundary-service:
   cpu_limits: "500m"
   cpu_requests: 200m
   replicas : 3
+  heap : "-Xms1024m -Xmx1536m"
   hpa:
     enabled: true
     minReplicas: 1
