@@ -569,9 +569,9 @@ egov-malware-detection:
 airflow-trigger-service:
   image:
     repository: egovio/airflow-trigger-service
-    tag: HCMPRE-4161-airflowTrigger-9e242cf
+    tag: HCMPRE-4161-airflowTrigger-38342cf
   namespace: egov
-  initContainerImage: "egovio/airflow-trigger-service:HCMPRE-4161-airflowTrigger-9e242cf"
+  initContainerImage: "egovio/airflow-trigger-service:HCMPRE-4161-airflowTrigger-38342cf"
   is-central-instance-enabled: "true"
   hpa:
     enabled: true
