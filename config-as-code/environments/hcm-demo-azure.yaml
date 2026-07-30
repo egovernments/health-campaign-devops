@@ -1476,9 +1476,11 @@ boundary-service:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
-  memory_limits: 1500Mi
-  memory_requests: 768Mi
+  memory_limits: 2500Mi
+  memory_requests: 1500Mi
   cpu_limits: "500m"
+  cpu_requests: 200m
+  replicas : 3
   hpa:
     enabled: true
     minReplicas: 1
