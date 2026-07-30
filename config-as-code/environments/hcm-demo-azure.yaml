@@ -328,8 +328,8 @@ egov-idgen:
   central-instance-enabled: true
   hpa:
     enabled: true
-    minReplicas: 1
-    maxReplicas: 3
+    minReplicas: 3
+    maxReplicas: 4
     cpuTargetPercentage: 70
     memoryTargetPercentage: 80
   initContainers:
@@ -337,7 +337,7 @@ egov-idgen:
       image:
         repository: egovio/egov-idgen-db
         tag: 2.9-LTS-IDgen-mdmsDatacache-bd2b4f1
-  replicas : 1
+  replicas : 3
   idformat-from-mdms: "true"
   java-args: -Dspring.profiles.active=monitoring
   heap: "-Xmx512m -Xms256m"
