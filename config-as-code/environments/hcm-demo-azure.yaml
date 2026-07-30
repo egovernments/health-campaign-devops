@@ -347,7 +347,7 @@ egov-idgen:
 beneficiary-idgen:
   image:
     repository: egovio/beneficiary-idgen
-    tag: master-eb25d83
+    tag: beneficiary-idgen-central-instance-a8d144a
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -355,7 +355,7 @@ beneficiary-idgen:
     dbMigration:
       image:
         repository: egovio/beneficiary-idgen-db
-        tag: master-eb25d83
+        tag: beneficiary-idgen-central-instance-a8d144a
   idformat-from-mdms: "true"
   java-args: -Dspring.profiles.active=monitoring
   autocreate-new-seq: "true"
