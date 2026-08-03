@@ -1208,11 +1208,13 @@ project-factory:
   userKafkaCreateBatchSize: '100'
   mappingBulkCreateChunkSize: '150'
   projectBulkCreateChunkSize: '100'
-  projectCreatePaceDelayMs: '100'
+  projectCreatePaceDelayMs: '250'
   userWorkerCreateBatchLag: '15'
   userIndividualConsistencyMaxPollAttempts: '25'
   userIndividualSearchBatchSize: '150'
   mappingKafkaBatchSize: '300'
+  projectConfirmRetries: '45'
+  projectBulkCreateConcurrency: '3'
   command: |
     - sh
     - -c
