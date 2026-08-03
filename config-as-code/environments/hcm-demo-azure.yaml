@@ -343,6 +343,8 @@ egov-idgen:
   heap: "-Xmx512m -Xms256m"
   memory_limits: 512Mi
   autocreate-new-seq: "true"
+  spring-datasource-tomcat-max-active: "10"
+  server-tomcat-max-threads: "20"
 
 beneficiary-idgen:
   image:
@@ -502,7 +504,8 @@ egov-user:
   egov-state-level-tenant-id: "demo"
   state-level-tenant-id: "demo"
   decryption-abac-enabled: "false"
-  server-tomcat-max-threads: "200"
+  server-tomcat-max-threads: "20"
+  spring-datasource-tomcat-max-active: "12"
   bulk-bcrypt-threads: "4"
 
 chatbot:
@@ -1043,6 +1046,8 @@ project:
   memory_limits: 1Gi
   heap: '-Xmx768m -Xms512m'
   kafka-mdc-enabled: "true"
+  spring-datasource-tomcat-max-active: "10"
+  server-tomcat-max-threads: "20"
 
 
 individual:
@@ -1492,6 +1497,8 @@ boundary-service:
     maxReplicas: 5
     cpuTargetPercentage: 70
     memoryTargetPercentage: 80
+  spring-datasource-tomcat-max-active: "10"
+  server-tomcat-max-threads: "20"
   
 
 dss-dashboard:
