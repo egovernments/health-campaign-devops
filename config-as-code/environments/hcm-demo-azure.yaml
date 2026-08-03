@@ -343,8 +343,6 @@ egov-idgen:
   heap: "-Xmx512m -Xms256m"
   memory_limits: 512Mi
   autocreate-new-seq: "true"
-  spring-datasource-tomcat-max-active: "10"
-  server-tomcat-max-threads: "20"
 
 beneficiary-idgen:
   image:
@@ -504,8 +502,8 @@ egov-user:
   egov-state-level-tenant-id: "demo"
   state-level-tenant-id: "demo"
   decryption-abac-enabled: "false"
-  server-tomcat-max-threads: "20"
-  spring-datasource-tomcat-max-active: "12"
+  server-tomcat-max-threads: "200"
+  spring-datasource-tomcat-max-active: "30"
   bulk-bcrypt-threads: "4"
 
 chatbot:
@@ -923,8 +921,8 @@ egov-hrms:
   employee-applink: "https://egov-demo.egovernments.org/employee/user/login"
   microplanWebsiteLink: "https://health-demo.digit.org/console/employee/user/login"
   microplanImplementationPartner: "Console Team"
-  spring-datasource-tomcat-max-active: "10"
-  server-tomcat-max-threads: "20"
+  spring-datasource-tomcat-max-active: "30"
+  server-tomcat-max-threads: "200"
 
 
 mdms-v2:
@@ -1046,8 +1044,8 @@ project:
   memory_limits: 1Gi
   heap: '-Xmx768m -Xms512m'
   kafka-mdc-enabled: "true"
-  spring-datasource-tomcat-max-active: "10"
-  server-tomcat-max-threads: "20"
+  spring-datasource-tomcat-max-active: "30"
+  server-tomcat-max-threads: "200"
 
 
 individual:
@@ -1078,8 +1076,8 @@ individual:
   egov-beneficiary-idgen-idpool-search-path: "beneficiary-idgen/id/id_pool/_search"
   egov-beneficiary-idgen-idpool-update-path: "beneficiary-idgen/id/id_pool/_update"
   kafka-mdc-enabled: "true"
-  spring-datasource-tomcat-max-active: "10"
-  server-tomcat-max-threads: "20"
+  spring-datasource-tomcat-max-active: "30"
+  server-tomcat-max-threads: "200"
 
 product:
   image:
@@ -1497,8 +1495,8 @@ boundary-service:
     maxReplicas: 5
     cpuTargetPercentage: 70
     memoryTargetPercentage: 80
-  spring-datasource-tomcat-max-active: "10"
-  server-tomcat-max-threads: "20"
+  spring-datasource-tomcat-max-active: "30"
+  server-tomcat-max-threads: "200"
   
 
 dss-dashboard:
