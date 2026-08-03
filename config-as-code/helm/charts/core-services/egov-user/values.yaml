@@ -28,7 +28,7 @@ healthChecks:
 appType: "java-spring"
 tracing-enabled: true
 cpu_limits: 4000m
-cpu_requests: 250m
+cpu_requests: 1000m
 memory_requests: 768Mi
 
 decryption-abac-enabled: "false"
