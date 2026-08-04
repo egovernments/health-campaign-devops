@@ -165,6 +165,7 @@ transformer:
   save-stock-reconciliation-topic: "demo-save-stock-reconciliation-topic"
   update-stock-reconciliation-topic: "demo-update-stock-reconciliation-topic"
   transformer-producer-stock-recon-index-v1-topic: "demo-transformer-producer-stock-recon-index-v1-topic"
+  transformer-producer-bulk-stock-index-updated-v1-topic: "demo-transformer-producer-bulk-stock-index-updated-v1-topic"
   health-transformer: "demo-health-transformer"
   transformer-consumer-error-tracer-topic: "error-details-indexer-topic"
   transformer-producer-error-details-index-v1-topic: "demo-transformed-errors-topic"
