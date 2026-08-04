@@ -12,7 +12,7 @@ disableAnnotationTimestamp: true
 workbench-ui:
   image:
     repository: egovio/workbench-ui
-    tag: master-2616096
+    tag: master-12d36ba
   namespace: demo
   custom-js-injection: |
     sub_filter.conf: "
@@ -74,7 +74,7 @@ digit-ui:
 payments-ui:
   image:
     repository: egovio/payments-ui
-    tag: master-f01fe0f
+    tag: master-12d36ba
   namespace: demo
   custom-js-injection: |
     sub_filter.conf: "
