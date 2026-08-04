@@ -411,12 +411,12 @@ beneficiary-idgen:
 household:
   image:
     repository: egovio/household
-    tag: master-perf-2d35084
+    tag: master-b912a1c
   initContainers:
     dbMigration:
       image:
         repository: egovio/household-db
-        tag: master-perf-2d35084
+        tag: master-b912a1c
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1015,12 +1015,12 @@ egov-accesscontrol:
 facility:
   image:
     repository: egovio/facility
-    tag: master-perf-2d35084
+    tag: master-b912a1c
   initContainers:
     dbMigration:
       image:
         repository: egovio/facility-db
-        tag: master-perf-2d35084
+        tag: master-b912a1c
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: true
@@ -1031,12 +1031,12 @@ facility:
 project:
   image:
     repository: egovio/project
-    tag: master-perf-ea56eb0
+    tag: master-b912a1c
   initContainers:
     dbMigration:
       image:
         repository: egovio/project-db
-        tag: master-perf-ea56eb0
+        tag: master-b912a1c
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1082,12 +1082,12 @@ individual:
 product:
   image:
     repository: egovio/product
-    tag: master-perf-2d35084
+    tag: master-b912a1c
   initContainers:
     dbMigration:
       image:
         repository: egovio/product-db
-        tag: master-perf-2d35084
+        tag: master-b912a1c
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1099,12 +1099,12 @@ product:
 referralmanagement:
   image:
     repository: egovio/referralmanagement
-    tag: master-perf-2d35084
+    tag: master-b912a1c
   initContainers:
     dbMigration:
       image:
         repository: egovio/referralmanagement-db
-        tag: master-perf-2d35084
+        tag: master-b912a1c
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: true
@@ -1132,12 +1132,12 @@ pgr-services:
 stock:
   image:
     repository: egovio/stock
-    tag: master-perf-2d35084
+    tag: master-b912a1c
   initContainers:
     dbMigration:
       image:
         repository: egovio/stock-db
-        tag: master-perf-2d35084
+        tag: master-b912a1c
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1149,10 +1149,10 @@ project-factory:
     dbMigration:
       image:
         repository: "project-factory-db"
-        tag: master-perf-checklist-clone-3cc3f79
+        tag: master-b912a1c
   image:
     repository: egovio/project-factory
-    tag: master-perf-checklist-clone-3cc3f79
+    tag: master-b912a1c
   central-instance-enabled: true
   central-instance-build: true
   namespace: egov
@@ -1229,12 +1229,12 @@ project-factory:
 boundary-management:
   image:
     repository: egovio/boundary-management
-    tag: master-perf-ea56eb0
+    tag: master-b912a1c
   initContainers:
     dbMigration:
       image:
         repository: egovio/boundary-management-db
-        tag: master-perf-ea56eb0
+        tag: master-b912a1c
   DEBUG: 'true'
   namespace: 'egov'
   logLevel: 'debug'
@@ -1250,7 +1250,7 @@ boundary-management:
 plan-service:
   image:
     repository: egovio/plan-service
-    tag: v1.0.2-0ea4104b4b-303
+    tag: master-b912a1c
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1258,7 +1258,7 @@ plan-service:
     dbMigration:
       image:
         repository: egovio/plan-service-db
-        tag: v1.0.2-0ea4104b4b-303
+        tag: master-b912a1c
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
   egov-mdms-service-v2-endpoint-key: "/mdms-v2/v2/_search"
@@ -1269,12 +1269,12 @@ plan-service:
 census-service:
   image:
     repository: egovio/census-service
-    tag: v1.0.1-ddae2629dc-105
+    tag: master-b912a1c
   initContainers:
     dbMigration:
       image:
         repository: egovio/census-service-db
-        tag: v1.0.1-ddae2629dc-105
+        tag: master-b912a1c
   kafka-producer-max-request-size: "4000000"
 
 resource-estimation-service:
@@ -1285,7 +1285,7 @@ resource-estimation-service:
 resource-generator:
   image:
     repository: egovio/resource-generator
-    tag: v1.0.2-b8bfac27c7-142
+    tag: master-b912a1c
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1296,12 +1296,12 @@ resource-generator:
 excel-ingestion:
   image:
     repository: egovio/excel-ingestion
-    tag: master-perf-ce3f6f9
+    tag: master-b912a1c
   initContainers:
     dbMigration:
       image:
         repository: egovio/excel-ingestion-db
-        tag: master-perf-ce3f6f9
+        tag: master-b912a1c
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
   defaultLocale: 'en_DEMO'
@@ -1318,10 +1318,10 @@ worker-registry:
     dbMigration:
       image:
         repository: egovio/worker-registry-db
-        tag: master-perf-1de0742
+        tag: master-b912a1c
   image:
     repository: egovio/worker-registry
-    tag: master-perf-1de0742
+    tag: master-b912a1c
   central-instance-build: true
   central-instance-enabled: true
   central-instance-name: egov
@@ -1335,10 +1335,10 @@ health-notification-service:
     dbMigration:
       image:
         repository: egovio/health-notification-service-db
-        tag: master-perf-2d35084
+        tag: master-b912a1c
   image:
     repository: egovio/health-notification-service
-    tag: master-perf-2d35084
+    tag: master-b912a1c
   replicas: 1
   central-instance-build: true
   central-instance-enabled: true
