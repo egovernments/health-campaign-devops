@@ -24,7 +24,7 @@ workbench-ui:
 dashboard-ui:
   image:
     repository: egovio/dashboard-ui
-    tag: master-11a0d73
+    tag: master-2616096
   namespace: demo
   custom-js-injection: |
     sub_filter.conf: "
