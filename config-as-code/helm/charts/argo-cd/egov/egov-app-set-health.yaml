@@ -25,6 +25,7 @@ spec:
           - name: health-notification-service
           - name: airflow-trigger-service
           - name: egov-notification-push
+          - name: census-service
 
   template:
     metadata:
