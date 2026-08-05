@@ -12,7 +12,7 @@ disableAnnotationTimestamp: true
 workbench-ui:
   image:
     repository: egovio/workbench-ui
-    tag: HCMPRE-4227-86c8f36
+    tag: master-af101ce
   namespace: demo
   custom-js-injection: |
     sub_filter.conf: "
