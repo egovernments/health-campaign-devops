@@ -210,22 +210,22 @@ health-expense-calculator:
   tenantId: "uat"
   excell-state-level-tenant-id: "uat"
   spring-kafka-consumer-group-id: "health-expense-calculator-group"
-  calculate-musterroll-health: demo-calculate-musterroll
-  calculate-error-health: demo-calculate-error
-  calculate-billmeta-health: demo-calculate-billmeta
-  billing-config-create-topic: demo-billing-config-create
-  billing-config-update-topic: demo-billing-config-update
+  calculate-musterroll-health: uat-calculate-musterroll
+  calculate-error-health: uat-calculate-error
+  calculate-billmeta-health: uat-calculate-billmeta
+  billing-config-create-topic: uat-billing-config-create
+  billing-config-update-topic: uat-billing-config-update
   billing-config-v2-enabled: "true"
   billing-muster-roll-period-aware-enabled: "true"
   billing-period-generation-enabled: "true"
-  billing-period-status-update-topic: demo-billing-period-status-update
-  expense-bill-create-topic: demo-expense-bill-create
-  expense-bill-index-topic: demo-expense-bill-index
-  expense-bill-update-topic: demo-expense-bill-update
+  billing-period-status-update-topic: uat-billing-period-status-update
+  expense-bill-create-topic: uat-expense-bill-create
+  expense-bill-index-topic: uat-expense-bill-index
+  expense-bill-update-topic: uat-expense-bill-update
   payment-pdf-key: "health-bill-payment"
-  project-management-system-kafka-update-date-topic: demo-update-project-date
-  project-management-system-kafka-update-topic: demo-update-project
-  report-error-queue-topic: demo-report-error-queue-topic
-  report-generation-retry-trigger-topic: demo-report-generation-retry-trigger
-  report-generation-trigger-topic: demo-report-generation-trigger
-  report-retry-queue-topic: demo-report-retry-queue-topic
+  project-management-system-kafka-update-date-topic: uat-update-project-date
+  project-management-system-kafka-update-topic: uat-update-project
+  report-error-queue-topic: uat-report-error-queue-topic
+  report-generation-retry-trigger-topic: uat-report-generation-retry-trigger
+  report-generation-trigger-topic: uat-report-generation-trigger
+  report-retry-queue-topic: uat-report-retry-queue-topic
