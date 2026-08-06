@@ -113,7 +113,7 @@ transformer:
   cpu_limits: 300m
   memory_limits: 1.5Gi
   java-enable-debug: true
-  replicas: 1
+  replicas: 3
   project-factory-host: "project-factory"
   save-attendance-log-topic: "demo-save-attendance-log"
   update-attendance-log-topic: "demo-update-attendance-log"
