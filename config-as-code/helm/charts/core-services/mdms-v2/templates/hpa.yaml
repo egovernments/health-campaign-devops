@@ -16,6 +16,20 @@ spec:
   {{- if .Values.hpa.metrics }}
   metrics:
 {{ toYaml .Values.hpa.metrics | indent 2 }}
+  {{- else }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.hpa.cpuTargetPercentage | default 70 }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.hpa.memoryTargetPercentage | default 80 }}
   {{- end }}
   {{- if .Values.hpa.behavior }}
   behavior:
