@@ -938,8 +938,11 @@ mdms-v2:
   central-instance-build: true
   central-instance-enabled: true
   replicas: 1
-  memory_limits: 1536Mi
-  heap: '-Xmx1152m -Xms768m'
+  memory_limits: 1Gi
+  memory_requests: 512Mi
+  cpu_limits: 1000m
+  cpu_requests: 500m
+  heap: '-Xmx768m -Xms512m'
   hpa:
     enabled: true
     minReplicas: 2
