@@ -1,0 +1,231 @@
+global:
+  domain: hcm-demo.digit.org
+
+# service:
+#   additionalAnnotations: |
+#     zuul/route-host: hcm-demo.digit.org
+
+namespace: uat
+
+disableAnnotationTimestamp: true
+
+workbench-ui:
+  image:
+    repository: egovio/workbench-ui
+    tag: master-af101ce
+  namespace: uat
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/demo/globalConfigsWorkbenchDemo.js type=text/javascript ></script>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/consoleAnalyticsDemo.js type=text/javascript ></script>
+      ';"  
+
+dashboard-ui:
+  image:
+    repository: egovio/dashboard-ui
+    tag: master-2616096
+  namespace: uat
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/demo/globalConfigsDashboardDemo.js type=text/javascript ></script>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript async></script>
+      ';"
+  heap: "-Xmx512m -Xms512m"
+  memory_limits: 1024Mi
+  
+microplan-ui:
+  image:
+    repository: egovio/microplan-ui
+    tag: master-88c8318
+  namespace: uat
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/demo/globalConfigsMicroplanDemo.js type=text/javascript></script>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript ></script>
+      ';" 
+
+core-ui:
+  image:
+    repository: egovio/core-ui
+    tag: develop-548f854d1d-57
+  namespace: uat
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/demo/globalConfigsCoreUIDemo.js type=text/javascript defer></script>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript ></script>
+      ';" 
+
+digit-ui:
+  image:
+    repository: egovio/digit-ui
+    tag: feature-sso-dev-multiarch-eb9bc14cc2-454
+  namespace: uat
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/demo/globalConfigs.js type=text/javascript></script>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript></script>
+      ';"  
+
+payments-ui:
+  image:
+    repository: egovio/payments-ui
+    tag: master-12d36ba
+  namespace: uat
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript ></script>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/demo/globalConfigsPayments.js type=text/javascript></script>
+      ';" 
+
+console:
+  image:
+    repository: egovio/console
+    tag: ondo-proxy-f806f086a2-149
+  namespace: uat
+  central-instance-name: egov
+  central-instance-build: true
+  central-instance-enabled: true
+  custom-js-injection: |
+    sub_filter.conf: "
+      sub_filter  '<head>' '<head>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/demo/globalConfigsConsoleDemo.js type=text/javascript defer></script>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript async></script>
+      ';"
+
+transformer:
+  image:
+    repository: egovio/transformer
+    tag: HDDF-5226-ERROR-CATCH-acbd7ef
+  namespace: uat
+  heap: "-Xmx768m -Xms512m"
+  hpa:
+    enabled: false
+    minReplicas: 3
+    maxReplicas: 5
+  cpu_requests: 200m
+  memory_requests: 1Gi
+  cpu_limits: 300m
+  memory_limits: 1.5Gi
+  java-enable-debug: true
+  replicas: 3
+  project-factory-host: "project-factory"
+  save-attendance-log-topic: "uat-save-attendance-log"
+  update-attendance-log-topic: "uat-update-attendance-log"
+  transformer-save-attendance-log-topic: "uat-transformer-save-attendance-log"
+  transformer-save-attendance-register-topic: "uat-transformer-save-attendance-register"
+  save-project-task-topic: "uat-save-project-task-topic"
+  update-project-task-topic: "uat-update-project-task-topic"
+  transformer-producer-bulk-project-task-index-v1-topic: "uat-transformer-producer-bulk-project-task-index-v1-topic"
+  save-project-staff-topic: "uat-save-project-staff-topic"
+  update-project-staff-topic: "uat-update-project-staff-topic"
+  transformer-producer-bulk-project-staff-index-v1-topic: "uat-transformer-producer-bulk-project-staff-index-v1-topic"
+  transformer-producer-bulk-project-index-v1-topic: "uat-transformer-producer-bulk-project-index-v1-topic"
+  save-project: "uat-save-project"
+  update-project: "uat-update-project"
+  save-household-member-topic: "uat-save-household-member-topic"
+  transformer-producer-household-member-index-v1-topic: "uat-transformer-producer-household-member-index-v1-topic"
+  save-household-topic: "uat-save-household-topic"
+  update-household-topic: "uat-update-household-topic"
+  transformer-producer-household-index-v1-topic: "uat-transformer-producer-household-index-v1-topic"
+  transformer-producer-service-index-v2-topic: "uat-transformer-producer-service-index-v2-topic"
+  save-stock-topic: "uat-save-stock-topic"
+  update-stock-topic: "uat-update-stock-topic"
+  transformer-producer-bulk-stock-index-v1-topic: "uat-transformer-producer-bulk-stock-index-v1-topic"
+  save-facility-topic: "uat-save-facility-topic"
+  update-facility-topic: "uat-update-facility-topic"
+  save-service: "uat-save-service"
+  transformer-producer-service-request-index-v1-topic: "uat-transformer-producer-service-request-index-v1-topic"
+  save-referral-topic: "uat-save-referral-topic"
+  transformer-producer-referral-index-v1-topic: "uat-transformer-producer-referral-index-v1-topic"
+  update-referral-topic: "uat-update-referral-topic"
+  save-side-effect-topic: "uat-save-side-effect-topic"
+  update-side-effect-topic: "uat-update-side-effect-topic"
+  transformer-producer-side-effect-index-v1-topic: "uat-transformer-producer-side-effect-index-v1-topic"
+  save-pgr-request: "uat-save-pgr-request"
+  transformer-save-pgr-request: "uat-transformer-save-pgr-request"
+  update-pgr-request: "uat-update-pgr-request"
+  save-hfreferral-topic: "uat-save-hfreferral-topic"
+  update-hfreferral-topic: "uat-update-hfreferral-topic"
+  transformer-producer-hfreferral-index-v1-topic: "uat-transformer-producer-hfreferral-index-v1-topic"
+  transformer-producer-hfreferral-service-index-topic: "uat-transformer-producer-hfreferral-service-index-topic"
+  transformer-producer-finance-checklist-index-v1-topic: "uat-transformer-producer-finance-checklist-index-v1-topic"
+  transformer-producer-special-spraying-index-topic: "uat-transformer-producer-special-spraying-index-topic"
+  save-attendance-log: "uat-save-attendance-log"
+  update-attendance-log: "uat-update-attendance-log"
+  transformer-save-attendance-log: "uat-transformer-save-attendance-log"
+  transformer-save-attendance-register: "uat-transformer-save-attendance-register"
+  transformer-producer-extra-transformed-checklist-index-topic: "uat-transformer-producer-extra-transformed-checklist-index-topic"
+  update-household-member-topic: "uat-update-household-member-topic"
+  save-stock-reconciliation-topic: "uat-save-stock-reconciliation-topic"
+  update-stock-reconciliation-topic: "uat-update-stock-reconciliation-topic"
+  transformer-producer-stock-recon-index-v1-topic: "uat-transformer-producer-stock-recon-index-v1-topic"
+  transformer-producer-bulk-stock-index-updated-v1-topic: "uat-transformer-producer-bulk-stock-index-updated-v1-topic"
+  health-transformer: "uat-health-transformer"
+  transformer-consumer-error-tracer-topic: "error-details-indexer-topic"
+  transformer-producer-error-details-index-v1-topic: "uat-transformed-errors-topic"
+  transformer-error-skip-error-messages: "UPLOAD_ERROR_FROM_APP"
+  transformer-error-skip-error-codes: "DUPLICATE_ENTITY,INDIVIDUAL_ALREADY_MEMBER_OF_HOUSEHOLD,HOUSEHOLD_ALREADY_HAS_HEAD"
+  transformer-error-skip-url-contains: "facility,resource"
+  state-level-tenantid: "uat"
+  expense-bill-create-health-topic: "uat-expense-bill-create-health"
+  expense-bill-update-health-topic: "uat-expense-bill-update-health"
+  transformer-bill-index-topic: "uat-transformer-bill-index-topic"
+  transformer-billdetail-index-topic: "uat-transformer-billdetail-index-topic"
+  expense-bill-report-save-topic: "uat-expense-bill-report-save"
+  expense-bill-report-update-topic: "uat-expense-bill-report-update"
+  transformer-billreport-index-topic: "uat-transformer-billreport-index-topic"
+  save-musterroll-health-topic: "uat-save-musterroll-health"
+  update-musterroll-health-topic: "uat-update-musterroll-health"
+  transformer-producer-muster-roll-index-v1-topic: "uat-transformer-producer-muster-roll-index-v1-topic"
+  expense-bill-detail-create-topic: "uat-expense-bill-detail-create"
+  expense-bill-detail-update-topic: "uat-expense-bill-detail-update"
+
+
+health-expense-calculator:
+  image:
+    repository: egovio/health-expense-calculator
+    tag: master-cdc5957
+  initContainers:
+    dbMigration:
+      image:
+        repository: egovio/health-expense-calculator-db
+        tag: master-cdc5957
+  tracing-enabled: true
+  java-enable-debug: true
+  egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
+  report-header-title: "Health Campaign Payment Report"
+  report-date-time-format: "dd/MM/yyyy HH:mm:ss z"
+  is-attendance-approval-required: "true"
+  register-batch-size: 15
+  bill-generation-async-enabled: "true"
+  bill-generation-async-topic: "uat-bill-generation-async-topic"
+  egov-musterroll-search-endpoint: "/health-muster-roll/v1/_search"
+  billing-frequency-custom-minimum-days: 1
+  tenantId: "uat"
+  excell-state-level-tenant-id: "uat"
+  spring-kafka-consumer-group-id: "health-expense-calculator-group"
+  calculate-musterroll-health: uat-calculate-musterroll
+  calculate-error-health: uat-calculate-error
+  calculate-billmeta-health: uat-calculate-billmeta
+  billing-config-create-topic: uat-billing-config-create
+  billing-config-update-topic: uat-billing-config-update
+  billing-config-v2-enabled: "true"
+  billing-muster-roll-period-aware-enabled: "true"
+  billing-period-generation-enabled: "true"
+  billing-period-status-update-topic: uat-billing-period-status-update
+  expense-bill-create-topic: uat-expense-bill-create
+  expense-bill-index-topic: uat-expense-bill-index
+  expense-bill-update-topic: uat-expense-bill-update
+  payment-pdf-key: "health-bill-payment"
+  project-management-system-kafka-update-date-topic: uat-update-project-date
+  project-management-system-kafka-update-topic: uat-update-project
+  report-error-queue-topic: uat-report-error-queue-topic
+  report-generation-retry-trigger-topic: uat-report-generation-retry-trigger
+  report-generation-trigger-topic: uat-report-generation-trigger
+  report-retry-queue-topic: uat-report-retry-queue-topic

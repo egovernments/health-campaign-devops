@@ -6,6 +6,7 @@ global:
    schema:
      - mz
      - demo
+     - uat
 
 cluster-configs:
     namespaces:  
@@ -38,7 +39,7 @@ cluster-configs:
                 is-environment-central-instance: "true"
                 egov-state-level-tenant-id: "demo"
                 state-level-tenant-id: "demo"
-                kafka-tenant-id-pattern: "(mz|demo)-"
+                kafka-tenant-id-pattern: "(mz|demo|uat)-"
                 s3-assets-bucket: "(pg-health-egov-assets|egov-health-playground-assets)"
                 es-host: "elasticsearch-data.es-cluster"
                 es-host-6: "elasticsearch-data.es-cluster"
@@ -59,7 +60,7 @@ cluster-configs:
                 timezone: "UTC"
                 tracer-errors-provideexceptionindetails: "true"
                 egov-internal-microservice-user-uuid: fa0f820c-49df-46bb-8e62-8a0ec5d9af5e
-                db-schema-names: "mz,demo"
+                db-schema-names: "mz,demo,uat"
                 boundary-hierarchy: 'MICROPLAN'
                 
 
@@ -478,7 +479,7 @@ egov-user:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
-  db-schema-names: "mz,demo"
+  db-schema-names: "mz,demo,uat"
   replicas: 5
   heap: "-Xmx512m -Xms256m"
   memory_limits: 768Mi
