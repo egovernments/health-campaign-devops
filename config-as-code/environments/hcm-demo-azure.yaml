@@ -854,7 +854,6 @@ egov-localization:
       image:
         repository: egovio/egov-localization-db
         tag: redis-localization-key-5c0a4c4
-  replicas: 4
   namespace: "egov"
   heap: '-Xmx6144m -Xms2048m'
   memory_limits: 8192Mi
