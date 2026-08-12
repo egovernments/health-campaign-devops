@@ -1299,12 +1299,12 @@ resource-generator:
 excel-ingestion:
   image:
     repository: egovio/excel-ingestion
-    tag: master-b912a1c
+    tag: HCMPRE-2138-attendance-register-bugfixes-46a585e
   initContainers:
     dbMigration:
       image:
         repository: egovio/excel-ingestion-db
-        tag: master-b912a1c
+        tag: HCMPRE-2138-attendance-register-bugfixes-46a585e
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
   defaultLocale: 'en_DEMO'
