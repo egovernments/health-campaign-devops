@@ -24,7 +24,7 @@ workbench-ui:
 dashboard-ui:
   image:
     repository: egovio/dashboard-ui
-    tag: master-ec9d53b
+    tag: master-015f85d
   namespace: demo
   custom-js-injection: |
     sub_filter.conf: "
@@ -74,7 +74,7 @@ digit-ui:
 payments-ui:
   image:
     repository: egovio/payments-ui
-    tag: master-ec9d53b
+    tag: master-015f85d
   namespace: demo
   custom-js-injection: |
     sub_filter.conf: "
