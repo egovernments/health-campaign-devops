@@ -1122,12 +1122,12 @@ referralmanagement:
 pgr-services:
   image:
     repository: egovio/pgr-services
-    tag: pgr-services:pgr-hierarchy-modification-a42c40b
+    tag: pgr-hierarchy-modification-a42c40b
   initContainers:
     dbMigration:
       image:
         repository: egovio/pgr-services-db
-        tag: pgr-services:pgr-hierarchy-modification-a42c40b
+        tag: pgr-hierarchy-modification-a42c40b
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: true
