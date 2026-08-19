@@ -192,12 +192,12 @@ transformer:
 health-expense-calculator:
   image:
     repository: egovio/health-expense-calculator
-    tag: master-cdc5957
+    tag: master-a5e4c31
   initContainers:
     dbMigration:
       image:
         repository: egovio/health-expense-calculator-db
-        tag: master-cdc5957
+        tag: master-a5e4c31
   tracing-enabled: true
   java-enable-debug: true
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
