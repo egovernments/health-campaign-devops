@@ -292,10 +292,10 @@ egov-filestore:
   image:
     repository: egovio/egov-filestore
     tag: master-1e8d2bb 
-  replicas: 2
+  replicas: 3
   hpa:
     enabled: true
-    minReplicas: 2
+    minReplicas: 3
     maxReplicas: 5
     targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage: 80
