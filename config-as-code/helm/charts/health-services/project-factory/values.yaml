@@ -216,6 +216,11 @@ env: |
     value: {{ .Values.excelIngestionGenerate | default "excel-ingestion/v1/data/generate/_init" }}
   - name: EGOV_SERVICE_DEFINITION_SEARCH_PATH
     value: service-request/service/definition/v1/_search
+  - name: EGOV_SERVICE_REQUEST_HOST
+    valueFrom:
+      configMapKeyRef:
+          name: egov-service-host
+          key: service-request
   - name: EGOV_SERVICE_DEFINITION_CREATE_PATH
     value: service-request/service/definition/v1/_create
   - name: EGOV_HOST
