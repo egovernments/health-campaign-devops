@@ -101,7 +101,7 @@ console:
 transformer:
   image:
     repository: egovio/transformer
-    tag: multihierarchy-error-catch-2d595c9
+    tag: multihierarchy-error-catch-2c59d3b
   namespace: "demo"
   heap: "-Xmx768m -Xms512m"
   hpa:
