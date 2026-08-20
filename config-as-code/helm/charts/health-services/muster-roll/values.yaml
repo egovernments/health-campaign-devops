@@ -215,8 +215,8 @@ env: |
   - name: ELASTICSEARCH_HOST
     valueFrom:
       configMapKeyRef:
-        name: egov-service-host
-        key: es-client
+        name: egov-config
+        key: es-indexer-host-8
   - name: ELASTICSEARCH_USERNAME
     valueFrom:
       secretKeyRef:
