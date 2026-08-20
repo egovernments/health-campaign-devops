@@ -1299,12 +1299,12 @@ resource-generator:
 excel-ingestion:
   image:
     repository: egovio/excel-ingestion
-    tag: excel-ingestion-dynamic-target-columns-f612c4d
+    tag: master-b9c634e
   initContainers:
     dbMigration:
       image:
         repository: egovio/excel-ingestion-db
-        tag: excel-ingestion-dynamic-target-columns-f612c4d
+        tag: master-b9c634e
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
   defaultLocale: 'en_DEMO'
