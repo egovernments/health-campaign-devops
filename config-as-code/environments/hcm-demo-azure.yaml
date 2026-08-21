@@ -260,7 +260,7 @@ inbox:
   namespace: egov
   image:
     repository: egovio/inbox
-    tag: v1.4.0-bd52511479-19
+    tag: pgr-hierarchy-modification-inbox-d3ae73e
   replicas: 1
   hpa:
     enabled: true
