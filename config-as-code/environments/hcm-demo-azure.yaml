@@ -937,7 +937,7 @@ mdms-v2:
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
-  replicas: 1
+  replicas: 2
   memory_limits: 1Gi
   memory_requests: 512Mi
   cpu_limits: 1000m
