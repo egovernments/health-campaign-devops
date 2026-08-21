@@ -260,7 +260,7 @@ inbox:
   namespace: egov
   image:
     repository: egovio/inbox
-    tag: inbox-parallel-workflow-b5cd4a6
+    tag: v1.4.0-bd52511479-19
   replicas: 1
   hpa:
     enabled: true
