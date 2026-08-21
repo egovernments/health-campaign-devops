@@ -1394,12 +1394,12 @@ transformer:
 health-attendance:
   image:
     repository: egovio/health-attendance
-    tag: master-cdc5957
+    tag: master-5767379
   initContainers:
     dbMigration:
       image:
         repository: egovio/health-attendance-db
-        tag: master-cdc5957
+        tag: master-5767379
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
