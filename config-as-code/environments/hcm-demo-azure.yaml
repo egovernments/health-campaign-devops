@@ -1152,10 +1152,10 @@ project-factory:
     dbMigration:
       image:
         repository: "project-factory-db"
-        tag: master-b912a1c
+        tag: master-38dc577
   image:
     repository: egovio/project-factory
-    tag: master-b912a1c
+    tag: master-38dc577
   central-instance-enabled: true
   central-instance-build: true
   namespace: egov
@@ -1299,12 +1299,12 @@ resource-generator:
 excel-ingestion:
   image:
     repository: egovio/excel-ingestion
-    tag: master-b9c634e
+    tag: master-38dc577
   initContainers:
     dbMigration:
       image:
         repository: egovio/excel-ingestion-db
-        tag: master-b9c634e
+        tag: master-38dc577
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
   defaultLocale: 'en_DEMO'
