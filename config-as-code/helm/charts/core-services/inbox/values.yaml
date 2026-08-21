@@ -105,3 +105,5 @@ env: |
         name: elasticsearch-master-credentials
   - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB_CLIENT
     value: "DEBUG"
+  - name: INBOX_SHOW_CLOSED_APPLICATIONS
+    value: "true"
