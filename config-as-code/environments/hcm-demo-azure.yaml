@@ -260,7 +260,7 @@ inbox:
   namespace: egov
   image:
     repository: egovio/inbox
-    tag: pgr-hierarchy-modification-inbox-d3ae73e
+    tag: master-d673cfa
   replicas: 1
   hpa:
     enabled: true
@@ -1122,12 +1122,12 @@ referralmanagement:
 pgr-services:
   image:
     repository: egovio/pgr-services
-    tag: pgr-hierarchy-modification-a42c40b
+    tag: master-d673cfa
   initContainers:
     dbMigration:
       image:
         repository: egovio/pgr-services-db
-        tag: pgr-hierarchy-modification-a42c40b
+        tag: master-d673cfa
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: true
@@ -1299,12 +1299,12 @@ resource-generator:
 excel-ingestion:
   image:
     repository: egovio/excel-ingestion
-    tag: master-32ff216
+    tag: master-d673cfa
   initContainers:
     dbMigration:
       image:
         repository: egovio/excel-ingestion-db
-        tag: master-32ff216
+        tag: master-d673cfa
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
   defaultLocale: 'en_DEMO'
