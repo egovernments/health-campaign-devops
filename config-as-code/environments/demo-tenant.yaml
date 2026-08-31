@@ -74,7 +74,7 @@ digit-ui:
 payments-ui:
   image:
     repository: egovio/payments-ui
-    tag: master-3034947
+    tag: master-a7fb9ad
   namespace: demo
   custom-js-injection: |
     sub_filter.conf: "
