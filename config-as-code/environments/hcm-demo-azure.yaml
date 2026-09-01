@@ -856,10 +856,10 @@ egov-localization:
         tag: redis-localization-key-5c0a4c4
   namespace: "egov"
   replicas: 3
-  heap: '-Xmx6144m -Xms2048m'
-  memory_limits: 8192Mi
+  heap: '-Xmx8192m -Xms2048m'
+  memory_limits: 12Gi
   cpu_limits: 1200m
-  memory_requests: 6144Mi
+  memory_requests: 9Gi
   cpu_requests: 500m
   hpa:
     enabled: true
