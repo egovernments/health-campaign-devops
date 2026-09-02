@@ -1767,7 +1767,7 @@ jupyterhub:
     config:
       Authenticator:
         admin_users:
-          - hcm-demo-admin
+          - reportsadmin
       NativeAuthenticator:
         minimum_password_length: 8
         check_common_password: false
@@ -1778,11 +1778,11 @@ jupyterhub:
   ingress:
     enabled: true
     hosts:
-      - health-demo.digit.org
+      - hcm-demo.digit.org
     tls:
       - hosts:
-          - health-demo.digit.org
-        secretName: health-demo.digit.org-tls
+          - hcm-demo.digit.org
+        secretName: hcm-demo.digit.org-tls-certs
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 hcm-moz-impl:
