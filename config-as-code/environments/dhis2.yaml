@@ -1,0 +1,71 @@
+namespace: dhis2
+
+global:
+  security:
+    allowInsecureImages: true
+  postgresql:
+    auth:
+      username: dhis
+      database: dhis2
+
+postgresql:
+  enabled: true
+  instances: 1
+  storageSize: 8Gi
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+
+minio:
+  enabled: false
+
+storage:
+  type: filesystem
+  volumeSize: 8Gi
+
+image:
+  repository: dhis2/core
+  tag: 2.42
+
+replicaCount: 1
+
+# storage.type=filesystem backs this deployment with a single ReadWriteOnce PVC, so a
+# second pod can't mount it on another node while the old one is still attached; the
+# chart's default RollingUpdate deadlocks on FailedAttachVolume. Recreate avoids that.
+strategy:
+  type: Recreate
+
+# DHIS 2's first boot runs Flyway migrations against an empty database, which takes
+# much longer than the chart's default 130s startup window (26 * 5s).
+startupProbe:
+  failureThreshold: 180
+  periodSeconds: 5
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: "1"
+    memory: 2Gi
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: true
+  className: nginx
+  hostname: dhis2-demo.digit.org
+  path: /
+  certIssuer: letsencrypt-prod
+
+jobs:
+  authentication:
+    dhis2:
+      username: admin
+      password: district

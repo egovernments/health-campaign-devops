@@ -1,0 +1,217 @@
+{{- if .Values.jobs.generateAnalytics.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ include "dhis2-core-helm.fullname" . }}-generate-analytics"
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "0"
+    #"helm.sh/hook-delete-policy": hook-succeeded,hook-failed
+spec:
+  ttlSecondsAfterFinished: 3600
+  template:
+    spec:
+      containers:
+        - name: {{ include "dhis2-core-helm.fullname" . }}-generate-analytics-job
+          image: curlimages/curl:latest
+          env:
+            - name: SERVICE_URL
+              value: "http://{{ include "dhis2-core-helm.fullname" . }}:{{ .Values.service.port }}{{ .Values.ingress.path }}"
+            - name: USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dhis2-core-helm.fullname" . }}
+                  key: USERNAME
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dhis2-core-helm.fullname" . }}
+                  key: PASSWORD
+          command:
+            - /bin/sh
+            - -c
+            - |
+              {{- .Files.Get "scripts/generate-analytics.sh" | nindent 15 }}
+      restartPolicy: OnFailure
+{{- end }}
+
+---
+
+{{- if .Values.jobs.enableUsers.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ include "dhis2-core-helm.fullname" . }}-enable-user"
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "0"
+    #"helm.sh/hook-delete-policy": hook-succeeded,hook-failed
+spec:
+  ttlSecondsAfterFinished: 3600
+  template:
+    spec:
+      containers:
+        - name: {{ include "dhis2-core-helm.fullname" . }}-enable-user-job
+          image: alpine/k8s:1.29.0
+          env:
+            - name: SERVICE_URL
+              value: "http://{{ include "dhis2-core-helm.fullname" . }}:{{ .Values.service.port }}{{ .Values.ingress.path }}"
+            - name: USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dhis2-core-helm.fullname" . }}
+                  key: USERNAME
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dhis2-core-helm.fullname" . }}
+                  key: PASSWORD
+            - name: TARGET_USER
+              value: {{ .Values.jobs.enableUsers.targetUser }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              {{- .Files.Get "scripts/enable-users.sh" | nindent 15 }}
+      restartPolicy: OnFailure
+{{- end }}
+
+---
+
+{{- if .Values.jobs.installApps.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ include "dhis2-core-helm.fullname" . }}-install-apps"
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "0"
+    #"helm.sh/hook-delete-policy": hook-succeeded,hook-failed
+spec:
+  ttlSecondsAfterFinished: 3600
+  template:
+    spec:
+      containers:
+        - name: {{ include "dhis2-core-helm.fullname" . }}-install-apps-job
+          image: alpine/k8s:1.29.0
+          env:
+            - name: SERVICE_URL
+              value: "http://{{ include "dhis2-core-helm.fullname" . }}:{{ .Values.service.port }}{{ .Values.ingress.path }}"
+            - name: USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dhis2-core-helm.fullname" . }}
+                  key: USERNAME
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dhis2-core-helm.fullname" . }}
+                  key: PASSWORD
+            - name: APPS
+              value: {{ .Values.jobs.installApps.apps | toJson | quote }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              {{- .Files.Get "scripts/install-apps.sh" | nindent 15 }}
+      restartPolicy: OnFailure
+{{- end }}
+
+---
+
+{{- if and .Values.doris.enabled .Values.doris.createDatabase }}
+{{- if not .Values.doris.database }}
+{{- fail "doris.database is required when createDatabase is true" }}
+{{- end }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ include "dhis2-core-helm.fullname" . }}-create-doris-database"
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    # Weight 1 so the PostgreSQL seed job (implicit weight 0) runs first.
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  ttlSecondsAfterFinished: 300
+  activeDeadlineSeconds: 1200
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: create-doris-database
+          image: mysql:8.0
+          env:
+{{- if .Values.doris.existingSecret }}
+            - name: DORIS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.doris.existingSecret }}
+                  key: {{ .Values.doris.secretKeys.username }}
+            - name: DORIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.doris.existingSecret }}
+                  key: {{ .Values.doris.secretKeys.password }}
+{{- else }}
+            - name: DORIS_USERNAME
+              value: {{ .Values.doris.username | quote }}
+            - name: DORIS_PASSWORD
+              value: {{ .Values.doris.password | quote }}
+{{- end }}
+          # Provisioning connects as passwordless root and grants ADMIN_PRIV (DHIS 2 creates a JDBC
+          # catalog against the PostgreSQL database on startup, which requires it). This is intended
+          # for the bundled single-tenant dorisCluster; for a shared Doris cluster set
+          # createDatabase=false and provide pre-provisioned credentials via doris.existingSecret.
+          # The SQL goes over stdin so the password stays out of process arguments, single quotes
+          # are doubled for the SQL string, and ALTER USER makes password rotation take effect on
+          # upgrades where CREATE USER IF NOT EXISTS would silently keep the old one.
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              until mysql -h {{ include "dhis2-core-helm.dorisHostname" . }} -P {{ .Values.doris.port }} -uroot -e "SELECT 1" >/dev/null 2>&1; do
+                echo "Doris is not ready yet, retrying in 10s"
+                sleep 10
+              done
+              ESCAPED_PASSWORD=$(printf %s "$DORIS_PASSWORD" | sed "s/'/''/g")
+              mysql -h {{ include "dhis2-core-helm.dorisHostname" . }} -P {{ .Values.doris.port }} -uroot <<EOF
+              CREATE DATABASE IF NOT EXISTS {{ .Values.doris.database }};
+              CREATE USER IF NOT EXISTS '${DORIS_USERNAME}'@'%' IDENTIFIED BY '${ESCAPED_PASSWORD}';
+              ALTER USER '${DORIS_USERNAME}'@'%' IDENTIFIED BY '${ESCAPED_PASSWORD}';
+              GRANT ADMIN_PRIV ON *.*.* TO '${DORIS_USERNAME}'@'%';
+              EOF
+
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ include "dhis2-core-helm.fullname" . }}-drop-doris-database"
+  annotations:
+    "helm.sh/hook": pre-delete
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: drop-doris-database
+          image: mysql:8.0
+          # Best effort: an unreachable Doris must not block uninstall, and the analytics database
+          # is derived data that can be regenerated.
+          command:
+            - /bin/sh
+            - -c
+            - |
+              for i in $(seq 1 12); do
+                if mysql -h {{ include "dhis2-core-helm.dorisHostname" . }} -P {{ .Values.doris.port }} -uroot -e "DROP DATABASE IF EXISTS {{ .Values.doris.database }}"; then
+                  exit 0
+                fi
+                echo "Doris is not reachable, retrying in 5s"
+                sleep 5
+              done
+              echo "Could not drop database {{ .Values.doris.database }}, continuing with uninstall"
+{{- end }}

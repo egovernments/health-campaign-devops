@@ -1,0 +1,304 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dhis2-core-helm.fullname" . }}
+  labels:
+    {{- include "dhis2-core-helm.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "dhis2-core-helm.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: {{ .Values.strategy.type }}
+    {{- if eq .Values.strategy.type "RollingUpdate" }}
+    rollingUpdate:
+      maxSurge: {{ .Values.strategy.rollingUpdate.maxSurge }}
+      maxUnavailable: {{ .Values.strategy.rollingUpdate.maxUnavailable }}
+    {{- end }}
+  minReadySeconds: {{ .Values.minReadySeconds }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "dhis2-core-helm.selectorLabels" . | nindent 8 }}
+      {{- with .Values.commonLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "dhis2-core-helm.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- $usesLocalStorage := eq (include "dhis2-core-helm.storageType" .) "filesystem" -}}
+      {{- $waitForSeed := and .Values.postgresql.enabled .Values.postgresql.seed.enabled -}}
+      {{- if or .Values.initContainers $usesLocalStorage .Values.glowroot.enabled $waitForSeed }}
+      initContainers:
+      {{- with .Values.initContainers }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if $waitForSeed }}
+      # The database accepts connections before the seed job has finished; DHIS 2 must not start
+      # against a partially seeded database, so wait for the job's completion marker.
+        - name: wait-for-seed
+          image: {{ .Values.postgresql.seed.image }}
+          env:
+            - name: PGHOST
+              value: {{ include "dhis2-core-helm.databaseHostname" . }}
+            - name: PGUSER
+              value: {{ include "dhis2-core-helm.databaseUsername" . }}
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dhis2-core-helm.fullname" . }}-postgresql-app
+                  key: password
+            - name: PGDATABASE
+              value: {{ include "dhis2-core-helm.databaseName" . }}
+          command:
+            - "/bin/bash"
+            - "-c"
+            - |
+              until psql -tAc "select 1 from pg_tables where tablename = 'dhis2_chart_seed_complete'" 2>/dev/null | grep -q 1; do
+                echo "waiting for database seed to complete..."
+                sleep 5
+              done
+      {{- end }}
+      {{- if $usesLocalStorage }}
+        - name: dhis2-home-permissions
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              set -o errexit
+              mkdir -p {{ .Values.dhis2Home }}
+              chown {{ .Values.securityContext.runAsUser }}:{{ .Values.securityContext.runAsGroup }} {{ .Values.dhis2Home }}
+              chmod u+rw,go-rwx {{ .Values.dhis2Home }}
+              mkdir -p {{ .Values.dhis2Home }}/files
+              chown -R {{ .Values.securityContext.runAsUser }}:{{ .Values.securityContext.runAsGroup }} {{ .Values.dhis2Home }}/files
+              chmod -R u+rw,go-rwx {{ .Values.dhis2Home }}/files
+          volumeMounts:
+            - name: dhis-home
+              mountPath: {{ .Values.dhis2Home }}
+      {{- end }}
+      {{- if .Values.glowroot.enabled }}
+        - name: glowroot-download
+          image: {{ .Values.glowroot.image }}
+          command:
+            - sh
+            - -c
+            - |
+              set -o errexit
+              apk upgrade --no-cache
+              apk add --no-cache wget unzip
+              wget -O /tmp/glowroot.zip https://github.com/glowroot/glowroot/releases/download/v{{ .Values.glowroot.version }}/glowroot-{{ .Values.glowroot.version }}-dist.zip
+              echo "{{ .Values.glowroot.expectedSha }}  /tmp/glowroot.zip" | sha256sum -c
+              unzip /tmp/glowroot.zip -d /tmp
+              cp -r /tmp/glowroot/* /glowroot/
+              cp /tmp/glowroot-config/admin.json /glowroot/
+          volumeMounts:
+            - name: glowroot-agent
+              mountPath: /glowroot
+            - name: glowroot-config
+              mountPath: /tmp/glowroot-config
+              readOnly: true
+      {{- end }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: CATALINA_OPTS
+              value: {{ .Values.catalinaOpts }}
+            - name: JAVA_TOOL_OPTIONS
+              value: >-
+                -Djava.io.tmpdir={{ .Values.javaTempDir }}
+                -Dlog4j2.configurationFile={{ .Values.dhis2Home }}/log4j2.xml
+                -Dcontext.sameSiteCookies={{ .Values.sessionCookieSameSite }}
+                -Dcontext.path={{ .Values.contextPath }}
+                {{- if .Values.glowroot.enabled }}
+                -javaagent:/glowroot/glowroot.jar
+                -Dglowroot.conf.dir=/glowroot
+                -Dglowroot.data.dir=/glowroot-data
+                -Dglowroot.log.dir=/glowroot-data
+                -Dglowroot.tmp.dir=/glowroot-data
+                {{- end }}
+                {{ .Values.javaOpts }}
+            - name: DHIS2_HOME
+              value: {{ .Values.dhis2Home }}
+            - name: SERVER_SERVLET_CONTEXT_PATH
+              value: {{ .Values.contextPath }}
+{{- if and .Values.database.existingSecret .Values.database.secretKeys.username }}
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.existingSecret }}
+                  key: {{ .Values.database.secretKeys.username }}
+{{- else }}
+            - name: DB_USERNAME
+              value: {{ include "dhis2-core-helm.databaseUsername" . | quote }}
+{{- end }}
+{{- if .Values.database.existingSecret }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.existingSecret }}
+                  key: {{ .Values.database.secretKeys.password }}
+{{- else }}
+            - name: DB_PASSWORD
+              value: {{ include "dhis2-core-helm.databasePassword" . | quote }}
+{{- end }}
+{{- if and .Values.doris.enabled .Values.doris.existingSecret }}
+            - name: DORIS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.doris.existingSecret }}
+                  key: {{ .Values.doris.secretKeys.username }}
+            - name: DORIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.doris.existingSecret }}
+                  key: {{ .Values.doris.secretKeys.password }}
+{{- end }}
+          envFrom:
+            - secretRef:
+                name: {{ include "dhis2-core-helm.fullname" . }}
+            - configMapRef:
+                name: {{ include "dhis2-core-helm.fullname" . }}-env
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            {{- if .Values.glowroot.enabled }}
+            - name: glowroot
+              containerPort: {{ .Values.glowroot.port }}
+              protocol: TCP
+            {{- end }}
+          startupProbe:
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+            httpGet:
+              path: {{ .Values.startupProbe.path }}
+              port: http
+          livenessProbe:
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            httpGet:
+              path: {{ .Values.livenessProbe.path }}
+              port: http
+          readinessProbe:
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            httpGet:
+              path: {{ .Values.readinessProbe.path }}
+              port: http
+          volumeMounts:
+            - name: dhis-home
+              mountPath: {{ .Values.dhis2Home }}
+            - name: dhis-conf
+              mountPath: {{ .Values.dhis2Home }}/dhis.conf
+              subPath: dhis.conf
+{{- if .Values.googleAuth.projectId }}
+            - name: google-auth-json
+              mountPath: {{ .Values.dhis2Home }}/dhis-google-auth.json
+              subPath: dhis-google-auth.json
+{{- end }}
+            - name: log4j2-xml
+              mountPath: {{ .Values.dhis2Home }}/log4j2.xml
+              subPath: log4j2.xml
+            - name: server-xml
+              mountPath: /usr/local/tomcat/conf/server.xml
+              subPath: server.xml
+            - name: tomcat-logs
+              mountPath: /usr/local/tomcat/logs
+            - name: tomcat-temp
+              mountPath: /usr/local/tomcat/temp
+            - name: tomcat-work
+              mountPath: /usr/local/tomcat/work
+            - name: java-tmp
+              mountPath: {{ .Values.javaTempDir }}
+            {{- if .Values.glowroot.enabled }}
+            - name: glowroot-agent
+              mountPath: /glowroot
+              readOnly: true
+            - name: glowroot-data
+              mountPath: /glowroot-data
+              readOnly: false
+            {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: dhis-home
+{{- if eq (include "dhis2-core-helm.storageType" .) "filesystem" }}
+          persistentVolumeClaim:
+            claimName: {{ include "dhis2-core-helm.fullname" . }}
+{{- else }}
+          emptyDir: {}
+{{- end }}
+        - name: dhis-conf
+          configMap:
+            name: {{ include "dhis2-core-helm.fullname" . }}
+            items:
+              - key: dhis.conf
+                path: dhis.conf
+{{- if .Values.googleAuth.projectId }}
+        - name: google-auth-json
+          secret:
+            secretName: {{ include "dhis2-core-helm.fullname" . }}
+            items:
+              - key: dhis-google-auth.json
+                path: dhis-google-auth.json
+{{- end }}
+        - name: server-xml
+          configMap:
+            name: {{ include "dhis2-core-helm.fullname" . }}
+            items:
+              - key: server.xml
+                path: server.xml
+        - name: log4j2-xml
+          configMap:
+            name: {{ include "dhis2-core-helm.fullname" . }}
+            items:
+              - key: log4j2.xml
+                path: log4j2.xml
+        - name: tomcat-logs
+          emptyDir: {}
+        - name: tomcat-temp
+          emptyDir: {}
+        - name: tomcat-work
+          emptyDir: {}
+        - name: java-tmp
+          emptyDir: {}
+        {{- if .Values.glowroot.enabled }}
+        - name: glowroot-agent
+          emptyDir: {}
+        - name: glowroot-config
+          configMap:
+            name: {{ include "dhis2-core-helm.fullname" . }}-glowroot
+        - name: glowroot-data
+          emptyDir: {}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

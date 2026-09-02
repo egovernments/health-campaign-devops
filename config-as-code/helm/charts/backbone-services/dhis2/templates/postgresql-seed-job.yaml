@@ -1,0 +1,52 @@
+{{- if and .Values.postgresql.enabled .Values.postgresql.seed.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "dhis2-core-helm.fullname" . }}-db-seed
+  labels:
+    {{- include "dhis2-core-helm.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: 20
+  template:
+    metadata:
+      labels:
+        {{- include "dhis2-core-helm.selectorLabels" . | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: seed
+          image: {{ .Values.postgresql.seed.image }}
+          env:
+            - name: PGHOST
+              value: {{ include "dhis2-core-helm.databaseHostname" . }}
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "dhis2-core-helm.fullname" . }}-postgresql-superuser
+                  key: password
+            - name: PGDATABASE
+              value: {{ include "dhis2-core-helm.databaseName" . }}
+            {{- with .Values.postgresql.seed.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          command:
+            - "/bin/bash"
+            - "-c"
+            - |
+              set -euo pipefail
+              until pg_isready -h "$PGHOST" -U postgres; do
+                echo "waiting for postgres..."
+                sleep 5
+              done
+              if psql -tAc "select 1 from pg_tables where tablename = 'dhis2_chart_seed_complete'" | grep -q 1; then
+                echo "database already seeded"
+                exit 0
+              fi
+              {{- .Values.postgresql.seed.script | nindent 14 }}
+              psql -c "create table dhis2_chart_seed_complete()"
+{{- end }}

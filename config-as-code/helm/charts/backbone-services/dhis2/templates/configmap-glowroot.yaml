@@ -1,0 +1,11 @@
+{{- if .Values.glowroot.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "dhis2-core-helm.fullname" . }}-glowroot
+  labels:
+    {{- include "dhis2-core-helm.labels" . | nindent 4 }}
+data:
+  admin.json: |
+{{ .Values.glowroot.config | toJson | indent 4 }}
+{{- end }}

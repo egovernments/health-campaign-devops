@@ -1,0 +1,36 @@
+{{- if .Values.postgresql.enabled }}
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ include "dhis2-core-helm.fullname" . }}-postgresql
+  labels:
+    {{- include "dhis2-core-helm.labels" . | nindent 4 }}
+spec:
+  {{- with .Values.postgresql.commonLabels }}
+  inheritedMetadata:
+    labels:
+      {{- toYaml . | nindent 6 }}
+  {{- end }}
+  instances: {{ .Values.postgresql.instances }}
+  imageName: {{ .Values.postgresql.imageName }}
+  storage:
+    size: {{ .Values.postgresql.storageSize }}
+    {{- with .Values.postgresql.storageClass }}
+    storageClass: {{ . }}
+    {{- end }}
+  {{- with .Values.postgresql.resources }}
+  resources:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  bootstrap:
+    initdb:
+      database: {{ include "dhis2-core-helm.databaseName" . }}
+      owner: {{ include "dhis2-core-helm.databaseUsername" . }}
+      secret:
+        name: {{ include "dhis2-core-helm.fullname" . }}-postgresql-app
+      postInitApplicationSQL:
+        - CREATE EXTENSION IF NOT EXISTS postgis
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: {{ include "dhis2-core-helm.fullname" . }}-postgresql-superuser
+{{- end }}

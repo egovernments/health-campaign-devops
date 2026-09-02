@@ -1,0 +1,17 @@
+{{- if .Values.glowroot.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dhis2-core-helm.fullname" . }}-glowroot
+  labels:
+    {{- include "dhis2-core-helm.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.glowroot.port }}
+      targetPort: glowroot
+      protocol: TCP
+      name: glowroot
+  selector:
+    {{- include "dhis2-core-helm.selectorLabels" . | nindent 4 }}
+{{- end }}

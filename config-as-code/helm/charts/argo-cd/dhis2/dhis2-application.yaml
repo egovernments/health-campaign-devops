@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dhis2
+  namespace: argocd
+spec:
+  project: dhis2-project
+
+  source:
+    repoURL: git@github.com:egovernments/health-campaign-devops.git
+    targetRevision: azure-install-hcm-demo
+    path: config-as-code/helm/charts/backbone-services/dhis2
+    helm:
+      valueFiles:
+        - values.yaml
+        - ../../../../environments/dhis2.yaml
+        - secrets://../../../../environments/dhis2-secrets.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dhis2
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - ServerSideApply=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s

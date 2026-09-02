@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "dhis2-core-helm.fullname" . }}-env
+  labels:
+    {{- include "dhis2-core-helm.labels" . | nindent 4 }}
+data:
+  FLYWAY_MIGRATE_OUT_OF_ORDER: {{ .Values.flyway.migrateOutOfOrder | quote }}
+  FLYWAY_REPAIR_BEFORE_MIGRATION: {{ .Values.flyway.repairBeforeMigration | quote }}
+  ENABLE_QUERY_LOGGING: {{ .Values.enableQueryLogging | quote }}

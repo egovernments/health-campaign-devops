@@ -1,0 +1,46 @@
+{{- if .Values.ingress.enabled -}}
+{{- $fullName := include "dhis2-core-helm.fullname" . -}}
+{{- $tls := .Values.ingress.certIssuer -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "dhis2-core-helm.labels" . | nindent 4 }}
+  annotations:
+  {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if $tls }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.certIssuer | quote }}
+    ingress.kubernetes.io/ssl-redirect: "true"
+  {{- end }}
+spec:
+  {{- if $tls }}
+  tls:
+    - secretName: {{ .Values.ingress.hostname | replace "." "-" }}-tls
+      hosts:
+        - {{ .Values.ingress.hostname | quote }}
+  {{- end }}
+  ingressClassName: {{ .Values.ingress.className }}
+  rules:
+    - host: {{ .Values.ingress.hostname | quote }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $fullName }}{{ if .Values.keda.enabled }}-keda-proxy{{ end }}
+                port:
+                  number: {{ .Values.service.port }}
+          {{- if and .Values.glowroot.enabled .Values.glowroot.ingress.enabled }}
+          - path: {{ .Values.glowroot.ingress.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $fullName }}-glowroot
+                port:
+                  number: {{ .Values.glowroot.port }}
+          {{- end }}
+{{- end }}

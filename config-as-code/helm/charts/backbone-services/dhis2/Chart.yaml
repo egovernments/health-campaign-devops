@@ -1,0 +1,17 @@
+apiVersion: v2
+appVersion: 1.16.0
+dependencies:
+- condition: minio.enabled
+  name: minio
+  repository: https://charts.bitnami.com/bitnami
+  version: 14.7.5
+- alias: dorisCluster
+  condition: dorisCluster.enabled
+  name: doris
+  repository: https://charts.selectdb.com
+  version: 25.8.0
+description: DHIS 2 Helm chart bundling a CloudNativePG PostgreSQL cluster, an optional
+  MinIO file store and an optional Doris analytics cluster
+name: dhis2
+type: application
+version: 1.0.0

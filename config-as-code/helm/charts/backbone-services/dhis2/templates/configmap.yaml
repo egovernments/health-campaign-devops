@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "dhis2-core-helm.fullname" . }}
+  labels:
+    {{- include "dhis2-core-helm.labels" . | nindent 4 }}
+data:
+  dhis.conf: |
+   {{- if .Values.customConfigSnippet }}
+   {{- .Values.customConfigSnippet | nindent 4 }}
+   {{- end }}
+    connection.dialect = org.hibernate.dialect.PostgreSQLDialect
+    connection.driver_class = org.postgresql.Driver
+    connection.url = jdbc:postgresql://${DB_HOSTNAME}/${DB_DATABASE}
+    connection.username = ${DB_USERNAME}
+    connection.password = ${DB_PASSWORD}
+    {{- if .Values.ingress.enabled }}
+    server.base.url = http{{ if .Values.ingress.certIssuer }}s{{ end }}://{{ .Values.ingress.hostname }}{{ .Values.ingress.path }}
+    server.https = {{ if .Values.ingress.certIssuer }}true{{ else }}false{{ end }}
+    {{- end }}
+    session.cookie.samesite = {{ .Values.sessionCookieSameSite }}
+    {{- if eq (include "dhis2-core-helm.storageType" .) "minio" }}
+    filestore.provider = ${MINIO_PROVIDER}
+    filestore.container = ${MINIO_CONTAINER}
+    filestore.endpoint = ${MINIO_ENDPOINT}
+    filestore.location = ${MINIO_LOCATION}
+    filestore.identity = ${MINIO_IDENTITY}
+    filestore.secret = ${MINIO_SECRET}
+    {{- end }}
+    {{- if eq (include "dhis2-core-helm.storageType" .) "s3" }}
+    filestore.provider = ${S3_PROVIDER}
+    filestore.container = ${S3_CONTAINER}
+    filestore.endpoint = ${S3_ENDPOINT}
+    filestore.location = ${S3_LOCATION}
+    filestore.identity = ${S3_IDENTITY}
+    filestore.secret = ${S3_SECRET}
+    {{- end }}
+    flyway.migrate_out_of_order = ${FLYWAY_MIGRATE_OUT_OF_ORDER}
+    flyway.repair_before_migration = ${FLYWAY_REPAIR_BEFORE_MIGRATION}
+    enable.query.logging = ${ENABLE_QUERY_LOGGING}
+    {{- if .Values.doris.enabled }}
+    analytics.table.unlogged = on
+    analytics.table.use_views = off
+    analytics.database = doris
+    analytics.database.driver_filename = {{ .Values.doris.driverFilename }}
+    analytics.connection.url = jdbc:mysql://${DORIS_HOSTNAME}:${DORIS_PORT}/${DORIS_DATABASE}?useUnicode=true&characterEncoding=UTF-8&useSSL=${DORIS_USE_SSL}
+    analytics.connection.username = ${DORIS_USERNAME}
+    analytics.connection.password = ${DORIS_PASSWORD}
+    {{- end }}
+  log4j2.xml: |
+    {{- .Files.Get .Values.log4j2 | nindent 4 }}
+  server.xml: |
+    {{- .Files.Get .Values.serverXml | nindent 4 }}

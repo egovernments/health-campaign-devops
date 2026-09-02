@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: dhis2-project
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+
+  sourceRepos:
+    - git@github.com:egovernments/health-campaign-devops.git
+
+  destinations:
+    - namespace: dhis2
+      server: https://kubernetes.default.svc

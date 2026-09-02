@@ -1,0 +1,21 @@
+apiVersion: v2
+appVersion: 2.1.7
+description: Apache Doris is an easy-to-use, high-performance and real-time analytical
+  database based on MPP architecture, known for its extreme speed and ease of use.
+home: https://doris.apache.org
+icon: https://charts.selectdb.com/images/doris.jpg
+keywords:
+- doris
+- database
+- olap
+- sharding
+kubeVersion: '>= 1.19.0-0'
+maintainers:
+- email: hudechao@selectdb.com
+  name: Dechao Hu
+name: doris
+sources:
+- https://github.com/apache/doris
+- https://github.com/apache/doris-operator
+type: application
+version: 25.8.0

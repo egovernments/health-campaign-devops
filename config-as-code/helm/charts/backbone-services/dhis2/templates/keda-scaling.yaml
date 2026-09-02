@@ -1,0 +1,39 @@
+{{- if .Values.keda.enabled }}
+kind: HTTPScaledObject
+apiVersion: http.keda.sh/v1alpha1
+metadata:
+  name: {{ include "dhis2-core-helm.fullname" . }}
+  labels:
+    {{- include "dhis2-core-helm.labels" . | nindent 4 }}
+spec:
+  hosts:
+    - {{ .Values.ingress.hostname | quote }}
+  pathPrefixes:
+    - {{ .Values.ingress.path }}
+  scaleTargetRef:
+    name: {{ include "dhis2-core-helm.fullname" . }}
+    kind: Deployment
+    apiVersion: apps/v1
+    service: {{ include "dhis2-core-helm.fullname" . }}
+    port: {{ .Values.service.port }}
+  replicas:
+    min: {{ .Values.keda.replicas.min }}
+    max: {{ .Values.keda.replicas.max }}
+  initialCooldownPeriod: {{ .Values.keda.initialCooldownPeriod }}
+  scaledownPeriod: {{ .Values.keda.scaledownPeriod }}
+  scalingMetric:
+    requestRate:
+      granularity: {{ .Values.keda.scalingMetric.requestRate.granularity }}
+      targetValue: {{ .Values.keda.scalingMetric.requestRate.targetValue }}
+      window: {{ .Values.keda.scalingMetric.requestRate.window }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dhis2-core-helm.fullname" . }}-keda-proxy
+spec:
+  type: ExternalName
+  externalName: {{ .Values.keda.proxy.hostname }}
+{{- end }}

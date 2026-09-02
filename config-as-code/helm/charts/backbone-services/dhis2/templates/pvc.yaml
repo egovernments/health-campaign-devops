@@ -1,0 +1,17 @@
+{{- if eq (include "dhis2-core-helm.storageType" .) "filesystem" }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "dhis2-core-helm.fullname" . }}
+  labels:
+    {{- include "dhis2-core-helm.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.storage.volumeSize }}
+  {{- with .Values.storage.className }}
+  storageClassName: {{ . }}
+  {{- end }}
+{{- end }}
