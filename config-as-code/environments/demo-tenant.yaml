@@ -200,7 +200,7 @@ health-expense-calculator:
         tag: master-a5e4c31
   tracing-enabled: true
   java-enable-debug: true
-  java-args: "-Dspring.kafka.consumer.max-poll-records=1 -Dspring.kafka.consumer.properties.max.poll.interval.ms=600000"
+  java-tool-options: "-Dspring.kafka.consumer.max-poll-records=1 -Dspring.kafka.consumer.properties.max.poll.interval.ms=600000"
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
   report-header-title: "Health Campaign Payment Report"
   report-date-time-format: "dd/MM/yyyy HH:mm:ss z"
