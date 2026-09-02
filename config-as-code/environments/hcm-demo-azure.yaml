@@ -1034,12 +1034,12 @@ facility:
 project:
   image:
     repository: egovio/project
-    tag: master-af73edf
+    tag: master-b912a1c
   initContainers:
     dbMigration:
       image:
         repository: egovio/project-db
-        tag: master-af73edf
+        tag: master-b912a1c
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
