@@ -654,7 +654,7 @@ egov-persister:
   replicas: 3
   heap: "-Xmx512m -Xms512m"
   memory_limits: 1Gi
-  memory_requests: 256Mi
+  memory_requests: 512Mi
   cpu_requests: 100m
   hpa:
     enabled: true
