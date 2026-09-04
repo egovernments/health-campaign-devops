@@ -656,7 +656,7 @@ egov-persister:
   memory_limits: 1Gi
   hpa:
     enabled: true
-    minReplicas: 1
+    minReplicas: 3
     maxReplicas: 5
     cpuTargetPercentage: 70
     memoryTargetPercentage: 80
