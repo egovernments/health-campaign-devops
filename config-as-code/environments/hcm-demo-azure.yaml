@@ -505,6 +505,7 @@ egov-user:
   server-tomcat-max-threads: "200"
   spring-datasource-tomcat-max-active: "30"
   bulk-bcrypt-threads: "4"
+  egov-localization-default-locale: "en_DEMO"
 
 chatbot:
   kafka-topics-partition-count: 3
