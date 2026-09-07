@@ -1416,12 +1416,12 @@ health-attendance:
 health-expense:
   image:
     repository: egovio/health-expense
-    tag: master-cdc5957
+    tag: master-fcb1889
   initContainers:
     dbMigration:
       image:
         repository: egovio/health-expense-db
-        tag: master-cdc5957
+        tag: master-fcb1889
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1442,12 +1442,12 @@ health-expense:
 health-muster-roll:
   image:
     repository: egovio/health-muster-roll
-    tag: master-cdc5957
+    tag: master-fcb1889
   initContainers:
     dbMigration:
       image:
         repository: egovio/health-muster-roll-db
-        tag: master-cdc5957
+        tag: master-fcb1889
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
