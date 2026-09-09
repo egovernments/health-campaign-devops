@@ -11,14 +11,14 @@ global:
 postgresql:
   enabled: true
   instances: 1
-  storageSize: 8Gi
+  storageSize: 20Gi
   resources:
     requests:
       cpu: 250m
-      memory: 512Mi
+      memory: 1Gi
     limits:
       cpu: 500m
-      memory: 1Gi
+      memory: 4Gi
 
 minio:
   enabled: false
