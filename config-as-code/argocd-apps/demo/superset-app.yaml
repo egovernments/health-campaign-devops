@@ -1,0 +1,108 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: superset
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: hcm-demo
+    app.kubernetes.io/managed-by: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://apache.github.io/superset
+    chart: superset
+    targetRevision: 0.22.7
+    helm:
+      values: |
+        ingress:
+          enabled: true
+          ingressClassName: nginx
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt-prod
+            nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+            nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+          path: /
+          pathType: ImplementationSpecific
+          hosts:
+            - superset.hcm-demo.digit.org
+          tls:
+            - secretName: superset.hcm-demo.digit.org-tls-certs
+              hosts:
+                - superset.hcm-demo.digit.org
+
+        # The 6.x apache/superset image ships without DB drivers baked in;
+        # install psycopg2 for the bundled Postgres metadata DB at pod startup.
+        bootstrapScript: |
+          #!/bin/bash
+          if [ ! -f ~/bootstrap ]; then
+            uv pip install --python /app/.venv/bin/python psycopg2-binary
+            echo "Running Superset with uid {{ .Values.runAsUser }}" > ~/bootstrap
+          fi
+
+        # SUPERSET_SECRET_KEY is sourced from a pre-created in-cluster secret
+        # (superset-app-secrets) rather than committed here. See
+        # config-as-code/argocd-apps/demo/README.md for the bootstrap steps.
+        envFromSecrets:
+          - superset-app-secrets
+
+        init:
+          # Admin user is created manually after first sync (kubectl exec + `superset fab create-admin`)
+          # so no plaintext password ever needs to live in this file or in Argo CD's Application CR.
+          createAdmin: false
+          loadExamples: false
+
+        # Postgres and Redis are bundled, ClusterIP-only, internal to this
+        # namespace (no external exposure). Passwords are pinned as literal
+        # values (not left to the subchart's lookup-based auto-generation) -
+        # Argo CD renders this chart via `helm template` with no live
+        # cluster access, so lookup() always misses and the subchart would
+        # otherwise mint a brand new random password on every single sync,
+        # orphaning it from whatever password the already-initialized data
+        # volume actually has. database.password must match
+        # postgresql.auth.password (Superset builds its own DB_PASS from
+        # database.password, it does not read the postgresql.* section).
+        #
+        # REPLACE_WITH_REAL_VALUES: the two password fields below are
+        # placeholders, not the live credentials. This repo normally encrypts
+        # secret values with sops against the hcm-demo-kv Azure Key Vault
+        # (see environments/dhis2-secrets.yaml for the pattern), but that
+        # wasn't accessible when this file was authored, so the real
+        # passwords were applied straight to the cluster and deliberately
+        # left out of git. See config-as-code/argocd-apps/demo/README.md.
+        postgresql:
+          enabled: true
+          auth:
+            postgresPassword: "REPLACE_WITH_REAL_VALUE"
+            password: "REPLACE_WITH_REAL_VALUE"
+          primary:
+            resources:
+              requests:
+                cpu: "250m"
+                memory: "1Gi"
+              limits:
+                cpu: "1000m"
+                memory: "4Gi"
+
+        database:
+          password: "REPLACE_WITH_REAL_VALUE"
+
+        redis:
+          enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: superset
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
