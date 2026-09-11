@@ -1,8 +1,8 @@
 global:
-   domain: hcm-demo.digit.org ## Add your Domain Name "Eg: site.mydomain.com" Do not use the dummy domain
+   domain: health-demo.digit.org ## Add your Domain Name "Eg: site.mydomain.com" Do not use the dummy domain
    setup: fullsetup
    hosts:
-     - hcm-demo.digit.org
+     - health-demo.digit.org
    schema:
      - mz
      - demo
@@ -27,10 +27,10 @@ cluster-configs:
                 db-url: "jdbc:postgresql://hcm-demo-server-v2.postgres.database.azure.com:5432/healthdemo" ## example: jdbc:postgresql://egov-demo.postgres.database.azure.com:5432/egov_demo
                 db-url-no-schema: "jdbc:postgresql://hcm-demo-server-v2.postgres.database.azure.com:5432/healthdemo"
                 demo-db-url: "jdbc:postgresql://hcm-demo-server-v2.postgres.database.azure.com:5432/healthdemo?currentSchema=demo"
-                domain: hcm-demo.digit.org ## Add your Domain Name
+                domain: health-demo.digit.org ## Add your Domain Name
                 redis-host: "redis.backbone.svc.cluster.local"
                 redis-downsync-host: "redis.backbone.svc.cluster.local"
-                egov-services-fqdn-name: https://hcm-demo.digit.org/ ## Add your Domain Name
+                egov-services-fqdn-name: https://health-demo.digit.org/ ## Add your Domain Name
                 kibana-host: http://release-name-kibana.es-cluster:5601/
                 kibana-base-path: kibana
                 state-level-tenantid-length: "1"
@@ -1781,11 +1781,11 @@ jupyterhub:
   ingress:
     enabled: true
     hosts:
-      - hcm-demo.digit.org
+      - health-demo.digit.org
     tls:
       - hosts:
-          - hcm-demo.digit.org
-        secretName: hcm-demo.digit.org-tls-certs
+          - health-demo.digit.org
+        secretName: health-demo.digit.org-tls-certs
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 hcm-moz-impl:

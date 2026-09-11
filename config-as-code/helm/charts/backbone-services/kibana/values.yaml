@@ -160,13 +160,13 @@ ingress:
     nginx.ingress.kubernetes.io/lua-resty-waf-score-threshold: "10"
     nginx.ingress.kubernetes.io/use-regex: "true"
   hosts:
-    - host: hcm-demo.digit.org
+    - host: health-demo.digit.org
       paths:
         - path: /kibana
-  tls: 
-   - secretName: hcm-demo.digit.org-tls-certs
+  tls:
+   - secretName: health-demo.digit.org-tls-certs
      hosts:
-       - hcm-demo.digit.org
+       - health-demo.digit.org
 #  hosts:
 #    - host: salama.digit.org
 #      paths:
