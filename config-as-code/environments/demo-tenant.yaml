@@ -86,7 +86,7 @@ payments-ui:
 console:
   image:
     repository: egovio/console
-    tag: ondo-proxy-f806f086a2-149
+    tag: master-5b31b5f
   namespace: demo
   central-instance-name: egov
   central-instance-build: true
