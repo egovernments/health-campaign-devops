@@ -106,14 +106,14 @@ transformer:
   heap: "-Xmx768m -Xms512m"
   hpa:
     enabled: false
-    minReplicas: 3
-    maxReplicas: 5
+    minReplicas: 1
+    maxReplicas: 3
   cpu_requests: 200m
   memory_requests: 1Gi
   cpu_limits: 300m
   memory_limits: 1.5Gi
   java-enable-debug: true
-  replicas: 3
+  replicas: 1
   project-factory-host: "project-factory"
   save-attendance-log-topic: "demo-save-attendance-log"
   update-attendance-log-topic: "demo-update-attendance-log"
