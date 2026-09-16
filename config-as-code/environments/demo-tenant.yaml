@@ -101,7 +101,7 @@ console:
 transformer:
   image:
     repository: egovio/transformer
-    tag: local-transformer-fix-1040e96
+    tag: local-transformer-fix-2ad9aa0
   namespace: "demo"
   heap: "-Xmx768m -Xms512m"
   hpa:
