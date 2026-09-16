@@ -101,19 +101,19 @@ console:
 transformer:
   image:
     repository: egovio/transformer
-    tag: transformer-final-2.1-2c59d3b
+    tag: local-transformer-fix-1040e96
   namespace: "demo"
   heap: "-Xmx768m -Xms512m"
   hpa:
     enabled: false
-    minReplicas: 1
-    maxReplicas: 3
+    minReplicas: 3
+    maxReplicas: 5
   cpu_requests: 200m
   memory_requests: 1Gi
   cpu_limits: 300m
   memory_limits: 1.5Gi
   java-enable-debug: true
-  replicas: 1
+  replicas: 3
   project-factory-host: "project-factory"
   save-attendance-log-topic: "demo-save-attendance-log"
   update-attendance-log-topic: "demo-update-attendance-log"
