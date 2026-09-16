@@ -166,6 +166,14 @@ transformer:
   update-stock-reconciliation-topic: "demo-update-stock-reconciliation-topic"
   transformer-producer-stock-recon-index-v1-topic: "demo-transformer-producer-stock-recon-index-v1-topic"
   transformer-producer-bulk-stock-index-updated-v1-topic: "demo-transformer-producer-bulk-stock-index-updated-v1-topic"
+  # User-action + project-beneficiary transformer topics were inheriting un-prefixed chart defaults
+  # (transformer-producer-user-action-index-v1-topic etc.), so nothing reached the demo-* indexer topics.
+  transformer-consumer-create-user-action-topic: "demo-save-user-action-project-task-topic"
+  transformer-consumer-update-user-action-topic: "demo-update-user-action-project-task-topic"
+  transformer-producer-user-action-index-v1-topic: "demo-transformer-producer-user-action-index-v1-topic"
+  save-project-beneficiary-topic: "demo-save-project-beneficiary-topic"
+  update-project-beneficiary-topic: "demo-update-project-beneficiary-topic"
+  transformer-producer-project-beneficiary-index-v1-topic: "demo-transformer-producer-project-beneficiary-index-v1-topic"
   health-transformer: "demo-health-transformer"
   transformer-consumer-error-tracer-topic: "error-details-indexer-topic"
   transformer-producer-error-details-index-v1-topic: "demo-transformed-errors-topic"
