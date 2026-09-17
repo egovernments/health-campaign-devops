@@ -1,0 +1,241 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: airflow
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: hcm-demo
+    app.kubernetes.io/managed-by: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://airflow.apache.org
+    chart: airflow
+    targetRevision: 1.22.0
+    helm:
+      values: |
+        executor: KubernetesExecutor
+
+        images:
+          airflow:
+            repository: egovio/airflow
+            tag: 3.0.2-custom2
+            pullPolicy: IfNotPresent
+          # Without this, the KubernetesExecutor worker pod template (used for
+          # actual DAG task pods) silently falls back to the chart's default
+          # apache/airflow:3.2.2 instead of the custom image every other
+          # component uses - confirmed via `helm template` dry-run diff.
+          pod_template:
+            repository: egovio/airflow
+            tag: 3.0.2-custom2
+
+        securityContexts:
+          pod:
+            fsGroup: 0
+            runAsGroup: 0
+            runAsUser: 50000
+
+        service:
+          type: ClusterIP
+
+        config:
+          api:
+            base_url: /airflow
+            enable_proxy_fix: "True"
+          core:
+            remote_logging: "False"
+          logging:
+            base_log_folder: /opt/airflow/logs
+            delete_local_logs: "False"
+            remote_logging: "False"
+          kubernetes_executor:
+            volumes: '[{"name": "logs", "persistentVolumeClaim": {"claimName": "airflow-logs-pvc"}}]'
+            volume_mounts: '[{"name": "logs", "mountPath": "/opt/airflow/logs"}]'
+          webserver:
+            base_url: https://health-demo.digit.org/airflow
+
+        # These secrets already exist in-cluster from the original `helm install`
+        # (see config-as-code/argocd-apps/demo/README.md). Pinning by name instead
+        # of leaving fernetKey/apiSecretKey/jwtSecret unset is required: Argo CD
+        # renders this chart via `helm template` with no live cluster access, so
+        # any *not* pinned to an existing secret gets freshly regenerated on every
+        # single sync, which would rotate the fernet key / API secret key each
+        # sync and break decryption of already-encrypted connections plus
+        # invalidate live sessions.
+        fernetKeySecretName: airflow-fernet-key
+        apiSecretKeySecretName: airflow-api-secret-key
+        jwtSecretName: airflow-jwt-secret
+
+        data:
+          metadataSecretName: airflow-metadata
+          brokerUrlSecretName: airflow-broker-url
+
+        # ELASTIC_PASSWORD for all Airflow containers, sourced from the existing
+        # elasticsearch-credentials secret rather than a literal value.
+        secret:
+          - envName: ELASTIC_PASSWORD
+            secretName: elasticsearch-credentials
+            secretKey: password
+
+        # Shared across scheduler/dag-processor/triggerer, and merged into the
+        # KubernetesExecutor worker pod template alongside `workers.env` below.
+        # KAFKA_BROKER/ES_HOST/ELASTIC_USERNAME/IS_CENTRAL_INSTANCE_ENABLED were
+        # hand-patched directly into the airflow-config ConfigMap at some point
+        # (not previously reflected in the Helm release values) - captured here
+        # so this Application reproduces the actual working state rather than
+        # reverting it.
+        env:
+          - name: AIRFLOW__LOGGING__BASE_LOG_FOLDER
+            value: /opt/airflow/logs
+          - name: AIRFLOW__LOGGING__REMOTE_LOGGING
+            value: "False"
+          - name: AIRFLOW__KUBERNETES_EXECUTOR__VOLUMES
+            value: '[{"name": "logs", "persistentVolumeClaim": {"claimName": "airflow-logs-pvc"}}]'
+          - name: AIRFLOW__KUBERNETES_EXECUTOR__VOLUME_MOUNTS
+            value: '[{"name": "logs", "mountPath": "/opt/airflow/logs"}]'
+          - name: MDMS_URL
+            value: http://mdms-v2.egov.svc.cluster.local:8080/
+          - name: MDMS_SEARCH_ENDPOINT
+            value: mdms-v2/v2/_search
+          - name: TENANT_ID
+            value: demo
+          - name: AIRFLOW__KUBERNETES_ENVIRONMENT_VARIABLES__TENANT_ID
+            value: demo
+          - name: AIRFLOW__KUBERNETES_ENVIRONMENT_VARIABLES__IS_CENTRAL_INSTANCE_ENABLED
+            value: "true"
+          - name: IS_CENTRAL_INSTANCE_ENABLED
+            value: "true"
+          - name: LIMIT
+            value: "100"
+          - name: FILE_STORE_URL
+            value: http://egov-filestore.egov.svc.cluster.local:8080/
+          - name: FILE_STORE_UPLOAD_FILE_ENDPOINT
+            value: filestore/v1/files
+          - name: KAFKA_BROKER
+            value: release-name-kafka.kafka-kraft.svc.cluster.local:9092
+          - name: ES_HOST
+            value: http://elasticsearch-data.es-cluster.svc.cluster.local:9200
+          - name: ELASTIC_USERNAME
+            value: elastic
+          - name: CUSTOM_REPORTS_AUTOMATION_TOPIC
+            value: save-hcm-report-metadata
+
+        dags:
+          gitSync:
+            enabled: true
+            repo: https://github.com/egovernments/health-campaign-services.git
+            branch: airflow-analysis
+            rev: HEAD
+            depth: 1
+            subPath: utilities/airflow-dags/dags
+            wait: 60
+            maxFailures: 0
+            containerName: git-sync
+            uid: 65533
+          persistence:
+            enabled: false
+
+        logs:
+          persistence:
+            enabled: true
+            existingClaim: airflow-logs-pvc
+
+        persistence:
+          enabled: true
+          size: 100Gi
+          storageClass: managed-csi
+
+        postgresql:
+          enabled: true
+          image:
+            registry: docker.io
+            repository: bitnamilegacy/postgresql
+            tag: 16.4.0-debian-12-r13
+          # Password already lives in the airflow-postgresql secret created by the
+          # original install; existingSecret avoids ever writing it as a literal
+          # here (see fernetKeySecretName comment above for why pinning matters
+          # under Argo CD's no-cluster-access `helm template` rendering).
+          auth:
+            existingSecret: airflow-postgresql
+          primary:
+            persistence:
+              storageClass: managed-csi
+
+        redis:
+          enabled: false
+
+        scheduler:
+          replicas: 1
+          logGroomerSidecar:
+            enabled: true
+          resources:
+            limits:
+              cpu: "1"
+              memory: 4Gi
+            requests:
+              cpu: "0.5"
+              memory: 2Gi
+
+        webserver:
+          replicas: 1
+          resources:
+            limits:
+              cpu: "1"
+              memory: 2Gi
+            requests:
+              cpu: "0.5"
+              memory: 1Gi
+
+        triggerer:
+          replicas: 1
+          persistence:
+            enabled: false
+
+        workers:
+          replicas: 1
+          resources:
+            limits:
+              cpu: "1"
+              memory: 2Gi
+            requests:
+              cpu: "0.5"
+              memory: 1Gi
+          env:
+            - name: AIRFLOW__LOGGING__BASE_LOG_FOLDER
+              value: /opt/airflow/logs
+            - name: AIRFLOW__LOGGING__REMOTE_LOGGING
+              value: "False"
+            - name: MDMS_URL
+              value: http://mdms-v2.egov.svc.cluster.local:8080/
+            - name: MDMS_SEARCH_ENDPOINT
+              value: mdms-v2/v2/_search
+            - name: TENANT_ID
+              value: demo
+            - name: LIMIT
+              value: "100"
+            - name: FILE_STORE_URL
+              value: http://egov-filestore.egov.svc.cluster.local:8080/
+            - name: FILE_STORE_UPLOAD_FILE_ENDPOINT
+              value: filestore/v1/files
+            - name: KAFKA_BROKER
+              value: release-name-kafka.kafka-kraft.svc.cluster.local:9092
+            - name: ES_HOST
+              value: http://elasticsearch-data.es-cluster.svc.cluster.local:9200
+            - name: ELASTIC_USERNAME
+              value: elastic
+            - name: CUSTOM_REPORTS_AUTOMATION_TOPIC
+              value: save-hcm-report-metadata
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: airflow
+  syncPolicy:
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
