@@ -44,6 +44,12 @@ spec:
           api:
             base_url: /airflow
             enable_proxy_fix: "True"
+            # Was defaulting to 4 workers, ~3.15Gi RSS each with no
+            # requests/limits set (BestEffort QoS) -> node evicted the pod
+            # twice in 30min ("available: 24884Ki"). Fewer workers first,
+            # then a real resource floor/ceiling below - a limit alone would
+            # just convert the eviction into an OOMKill at the same usage.
+            workers: "2"
           core:
             remote_logging: "False"
           logging:
@@ -115,8 +121,12 @@ spec:
             value: filestore/v1/files
           - name: KAFKA_BROKER
             value: release-name-kafka.kafka-kraft.svc.cluster.local:9092
+          # https, not http: ES has xpack.security.http.ssl.enabled=true, so
+          # port 9200 only speaks TLS. Plain HTTP gets silently dropped by ES,
+          # causing report-generation task pods to retry 30x and fail after
+          # ~150s. Client already uses verify=False, so no cert work needed.
           - name: ES_HOST
-            value: http://elasticsearch-data.es-cluster.svc.cluster.local:9200
+            value: https://elasticsearch-data.es-cluster.svc.cluster.local:9200
           - name: ELASTIC_USERNAME
             value: elastic
           - name: CUSTOM_REPORTS_AUTOMATION_TOPIC
@@ -178,6 +188,10 @@ spec:
               cpu: "0.5"
               memory: 2Gi
 
+        # `webserver.resources` (legacy pre-Airflow-3 key) does NOT apply to the
+        # Airflow 3 api-server Deployment - confirmed live (api-server container
+        # had resources: {} despite this being set). `apiServer.resources` is
+        # the key that actually takes effect.
         webserver:
           replicas: 1
           resources:
@@ -187,6 +201,33 @@ spec:
             requests:
               cpu: "0.5"
               memory: 1Gi
+
+        # Previously resources: {} (BestEffort) - the direct cause of the
+        # eviction loop (see config.api.workers comment above). Sized off the
+        # observed ~12.6Gi RSS at 4 workers (~3.15Gi/worker): 2 workers here
+        # should land around 7-8.5Gi, so the 10Gi limit leaves headroom instead
+        # of just trading eviction for OOMKill. Re-check against actual usage
+        # after this rolls out and tune down once real Airflow-3 numbers are in.
+        apiServer:
+          replicas: 1
+          resources:
+            requests:
+              cpu: "250m"
+              memory: 2Gi
+            limits:
+              cpu: "1"
+              memory: 10Gi
+
+        # Was also resources: {} (BestEffort) - same node-pressure exposure as
+        # api-server, just not the one that got singled out by evictions yet.
+        dagProcessor:
+          resources:
+            requests:
+              cpu: "0.5"
+              memory: 1Gi
+            limits:
+              cpu: "1"
+              memory: 2Gi
 
         triggerer:
           replicas: 1
@@ -222,7 +263,7 @@ spec:
             - name: KAFKA_BROKER
               value: release-name-kafka.kafka-kraft.svc.cluster.local:9092
             - name: ES_HOST
-              value: http://elasticsearch-data.es-cluster.svc.cluster.local:9200
+              value: https://elasticsearch-data.es-cluster.svc.cluster.local:9200
             - name: ELASTIC_USERNAME
               value: elastic
             - name: CUSTOM_REPORTS_AUTOMATION_TOPIC
