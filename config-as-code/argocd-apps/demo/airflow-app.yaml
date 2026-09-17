@@ -209,14 +209,14 @@ spec:
         # of just trading eviction for OOMKill. Re-check against actual usage
         # after this rolls out and tune down once real Airflow-3 numbers are in.
         apiServer:
-          replicas: 1
+          replicas: 2
           resources:
             requests:
               cpu: "250m"
-              memory: 2Gi
+              memory: 4Gi
             limits:
               cpu: "1"
-              memory: 10Gi
+              memory: 16Gi
 
         # Was also resources: {} (BestEffort) - same node-pressure exposure as
         # api-server, just not the one that got singled out by evictions yet.
