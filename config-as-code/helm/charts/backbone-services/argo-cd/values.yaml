@@ -936,13 +936,16 @@ controller:
   podLabels: {}
 
   # -- Resource limits and requests for the application controller pods
+  # Bumped 2026-09-18: Prometheus showed the controller peaking at 503-532Mi
+  # (right at/over the old 512Mi limit) and OOMKilling repeatedly - it now
+  # manages 60+ Applications, well past what 512Mi was sized for.
   resources:
    limits:
      cpu: 500m
-     memory: 512Mi
+     memory: 1Gi
    requests:
      cpu: 250m
-     memory: 256Mi
+     memory: 512Mi
 
   # Application controller container ports
   containerPorts:
@@ -2775,7 +2778,10 @@ repoServer:
   name: repo-server
 
   # -- The number of repo server pods to run
-  replicas: 1
+  # Live was already scaled to 2 via a direct kubectl scale (never recorded
+  # here) - matching git to reality so this upgrade doesn't silently scale
+  # it back down to 1.
+  replicas: 2
 
   # -- Runtime class name for the repo server
   # @default -- `""` (defaults to global.runtimeClassName)
@@ -3053,13 +3059,17 @@ repoServer:
   podLabels: {}
 
   # -- Resource limits and requests for the repo server pods
+  # Updated 2026-09-18: live Deployment had already drifted to 1Gi/300m
+  # limits via a direct kubectl patch (never reflected back here) - this
+  # brings git in line with what's actually running. Request raised from
+  # 64Mi to 512Mi to match observed steady-state usage (320-392Mi).
   resources:
    limits:
-     cpu: 50m
-     memory: 128Mi
+     cpu: 300m
+     memory: 1Gi
    requests:
-     cpu: 10m
-     memory: 64Mi
+     cpu: 100m
+     memory: 512Mi
 
   # Repo server container ports
   containerPorts:
