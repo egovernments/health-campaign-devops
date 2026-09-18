@@ -2,7 +2,15 @@
 
 Apps in this folder are applied directly with `kubectl apply -f <file>` against the
 `hcm-demo` cluster's `argocd` namespace — there is no app-of-apps auto-syncing this
-folder from git yet, so any new file here also needs to be applied manually once.
+whole folder from git, so any new file here (or edits to `superset-app.yaml`) still
+needs to be applied manually once.
+
+`airflow-app.yaml` is the one exception: `airflow-app-sync.yaml` is a file-scoped
+app-of-apps (`directory.include: airflow-app.yaml`) that watches only that one file
+and re-applies it automatically on every git change (see its own section below).
+It deliberately does **not** include `superset-app.yaml` — that file has placeholder
+secrets that must never be auto-reapplied (see the Superset section below) — so
+Superset stays manual-only.
 
 ## superset-app.yaml
 
@@ -114,16 +122,35 @@ Superset postgres password (Argo CD renders via `helm template` with no cluster 
 so anything left unpinned regenerates randomly every sync) — it's just fully solved
 here instead of worked around with a placeholder.
 
-### Sync policy is intentionally manual (no `automated` block)
+### Sync policy: selfHeal only, no prune (2026-09-18)
 
 This app has a real, populated metadata Postgres and real running DAG history behind
-it, so unlike the other apps in this folder `syncPolicy.automated` was deliberately
-left unset. Before the first sync, diff what Argo CD *would* apply:
+it, so `syncPolicy.automated.prune` is deliberately left `false` — an unexpected
+prune here (e.g. a field accidentally dropped from git) could delete live
+Deployments/PVCs backing that data. `selfHeal: true` is enabled: once this file
+changes and reaches the cluster (see `airflow-app-sync.yaml` below), drift between
+the Application's spec and the live Deployments (like a `resources` bump) is applied
+automatically, without ever pruning.
+
+Before enabling `prune: true` as well, run a manual dry-run first to confirm nothing
+unexpected would be deleted:
 
 ```bash
 kubectl apply -f airflow-app.yaml
 argocd app diff airflow   # or: argocd app sync airflow --dry-run
 ```
 
-Only enable `automated: {prune: true, selfHeal: true}` once a sync has been run
-cleanly and nothing unexpected was pruned.
+### `airflow-app-sync.yaml`: keeps this file's changes flowing from git automatically
+
+Editing `airflow-app.yaml` alone does **not** reach the cluster — Argo CD only syncs
+resources that some `Application` already knows to watch, and this folder isn't
+watched by any app-of-apps. `airflow-app-sync.yaml` closes that gap for this one
+file: it's a `directory`-source Application scoped to
+`config-as-code/argocd-apps/demo/airflow-app.yaml` only (via `directory.include`),
+with `syncPolicy.automated: {selfHeal: true, prune: false}`, so any git change to
+`airflow-app.yaml` is re-applied to the `airflow` Application object automatically,
+which then (per the selfHeal policy above) rolls out to the live Deployments.
+
+It intentionally excludes `superset-app.yaml` and has no `resources-finalizer` of its
+own, so deleting `airflow-app-sync.yaml` (or its Application object) can never cascade
+into deleting the `airflow` Application or the real resources behind it.

@@ -272,6 +272,13 @@ spec:
     server: https://kubernetes.default.svc
     namespace: airflow
   syncPolicy:
+    # selfHeal only, no prune: keeps the live Deployments/etc. in line with
+    # this file automatically, but never deletes anything - this adopted
+    # release has a real Postgres + DAG history behind it (see README.md),
+    # so an unexpected prune here is much worse than a missed auto-sync.
+    automated:
+      selfHeal: true
+      prune: false
     syncOptions:
       - ApplyOutOfSyncOnly=true
     retry:

@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: airflow-app-sync
+  namespace: argocd
+  labels:
+    app.kubernetes.io/managed-by: argocd
+    app.kubernetes.io/part-of: hcm-demo
+  # Deliberately NO resources-finalizer here: this app manages exactly one
+  # child resource (the `airflow` Application, which itself owns the real
+  # Airflow release incl. Postgres/DAG history via its own finalizer). If
+  # this wrapper is ever deleted, it must NOT cascade into deleting the
+  # `airflow` Application - so no finalizer, and prune stays false below.
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:egovernments/health-campaign-devops.git
+    targetRevision: azure-install-hcm-demo
+    path: config-as-code/argocd-apps/demo
+    directory:
+      # Scoped to this one file only - superset-app.yaml in the same folder
+      # has known placeholder secrets (see README.md) that must never be
+      # auto-reapplied from git, so it is intentionally excluded here.
+      include: "airflow-app.yaml"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: false
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
