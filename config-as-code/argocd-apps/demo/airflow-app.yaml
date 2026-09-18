@@ -202,18 +202,22 @@ spec:
               cpu: "0.5"
               memory: 1Gi
 
-        # Previously resources: {} (BestEffort) - the direct cause of the
-        # eviction loop (see config.api.workers comment above). Sized off the
-        # observed ~12.6Gi RSS at 4 workers (~3.15Gi/worker): 2 workers here
-        # should land around 7-8.5Gi, so the 10Gi limit leaves headroom instead
-        # of just trading eviction for OOMKill. Re-check against actual usage
-        # after this rolls out and tune down once real Airflow-3 numbers are in.
+        # Re-checked against actual usage on 2026-09-18 after the 2Gi/10Gi ->
+        # 4Gi/16Gi rollout (see git history): Prometheus showed real peaks of
+        # 9.4-13.7Gi across both replicas, well under the 16Gi limit, so the
+        # limit stays. But request was still only 4Gi against ~8Gi steady-state
+        # usage - that gap is exactly what makes this pod look like the worst
+        # offender to the kernel OOM killer under node-wide memory pressure
+        # (this node pool runs at 148-177% memory-*limit* overcommit), so both
+        # replicas got OOMKilled by the node, not by their own cgroup limit.
+        # Raising the request to ~match real usage fixes that targeting, even
+        # though the underlying node overcommit is a separate problem.
         apiServer:
           replicas: 2
           resources:
             requests:
               cpu: "250m"
-              memory: 4Gi
+              memory: 8Gi
             limits:
               cpu: "1"
               memory: 16Gi
