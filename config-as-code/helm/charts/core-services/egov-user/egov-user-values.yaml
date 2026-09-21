@@ -3,6 +3,21 @@ labels:
   app: "egov-user"
   group: "core"
 
+# HCMADMIN bootstrap-user seed (see templates/hcmadmin-seed-job.yaml and
+# docs/FRESH-INSTALL-RUNBOOK.md). Disabled by default; enable per-env
+# after creating the password secret. Roles mirror the live HCMADMIN user and
+# are owner-authorized.
+hcmSeed:
+  enabled: false
+  tenantId: "mz"
+  userHost: "http://egov-user.egov:8080"
+  image: "curlimages/curl:8.9.1"
+  backoffLimit: 20
+  # password is read from this Secret's key — never stored in git:
+  #   kubectl -n <ns> create secret generic hcmadmin-seed --from-literal=password='<strong-pass>'
+  passwordSecret: "hcmadmin-seed"
+  passwordSecretKey: "password"
+
 # Ingress Configs
 ingress:
   enabled: true
@@ -22,6 +37,7 @@ image:
   repository: "egov-user"
 replicas: "2"
 healthChecks:
+  startupProbeEnabled: true
   enabled: true
   livenessProbePath: "/user/health"
   readinessProbePath: "/user/health"

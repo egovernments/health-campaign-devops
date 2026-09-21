@@ -33,6 +33,8 @@ tracing-enabled: true
 heap: "-Xmx256m -Xms256m"
 memory_limits: 512Mi
 java-args: ""
+egov-mdms-service-host-key: "mdms-v2"
+egov-mdms-service-endpoint-key: "mdms-v2/v1/_search"
 
 # Additional Container Envs
 env: |
@@ -88,11 +90,6 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: health-expense-calculator
-  - name: APP_TIMEZONE
-    valueFrom:
-      configMapKeyRef:
-        name: egov-config
-        key: timezone
   - name: MUSTERROLL_KAFKA_CREATE_TOPIC
     value: "save-musterroll-health"
   - name: MUSTERROLL_KAFKA_UPDATE_TOPIC
@@ -196,5 +193,63 @@ env: |
   - name: MUSTERROLL_SET_DEFAULT_DURATION_ENABLED
     value: {{ index .Values "musterroll-set-default-duration-enabled" | quote }}
   {{- end }}
+  # ---- Attendance Report (Elasticsearch + FileStore + Worker Registry) ----
+  - name: ELASTICSEARCH_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: es-client
+  - name: ELASTICSEARCH_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: elasticsearch-master-credentials
+        key: username
+  - name: ELASTICSEARCH_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: elasticsearch-master-credentials
+        key: password
+  - name: ELASTICSEARCH_QUERIES_MDMS_MODULE
+    value: "AttendanceReportDetail"
+  - name: ELASTICSEARCH_QUERIES_MDMS_MASTER
+    value: "ElasticSearchQuery"
+  - name: MUSTERROLL_KAFKA_STATUS_UPDATE_TOPIC
+    value: "muster-roll-status-update"
+  - name: MUSTERROLL_PERIOD_LOCKING_ENABLED
+    value: {{ index .Values "musterroll-period-locking-enabled" | default "true" | quote }}
+  - name: MUSTER_ROLL_ATTENDANCE_REPORT_GENERATE_TOPIC
+    value: "generate-attendance-report"
+  - name: MUSTER_ROLL_ATTENDANCE_REPORT_UPDATE_TOPIC
+    value: "attendance-report-update"
+  - name: EGOV_FILESTORE_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: egov-filestore
+  - name: EGOV_FILESTORE_ENDPOINT
+    value: "/filestore/v1/files"
+  - name: EGOV_FILESTORE_DOWNLOAD_ENDPOINT
+    value: "/filestore/v1/files/id"
+  - name: ATTENDANCE_REPORT_FILESTORE_MODULE
+    value: "ATTENDANCE"
+  - name: ATTENDANCE_REPORT_LOCALIZATION_MODULE
+    value: "muster-roll"
+  - name: ATTENDANCE_REPORT_DATE_FORMAT
+    value: "dd/MM/yyyy"
+  - name: ATTENDANCE_REPORT_TIMEZONE
+    value: "Asia/Kolkata"
+  - name: ATTENDANCE_REPORT_SESSION_BOUNDARY_TIME
+    value: "12:00"
+  - name: ATTENDANCE_REPORT_ALLOWED_SKILLS
+    value: "DISTRIBUTOR,REGISTRAR,HEALTH_FACILITY_WORKER"
+  - name: EGOV_WORKER_REGISTRY_ENABLED
+    value: "true"
+  - name: EGOV_WORKER_REGISTRY_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: worker-registry-host
+  - name: EGOV_WORKER_REGISTRY_SEARCH_PATH
+    value: "worker/v1/_search"
 
   

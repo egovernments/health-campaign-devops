@@ -9,8 +9,9 @@ cluster-configs:
     name: root-ingress
     namespace: egov
     cert-issuer: "letsencrypt-staging"
-    appRoot: citizen
-    serviceName: citizen
+    # HCM has no citizen UI; land the bare domain on the workbench (HCM console) login.
+    appRoot: workbench-ui/employee/user/login
+    serviceName: workbench-ui
     servicePort: 80
  
   nginx-errors:

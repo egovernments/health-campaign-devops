@@ -1,0 +1,40 @@
+-- 08-sso-identityproviders.TEMPLATE.sql  (HCM 2.1, tenant mz) -- TEMPLATE, DO NOT COMMIT REAL VALUES
+--
+-- OIDC/SSO login is OPTIONAL. The IdentityProvider rows are ENVIRONMENT-SPECIFIC
+-- (each carries that environment's OAuth clientId, issuer/redirect URLs, tenant,
+-- and role mappings), so they are deliberately NOT shipped in 01-mdms.sql.
+--
+-- To enable SSO in a given environment, fill the <PLACEHOLDERS> below and apply.
+-- No client SECRET is stored in MDMS -- the SSO password/secret is supplied to
+-- egov-user via env (SSO_DEFAULT_PASSWORD_<TENANT>_<PROVIDER>) or a K8s Secret.
+--
+-- Skip this file entirely if the environment does not use SSO.
+
+-- Schema definition (safe, generic -- no secrets). Uncomment to install:
+-- INSERT INTO eg_mdms_schema_definition (id,tenantid,code,description,definition,isactive,createdby,lastmodifiedby,createdtime,lastmodifiedtime)
+-- SELECT gen_random_uuid()::text,'mz','SSO.IdentityProviders','OIDC/SSO provider config for egov-user',
+--        '<SCHEMA_JSON>'::jsonb,true,'seed','seed',
+--        (extract(epoch from now())*1000)::bigint,(extract(epoch from now())*1000)::bigint
+-- WHERE NOT EXISTS (SELECT 1 FROM eg_mdms_schema_definition WHERE tenantid='mz' AND code='SSO.IdentityProviders');
+
+-- One data row per provider (fill placeholders):
+-- INSERT INTO eg_mdms_data (id,tenantid,uniqueidentifier,schemacode,data,isactive,createdby,lastmodifiedby,createdtime,lastmodifiedtime)
+-- SELECT gen_random_uuid()::text,'mz','<PROVIDER_ID e.g. oidc-google>','SSO.IdentityProviders',
+--   jsonb_build_object(
+--     'id','<PROVIDER_ID>',
+--     'active', true,
+--     'tenantId','<DIGIT_TENANT e.g. mz>',
+--     'userType','EMPLOYEE',
+--     'issuerUri','<OIDC_ISSUER_URI>',
+--     'jwkSetUri','<JWKS_URI>',
+--     'audiences', jsonb_build_array('<OAUTH_CLIENT_ID>'),
+--     'providerType','<google|microsoft>',
+--     'ui', jsonb_build_object('clientId','<OAUTH_CLIENT_ID>','provider','<GOOGLE|MICROSOFT>',
+--                              'authority','<AUTHORITY_URL>','authStrategy','OIDC_POPUP',
+--                              'logoutUrl','<APP_LOGOUT_URL>'),
+--     'roleMappings', '<ROLE_MAPPINGS_JSON_ARRAY>'::jsonb,
+--     'defaultRoleCodes','<CSV_DIGIT_ROLE_CODES>',
+--     'defaultBoundaryHierarchyType','ADMIN'
+--   ),
+--   true,'seed','seed',(extract(epoch from now())*1000)::bigint,(extract(epoch from now())*1000)::bigint
+-- WHERE NOT EXISTS (SELECT 1 FROM eg_mdms_data WHERE tenantid='mz' AND schemacode='SSO.IdentityProviders' AND uniqueidentifier='<PROVIDER_ID>');

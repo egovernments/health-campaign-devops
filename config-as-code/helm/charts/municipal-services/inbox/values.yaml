@@ -97,8 +97,11 @@ env: |
   - name: BS_BUSINESSCODE_SERVICE_SEARCH
     value:  {{ index .Values "bs-service-map" | quote }} 
   {{- if index .Values "tracing-enabled" }}
-  - name: TRACER_OPENTRACING_ENABLED
-    value: "true" 
   {{- end }}
-  - name: JAVA_ENABLE_DEBUG
-    value: "true"
+
+  # --- mirrored from the demo chart (health-campaign-devops @ azure-install-hcm-demo) ---
+  - name: EGOV_STATE_LEVEL_TENANT_ID
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: egov-state-level-tenant-id

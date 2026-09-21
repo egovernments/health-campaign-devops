@@ -35,15 +35,32 @@ cpu_limits: "500m"
 heap: "-Xmx2900m -Xms256m"
 java-args: ""
 egov-mdms-service-host-key: "egov-mdms-service"
-egov-mdms-service-endpoint-key: "egov-mdms-service/v2/_search"
+egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
 defaultLocale: "en_IN"
 java-enable-debug: false
 java-debug-port: 5005
+egov-hrms-employee-search-path: "egov-hrms/employees/_search"
+egov-hrms-employee-search-parallel-calls: "100"
+egov-worker-registry-search-path: "worker/v1/_search"
+egov-worker-registry-search-batch-size: "100"
+egov-attendance-attendee-search-path: "health-attendance/attendee/v1/_search"
+egov-attendance-attendee-search-page-size: "100"
+egov-attendance-staff-search-path: "health-attendance/staff/v1/_search"
+egov-attendance-staff-search-page-size: "100"
+egov-attendance-register-search-batch-size: "100"
+egov-attendance-register-search-parallel-calls: "10"
+excel-row-limit: "5000"
+excel-sheet-name-max-length: "31"
+egov-excel-sheet-password: "passwordhere"
+egov-excel-sheet-zoom: "90"
+egov-excel-validation-error-color: "#ff0000"
 
 # Additional Container Envs
 env: |
   - name: SERVER_PORT
     value: "8080"
+  - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+    value: {{ index .Values "group-id" | default "excel-ingestion" }}
   - name: SERVER_SERVLET_CONTEXT_PATH
     value: "/excel-ingestion"
   - name: EGOV_BOUNDARY_HOST
@@ -81,13 +98,74 @@ env: |
       configMapKeyRef:
         name: egov-service-host
         key: {{ index .Values "egov-mdms-service-host-key" | quote }}
-        
+
+  - name: EGOV_HRMS_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: egov-hrms
+  - name: EGOV_HRMS_EMPLOYEE_SEARCH_PATH
+    value: "egov-hrms/employees/_search"
+  - name: EGOV_HRMS_EMPLOYEE_SEARCH_PARALLEL_CALLS
+    value: "100"
+
+  - name: EGOV_ATTENDANCE_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: health-attendance
+  - name: EGOV_ATTENDANCE_REGISTER_SEARCH_PATH
+    value: "health-attendance/v1/_search"
+  - name: EGOV_ATTENDANCE_REGISTER_SEARCH_BATCH_SIZE
+    value: "100"
+  - name: EGOV_ATTENDANCE_REGISTER_SEARCH_PARALLEL_CALLS
+    value: "10"
+  - name: EGOV_ATTENDANCE_ATTENDEE_SEARCH_PATH
+    value: "health-attendance/attendee/v1/_search"
+  - name: EGOV_ATTENDANCE_ATTENDEE_SEARCH_PAGE_SIZE
+    value: "100"
+  - name: EGOV_ATTENDANCE_STAFF_SEARCH_PATH
+    value: "health-attendance/staff/v1/_search"
+  - name: EGOV_ATTENDANCE_STAFF_SEARCH_PAGE_SIZE
+    value: "100"
+
+
+  - name: EGOV_WORKER_REGISTRY_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: egov-service-host
+        key: worker-registry-host
+  - name: EGOV_WORKER_REGISTRY_SEARCH_PATH
+    value: "worker/v1/_search"
+  - name: EGOV_WORKER_REGISTRY_SEARCH_BATCH_SIZE
+    value: "100"
+
+  - name: EXCEL_SHEET_NAME_MAX_LENGTH
+    value: "31"
+  - name: EXCEL_ROW_LIMIT
+    value: {{ index .Values "excel-row-limit" | default "5000" | quote }}
+  - name: EGOV_EXCEL_SHEET_PASSWORD
+    value: {{ index .Values "egov-excel-sheet-password" | default "passwordhere" | quote }}
+  - name: EGOV_EXCEL_SHEET_ZOOM
+    value: {{ index .Values "egov-excel-sheet-zoom" | default "90" | quote }}
+  - name: EGOV_EXCEL_VALIDATION_ERROR_COLOR
+    value: {{ index .Values "egov-excel-validation-error-color" | default "#ff0000" | quote }}
+  - name: EGOV_EXCEL_JOIN_MODE_SHEET_PROTECTION_ENABLED
+    value: {{ index .Values "egov-excel-join-mode-sheet-protection-enabled" | default "false" | quote }}
+  - name: EGOV_EXCEL_IMMUTABLE_REJECT_ON_CHANGE
+    value: {{ index .Values "egov-excel-immutable-reject-on-change" | default "true" | quote }}
+  - name: EGOV_EXCEL_USAGE_VALUE_VALIDATION_ENABLED
+    value: {{ index .Values "egov-excel-usage-value-validation-enabled" | default "true" | quote }}
+  - name: EGOV_EXCEL_BOUNDARY_SELECTION_VALIDATION_ENABLED
+    value: {{ index .Values "egov-excel-boundary-selection-validation-enabled" | default "true" | quote }}
   - name: EGOV_CAMPAIGN_DATA_SEARCH_PATH
     value: "project-factory/v1/data/campaign/_search"
   - name: EGOV_CAMPAIGN_CRYPTO_BULK_DECRYPT_PATH
     value: "project-factory/v1/crypto/_bulkDecrypt"
   - name: EGOV_HEALTH_INDIVIDUAL_SEARCH_PATH
     value: "individual/v1/_search"
+  - name: EGOV_EXCEL_USER_SEARCH_PARALLEL_CALLS
+    value: {{ index .Values "egov-excel-user-search-parallel-calls" | default "20" | quote }}
   - name: EGOV_HIERARCHY_SEARCH_URL
     value: "boundary-service/boundary-hierarchy-definition/_search"
   - name: EGOV_BOUNDARY_RELATIONSHIP_SEARCH_URL
@@ -109,30 +187,6 @@ env: |
     value: "false"
     
   # Database Configuration
-  - name: SPRING_DATASOURCE_URL
-  {{- if eq .Values.namespace "health" }}
-    valueFrom:
-      configMapKeyRef:
-        name: egov-config
-        key: db-url
-  {{- else }}
-    valueFrom:
-      configMapKeyRef:
-        name: egov-config
-        key: db-url
-  {{- end }}
-  - name: SPRING_DATASOURCE_USERNAME
-    valueFrom:
-      secretKeyRef:
-        name: db
-        key: username
-  - name: SPRING_DATASOURCE_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: db
-        key: password
-  - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
-    value: "org.postgresql.Driver"
   - name: DB_HOST
     valueFrom:
       configMapKeyRef:
@@ -153,7 +207,34 @@ env: |
     value: "update"
   - name: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
     value: "org.hibernate.dialect.PostgreSQLDialect"
-  
+  - name: EXCEL_INGESTION_GENERATION_SAVE_TOPIC
+    value: {{ index .Values "excel-ingestion-generation-save-topic" | default "save-generated-file" | quote }}
+  - name: EXCEL_INGESTION_GENERATION_UPDATE_TOPIC
+    value: {{ index .Values "excel-ingestion-generation-update-topic" | default "update-generated-file" | quote }}
+  - name: EXCEL_INGESTION_PROCESSING_SAVE_TOPIC
+    value: {{ index .Values "excel-ingestion-processing-save-topic" | default "save-processing-file" | quote }}
+  - name: EXCEL_INGESTION_PROCESSING_UPDATE_TOPIC
+    value: {{ index .Values "excel-ingestion-processing-update-topic" | default "update-processing-file" | quote }}
+  - name: EXCEL_INGESTION_SHEET_DATA_SAVE_TOPIC
+    value: {{ index .Values "excel-ingestion-sheet-data-save-topic" | default "save-sheet-data-temp" | quote }}
+  - name: EXCEL_INGESTION_SHEET_DATA_DELETE_TOPIC
+    value: {{ index .Values "excel-ingestion-sheet-data-delete-topic" | default "delete-sheet-data-temp" | quote }}
+  - name: EXCEL_INGESTION_PROCESSING_RESULT_TOPIC
+    value: {{ index .Values "excel-ingestion-processing-result-topic" | default "hcm-processing-result" | quote }}
+  - name: EXCEL_INGESTION_GENERATION_INIT_TOPIC
+    value: {{ index .Values "excel-ingestion-generation-init-topic" | default "excel-ingestion-generation-init" | quote }}
+ 
+  # Kafka consumer tuning for the generation init listener (max.poll.records is
+  # pinned to 1 in code; do not expose).
+  - name: SPRING_KAFKA_CONSUMER_PROPERTIES_MAX_POLL_INTERVAL_MS
+    value: {{ index .Values "excel-ingestion-consumer-max-poll-interval-ms" | default "900000" | quote }}
+  - name: SPRING_KAFKA_CONSUMER_PROPERTIES_SESSION_TIMEOUT_MS
+    value: {{ index .Values "excel-ingestion-consumer-session-timeout-ms" | default "120000" | quote }}
+  - name: EXCEL_INGESTION_GENERATION_ROW_WAIT_TIMEOUT_MS
+    value: {{ index .Values "excel-ingestion-generation-row-wait-timeout-ms" | default "10000" | quote }}
+  # Listener watchdog: restart any zombie Kafka listener container on this interval.
+  - name: EXCEL_INGESTION_LISTENER_WATCHDOG_INTERVAL_MS
+    value: {{ index .Values "excel-ingestion-listener-watchdog-interval-ms" | default "60000" | quote }}
   # Flyway Configuration
   - name: FLYWAY_USER
     valueFrom:
@@ -194,3 +275,17 @@ env: |
     value: org.apache.kafka.common.serialization.StringSerializer
   - name: SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER
     value: org.springframework.kafka.support.serializer.JsonSerializer
+
+  # --- mirrored from the demo chart (health-campaign-devops @ azure-install-hcm-demo) ---
+  - name: TRACER_KAFKA_MDC_ENABLED
+    value: {{ index .Values "kafka-mdc-enabled" | quote }}
+  - name: KAFKA_TENANT_ID_PATTERN
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: kafka-tenant-id-pattern
+  # Kafka consumer tuning for the generation init listener (max.poll.records is
+  # pinned to 1 in code; do not expose).
+
+# --- values mirrored from the demo chart (referenced by the env entries above) ---
+kafka-mdc-enabled: "true"

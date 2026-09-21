@@ -1,0 +1,15 @@
+apiVersion: v2
+name: clamav
+description: A Helm chart for deploying ClamAV antivirus scanner
+type: application
+version: 1.0.0
+appVersion: "1.4.3"
+keywords:
+  - clamav
+  - antivirus
+  - security
+home: https://www.clamav.net/
+sources:
+  - https://github.com/Cisco-Talos/clamav
+maintainers:
+  - name: DevOps Team

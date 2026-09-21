@@ -1,0 +1,110 @@
+{{- /*
+HCMADMIN bootstrap-user seed.
+
+Creates the HCM console admin (userName HCMADMIN, tenant mz). The role set below
+mirrors the live HCMADMIN user (id 95) exactly and is explicitly authorized by
+the platform owner:
+  BOUNDARY_MANAGER, SUPERUSER, HRMS_ADMIN, PGR-ADMIN, CAMPAIGN_MANAGER.
+HRMS_ADMIN + PGR-ADMIN are what render the User-Management and Complaints cards.
+
+Runs as a post-install/post-upgrade Helm hook once egov-user is up. IDEMPOTENT:
+it searches for the user first and exits 0 if present, so re-running is safe.
+The call hits egov-user's internal service port directly (no gateway), so the
+service performs username/mobile encryption (enc-service) and password hashing —
+no encrypted/hashed values are ever written to git.
+
+CREDENTIAL: the login password is NOT stored here. Provide it out-of-band as a
+Kubernetes Secret and reference it via hcmSeed.passwordSecret / passwordSecretKey:
+  kubectl -n <ns> create secret generic hcmadmin-seed \
+    --from-literal=password='<choose-a-strong-password>'
+The Job will not start until that secret exists.
+
+CARDS DEPENDENCY: the roles above must also exist as access-control MDMS
+roles + roleactions for the cards to render. Those live in the MDMS data repo
+(see docs/FRESH-INSTALL-RUNBOOK.md) — this Job only guarantees the USER
+exists with the roles attached.
+
+Disabled by default (hcmSeed.enabled=false); enable per-environment once the
+password secret is in place.
+*/ -}}
+{{- if .Values.hcmSeed.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hcmadmin-seed
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: egov-user
+    component: hcmadmin-seed
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "10"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: {{ .Values.hcmSeed.backoffLimit | default 20 }}
+  template:
+    metadata:
+      labels:
+        app: egov-user
+        component: hcmadmin-seed
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: hcmadmin-seed
+          image: {{ .Values.hcmSeed.image | default "curlimages/curl:8.9.1" | quote }}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: USER_HOST
+              value: {{ .Values.hcmSeed.userHost | default "http://egov-user.egov:8080" | quote }}
+            - name: TENANT
+              value: {{ .Values.hcmSeed.tenantId | default "mz" | quote }}
+            - name: SEED_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.hcmSeed.passwordSecret | default "hcmadmin-seed" | quote }}
+                  key: {{ .Values.hcmSeed.passwordSecretKey | default "password" | quote }}
+          command: ["/bin/sh", "-ec"]
+          args:
+            - |
+              set -eu
+              echo ">> waiting for egov-user at $USER_HOST ..."
+              i=0
+              until curl -fs "$USER_HOST/user/health" >/dev/null 2>&1; do
+                i=$((i+1)); [ "$i" -gt 60 ] && { echo "egov-user not ready"; exit 1; }
+                sleep 5
+              done
+              echo ">> egov-user is up"
+
+              # ---- idempotency: exit early if HCMADMIN already exists ----
+              SEARCH=$(curl -fs -X POST "$USER_HOST/user/_search" \
+                -H 'Content-Type: application/json' \
+                -d "{\"RequestInfo\":{\"apiId\":\"seed\",\"ver\":\"1.0\",\"action\":\"_search\"},\"tenantId\":\"$TENANT\",\"userName\":\"HCMADMIN\",\"userType\":\"EMPLOYEE\"}" || echo '{}')
+              case "$SEARCH" in
+                *'"userName":"HCMADMIN"'*) echo ">> HCMADMIN already present — nothing to do."; exit 0 ;;
+              esac
+
+              echo ">> creating HCMADMIN ..."
+              curl -fsS -X POST "$USER_HOST/user/users/_createnovalidate" \
+                -H 'Content-Type: application/json' \
+                -d "{
+                  \"RequestInfo\":{\"apiId\":\"seed\",\"ver\":\"1.0\",\"action\":\"_create\"},
+                  \"user\":{
+                    \"userName\":\"HCMADMIN\",
+                    \"name\":\"HCM Admin\",
+                    \"mobileNumber\":\"9999900001\",
+                    \"type\":\"EMPLOYEE\",
+                    \"active\":true,
+                    \"tenantId\":\"$TENANT\",
+                    \"password\":\"$SEED_PASSWORD\",
+                    \"roles\":[
+                      {\"code\":\"BOUNDARY_MANAGER\",\"name\":\"Boundary Manager\",\"tenantId\":\"$TENANT\"},
+                      {\"code\":\"SUPERUSER\",\"name\":\"Super User\",\"tenantId\":\"$TENANT\"},
+                      {\"code\":\"HRMS_ADMIN\",\"name\":\"HRMS Admin\",\"tenantId\":\"$TENANT\"},
+                      {\"code\":\"PGR-ADMIN\",\"name\":\"PGR Administrator\",\"tenantId\":\"$TENANT\"},
+                      {\"code\":\"CAMPAIGN_MANAGER\",\"name\":\"Campaign Managers\",\"tenantId\":\"$TENANT\"}
+                    ]
+                  }
+                }"
+              echo ""
+              echo ">> HCMADMIN seeded (tenant $TENANT)."
+{{- end }}

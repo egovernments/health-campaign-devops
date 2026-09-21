@@ -117,12 +117,16 @@ spec:
             - name: http
               containerPort: {{ .Values.httpPort }}
               protocol: TCP
-      {{- if .Values.healthChecks.enabled }}              
+      {{- if .Values.healthChecks.enabled }}
+          {{- if .Values.healthChecks.startupProbeEnabled }}
+          startupProbe:
+          {{- tpl  .Values.healthChecks.startupProbe . | nindent 12 }}
+          {{- end }}
           readinessProbe:
-          {{- tpl  .Values.healthChecks.readinessProbe . | nindent 12 }} 
+          {{- tpl  .Values.healthChecks.readinessProbe . | nindent 12 }}
           livenessProbe:
-          {{- tpl  .Values.healthChecks.livenessProbe . | nindent 12 }}                      
-       {{- end }}       
+          {{- tpl  .Values.healthChecks.livenessProbe . | nindent 12 }}
+       {{- end }}
         {{- if .Values.lifecycle }}
           lifecycle:
           {{- toYaml .Values.lifecycle | nindent 12 }}

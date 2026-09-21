@@ -22,6 +22,7 @@ image:
   repository: "individual"
 replicas: "1"
 healthChecks:
+  startupProbeEnabled: true
   enabled: true
   livenessProbePath: "/individual/health"
   readinessProbePath: "/individual/health"
@@ -72,7 +73,7 @@ env: |
   - name: EGOV_BENEFICIARY_IDGEN_INTEGRATION_ENABLED
     value: "true"
   - name: INDIVIDUAL_BENEFICIARY_ID_VALIDATION_ENABLED
-    value: "true"
+    value: "false"
   - name: IDGEN.INDIVIDUAL.ID.FORMAT
     value: "individual.id"
   - name: SPRING_REDIS_HOST
@@ -101,8 +102,6 @@ env: |
     value: {{ index .Values "heap" | quote }}
   - name: JAVA_ARGS
     value: {{ index .Values "java-args" | quote }}
-  - name: JAVA_ENABLE_DEBUG
-    value: {{ index .Values "java-enable-debug" | quote }}
   - name: SERVER_PORT
     value: "8080"
   - name: SECURITY_BASIC_ENABLED
@@ -176,6 +175,11 @@ env: |
   - name: NOTIFICATION_SMS_ENABLED
     value: "false"
   {{- if index .Values "tracing-enabled" }}
-  - name: TRACER_OPENTRACING_ENABLED
-    value: "true" 
   {{- end }}
+
+  # --- mirrored from the demo chart (health-campaign-devops @ azure-install-hcm-demo) ---
+  - name: TRACER_KAFKA_MDC_ENABLED
+    value: {{ index .Values "kafka-mdc-enabled" | quote }}
+
+# --- values mirrored from the demo chart (referenced by the env entries above) ---
+kafka-mdc-enabled: "true"

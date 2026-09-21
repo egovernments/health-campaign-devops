@@ -22,6 +22,7 @@ image:
   repository: "egov-workflow-v2"
 replicas: "1"
 healthChecks:
+  startupProbeEnabled: true
   enabled: true
   livenessProbePath: "/egov-workflow-v2/health"
   readinessProbePath: "/egov-workflow-v2/health"
@@ -62,8 +63,6 @@ env: |
       configMapKeyRef:
         name: egov-config
         key: egov-state-level-tenant-id
-  - name: EGOV_MDMS_SEARCH_ENDPOINT
-    value: "/mdms-v2/v1/_search"
   - name: EGOV_USER_HOST
     valueFrom:
       configMapKeyRef:
