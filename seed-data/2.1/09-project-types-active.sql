@@ -1,6 +1,6 @@
 -- HCM 2.1 seed: mirror demo's active campaign project types on tenant mz.
 -- demo (tenant demo) shows 5 active projectTypes: CO-DELIVERY, MR-DN, POLIO, Bednet, Oncho.
--- testhealth/mz had only 3 (MR-DN, Bednet, Oncho). This activates POLIO (already
+-- the target tenant had only 3 (MR-DN, Bednet, Oncho). This activates POLIO (already
 -- present, was inactive) and adds CO-DELIVERY (from demo). Idempotent.
 
 -- 1) activate POLIO

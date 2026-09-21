@@ -1,6 +1,6 @@
 -- 03-workflow.sql (HCM 2.1, tenant mz): businessservice workflow definitions. Idempotent.
 
--- HCM 2.1 workflow business services (demo->mz) for testhealth-k8supgrade
+-- HCM 2.1 workflow business services (demo->mz) for the target cluster
 -- deterministic uuid5 keys; idempotent via WHERE NOT EXISTS
 BEGIN;
 

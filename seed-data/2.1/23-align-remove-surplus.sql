@@ -6,7 +6,7 @@
 -- WHY IT IS NEEDED. Files 19/20/21 are INSERT ... ON CONFLICT DO UPDATE: they can add a row and correct
 -- a row, but they can never REMOVE one. A cluster seeded before this bundle existed keeps its local-only
 -- rows through every re-apply, and those render as DUPLICATE CARD TILES and duplicate dropdown options.
--- Measured on testhealth against demo, 2026-08-20:
+-- Measured against the reference environment, 2026-08-20:
 --     ACCESSCONTROL-ACTIONS-TEST.actions-test    197 local-only rows (the id-5000 series and others)
 --     ACCESSCONTROL-ROLEACTIONS.roleactions      497 local-only rows (they grant the surplus actions)
 --     HCM-PROJECT-TYPES.projectTypes               1 local-only row  -> 'Co-Delivery' listed TWICE
@@ -4893,7 +4893,7 @@ DELETE FROM eg_mdms_data d
 -- bucket that does not exist (the real one is hcm-demo-assets). demo has 0 such rows and file 21
 -- emits none (its only 'hcm-mz-assets' occurrence is a header comment), so this is a no-op on a
 -- fresh install and removes exactly the 21 relics on a cluster seeded with the pre-fix bundle
--- (measured on testhealth 2026-08-21: DELETE 21, leaving the 21 correct rows + 6 other-host rows).
+-- (measured against the reference environment, 2026-08-21: DELETE 21, leaving the 21 correct rows + 6 other-host rows).
 DELETE FROM eg_mdms_data
  WHERE schemacode = 'map-config.GeoJsonMapping'
    AND data::text LIKE '%hcm-mz-assets%';

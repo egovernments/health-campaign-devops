@@ -86,7 +86,7 @@ This rule was not invented — it was reverse-engineered from the previously com
 `19`/`20`/`21` were `DO NOTHING` until 2026-08-20. **That was a real defect on any non-empty cluster.**
 `DO NOTHING` can add a row but can never correct one, so a tenant that already had a label or a master with
 a stale value kept it forever and could never be brought back in line with demo — re-applying the bundle
-appeared to succeed while changing nothing. Measured on testhealth against demo:
+appeared to succeed while changing nothing. Measured against the reference environment:
 
 - **248** localization messages differed (e.g. `CORE_LOADING` = `Loading...` locally vs `Loading` on demo)
 - **255** MDMS rows differed, including the 7 console **card-tile** definitions, which is why tiles rendered
@@ -106,7 +106,7 @@ current values on apply.
 
 An upsert can add and correct rows; it can never **remove** one. A cluster seeded before this bundle existed
 keeps its local-only rows through every re-apply, and those render as **duplicate card tiles and duplicate
-dropdown options**. Measured on testhealth vs demo (2026-08-20):
+dropdown options**. Measured against the reference environment (2026-08-20):
 
 | Master | Local-only rows | Visible symptom |
 |---|---|---|
@@ -135,7 +135,7 @@ Verified on a throwaway PostgreSQL:
 | Scenario | Result |
 |---|---|
 | Fresh DB seeded only from this bundle | **exact no-op** — 0 rows removed, 6,284 → 6,284 |
-| DB pre-loaded with testhealth's 696 real surplus rows, then `21` + `23` | removed 695, converged to **exactly** demo's 6,284 |
+| DB pre-loaded with 696 real surplus rows, then `21` + `23` | removed 695, converged to **exactly** demo's 6,284 |
 
 After alignment: `Setup Payment Attributes` 2→**1**, `Co-Delivery` 2→**1**, active campaign templates
 3→**2** (`Malaria2024` exists on demo but *inactive*, so file `21`'s upsert deactivates it rather than `23`
@@ -201,7 +201,7 @@ Refreshed **2026-08-20 ~13:00 IST** directly from the hcm-demo reference environ
 | `eg_mdms_data` (`21`) | `POST https://hcm-demo.digit.org/mdms-v2/v2/_search` per schemaCode, paginated over the union of 372 schema codes | **Complete.** `v2/_search` returns `isActive=false` rows when `isActive` is omitted (verified) — unlike `v1`, which is active-only. 6,581 rows pulled, 0 errors. |
 | `eg_mdms_schema_definition` (`19`) | `POST /mdms-v2/schema/v1/_search` | 311 defs — **identical** to the committed file; no change. |
 | localization (`20`) | `POST /localization/messages/v1/_search?tenantId=demo&locale=<L>` (no module filter ⇒ all modules) | 4,895,783 rows across `en_DEMO`/`pt_DEMO`/`fr_DEMO`, of which 191,106 are seed-worthy per the table above. |
-| `product` / `product_variant` (`22`) | — | **Not refreshed**: demo's product API returns 401 and the `HCMADMIN` credentials are testhealth-only. Still the 2026-08-20 01:14 pgAdmin CSV snapshot. |
+| `product` / `product_variant` (`22`) | — | **Not refreshed**: demo's product API returns 401 and the `HCMADMIN` credentials are the target cluster-only. Still the 2026-08-20 01:14 pgAdmin CSV snapshot. |
 
 ### Drift found against the previous (CSV-based) snapshot
 - **MDMS:** 8 new rows (all per-campaign airflow config, now excluded) and **7 changed rows**, all

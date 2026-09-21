@@ -1,6 +1,6 @@
 -- 05-localization.sql (HCM 2.1, tenant mz): en_MZ / pt_MZ / fr_MZ UI messages. Idempotent.
 
--- HCM 2.1 localization seed (demo->mz) for testhealth-k8supgrade
+-- HCM 2.1 localization seed (demo->mz) for the target cluster
 -- MZ locales; idempotent via ON CONFLICT (tenantid,locale,module,code) DO NOTHING
 BEGIN;
 INSERT INTO message (id,locale,code,message,tenantid,module,createdby,createddate,lastmodifiedby,lastmodifieddate) VALUES

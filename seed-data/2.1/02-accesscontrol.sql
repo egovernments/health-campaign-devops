@@ -1,7 +1,7 @@
 -- 02-accesscontrol.sql (HCM 2.1, tenant mz): roles, actions, roleactions.
 -- Grants the card/menu access (incl. PGR-ADMIN, HRMS_ADMIN). Idempotent.
 
--- HCM 2.1 access-control seed (demo->mz) for testhealth-k8supgrade
+-- HCM 2.1 access-control seed (demo->mz) for the target cluster
 -- roles + actions + roleactions; idempotent
 BEGIN;
 

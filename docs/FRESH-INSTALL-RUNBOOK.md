@@ -1,7 +1,7 @@
 # HCM 2.1 fresh-install runbook (proven end-to-end 2026-08-23)
 
 Every step below was executed and verified live on an empty cluster + empty database
-(testhealth-k8supgrade, tenant `mz`, db `testhealthdb21`): install → seed → HCMADMIN bootstrap →
+(target cluster, tenant `mz`, db `<db_name>`): install → seed → HCMADMIN bootstrap →
 public-domain smoke → unified CO-DELIVERY campaign to `created` with **5 projects persisted**.
 
 ## 0. Prerequisites
@@ -98,14 +98,14 @@ because it compared against demo's env file instead of demo's cluster. Read live
 `KUBECONFIG=~/Downloads/readonly-kubeconfig.yaml` (context `readonly-context`):
 
 ```
-dashboard-ui  demo egovio/dashboard-ui:master-4e0e7fd   == testhealth   IDENTICAL
-payments-ui   demo egovio/payments-ui:master-2376f89    == testhealth   IDENTICAL
-transformer   demo transformer-final-2.1-2c59d3b        == testhealth   IDENTICAL
-workbench-ui  demo master-b40c93b  vs testhealth master-2376f89   demo AHEAD by ~1 day
+dashboard-ui  demo egovio/dashboard-ui:master-4e0e7fd   == target      IDENTICAL
+payments-ui   demo egovio/payments-ui:master-2376f89    == target      IDENTICAL
+transformer   demo transformer-final-2.1-2c59d3b        == target      IDENTICAL
+workbench-ui  demo master-b40c93b  vs target master-2376f89   demo AHEAD by ~1 day
 ```
 
 Only **2 of 60** live images differ at all: `workbench-ui` (demo ahead) and `redis` (demo runs 7.2.4 while
-BOTH repos declare 3.2 — demo's pod is an undeclared manual bump, so testhealth is the compliant side).
+BOTH repos declare 3.2 — demo's pod is an undeclared manual bump, so the target is the compliant side).
 
 Why the file misleads: `hcm-demo-azure.yaml:167` still pins `workbench-ui: master-9fcd8db`, but demo's real
 pin lives in the tenant overlay `demo-tenant.yaml`. The env file is stale for any service overridden there.
