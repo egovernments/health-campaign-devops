@@ -113,7 +113,7 @@ modules:
       - "backbone"
       - "authn-authz"
       - "core"
-      - "m-health"
+      - "m_health"
       - "m_hcm_microplanning"
     services:
       - egovio/project-factory:master-32ff216
