@@ -1,0 +1,1644 @@
+{
+  "info": {
+    "_postman_id": "f3b65b05-2441-4ce0-bd2d-2bb5894a4e88",
+    "name": "HCM seed 2.1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "25568368",
+    "description": "HCM v2.1 project seed script.\n\nChanged from the v2.0 collection:\n- 'Product Create' and 'Product Variant Create' were REMOVED. Products and product variants are supplied by the v2.1 seed data dump (product and product_variant tables). Running them against a seeded environment creates duplicate SKUs.\n- Product and product-variant IDs are now pre-set as collection variables, taken from the seeded reference set. Where a product has several variants in the seed, the earliest variant for that product was chosen.\n- tenantId defaults to mz.\n\nStill required from your environment: URL, authToken/access_token, the user UUIDs (Superadmin, SupervisorUUID, distUUID, wmUUID, hrmsAdminUUID, hfReferralUUID, staffUserServiceUuid), boundary code FIRST_PROVINCIA, project type values, and the epoch time variables."
+  },
+  "item": [
+    {
+      "name": "User creation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "",
+              "",
+              "",
+              "",
+              "let registrarresponse = pm.response.json().user[0];",
+              "if (pm.response.code != 200) return;",
+              "console.log(registrarresponse);",
+              "console.log(\"Newly created Superadmin Username  \" + pm.response.json().user[0].userName + \" Password {{password}}\")",
+              "pm.environment.set(\"userName\", pm.response.json().user[0].userName)",
+              "pm.environment.set(\"password\", \"{{password}}\")",
+              "",
+              "pm.environment.set(\"superadminUUID\", pm.response.json().user[0].uuid)",
+              "console.log(\"Newly created superadminUUID  \" + pm.response.json().user[0].uuid)",
+              "",
+              "pm.sendRequest({",
+              "    url: pm.environment.get(\"URL\") + '/user/oauth/token',",
+              "    method: 'POST',",
+              "    header: { \"Content-Type\": \"application/x-www-form-urlencoded\", \"Authorization\": \"Basic ZWdvdi11c2VyLWNsaWVudDo=\" },",
+              "    body: {",
+              "        mode: 'urlencoded',",
+              "        urlencoded: [",
+              "            { key: 'grant_type', value: 'password' },",
+              "            { key: 'scope', value: 'read' },",
+              "            { key: 'username', value: pm.environment.get('userName') },",
+              "            { key: 'password', value: pm.environment.get('password') },",
+              "            { key: 'tenantId', value: 'mz' },",
+              "            { key: 'userType', value: 'EMPLOYEE' }",
+              "        ]",
+              "    }",
+              "},",
+              "",
+              "    function (err, response) {",
+              "        const responseJSON = response.json();",
+              "        console.log(\"Access Token is \" + responseJSON.access_token)",
+              "        pm.environment.set(\"access_token\", responseJSON.access_token)",
+              "        console.log(\"The auth token has been set up now\")",
+              "    });",
+              "",
+              "console.log(\"Calling District Supervisor creation\")",
+              "pm.sendRequest({",
+              "    url: pm.environment.get(\"URL\") + '/user/users/_createnovalidate',",
+              "    method: 'POST',",
+              "    header: {",
+              "        'Content-Type': 'application/json',",
+              "    },",
+              "    body: {",
+              "        mode: 'raw',",
+              "        raw: JSON.stringify({",
+              "            \"RequestInfo\": {",
+              "                \"authToken\": pm.environment.get(\"authToken\")",
+              "            },",
+              "",
+              "            \"user\": {",
+              "                \"userName\": pm.environment.get(\"DistrictSupervisor\"),",
+              "                \"name\": \"supervisor\",",
+              "                \"mobileNumber\": \"5689999982\",",
+              "                \"gender\": \"Female\",",
+              "                \"type\": \"EMPLOYEE\",",
+              "                \"active\": true,",
+              "                \"password\": \"{{password}}\",",
+              "                \"roles\": [",
+              "                    {",
+              "                        \"name\": \"Field Supervisor\",",
+              "                        \"code\": \"FIELD_SUPERVISOR\",",
+              "                        \"tenantId\": \"mz\"",
+              "                    },",
+              "                    {",
+              "                        \"name\": \"National Supervisor\",",
+              "                        \"code\": \"NATIONAL_SUPERVISOR\",",
+              "                        \"tenantId\": \"mz\"",
+              "                    },",
+              "                    {",
+              "                        \"name\": \"District Supervisor\",",
+              "                        \"code\": \"DISTRICT_SUPERVISOR\",",
+              "                        \"tenantId\": \"mz\"",
+              "                    },",
+              "                    {",
+              "                        \"name\": \"Provincial Supervisor\",",
+              "                        \"code\": \"PROVINCIAL_SUPERVISOR\",",
+              "                        \"tenantId\": \"mz\"",
+              "                    }",
+              "                ],",
+              "                \"tenantId\": \"mz\"",
+              "            }",
+              "        })",
+              "    }",
+              "},",
+              "    function (err, supervisorresponse) {",
+              "        if (err) {",
+              "            console.error(err);",
+              "            return;",
+              "        }",
+              "",
+              "        // Check the response",
+              "        else if (supervisorresponse.code === 200) {",
+              "",
+              "            //let response = userresponse.json().user;",
+              "            // const responseJSON = response.json();",
+              "            console.log(\"Newly created DistrictSupervisor Username  \" + supervisorresponse.json().user[0].userName + \" Password {{password}}\")",
+              "            pm.environment.set(\"SupervisorUUID\", supervisorresponse.json().user[0].uuid)",
+              "            console.log(\"Newly created UUID  \" + supervisorresponse.json().user[0].uuid)",
+              "            console.log(\"Supervisor : Create completed, environment variable set\");",
+              "            console.log(\"Calling Warehouse manager creation\")",
+              "            pm.sendRequest({",
+              "                url: pm.environment.get(\"URL\") + '/user/users/_createnovalidate',",
+              "                method: 'POST',",
+              "                header: {",
+              "                    'Content-Type': 'application/json',",
+              "                },",
+              "                body: {",
+              "                    mode: 'raw',",
+              "                    raw: JSON.stringify({",
+              "                        \"RequestInfo\": {",
+              "                            \"authToken\": pm.environment.get(\"authToken\")",
+              "                        },",
+              "",
+              "                        \"user\": {",
+              "                            \"userName\": pm.environment.get(\"WarehouseManager\"),",
+              "                            \"name\": \"Warehouse manager\",",
+              "                            \"mobileNumber\": \"5689989982\",",
+              "                            \"gender\": \"Female\",",
+              "                            \"type\": \"EMPLOYEE\",",
+              "                            \"active\": true,",
+              "                            \"password\": \"{{password}}\",",
+              "                            \"roles\": [",
+              "                                {",
+              "                                    \"name\": \"Warehouse Manager\",",
+              "                                    \"code\": \"WAREHOUSE_MANAGER\",",
+              "                                    \"tenantId\": \"mz\"",
+              "                                }",
+              "                            ],",
+              "                            \"tenantId\": \"mz\"",
+              "                        }",
+              "                    })",
+              "                }",
+              "            },",
+              "                function (err, wmresponse) {",
+              "                    if (err) {",
+              "                        console.error(err);",
+              "                        return;",
+              "                    }",
+              "",
+              "                    // Check the response",
+              "                    else if (wmresponse.code === 200) {",
+              "",
+              "                        //let response = userresponse.json().user;",
+              "                        // const responseJSON = response.json();",
+              "                        console.log(\"Newly created Warehouse Manager Username  \" + wmresponse.json().user[0].userName + \" Password {{password}}\")",
+              "                        pm.environment.set(\"wmUUID\", wmresponse.json().user[0].uuid)",
+              "                        console.log(\"Newly created UUID  \" + wmresponse.json().user[0].uuid)",
+              "                        console.log(\"Warehouse Manager : Create completed, environment variable set\");",
+              "                        console.log(\"HF Referral creation\");",
+              "",
+              "                        pm.sendRequest({",
+              "                            url: pm.environment.get(\"URL\") + '/user/users/_createnovalidate',",
+              "                            method: 'POST',",
+              "                            header: {",
+              "                                'Content-Type': 'application/json',",
+              "                            },",
+              "                            body: {",
+              "                                mode: 'raw',",
+              "                                raw: JSON.stringify({",
+              "                                    \"RequestInfo\": {",
+              "                                        \"authToken\": pm.environment.get(\"authToken\")",
+              "                                    },",
+              "",
+              "                                    \"user\": {",
+              "                                        \"userName\": pm.environment.get(\"HFReferral\"),",
+              "                                        \"name\": \"HF Referral\",",
+              "                                        \"mobileNumber\": \"5689982982\",",
+              "                                        \"gender\": \"Female\",",
+              "                                        \"type\": \"EMPLOYEE\",",
+              "                                        \"active\": true,",
+              "                                        \"password\": \"{{password}}\",",
+              "                                        \"roles\": [",
+              "                                            {",
+              "                                                \"name\": \"Health Facilty Worker\",",
+              "                                                \"code\": \"HEALTH_FACILITY_WORKER\",",
+              "                                                \"tenantId\": \"mz\"",
+              "                                            }",
+              "                                        ],",
+              "                                        \"tenantId\": \"mz\"",
+              "                                    }",
+              "                                })",
+              "                            }",
+              "                        },",
+              "                            function (err, hfresponse) {",
+              "                                if (err) {",
+              "                                    console.error(err);",
+              "                                    return;",
+              "                                }",
+              "",
+              "                                // Check the response",
+              "                                else if (hfresponse.code === 200) {",
+              "",
+              "                                    //let response = userresponse.json().user;",
+              "                                    // const responseJSON = response.json();",
+              "                                    console.log(\"Newly created HF Referral Username  \" + hfresponse.json().user[0].userName + \" Password {{password}}\")",
+              "                                    pm.environment.set(\"hfReferralUUID\", hfresponse.json().user[0].uuid)",
+              "                                    console.log(\"Newly created hf referral UUID  \" + hfresponse.json().user[0].uuid)",
+              "                                    console.log(\"HF Referral : Create completed, environment variable set\");",
+              "",
+              "console.log(\"Distributor creation\");",
+              "",
+              "                        pm.sendRequest({",
+              "                            url: pm.environment.get(\"URL\") + '/user/users/_createnovalidate',",
+              "                            method: 'POST',",
+              "                            header: {",
+              "                                'Content-Type': 'application/json',",
+              "                            },",
+              "                            body: {",
+              "                                mode: 'raw',",
+              "                                raw: JSON.stringify({",
+              "                                    \"RequestInfo\": {",
+              "                                        \"authToken\": pm.environment.get(\"authToken\")",
+              "                                    },",
+              "",
+              "                                    \"user\": {",
+              "                                        \"userName\": pm.environment.get(\"Distributor\"),",
+              "                                        \"name\": \"Distributor\",",
+              "                                        \"mobileNumber\": \"5689982982\",",
+              "                                        \"gender\": \"Female\",",
+              "                                        \"type\": \"EMPLOYEE\",",
+              "                                        \"active\": true,",
+              "                                        \"password\": \"{{password}}\",",
+              "                                        \"roles\": [",
+              "                                            {",
+              "                        \"name\": \"Distributor\",",
+              "                        \"code\": \"DISTRIBUTOR\",",
+              "                        \"tenantId\": \"mz\"",
+              "                    }",
+              "                                        ],",
+              "                                        \"tenantId\": \"mz\"",
+              "                                    }",
+              "                                })",
+              "                            }",
+              "                        },",
+              "                            function (err, distresponse) {",
+              "                                if (err) {",
+              "                                    console.error(err);",
+              "                                    return;",
+              "                                }",
+              "",
+              "                                // Check the response",
+              "                                else if (distresponse.code === 200) {",
+              "",
+              "                                    //let response = userresponse.json().user;",
+              "                                    // const responseJSON = response.json();",
+              "                                    console.log(\"Newly created Distributor Username  \" + distresponse.json().user[0].userName + \" Password {{password}}\")",
+              "                                    pm.environment.set(\"distUUID\", distresponse.json().user[0].uuid)",
+              "                                    console.log(\"Newly created distresponseDistributor UUID  \" + distresponse.json().user[0].uuid)",
+              "                                    console.log(\"Distributor : Create completed, environment variable set\");",
+              "",
+              "",
+              "                                }",
+              "                            });",
+              "",
+              "                                }",
+              "                            });",
+              "",
+              "",
+              "                    }",
+              "                });",
+              "        }",
+              "    });",
+              "",
+              "",
+              "pm.sendRequest({",
+              "    url: pm.environment.get(\"URL\") + '/user/users/_createnovalidate',",
+              "    method: 'POST',",
+              "    header: {",
+              "        'Content-Type': 'application/json',",
+              "    },",
+              "    body: {",
+              "        mode: 'raw',",
+              "        raw: JSON.stringify({",
+              "            \"RequestInfo\": {",
+              "                \"authToken\": pm.environment.get(\"authToken\")",
+              "            },",
+              "",
+              "            \"user\": {",
+              "                \"userName\": pm.environment.get(\"HRMSUser\"),",
+              "                \"name\": \"HRMS PGR Admin\",",
+              "                \"mobileNumber\": \"5689999983\",",
+              "                \"gender\": \"Female\",",
+              "                \"type\": \"EMPLOYEE\",",
+              "                \"active\": true,",
+              "                \"password\": \"{{password}}\",",
+              "                \"roles\": [",
+              "                    {",
+              "                        \"name\": \"PGR Admin\",",
+              "                        \"code\": \"PGR-ADMIN\",",
+              "                        \"tenantId\": \"mz\"",
+              "                    },",
+              "                    {",
+              "                        \"name\": \"National Supervisor\",",
+              "                        \"code\": \"NATIONAL_SUPERVISOR\",",
+              "                        \"tenantId\": \"mz\"",
+              "                    },",
+              "                    {",
+              "                        \"name\": \"HRMS Admin\",",
+              "                        \"code\": \"HRMS_ADMIN\",",
+              "                        \"tenantId\": \"mz\"",
+              "                    },",
+              "                    {",
+              "                        \"name\": \"Help Desk User\",",
+              "                        \"code\": \"HELPDESK_USER\",",
+              "                        \"tenantId\": \"mz\"",
+              "                    }",
+              "                ],",
+              "                \"tenantId\": \"mz\"",
+              "            }",
+              "        })",
+              "    }",
+              "},  function (err, adminresponse) {",
+              "                                if (err) {",
+              "                                    console.error(err);",
+              "                                    return;",
+              "                                }",
+              "",
+              "                                // Check the response",
+              "                                else if (adminresponse.code === 200) {",
+              "",
+              "                                    //let response = userresponse.json().user;",
+              "                                    // const responseJSON = response.json();",
+              "                                    console.log(\"Newly created HRMS Admin srname  \" + adminresponse.json().user[0].userName + \" Password {{password}}\")",
+              "                                    pm.environment.set(\"hrmsAdminUUID\", adminresponse.json().user[0].uuid)",
+              "                                    console.log(\"Newly created hrms admin UUID  \" + adminresponse.json().user[0].uuid)",
+              "                                    console.log(\"HRMS Admin : Create completed, environment variable set\");",
+              "",
+              "",
+              "                                }",
+              "                            });",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// User creation with dynamic username",
+              "pm.environment.set(\"Superadmin\", \"SU-\" + Math.floor((Math.random() * (9999 - 1000 + 1)) + 1000))",
+              "pm.environment.set(\"Distributor\", \"D-\" + Math.floor((Math.random() * (9999 - 1000 + 1)) + 1000))",
+              "pm.environment.set(\"WarehouseManager\", \"WM-\" + Math.floor((Math.random() * (9999 - 1000 + 1)) + 1000))",
+              "pm.environment.set(\"HFReferral\", \"HFW-\" + Math.floor((Math.random() * (9999 - 1000 + 1)) + 1000))",
+              "pm.environment.set(\"DistrictSupervisor\", \"DS-\" + Math.floor((Math.random() * (9999 - 1000 + 1)) + 1000))",
+              "pm.environment.set(\"HRMSUser\", \"HR-PGR-\" + Math.floor((Math.random() * (9999 - 1000 + 1)) + 1000))",
+              "",
+              "// pm.environment.set(\"Superadmin\", \"QAAdmin\")",
+              "// pm.environment.set(\"Distributor\", \"SyncDist\")",
+              "// pm.environment.set(\"WarehouseManager\", \"QAManager\")",
+              "// pm.environment.set(\"HFReferral\", \"QAReferral\")",
+              "// pm.environment.set(\"DistrictSupervisor\", \"QASupervisor\")",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"requestInfo\": {\n        \"apiId\": \"Rainmaker\",\n        \"ver\": \".01\",\n        \"ts\": null,\n        \"action\": \"_create\",\n        \"did\": \"1\",\n        \"key\": \"\",\n        \"msgId\": \"20170310130900|en_IN\",\n        \"authToken\": \"{{authToken}}\"\n    },\n    \"user\": {\n        \"userName\": \"{{Superadmin}}\",\n        \"name\": \"Superuer\",\n        \"mobileNumber\": \"5689999982\",\n        \"gender\": \"Female\",\n        \"type\": \"EMPLOYEE\",\n        \"active\": true,\n        \"password\": \"{{password}}\",\n        \"roles\": [\n           \n            {\n                \"name\": \"HRMS Admin\",\n                \"code\": \"HRMS_ADMIN\",\n                \"tenantId\": \"mz\"\n            },\n            {\n                \"name\": \"HELPDESK USER\",\n                \"code\": \"HELPDESK_USER\",\n                \"tenantId\": \"mz\"\n            },\n            {\n                \"name\": \"Registrar\",\n                \"code\": \"REGISTRAR\",\n                \"tenantId\": \"mz\"\n            },\n          \n            {\n                \"name\": \"System Administrator\",\n                \"code\": \"SYSTEM_ADMINISTRATOR\",\n                \"tenantId\": \"mz\"\n            },\n            {\n                \"name\": \"Health Facilty Worker\",\n                \"code\": \"HEALTH_FACILITY_WORKER\",\n                \"tenantId\": \"mz\"\n            },\n            {\n                \"name\": \"Distributor\",\n                \"code\": \"DISTRIBUTOR\",\n                \"tenantId\": \"mz\"\n            },\n            {\n                \"name\": \"Warehouse Manager\",\n                \"code\": \"WAREHOUSE_MANAGER\",\n                \"tenantId\": \"mz\"\n            },\n            {\n                \"name\": \"L2 Support\",\n                \"code\": \"L2_SUPPORT\",\n                \"tenantId\": \"mz\"\n            },\n            {\n                \"name\": \"PGR Administrator\",\n                \"code\": \"PGR-ADMIN\",\n                \"tenantId\": \"mz\"\n            }\n        ],\n        \"tenantId\": \"mz\"\n    }\n}"
+        },
+        "url": {
+          "raw": "{{URL}}/user/users/_createnovalidate",
+          "host": [
+            "{{URL}}"
+          ],
+          "path": [
+            "user",
+            "users",
+            "_createnovalidate"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "mdms Search",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Parse the response body",
+              "let response = pm.response.json();",
+              "",
+              "// Initialize variables to store the ids for different beneficiary types",
+              "let individualId = null;",
+              "let householdId = null;",
+              "",
+              "// Check if the response has the expected structure",
+              "if (response.MdmsRes && response.MdmsRes[\"HCM-PROJECT-TYPES\"] && response.MdmsRes[\"HCM-PROJECT-TYPES\"].projectTypes) {",
+              "    // Loop through the projectTypes array",
+              "    response.MdmsRes[\"HCM-PROJECT-TYPES\"].projectTypes.forEach(item => {",
+              "        if (item.beneficiaryType === \"INDIVIDUAL\") {",
+              "            individualId = item.id;",
+              "        }",
+              "        if (item.beneficiaryType === \"HOUSEHOLD\") {",
+              "            householdId = item.id;",
+              "        }",
+              "    });",
+              "",
+              "    // Store the ids in Postman environment variables if found",
+              "    if (individualId) {",
+              "        pm.environment.set(\"individualId\", individualId);",
+              "        console.log(\"ID for INDIVIDUAL stored in environment variable 'individualId':\", individualId);",
+              "    } else {",
+              "        console.log(\"No INDIVIDUAL beneficiaryType found\");",
+              "    }",
+              "",
+              "    if (householdId) {",
+              "        pm.environment.set(\"householdId\", householdId);",
+              "        console.log(\"ID for HOUSEHOLD stored in environment variable 'householdId':\", householdId);",
+              "    } else {",
+              "        console.log(\"No HOUSEHOLD beneficiaryType found\");",
+              "    }",
+              "} else {",
+              "    console.log(\"Response structure is not as expected\");",
+              "}",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"RequestInfo\": {\n        \"authToken\": \"{{access_token}}\"\n    },\n    \"MdmsCriteria\": {\n        \"tenantId\": \"mz\",\n        \"moduleDetails\": [\n            {\n                \"moduleName\": \"HCM-PROJECT-TYPES\",\n                \"masterDetails\": [\n                    {\n                        \"name\": \"projectTypes\"\n                    }\n                ]\n            }\n        ]\n    }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{URL}}/mdms-v2/v1/_search",
+          "host": [
+            "{{URL}}"
+          ],
+          "path": [
+            "mdms-v2",
+            "v1",
+            "_search"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "search Boundary",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Sample response body",
+              "const responseJson = pm.response.json();",
+              "",
+              "// Navigate to the boundary data",
+              "const boundary = responseJson.TenantBoundary[0].boundary[0];",
+              "",
+              "// Extract the required codes",
+              "const firstProvinciaCode = boundary.children[0].code;",
+              "const firstDistritoCode = boundary.children[0].children[0].code;",
+              "const firstLocalidadeCode = boundary.children[0].children[0].children[0].children[0].code;",
+              "const firstAldeiaCode = boundary.children[0].children[0].children[0].children[0].children[0].code;",
+              "",
+              "// Save the codes as environment variables",
+              "pm.environment.set(\"FIRST_PROVINCIA\", firstProvinciaCode);",
+              "pm.environment.set(\"FIRST_DISTRITO\", firstDistritoCode);",
+              "pm.environment.set(\"FIRST_LOCALIDADE\", firstLocalidadeCode);",
+              "pm.environment.set(\"FIRST_ALDEIA\", firstAldeiaCode);",
+              "",
+              "// Optional: Log the values for verification",
+              "console.log(`FIRST_PROVINCIA: ${firstProvinciaCode}`);",
+              "console.log(`FIRST_DISTRITO: ${firstDistritoCode}`);",
+              "console.log(`FIRST_LOCALIDADE: ${firstLocalidadeCode}`);",
+              "console.log(`FIRST_ALDEIA: ${firstAldeiaCode}`);",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": " {\n   \"RequestInfo\": {\n     \"apiId\": \"hcm\",\n     \"ver\": \".01\",\n     \"ts\": 1717570385903,\n     \"action\": \"_search\",\n     \"did\": \"1\",\n     \"key\": \"1\",\n     \"authToken\": \"{{access_token}}\",\n     \"userInfo\": {\n       \"id\": 6128,\n       \"uuid\": \"5fcff5f5-0c0c-445a-af09-a18d958a26ae\",\n       \"userName\": \"DIST\",\n       \"name\": \"Distributor\",\n       \"mobileNumber\": \"5610999988\",\n       \"emailId\": null,\n       \"locale\": null,\n       \"active\": true,\n       \"tenantId\": \"mz\",\n       \"permanentCity\": null,\n       \"gender\": null,\n       \"roles\": [\n         {\n           \"name\": \"Distributor\",\n           \"code\": \"DISTRIBUTOR\",\n           \"tenantId\": \"mz\"\n         }\n       ]\n     }\n   }\n }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{URL}}/boundary-service/boundary-relationships/_search?tenantId=mz&includeChildren=true&boundaryType=Country&hierarchyType=ADMIN",
+          "host": [
+            "{{URL}}"
+          ],
+          "path": [
+            "boundary-service",
+            "boundary-relationships",
+            "_search"
+          ],
+          "query": [
+            {
+              "key": "tenantId",
+              "value": "mz"
+            },
+            {
+              "key": "includeChildren",
+              "value": "true"
+            },
+            {
+              "key": "boundaryType",
+              "value": "Country"
+            },
+            {
+              "key": "hierarchyType",
+              "value": "ADMIN"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Project Create INDI",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Assuming that the response is stored in the \"response\" variable\r",
+              "const jsonResponse = pm.response.json();\r",
+              "\r",
+              "// Ensure that the \"Project\" array exists in the response\r",
+              "pm.expect(jsonResponse.Project).to.be.an(\"array\");\r",
+              "\r",
+              "// Extract the project ID from the first project in the array\r",
+              "const individualProjectId = jsonResponse.Project[0].id;\r",
+              "if (pm.response.code != 200) return;\r",
+              "pm.environment.set(\"individualProjectId\", individualProjectId);\r",
+              "// Log the extracted project ID\r",
+              "console.log(\"Individual Project ID extracted:\", individualProjectId);\r",
+              "\r",
+              "// Set a test result for visualization in the Postman collection runner\r",
+              "pm.test(\"Extract Project ID\", function () {\r",
+              "    pm.expect(individualProjectId).to.not.be.undefined;\r",
+              "    pm.expect(individualProjectId).to.be.a(\"string\");\r",
+              "    pm.expect(individualProjectId.length).to.be.greaterThan(0);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.variables.set(\"timeStampMs\", new Date().getTime());",
+              "// let requestCount = pm.environment.get(\"HRequestCount\");",
+              "// requestCount += 1;",
+              "// pm.environment.set(\"HRequestCount\", requestCount);",
+              "pm.variables.set(\"boundaryCode\", \"HCM-MOZ-HIERARCHY_MZ\");",
+              "pm.variables.set(\"projectName\", \"SMC Campaign\");",
+              "pm.variables.set(\"projectType\", \"LLIN-mz\");",
+              "pm.variables.set(\"projectSubType\", \"LLIN-mz\");",
+              "pm.variables.set(\"department\", \"MALERIA\");",
+              "pm.variables.set(\"projectTypeIdIndividual\", \"b1107f0c-7a91-4c76-afc2-a279d8a7b76a\");",
+              "pm.variables.set(\"tenantId\", \"mz\");",
+              "// pm.variables.set(\"projectTypeIdHousehold\", \"VFTwdbd45c31-de9e-4e62-a9b6-abb818928fd10jbRf1y\");",
+              "//pm.variables.set(\"startDate\", \"1709145000000\");",
+              "//pm.variables.set(\"endDate\", \"1710009000000\");",
+              "pm.variables.set(\"beneficiaryTypeIndividual\", \"INDIVIDUAL\");",
+              "// pm.variables.set(\"beneficiaryTypeHousehold\", \"HOUSEHOLD\");",
+              "pm.variables.set(\"boundaryType\", \"Country\");",
+              "pm.variables.set(\"boundaryCountry\", \"mz\");",
+              "pm.variables.set(\"description\", \"mz project type configuration for LLIN Campaigns\");",
+              "",
+              "let boundaryCode = \"HCM-MOZ-HIERARCHY_MZ\";",
+              "let date = new Date();",
+              "let timeStampMs = date.getTime();",
+              "function generateUUID() {",
+              "    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {",
+              "        var r = Math.random() * 16 | 0,",
+              "            v = c == 'x' ? r : (r & 0x3 | 0x8);",
+              "        return v.toString(16);",
+              "    });",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"RequestInfo\": {\n        \"authToken\": \"{{access_token}}\"\n    },\n    \"Projects\": [\n        {\n            \"tenantId\": \"{{tenantId}}\",\n            \"projectNumber\": \"f5F6xAskA05\",\n            \"name\": \"{{projectName}}\",\n            \"projectType\": \"{{projectType}}\",\n            \"projectSubType\": \"{{projectSubType}}\",\n            \"department\": \"{{department}}\",\n            \"description\": \"{{description}}\",\n            \"referenceID\": \"f5F6xAskA05\",\n             \"projectTypeId\": \"{{individualId}}\",\n            \"documents\": null,\n            \"address\": {\n                \"id\": null,\n                \"tenantId\": \"{{tenantId}}\",\n                \"clientReferenceId\": null,\n                \"doorNo\": null,\n                \"latitude\": null,\n                \"longitude\": null,\n                \"locationAccuracy\": null,\n                \"type\": null,\n                \"addressLine1\": null,\n                \"addressLine2\": null,\n                \"landmark\": null,\n                \"city\": null,\n                \"pincode\": null,\n                \"buildingName\": null,\n                \"street\": null,\n                \"boundaryType\": \"Provincia\",\n                \"boundary\": \"{{FIRST_PROVINCIA}}\",\n                \"locality\": null\n            },\n            \"startDate\": \"{{epochTimeCurrent}}\",\n            \"endDate\": \"{{epochTimePlus20Days}}\",\n            \"isTaskEnabled\": true,\n            \"parent\": null,\n            \"projectHierarchy\": \"LJX5GuypkKy\",\n            \"natureOfWork\": null,\n            \"ancestors\": null,\n            \"descendants\": null,\n            \"targets\": [\n                {\n                    \"id\": null,\n                    \"beneficiaryType\": \"{{beneficiaryTypeIndividual}}\",\n                    \"totalNo\": 50,\n                    \"targetNo\": 50,\n                    \"isDeleted\": null,\n                    \"auditDetails\": {\n                        \"createdBy\": \"test\",\n                        \"lastModifiedBy\": \"test\",\n                        \"createdTime\": 1683914109181,\n                        \"lastModifiedTime\": 1683914109181\n                    }\n                }\n            ],\n            \"additionalDetails\": {\n                \"projectType\": {\n                    \"projectTypeId\": \"{{individualId}}\",\n                    \"name\": \"configuration for Multi Round Campaigns\",\n                    \"code\": \"MR-DN\",\n                    \"group\": \"MALARIA\",\n                    \"type\": \"multiround\",\n                    \"beneficiaryType\": \"{{beneficiaryTypeIndividual}}\",\n                    \"eligibilityCriteria\": [\n                        \"All households having members under the age of 18 are eligible.\",\n                        \"Prison inmates are eligible.\"\n                    ],\n                    \"taskProcedure\": [\n                        \"1 bednet is to be distributed per 2 household members.\",\n                        \"If there are 4 household members, 2 bednets should be distributed.\",\n                        \"If there are 5 household members, 3 bednets should be distributed.\"\n                    ],\n                    \"resources\": [\n                        {\n                            \"productVariantId\": \"{{ProductVariantIdSP}}\",\n                            \"isBaseUnitVariant\": false\n                        },\n                        {\n                            \"productVariantId\": \"{{ProductVariantIdAQ}}\",\n                            \"isBaseUnitVariant\": true\n                        }\n                    ],\n                    \"observationStrategy\": \"DOT1\",\n                    \"validMinAge\": 3,\n                    \"validMaxAge\": 64,\n                    \"cycles\": [\n                        {\n                            \"mandatoryWaitSinceLastCycleInDays\": null,\n                            \"startDate\": \"{{epochTimeCurrent}}\",\n                            \"endDate\": \"{{epochTimePlus10Days}}\",\n                            \"id\": 1,\n                            \"deliveries\": [\n                                {\n                                    \"id\": 1,\n                                    \"deliveryStrategy\": \"DIRECT\",\n                                    \"mandatoryWaitSinceLastDeliveryInDays\": null,\n                                    \"doseCriteria\": [\n                                        {\n                                            \"condition\": \"3<=ageandage<=11\",\n                                            \"ProductVariants\": [\n                                                {\n                                                    \"productVariantId\": \"{{ProductVariantIdSP}}\",\n                                                    \"quantity\": 1\n                                                },\n                                                {\n                                                    \"productVariantId\": \"{{ProductVariantIdAQ}}\",\n                                                    \"quantity\": 1\n                                                }\n                                            ]\n                                        },\n                                        {\n                                            \"condition\": \"12<=ageandage<=60\",\n                                            \"ProductVariants\": [\n                                                {\n                                                    \"productVariantId\": \"{{ProductVariantIdSP}}\",\n                                                    \"quantity\": 1\n                                                },\n                                                {\n                                                    \"productVariantId\": \"{{ProductVariantIdAQ}}\",\n                                                    \"quantity\": 1\n                                                }\n                                            ]\n                                        }\n                                    ]\n                                },\n                                {\n                                    \"id\": 2,\n                                    \"deliveryStrategy\": \"INDIRECT\",\n                                    \"mandatoryWaitSinceLastDeliveryInDays\": null,\n                                    \"doseCriteria\": [\n                                        {\n                                            \"condition\": \"3<=ageandage<=11\",\n                                            \"ProductVariants\": [\n                                                {\n                                                    \"productVariantId\": \"{{ProductVariantIdSP}}\",\n                                                    \"quantity\": 1\n                                                }\n                                            ]\n                                        },\n                                        {\n                                            \"condition\": \"12<=ageandage<=60\",\n                                            \"ProductVariants\": [\n                                                {\n                                                    \"productVariantId\": \"{{ProductVariantIdAQ}}\",\n                                                    \"quantity\": 1\n                                                }\n                                            ]\n                                        }\n                                    ]\n                                },\n                                {\n                                    \"id\": 3,\n                                    \"deliveryStrategy\": \"INDIRECT\",\n                                    \"mandatoryWaitSinceLastDeliveryInDays\": null,\n                                    \"doseCriteria\": [\n                                        {\n                                            \"condition\": \"3<=ageandage<=11\",\n                                            \"ProductVariants\": [\n                                                {\n                                                    \"productVariantId\":  \"{{ProductVariantIdSP}}\",\n                                                    \"quantity\": 1\n                                                }\n                                            ]\n                                        },\n                                        {\n                                            \"condition\": \"12<=ageandage<=60\",\n                                            \"ProductVariants\": [\n                                                {\n                                                    \"productVariantId\": \"{{ProductVariantIdAQ}}\",\n                                                    \"quantity\": 1\n                                                }\n                                            ]\n                                        }\n                                    ]\n                                }\n                            ]\n                        },\n                        {\n                            \"mandatoryWaitSinceLastCycleInDays\": \"30\",\n                            \"startDate\": \"{{epochTimePlus10Days}}\",\n                            \"endDate\": \"{{epochTimePlus20Days}}\",\n                            \"id\": 2,\n                            \"deliveries\": [\n                                {\n                                    \"id\": 1,\n                                    \"deliveryStrategy\": \"DIRECT\",\n                                    \"mandatoryWaitSinceLastDeliveryInDays\": null,\n                                    \"doseCriteria\": [\n                                        {\n                                            \"condition\": \"3<=ageandage<=11\",\n                                            \"ProductVariants\": [\n                                                {\n                                                    \"productVariantId\":  \"{{ProductVariantIdSP}}\",\n                                                    \"quantity\": 1\n                                                },\n                                                {\n                                                    \"productVariantId\": \"{{ProductVariantIdAQ}}\",\n                                                    \"quantity\": 1\n                                                }\n                                            ]\n                                        },\n                                        {\n                                            \"condition\": \"12<=ageandage<=60\",\n                                            \"ProductVariants\": [\n                                                {\n                                                    \"productVariantId\":  \"{{ProductVariantIdSP}}\",\n                                                    \"quantity\": 1\n                                                },\n                                                {\n                                                    \"productVariantId\": \"{{ProductVariantIdAQ}}\",\n                                                    \"quantity\": 1\n                                                }\n                                            ]\n                                        }\n                                    ]\n                                },\n                                {\n                                    \"id\": 2,\n                                    \"deliveryStrategy\": \"INDIRECT\",\n                                    \"mandatoryWaitSinceLastDeliveryInDays\": null,\n                                    \"doseCriteria\": [\n                                        {\n                                            \"condition\": \"3<=ageandage<=11\",\n                                            \"ProductVariants\": [\n                                                {\n                                                    \"productVariantId\":  \"{{ProductVariantIdSP}}\",\n                                                    \"quantity\": 1\n                                                }\n                                            ]\n                                        },\n                                        {\n                                            \"condition\": \"12<=ageandage<=60\",\n                                            \"ProductVariants\": [\n                                                {\n                                                    \"productVariantId\": \"{{ProductVariantIdAQ}}\",\n                                                    \"quantity\": 1\n                                                }\n                                            ]\n                                        }\n                                    ]\n                                },\n                                {\n                                    \"id\": 3,\n                                    \"deliveryStrategy\": \"INDIRECT\",\n                                    \"mandatoryWaitSinceLastDeliveryInDays\": null,\n                                    \"doseCriteria\": [\n                                        {\n                                            \"condition\": \"3<=ageandage<=11\",\n                                            \"ProductVariants\": [\n                                                {\n                                                   \"productVariantId\": \"{{ProductVariantIdSP}}\",\n                                                    \"quantity\": 1\n                                                }\n                                            ]\n                                        },\n                                        {\n                                            \"condition\": \"12<=ageandage<=60\",\n                                            \"ProductVariants\": [\n                                                {\n                                                    \"productVariantId\": \"{{ProductVariantIdAQ}}\",\n                                                    \"quantity\": 1\n                                                }\n                                            ]\n                                        }\n                                    ]\n                                }\n                            ]\n                        }\n                    ]\n                },\n                \"numberOfSessions\": \"ZERO_SESSIONS\"\n            },\n            \"isDeleted\": false,\n            \"rowVersion\": 1,\n            \"auditDetails\": {\n                \"createdBy\": \"test\",\n                \"lastModifiedBy\": \"test\",\n                \"createdTime\": 1683914109181,\n                \"lastModifiedTime\": 1683914109181\n            }\n        }\n    ],\n    \"rowVersion\": 0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{URL}}/project/v1/_create",
+          "host": [
+            "{{URL}}"
+          ],
+          "path": [
+            "project",
+            "v1",
+            "_create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Project Create HOUSE",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Assuming that the response is stored in the \"response\" variable\r",
+              "\r",
+              "const jsonResponse = pm.response.json();\r",
+              "\r",
+              "// Ensure that the \"Project\" array exists in the response\r",
+              "pm.expect(jsonResponse.Project).to.be.an(\"array\");\r",
+              "\r",
+              "// Extract the project ID from the first project in the array\r",
+              "const householdProjectId = jsonResponse.Project[0].id;\r",
+              "if (pm.response.code != 200) return;\r",
+              "pm.environment.set(\"householdProjectId\", householdProjectId);\r",
+              "// Log the extracted project ID\r",
+              "console.log(\"Household Project ID extracted:\", householdProjectId);\r",
+              "\r",
+              "// Set a test result for visualization in the Postman collection runner\r",
+              "pm.test(\"Extract Project ID\", function () {\r",
+              "    pm.expect(householdProjectId).to.not.be.undefined;\r",
+              "    pm.expect(householdProjectId).to.be.a(\"string\");\r",
+              "    pm.expect(householdProjectId.length).to.be.greaterThan(0);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.variables.set(\"timeStampMs\", new Date().getTime());",
+              "// let requestCount = pm.environment.get(\"HRequestCount\");",
+              "// requestCount += 1;",
+              "// pm.environment.set(\"HRequestCount\", requestCount);",
+              "pm.variables.set(\"boundaryCode\", \"HCM-MOZ-HIERARCHY_MZ\");",
+              "pm.variables.set(\"tenantIdValue\", \"mz\");",
+              "pm.variables.set(\"projectName\", \"LLIN Bednet\");",
+              "pm.variables.set(\"projectType\", \"LLIN-mz\");",
+              "pm.variables.set(\"projectSubType\", \"LLIN-mz\");",
+              "pm.variables.set(\"department\", \"MALERIA\");",
+              "// pm.variables.set(\"projectTypeIdIndividual\", \"ea1bb2e7-06d8-4fe4-ba1e-f4a6363a21be\");",
+              "pm.variables.set(\"projectTypeIdHousehold\", \"dbd45c31-de9e-4e62-a9b6-abb818928fd1\");",
+              "//pm.variables.set(\"startDate\", \"1709145000000\");",
+              "//pm.variables.set(\"endDate\", \"1710009000000\");",
+              "// pm.variables.set(\"beneficiaryTypeIndividual\", \"INDIVIDUAL\");",
+              "pm.variables.set(\"beneficiaryTypeHousehold\", \"HOUSEHOLD\");",
+              "pm.variables.set(\"boundaryType\", \"Country\");",
+              "pm.variables.set(\"boundaryCountry\", \"mz\");",
+              "pm.variables.set(\"description\", \"mz project type configuration for LLIN Campaigns\");",
+              "",
+              "let boundaryCode = \"HCM-MOZ-HIERARCHY_MZ\";",
+              "let date = new Date();",
+              "let timeStampMs = date.getTime();",
+              "function generateUUID() {",
+              "  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {",
+              "    var r = Math.random() * 16 | 0,",
+              "      v = c == 'x' ? r : (r & 0x3 | 0x8);",
+              "    return v.toString(16);",
+              "  });",
+              "}",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"RequestInfo\": {\n        \"authToken\": \"{{access_token}}\"\n    },\n    \"Projects\": [\n        {\n           \n            \"tenantId\": \"{{tenantId}}\",\n            \"projectNumber\": \"f5F6xAskA05\",\n            \"name\": \"{{projectName}}\",\n            \"projectType\": \"{{projectType}}\",\n            \"projectSubType\": \"{{projectSubType}}\",\n            \"department\": \"{{department}}\",\n            \"description\": \"{{description}}\",\n            \"referenceID\": \"f5F6xAskA05\",\n            \"projectTypeId\": \"{{householdId}}\",\n            \"documents\": null,\n            \"address\": {\n                \"id\": null,\n                \"tenantId\": \"{{tenantId}}\",\n                \"clientReferenceId\": null,\n                \"doorNo\": null,\n                \"latitude\": null,\n                \"longitude\": null,\n                \"locationAccuracy\": null,\n                \"type\": null,\n                \"addressLine1\": null,\n                \"addressLine2\": null,\n                \"landmark\": null,\n                \"city\": null,\n                \"pincode\": null,\n                \"buildingName\": null,\n                \"street\": null,\n                \"boundaryType\": \"Provincia\",\n                \"boundary\": \"{{FIRST_PROVINCIA}}\"\n            },\n            \"startDate\": \"{{epochTimeCurrent}}\",\n            \"endDate\": \"{{epochTimePlus20Days}}\",\n            \"isTaskEnabled\": true,\n            \"parent\": null,\n            \"projectHierarchy\": \"LJX5GuypkKy\",\n            \"natureOfWork\": null,\n            \"ancestors\": null,\n            \"descendants\": null,\n            \"targets\": [\n                {\n                    \"id\": null,\n                    \"beneficiaryType\": \"{{beneficiaryTypeHousehold}}\",\n                    \"totalNo\": 50,\n                    \"targetNo\": 50,\n                    \"isDeleted\": null,\n                    \"auditDetails\": {\n                        \"createdBy\": \"test\",\n                        \"lastModifiedBy\": \"test\",\n                        \"createdTime\": 1683914109181,\n                        \"lastModifiedTime\": 1683914109181\n                    }\n                }\n            ],\n            \"additionalDetails\": {\n                \"projectType\": {\n                    // \"id\": \"{{projectTypeIdHousehold}}\",\n                    \"projectTypeId\": \"{{householdId}}\",\n                    \"name\": \"mz project type configuration for LLIN Campaigns\",\n                    \"code\": \"LLIN-mz\",\n                    \"group\": \"MALARIA\",\n                    \"beneficiaryType\": \"{{beneficiaryTypeHousehold}}\",\n                    \"eligibilityCriteria\": [\n                        \"All households are eligible.\",\n                        \"Prison inmates are eligible.\"\n                    ],\n                    \"dashboardUrls\": {\n                        \"NATIONAL_SUPERVISOR\": \"/digit-ui/employee/dss/landing/national-health-dashboard\",\n                        \"PROVINCIAL_SUPERVISOR\": \"/digit-ui/employee/dss/dashboard/provincial-health-dashboard\",\n                        \"DISTRICT_SUPERVISOR\": \"/digit-ui/employee/dss/dashboard/district-health-dashboard\"\n                    },\n                    \"taskProcedure\": [\n                        \"1 bednet is to be distributed per 2 household members.\",\n                        \"If there are 4 household members, 2 bednets should be distributed.\",\n                        \"If there are 5 household members, 3 bednets should be distributed.\"\n                    ],\n                    \"resources\": [\n                        {\n                            \"productVariantId\": \"{{ProductVariantIdBednet}}\",\n                            \"isBaseUnitVariant\": false\n                        }\n                    ]\n                },\n                \"numberOfSessions\": \"TWO_SESSIONS\"\n            },\n            \"isDeleted\": false,\n            \"rowVersion\": 1,\n            \"auditDetails\": {\n                \"createdBy\": \"test\",\n                \"lastModifiedBy\": \"test\",\n                \"createdTime\": 1683914109181,\n                \"lastModifiedTime\": 1683914109181\n            }\n        }\n    ],\n    \"rowVersion\": 0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{URL}}/project/v1/_create",
+          "host": [
+            "{{URL}}"
+          ],
+          "path": [
+            "project",
+            "v1",
+            "_create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Project Create HOUSE IRS",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Assuming that the response is stored in the \"response\" variable\r",
+              "\r",
+              "const jsonResponse = pm.response.json();\r",
+              "\r",
+              "// Ensure that the \"Project\" array exists in the response\r",
+              "pm.expect(jsonResponse.Project).to.be.an(\"array\");\r",
+              "\r",
+              "// Extract the project ID from the first project in the array\r",
+              "const householdProjectId = jsonResponse.Project[0].id;\r",
+              "if (pm.response.code != 200) return;\r",
+              "pm.environment.set(\"projectIdHouseholdIRS\", householdProjectId);\r",
+              "// Log the extracted project ID\r",
+              "console.log(\"Household Project ID extracted:\", householdProjectId);\r",
+              "\r",
+              "// Set a test result for visualization in the Postman collection runner\r",
+              "pm.test(\"Extract Project ID\", function () {\r",
+              "    pm.expect(householdProjectId).to.not.be.undefined;\r",
+              "    pm.expect(householdProjectId).to.be.a(\"string\");\r",
+              "    pm.expect(householdProjectId.length).to.be.greaterThan(0);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.variables.set(\"timeStampMs\", new Date().getTime());",
+              "// let requestCount = pm.environment.get(\"HRequestCount\");",
+              "// requestCount += 1;",
+              "// pm.environment.set(\"HRequestCount\", requestCount);",
+              "pm.variables.set(\"boundaryCode\", \"HCM-MOZ-HIERARCHY_MZ\");",
+              "pm.variables.set(\"tenantIdValue\", \"mz\");",
+              "pm.variables.set(\"projectName\", \"IRS\");",
+              "pm.variables.set(\"projectType\", \"IRS-mz\");",
+              "pm.variables.set(\"projectSubType\", \"IRS-mz\");",
+              "pm.variables.set(\"department\", \"IRS\");",
+              "pm.variables.set(\"beneficiaryTypeHousehold\", \"HOUSEHOLD\");",
+              "pm.variables.set(\"boundaryType\", \"Country\");",
+              "pm.variables.set(\"boundaryCountry\", \"mz\");",
+              "pm.variables.set(\"description\", \"Project type configuration for IRS - Campaigns\");",
+              "",
+              "let boundaryCode = \"HCM-MOZ-HIERARCHY_MZ\";",
+              "let date = new Date();",
+              "let timeStampMs = date.getTime();",
+              "function generateUUID() {",
+              "  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {",
+              "    var r = Math.random() * 16 | 0,",
+              "      v = c == 'x' ? r : (r & 0x3 | 0x8);",
+              "    return v.toString(16);",
+              "  });",
+              "}",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"RequestInfo\": {\n        \"authToken\": \"{{access_token}}\"\n    },\n    \"Projects\": [\n        {\n           \n            \"tenantId\": \"{{tenantId}}\",\n            \"projectNumber\": \"f5F6xAskA05\",\n            \"name\": \"{{projectName}}\",\n            \"projectType\": \"{{projectType}}\",\n            \"projectSubType\": \"{{projectSubType}}\",\n            \"department\": \"{{department}}\",\n            \"description\": \"{{description}}\",\n            \"referenceID\": \"f5F6xAskA05\",\n            \"projectTypeId\": \"{{householdId}}\",\n            \"documents\": null,\n            \"address\": {\n                \"id\": null,\n                \"tenantId\": \"{{tenantId}}\",\n                \"clientReferenceId\": null,\n                \"doorNo\": null,\n                \"latitude\": null,\n                \"longitude\": null,\n                \"locationAccuracy\": null,\n                \"type\": null,\n                \"addressLine1\": null,\n                \"addressLine2\": null,\n                \"landmark\": null,\n                \"city\": null,\n                \"pincode\": null,\n                \"buildingName\": null,\n                \"street\": null,\n                \"boundaryType\": \"Provincia\",\n                \"boundary\": \"{{FIRST_PROVINCIA}}\"\n            },\n            \"startDate\": \"{{epochTimeCurrent}}\",\n            \"endDate\": \"{{epochTimePlus20Days}}\",\n            \"isTaskEnabled\": true,\n            \"parent\": null,\n            \"projectHierarchy\": \"LJX5GuypkKy\",\n            \"natureOfWork\": null,\n            \"ancestors\": null,\n            \"descendants\": null,\n            \"targets\": [\n                {\n                    \"id\": null,\n                    \"beneficiaryType\": \"{{beneficiaryTypeHousehold}}\",\n                    \"totalNo\": 50,\n                    \"targetNo\": 50,\n                    \"isDeleted\": null,\n                    \"auditDetails\": {\n                        \"createdBy\": \"test\",\n                        \"lastModifiedBy\": \"test\",\n                        \"createdTime\": 1683914109181,\n                        \"lastModifiedTime\": 1683914109181\n                    }\n                }\n            ],\n            \"additionalDetails\": {\n                \"projectType\": {\n                    // \"id\": \"{{projectTypeIdHousehold}}\",\n                    \"projectTypeId\": \"{{householdId}}\",\n                    \"name\": \"Project type configuration for IRS - Campaigns\",\n                    \"code\": \"IRS-mz\",\n                    \"group\": \"IRS Campaign\",\n                    \"beneficiaryType\": \"{{beneficiaryTypeHousehold}}\",\n                    \"eligibilityCriteria\": [\n                        \"All households are eligible.\"\n                    ],\n                    \"dashboardUrls\": {\n                        \"NATIONAL_SUPERVISOR\": \"/digit-ui/employee/dss/landing/national-health-dashboard\",\n                        \"PROVINCIAL_SUPERVISOR\": \"/digit-ui/employee/dss/dashboard/provincial-health-dashboard\",\n                        \"DISTRICT_SUPERVISOR\": \"/digit-ui/employee/dss/dashboard/district-health-dashboard\"\n                    },\n                    \"taskProcedure\": [\n                        \"1 DDT is to be distributed per house.\",\n                        \"1 Malathion is to be distributed per house.\",\n                        \"1 Pyrethroid is to be distributed per house.\"\n                    ],\n                    \"resources\": [\n                        {\n                            \"productVariantId\": \"{{ProductVariantIdIRSSumishield}}\",\n                            \"isBaseUnitVariant\": true\n                        },\n                        {\n                            \"productVariantId\": \"{{ProductVariantIdIRSFludora}}\",\n                            \"isBaseUnitVariant\": true\n                        },\n                        {\n                            \"productVariantId\": \"{{ProductVariantIdIRSDelt}}\",\n                            \"isBaseUnitVariant\": true\n                        },\n                        {\n                            \"productVariantId\": \"{{ProductVariantIdIRSAcetellic}}\",\n                            \"isBaseUnitVariant\": true\n                        },\n                        {\n                            \"productVariantId\": \"{{ProductVariantIdIRSDOT}}\",\n                            \"isBaseUnitVariant\": true\n                        },\n                        {\n                            \"productVariantId\": \"{{ProductVariantIdIRSBendiocarb}}\",\n                            \"isBaseUnitVariant\": true\n                        }\n                    ]\n                },\n                \"numberOfSessions\": \"TWO_SESSIONS\"\n            }\n        }\n    ],\n    \"rowVersion\": 0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{URL}}/project/v1/_create",
+          "host": [
+            "{{URL}}"
+          ],
+          "path": [
+            "project",
+            "v1",
+            "_create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Facility Create",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Assuming that the response is stored in the \"response\" variable",
+              "const jsonResponse = pm.response.json();",
+              "",
+              "pm.environment.set(\"FacilityID1\", jsonResponse.Facility.id);",
+              "",
+              "let URLPath = pm.environment.get(\"URL\");",
+              "pm.sendRequest({",
+              "    url: URLPath + '/facility/v1/_create', // Replace with the actual URL",
+              "    method: 'POST',",
+              "    header: {",
+              "        'Content-Type': 'application/json', // Replace with appropriate headers",
+              "    },",
+              "    body: {",
+              "        mode: 'raw',",
+              "        raw: JSON.stringify({",
+              "            \"RequestInfo\": {",
+              "                \"authToken\": pm.environment.get(\"access_token\")",
+              "            },",
+              "            \"Facility\": {",
+              "                \"tenantId\": pm.environment.get(\"tenantId\"),",
+              "                \"isPermanent\": \"true\",",
+              "                \"name\": \"Facility bednet MDA-LF-Nairobi\",",
+              "                \"usage\": \"Storing Resource\",",
+              "                \"storageCapacity\": 200,",
+              "                \"address\": {",
+              "                    \"tenantId\": pm.environment.get(\"tenantId\"),",
+              "                    \"doorNo\": \"123\",",
+              "                    \"latitude\": 12.34,",
+              "                    \"longitude\": 123.45,",
+              "                    \"locationAccuracy\": 123.76,",
+              "                    \"type\": \"PERMANENT\",",
+              "                    \"addressLine1\": \"Alpine Apartments\",",
+              "                    \"addressLine2\": \"Road Number 12\",",
+              "                    \"landmark\": \"Near Niagara Lake\",",
+              "                    \"city\": \"Bangalore\",",
+              "                    \"pincode\": \"1234567\",",
+              "                    \"buildingName\": \"Alpine Apartments\",",
+              "                    \"street\": \"test_da0b8ebec5ef\",",
+              "                    \"locality\": {",
+              "                        \"code\": pm.environment.get(\"FIRST_PROVINCIA\"),",
+              "                        \"name\": pm.environment.get(\"FIRST_PROVINCIA\"),",
+              "                    }",
+              "                },",
+              "                \"additionalFields\": {",
+              "                    \"schema\": \"test_e37466be924cjhghjg\",",
+              "                    \"version\": 8,",
+              "                    \"fields\": [",
+              "                        {",
+              "                            \"key\": \"test_12bc5f24692f\",",
+              "                            \"value\": \"test_bf376bce4c01\"",
+              "                        }",
+              "                    ]",
+              "                },",
+              "                \"rowVersion\": 0,",
+              "                \"clientAuditDetails\": {",
+              "                    \"createdTime\": 1692774209,",
+              "                    \"lastModifiedTime\": 1692774209",
+              "                }",
+              "            }",
+              "        })",
+              "    }",
+              "}, function (err, facilityresponse) {",
+              "    if (err) {",
+              "        console.error(err);",
+              "        return;",
+              "    }",
+              "",
+              "    // Check the response",
+              "    if (facilityresponse.code === 202) {",
+              "        console.log('POST request was successful.');",
+              "        // let sideEffectCount = pm.environment.get(\"SideEffectCount\");",
+              "        // sideEffectCount = sideEffectCount + 1;",
+              "        pm.environment.set(\"FacilityID2\", facilityresponse.json().Facility.id);",
+              "    }",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"RequestInfo\": {\n        \"authToken\": \"{{access_token}}\"\n    },\n    \"Facility\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"isPermanent\": \"true\",\n        \"name\": \"Facility bednet MDA-LF-Nairobi\",\n        \"usage\": \"Storing Resource\",\n        \"storageCapacity\": 200,\n        \"address\": {\n            \"tenantId\": \"mz\",\n            \"doorNo\": \"123\",\n            \"latitude\": 12.34,\n            \"longitude\": 123.45,\n            \"locationAccuracy\": 123.76,\n            \"type\": \"PERMANENT\",\n            \"addressLine1\": \"Alpine Apartments\",\n            \"addressLine2\": \"Road Number 12\",\n            \"landmark\": \"Near Niagara Lake\",\n            \"city\": \"Bangalore\",\n            \"pincode\": \"1234567\",\n            \"buildingName\": \"Alpine Apartments\",\n            \"street\": \"test_da0b8ebec5ef\",\n            \"locality\": {\n                \"code\": \"{{FIRST_PROVINCIA}}\",\n                \"name\": \"{{FIRST_PROVINCIA}}\"\n            }\n        },\n        \"additionalFields\": {\n            \"schema\": \"test_e37466be924cjhghjg\",\n            \"version\": 8,\n            \"fields\": [\n                {\n                    \"key\": \"test_12bc5f24692f\",\n                    \"value\": \"test_bf376bce4c01\"\n                }\n            ]\n        },\n        \"rowVersion\": 0,\n        \"clientAuditDetails\": {\n            \"createdTime\": 1692774209,\n            \"lastModifiedTime\": 1692774209\n        }\n    }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{URL}}/facility/v1/_create",
+          "host": [
+            "{{URL}}"
+          ],
+          "path": [
+            "facility",
+            "v1",
+            "_create"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Facility Create Response",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"RequestInfo\": {\n        \"authToken\": \"{{authToken}}\"\n    },\n    \"Facility\": {\n        \"tenantId\": \"default\",\n        \"isPermanent\": \"true\",\n        \"name\": \"LLIN Warehouse1\",\n        \"usage\": \"Storing LLIN\",\n        \"storageCapacity\": 200,\n        \"address\": {\n            \"tenantId\": \"default\",\n            \"doorNo\": \"123\",\n            \"latitude\": 12.34,\n            \"longitude\": 123.45,\n            \"locationAccuracy\": 123.76,\n            \"type\": \"PERMANENT\",\n            \"addressLine1\": \"Alpine Apartments\",\n            \"addressLine2\": \"Road Number 12\",\n            \"landmark\": \"Near Niagara Lake\",\n            \"city\": \"Bangalore\",\n            \"pincode\": \"1234567\",\n            \"buildingName\": \"Alpine Apartments\",\n            \"street\": \"test_da0b8ebec5ef\",\n            \"locality\": {\n                \"code\": \"test_45ab2c1c24cfi67575478\",\n                \"name\": \"locality name\"\n            }\n        },\n        \"additionalFields\": {\n            \"schema\": \"test_e37466be924cjhghjg\",\n            \"version\": 8,\n            \"fields\": [\n                {\n                    \"key\": \"test_12bc5f24692f\",\n                    \"value\": \"test_bf376bce4c01\"\n                }\n            ]\n        },\n        \"rowVersion\": 0\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{qa}}/facility/v1/_create",
+              "host": [
+                "{{qa}}"
+              ],
+              "path": [
+                "facility",
+                "v1",
+                "_create"
+              ]
+            }
+          },
+          "status": "Accepted",
+          "code": 202,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Date",
+              "value": "Tue, 28 Feb 2023 09:33:57 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000; includeSubdomains; preload"
+            },
+            {
+              "key": "X-Lua-Resty-WAF-ID",
+              "value": "d8fe2665d808b5a2949f"
+            },
+            {
+              "key": "x-correlation-id",
+              "value": "8257850d-8295-4ad4-b1d6-aff87e7e2075"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self' https: 'unsafe-eval' 'unsafe-inline'; object-src 'none'; img-src 'self' https: data: blob:; style-src https: blob: 'unsafe-inline'; worker-src 'self' blob:; font-src 'self' https: data: blob:; child-src 'self' https: data: blob:;"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer-when-downgrade"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "sameorigin"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "1"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"ResponseInfo\": {\n        \"apiId\": null,\n        \"ver\": null,\n        \"ts\": 1677576837701,\n        \"resMsgId\": null,\n        \"msgId\": null,\n        \"status\": \"successful\"\n    },\n    \"Facility\": {\n        \"id\": \"F-2023-02-28-000012\",\n        \"tenantId\": \"default\",\n        \"isPermanent\": true,\n        \"name\": \"LLIN Warehouse1\",\n        \"usage\": \"Storing LLIN\",\n        \"storageCapacity\": 200,\n        \"address\": {\n            \"id\": \"0717cfa6-8d89-42e7-b934-19e91ea9b16c\",\n            \"tenantId\": \"default\",\n            \"doorNo\": \"123\",\n            \"latitude\": 12.34,\n            \"longitude\": 123.45,\n            \"locationAccuracy\": 123.76,\n            \"type\": \"PERMANENT\",\n            \"addressLine1\": \"Alpine Apartments\",\n            \"addressLine2\": \"Road Number 12\",\n            \"landmark\": \"Near Niagara Lake\",\n            \"city\": \"Bangalore\",\n            \"pincode\": \"1234567\",\n            \"buildingName\": \"Alpine Apartments\",\n            \"street\": \"test_da0b8ebec5ef\",\n            \"locality\": {\n                \"code\": \"test_45ab2c1c24cfi67575478\",\n                \"name\": \"locality name\",\n                \"label\": null,\n                \"latitude\": null,\n                \"longitude\": null,\n                \"children\": null,\n                \"materializedPath\": null\n            }\n        },\n        \"additionalFields\": {\n            \"schema\": \"test_e37466be924cjhghjg\",\n            \"version\": 8,\n            \"fields\": [\n                {\n                    \"key\": \"test_12bc5f24692f\",\n                    \"value\": \"test_bf376bce4c01\"\n                }\n            ]\n        },\n        \"isDeleted\": false,\n        \"rowVersion\": 1,\n        \"auditDetails\": {\n            \"createdBy\": \"56b5c31b-b843-426c-b8d5-64a4c80286aa\",\n            \"lastModifiedBy\": \"56b5c31b-b843-426c-b8d5-64a4c80286aa\",\n            \"createdTime\": 1677576837670,\n            \"lastModifiedTime\": 1677576837670\n        }\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Project Resource Bulk Create Copy",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"RequestInfo\": {\n        \"authToken\": \"{{access_token}}\"\n    },\n    \"ProjectResources\": [\n        {\n            \"tenantId\": \"mz\",\n            \"projectId\": \"{{individualProjectId}}\",\n            \"resource\": {\n                \"productVariantId\": \"{{ProductVariantIdSP}}\",\n                \"type\": \"DRUG\",\n                \"isBaseUnitVariant\": false\n            },\n            \"startDate\": 1707935400000,\n            \"endDate\": 1708367400000,\n            \"isDeleted\": false,\n            \"rowVersion\": 1\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"projectId\": \"{{individualProjectId}}\",\n            \"resource\": {\n                \"productVariantId\": \"{{ProductVariantIdAQ}}\",\n                \"type\": \"DRUG\",\n                \"isBaseUnitVariant\": false\n            },\n            \"startDate\": 1707935400000,\n            \"endDate\": 1708367400000,\n            \"isDeleted\": false,\n            \"rowVersion\": 1\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"projectId\": \"{{householdProjectId}}\",\n            \"resource\": {\n                \"productVariantId\": \"{{ProductVariantIdBednet}}\",\n                \"type\": \"Bednet\",\n                \"isBaseUnitVariant\": false\n            },\n            \"startDate\": 1707935400000,\n            \"endDate\": 1708367400000,\n            \"isDeleted\": false,\n            \"rowVersion\": 1\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"projectId\": \"{{projectIdHouseholdIRS}}\",\n            \"resource\": {\n                \"productVariantId\": \"{{ProductVariantIdIRSSumishield}}\",\n                \"type\": \"DRUG\",\n                \"isBaseUnitVariant\": false\n            },\n            \"startDate\": \"{{epochTimeCurrent}}\",\n            \"endDate\": \"{{epochTimePlus20Days}}\"\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"projectId\": \"{{projectIdHouseholdIRS}}\",\n            \"resource\": {\n                \"productVariantId\": \"{{ProductVariantIdIRSFludora}}\",\n                \"type\": \"DRUG\",\n                \"isBaseUnitVariant\": false\n            },\n            \"startDate\": \"{{epochTimeCurrent}}\",\n            \"endDate\": \"{{epochTimePlus20Days}}\"\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"projectId\": \"{{projectIdHouseholdIRS}}\",\n            \"resource\": {\n                \"productVariantId\": \"{{ProductVariantIdIRSDelt}}\",\n                \"type\": \"DRUG\",\n                \"isBaseUnitVariant\": false\n            },\n            \"startDate\": \"{{epochTimeCurrent}}\",\n            \"endDate\": \"{{epochTimePlus20Days}}\"\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"projectId\": \"{{projectIdHouseholdIRS}}\",\n            \"resource\": {\n                \"productVariantId\": \"{{ProductVariantIdIRSAcetellic}}\",\n                \"type\": \"DRUG\",\n                \"isBaseUnitVariant\": false\n            },\n            \"startDate\": \"{{epochTimeCurrent}}\",\n            \"endDate\": \"{{epochTimePlus20Days}}\"\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"projectId\": \"{{projectIdHouseholdIRS}}\",\n            \"resource\": {\n                \"productVariantId\": \"{{ProductVariantIdIRSDOT}}\",\n                \"type\": \"DRUG\",\n                \"isBaseUnitVariant\": false\n            },\n            \"startDate\": \"{{epochTimeCurrent}}\",\n            \"endDate\": \"{{epochTimePlus20Days}}\"\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"projectId\": \"{{projectIdHouseholdIRS}}\",\n            \"resource\": {\n                \"productVariantId\": \"{{ProductVariantIdIRSBendiocarb}}\",\n                \"type\": \"DRUG\",\n                \"isBaseUnitVariant\": false\n            },\n            \"startDate\": \"{{epochTimeCurrent}}\",\n            \"endDate\": \"{{epochTimePlus20Days}}\"\n        }\n        // {\n        //     \"tenantId\": \"mz\",\n        //     \"projectId\":\"526d0806-f957-4bb0-8554-db35870d5619\",\n        //     \"resource\": {\n        //         \"productVariantId\": \"PVAR-2024-03-21-000025\",\n        //         \"type\": \"DRUG\",\n        //         \"isBaseUnitVariant\": false\n        //     },\n        //    \"startDate\": 1707935400000,\n        //     \"endDate\": 1708367400000,\n        //     \"isDeleted\": false,\n        //     \"rowVersion\": 1\n        // }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{URL}}/project/resource/v1/bulk/_create",
+          "host": [
+            "{{URL}}"
+          ],
+          "path": [
+            "project",
+            "resource",
+            "v1",
+            "bulk",
+            "_create"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Project Resource Bulk Create Response",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"RequestInfo\": {\n        \"authToken\": \"{{authToken}}\"\n    },\n    \"ProjectResources\": [\n        {\n            \"tenantId\": \"default\",\n            \"projectId\": \"cec9b18d-37f0-49a4-90c2-ad462bb66134\",\n            \"resource\": {\n                \"productVariantId\": \"PVAR-2023-03-03-000023\",\n                \"type\": \"DRUG\",\n                \"isBaseUnitVariant\": false\n            },\n            \"startDate\": 1677732637,\n            \"endDate\": 1677932637,\n            \"isDeleted\": false,\n            \"rowVersion\": 1\n        },\n        {\n            \"tenantId\": \"default\",\n            \"projectId\": \"9bd01fe5-983c-4695-8492-1ab425b6d5c2\",\n            \"resource\": {\n                \"productVariantId\": \"PVAR-2023-03-03-000024\",\n                \"type\": \"DRUG\",\n                \"isBaseUnitVariant\": false\n            },\n            \"startDate\": 1677732637,\n            \"endDate\": 1677932637,\n            \"isDeleted\": false,\n            \"rowVersion\": 1\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{qa}}/project/resource/v1/bulk/_create",
+              "host": [
+                "{{qa}}"
+              ],
+              "path": [
+                "project",
+                "resource",
+                "v1",
+                "bulk",
+                "_create"
+              ]
+            }
+          },
+          "status": "Accepted",
+          "code": 202,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Date",
+              "value": "Fri, 03 Mar 2023 03:12:41 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000; includeSubdomains; preload"
+            },
+            {
+              "key": "X-Lua-Resty-WAF-ID",
+              "value": "fe70a28f318fdef859c7"
+            },
+            {
+              "key": "x-correlation-id",
+              "value": "823a5ff7-a820-4859-82a9-6dee9ae63cc7"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self' https: 'unsafe-eval' 'unsafe-inline'; object-src 'none'; img-src 'self' https: data: blob:; style-src https: blob: 'unsafe-inline'; worker-src 'self' blob:; font-src 'self' https: data: blob:; child-src 'self' https: data: blob:;"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer-when-downgrade"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "sameorigin"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "1"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"apiId\": \"/project/resource/v1/bulk/_create\",\n    \"ver\": null,\n    \"ts\": 1677813161324,\n    \"resMsgId\": null,\n    \"msgId\": null,\n    \"status\": \"successful\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Project Staff Bulk Create",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "let URLPath = pm.environment.get(\"URL\");",
+              "pm.sendRequest({",
+              "    url: URLPath + '/project/facility/v1/bulk/_create', // Replace with the actual URL",
+              "    method: 'POST',",
+              "    header: {",
+              "        'Content-Type': 'application/json', // Replace with appropriate headers",
+              "    },",
+              "    body: {",
+              "        mode: 'raw',",
+              "        raw: JSON.stringify({",
+              "            \"RequestInfo\": {",
+              "                \"authToken\": pm.environment.get(\"access_token\")",
+              "            },",
+              "            \"ProjectFacilities\": [{",
+              "                \"tenantId\": pm.environment.get(\"tenantId\"),",
+              "                \"projectId\": pm.environment.get(\"individualProjectId\"),",
+              "                \"facilityId\": pm.environment.get(\"FacilityID1\"),",
+              "                \"additionalFields\": {",
+              "                    \"schema\": \"test_e37466be924cjhghjg\",",
+              "                    \"version\": 8,",
+              "                    \"fields\": [",
+              "                        {",
+              "                            \"key\": \"test_12bc5f24692f\",",
+              "                            \"value\": \"test_bf376bce4c01\"",
+              "                        }",
+              "                    ]",
+              "                },",
+              "                \"rowVersion\": 0",
+              "            },  {",
+              "                \"tenantId\": pm.environment.get(\"tenantId\"),",
+              "                \"projectId\": pm.environment.get(\"householdProjectId\"),",
+              "                \"facilityId\": pm.environment.get(\"FacilityID1\"),",
+              "                \"additionalFields\": {",
+              "                    \"schema\": \"test_e37466be924cjhghjg\",",
+              "                    \"version\": 8,",
+              "                    \"fields\": [",
+              "                        {",
+              "                            \"key\": \"test_12bc5f24692f\",",
+              "                            \"value\": \"test_bf376bce4c01\"",
+              "                        }",
+              "                    ]",
+              "                },",
+              "                \"rowVersion\": 0",
+              "            },  {",
+              "                \"tenantId\": pm.environment.get(\"tenantId\"),",
+              "                \"projectId\": pm.environment.get(\"projectIdHouseholdIRS\"),",
+              "                \"facilityId\": pm.environment.get(\"FacilityID1\"),",
+              "                \"additionalFields\": {",
+              "                    \"schema\": \"test_e37466be924cjhghjg\",",
+              "                    \"version\": 8,",
+              "                    \"fields\": [",
+              "                        {",
+              "                            \"key\": \"test_12bc5f24692f\",",
+              "                            \"value\": \"test_bf376bce4c01\"",
+              "                        }",
+              "                    ]",
+              "                },",
+              "                \"rowVersion\": 0",
+              "            }, {",
+              "                \"tenantId\": pm.environment.get(\"tenantId\"),",
+              "                \"projectId\": pm.environment.get(\"individualProjectId\"),",
+              "                \"facilityId\": pm.environment.get(\"FacilityID2\"),",
+              "                \"additionalFields\": {",
+              "                    \"schema\": \"test_e37466be924cjhghjg\",",
+              "                    \"version\": 8,",
+              "                    \"fields\": [",
+              "                        {",
+              "                            \"key\": \"test_12bc5f24692f\",",
+              "                            \"value\": \"test_bf376bce4c01\"",
+              "                        }",
+              "                    ]",
+              "                },",
+              "                \"rowVersion\": 0",
+              "            },",
+              "            {",
+              "                \"tenantId\": pm.environment.get(\"tenantId\"),",
+              "                \"projectId\": pm.environment.get(\"householdProjectId\"),",
+              "                \"facilityId\": pm.environment.get(\"FacilityID2\"),",
+              "                \"additionalFields\": {",
+              "                    \"schema\": \"test_e37466be924cjhghjg\",",
+              "                    \"version\": 8,",
+              "                    \"fields\": [",
+              "                        {",
+              "                            \"key\": \"test_12bc5f24692f\",",
+              "                            \"value\": \"test_bf376bce4c01\"",
+              "                        }",
+              "                    ]",
+              "                },",
+              "                \"rowVersion\": 0",
+              "            }, {",
+              "                \"tenantId\": pm.environment.get(\"tenantId\"),",
+              "                \"projectId\": pm.environment.get(\"projectIdHouseholdIRS\"),",
+              "                \"facilityId\": pm.environment.get(\"FacilityID2\"),",
+              "                \"additionalFields\": {",
+              "                    \"schema\": \"test_e37466be924cjhghjg\",",
+              "                    \"version\": 8,",
+              "                    \"fields\": [",
+              "                        {",
+              "                            \"key\": \"test_12bc5f24692f\",",
+              "                            \"value\": \"test_bf376bce4c01\"",
+              "                        }",
+              "                    ]",
+              "                },",
+              "                \"rowVersion\": 0",
+              "            }]",
+              "        })",
+              "    }",
+              "}, function (err, response) {",
+              "    if (err) {",
+              "        console.error(err);",
+              "        return;",
+              "    }",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"RequestInfo\": {\n        \"authToken\": \"{{access_token}}\"\n    },\n    \"ProjectStaff\": [\n        {\n            \"tenantId\": \"mz\",\n            \"userId\": \"{{distUUID}}\", //userserviceID\n            \"projectId\": \"{{individualProjectId}}\",\n            \"startDate\": 1983874101527,\n            \"endDate\": 9983874101527,\n            \"channel\": \"testing for HCM multi round mobile app\",\n            \"rowVersion\": 1,\n            \"additionalFields\": {\n                \"schema\": \"registration\",\n                \"version\": 1,\n                \"fields\": [\n                    {\n                        \"key\": \"key\",\n                        \"value\": \"value\"\n                    }\n                ]\n            }\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"userId\": \"{{SupervisorUUID}}\", //userserviceID\n            \"projectId\": \"{{individualProjectId}}\",\n            \"startDate\": 1983874101527,\n            \"endDate\": 9983874101527,\n            \"channel\": \"testing for HCM multi round mobile app\",\n            \"rowVersion\": 1,\n            \"additionalFields\": {\n                \"schema\": \"registration\",\n                \"version\": 1,\n                \"fields\": [\n                    {\n                        \"key\": \"key\",\n                        \"value\": \"value\"\n                    }\n                ]\n            }\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"userId\": \"{{wmUUID}}\", //userserviceID\n            \"projectId\": \"{{individualProjectId}}\",\n            \"startDate\": 1983874101527,\n            \"endDate\": 9983874101527,\n            \"channel\": \"testing for HCM multi round mobile app\",\n            \"rowVersion\": 1,\n            \"additionalFields\": {\n                \"schema\": \"registration\",\n                \"version\": 1,\n                \"fields\": [\n                    {\n                        \"key\": \"key\",\n                        \"value\": \"value\"\n                    }\n                ]\n            }\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"userId\": \"{{hfReferralUUID}}\", //userserviceID\n            \"projectId\": \"{{individualProjectId}}\",\n            \"startDate\": 1983874101527,\n            \"endDate\": 9983874101527,\n            \"channel\": \"testing for HCM multi round mobile app\",\n            \"rowVersion\": 1,\n            \"additionalFields\": {\n                \"schema\": \"registration\",\n                \"version\": 1,\n                \"fields\": [\n                    {\n                        \"key\": \"key\",\n                        \"value\": \"value\"\n                    }\n                ]\n            }\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"userId\": \"{{hrmsAdminUUID}}\", //userserviceID\n            \"projectId\": \"{{individualProjectId}}\",\n            \"startDate\": 1983874101527,\n            \"endDate\": 9983874101527,\n            \"channel\": \"testing for HCM multi round mobile app\",\n            \"rowVersion\": 1,\n            \"additionalFields\": {\n                \"schema\": \"registration\",\n                \"version\": 1,\n                \"fields\": [\n                    {\n                        \"key\": \"key\",\n                        \"value\": \"value\"\n                    }\n                ]\n            }\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"userId\": \"{{distUUID}}\", //userserviceID\n            \"projectId\": \"{{householdProjectId}}\",\n            \"startDate\": 1983874101527,\n            \"endDate\": 9983874101527,\n            \"channel\": \"testing for HCM multi round mobile app\",\n            \"rowVersion\": 1,\n            \"additionalFields\": {\n                \"schema\": \"registration\",\n                \"version\": 1,\n                \"fields\": [\n                    {\n                        \"key\": \"key\",\n                        \"value\": \"value\"\n                    }\n                ]\n            }\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"userId\": \"{{SupervisorUUID}}\", //userserviceID\n            \"projectId\": \"{{householdProjectId}}\",\n            \"startDate\": 1983874101527,\n            \"endDate\": 9983874101527,\n            \"channel\": \"testing for HCM multi round mobile app\",\n            \"rowVersion\": 1,\n            \"additionalFields\": {\n                \"schema\": \"registration\",\n                \"version\": 1,\n                \"fields\": [\n                    {\n                        \"key\": \"key\",\n                        \"value\": \"value\"\n                    }\n                ]\n            }\n        },\n        {\n            \"tenantId\": \"mz\",\n            // \"userId\": \"{{staffUserServiceUuid}}\", //userserviceID\n            \"userId\": \"{{wmUUID}}\", //userserviceID\n            \"projectId\": \"{{householdProjectId}}\",\n            \"startDate\": 1983874101527,\n            \"endDate\": 9983874101527,\n            \"channel\": \"testing for HCM multi round mobile app\",\n            \"rowVersion\": 1,\n            \"additionalFields\": {\n                \"schema\": \"registration\",\n                \"version\": 1,\n                \"fields\": [\n                    {\n                        \"key\": \"key\",\n                        \"value\": \"value\"\n                    }\n                ]\n            }\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"userId\": \"{{hfReferralUUID}}\", //userserviceID\n            \"projectId\": \"{{householdProjectId}}\",\n            \"startDate\": 1983874101527,\n            \"endDate\": 9983874101527,\n            \"channel\": \"testing for HCM multi round mobile app\",\n            \"rowVersion\": 1,\n            \"additionalFields\": {\n                \"schema\": \"registration\",\n                \"version\": 1,\n                \"fields\": [\n                    {\n                        \"key\": \"key\",\n                        \"value\": \"value\"\n                    }\n                ]\n            }\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"userId\": \"{{hrmsAdminUUID}}\", //userserviceID\n            \"projectId\": \"{{householdProjectId}}\",\n            \"startDate\": 1983874101527,\n            \"endDate\": 9983874101527,\n            \"channel\": \"testing for HCM multi round mobile app\",\n            \"rowVersion\": 1,\n            \"additionalFields\": {\n                \"schema\": \"registration\",\n                \"version\": 1,\n                \"fields\": [\n                    {\n                        \"key\": \"key\",\n                        \"value\": \"value\"\n                    }\n                ]\n            }\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"userId\": \"{{distUUID}}\", //userserviceID\n            \"projectId\": \"{{projectIdHouseholdIRS}}\",\n            \"startDate\": 1983874101527,\n            \"endDate\": 9983874101527,\n            \"channel\": \"testing for HCM multi round mobile app\",\n            \"rowVersion\": 1,\n            \"additionalFields\": {\n                \"schema\": \"registration\",\n                \"version\": 1,\n                \"fields\": [\n                    {\n                        \"key\": \"key\",\n                        \"value\": \"value\"\n                    }\n                ]\n            }\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"userId\": \"{{SupervisorUUID}}\", //userserviceID\n            \"projectId\": \"{{projectIdHouseholdIRS}}\",\n            \"startDate\": 1983874101527,\n            \"endDate\": 9983874101527,\n            \"channel\": \"testing for HCM multi round mobile app\",\n            \"rowVersion\": 1,\n            \"additionalFields\": {\n                \"schema\": \"registration\",\n                \"version\": 1,\n                \"fields\": [\n                    {\n                        \"key\": \"key\",\n                        \"value\": \"value\"\n                    }\n                ]\n            }\n        },\n        {\n            \"tenantId\": \"mz\",\n            // \"userId\": \"{{staffUserServiceUuid}}\", //userserviceID\n            \"userId\": \"{{wmUUID}}\", //userserviceID\n            \"projectId\": \"{{projectIdHouseholdIRS}}\",\n            \"startDate\": 1983874101527,\n            \"endDate\": 9983874101527,\n            \"channel\": \"testing for HCM multi round mobile app\",\n            \"rowVersion\": 1,\n            \"additionalFields\": {\n                \"schema\": \"registration\",\n                \"version\": 1,\n                \"fields\": [\n                    {\n                        \"key\": \"key\",\n                        \"value\": \"value\"\n                    }\n                ]\n            }\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"userId\": \"{{hfReferralUUID}}\", //userserviceID\n            \"projectId\": \"{{projectIdHouseholdIRS}}\",\n            \"startDate\": 1983874101527,\n            \"endDate\": 9983874101527,\n            \"channel\": \"testing for HCM multi round mobile app\",\n            \"rowVersion\": 1,\n            \"additionalFields\": {\n                \"schema\": \"registration\",\n                \"version\": 1,\n                \"fields\": [\n                    {\n                        \"key\": \"key\",\n                        \"value\": \"value\"\n                    }\n                ]\n            }\n        },\n        {\n            \"tenantId\": \"mz\",\n            \"userId\": \"{{hrmsAdminUUID}}\", //userserviceID\n            \"projectId\": \"{{projectIdHouseholdIRS}}\",\n            \"startDate\": 1983874101527,\n            \"endDate\": 9983874101527,\n            \"channel\": \"testing for HCM multi round mobile app\",\n            \"rowVersion\": 1,\n            \"additionalFields\": {\n                \"schema\": \"registration\",\n                \"version\": 1,\n                \"fields\": [\n                    {\n                        \"key\": \"key\",\n                        \"value\": \"value\"\n                    }\n                ]\n            }\n        }\n    ]\n}"
+        },
+        "url": {
+          "raw": "{{URL}}/project/staff/v1/bulk/_create",
+          "host": [
+            "{{URL}}"
+          ],
+          "path": [
+            "project",
+            "staff",
+            "v1",
+            "bulk",
+            "_create"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Project Staff Create",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"RequestInfo\": {\n        \"authToken\": \"{{authToken}}\"\n    },\n    \"ProjectStaff\": [\n        {\n            \"tenantId\": \"default\",\n            \"userId\": \"56b5c31b-b843-426c-b8d5-64a4c80286aa\",\n            \"projectId\": \"13\",\n            \"startDate\": {{timeStamp}},\n            \"endDate\": {{timeStamp}},\n            \"additionalFields\": {\n                \"schema\": \"registration\",\n                \"version\": 1,\n                \"fields\": [\n                    {\n                        \"key\": \"key\",\n                        \"value\": \"value\"\n                    }\n                ]\n            },\n            \"channel\": \"test_02c6c793f445\"\n        }\n    ],\n    \"apiOperation\": \"CREATE\"\n}"
+            },
+            "url": {
+              "raw": "{{qa}}/project/staff/v1/_create",
+              "host": [
+                "{{qa}}"
+              ],
+              "path": [
+                "project",
+                "staff",
+                "v1",
+                "_create"
+              ]
+            }
+          },
+          "status": "Accepted",
+          "code": 202,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Date",
+              "value": "Thu, 19 Jan 2023 10:05:24 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=63072000; includeSubdomains; preload"
+            },
+            {
+              "key": "X-Lua-Resty-WAF-ID",
+              "value": "a9a679df0904f86af8b9"
+            },
+            {
+              "key": "x-correlation-id",
+              "value": "c8ad22bb-fab7-4f76-80b9-33f2df4181f0"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, max-age=0, must-revalidate"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "default-src 'self' https: 'unsafe-eval' 'unsafe-inline'; object-src 'none'; img-src 'self' https: data: blob:; style-src https: blob: 'unsafe-inline'; worker-src 'self' blob:; font-src 'self' https: data: blob:; child-src 'self' https: data: blob:;"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer-when-downgrade"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "sameorigin"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "1"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"ResponseInfo\": {\n        \"apiId\": null,\n        \"ver\": null,\n        \"ts\": 1674122724368,\n        \"resMsgId\": null,\n        \"msgId\": null,\n        \"status\": \"successful\"\n    },\n    \"ProjectStaff\": [\n        {\n            \"id\": \"PTS-2023-01-19-000010\",\n            \"tenantId\": \"default\",\n            \"userId\": \"56b5c31b-b843-426c-b8d5-64a4c80286aa\",\n            \"projectId\": \"13\",\n            \"startDate\": 1674122723,\n            \"endDate\": 1674122723,\n            \"channel\": \"test_02c6c793f445\",\n            \"isDeleted\": false,\n            \"rowVersion\": 1,\n            \"additionalFields\": {\n                \"schema\": \"registration\",\n                \"version\": 1,\n                \"fields\": [\n                    {\n                        \"key\": \"key\",\n                        \"value\": \"value\"\n                    }\n                ]\n            },\n            \"auditDetails\": {\n                \"createdBy\": \"56b5c31b-b843-426c-b8d5-64a4c80286aa\",\n                \"lastModifiedBy\": \"56b5c31b-b843-426c-b8d5-64a4c80286aa\",\n                \"createdTime\": 1674122724357,\n                \"lastModifiedTime\": 1674122724357\n            }\n        }\n    ]\n}"
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          "pm.environment.set(\"authToken\", \"\")",
+          "pm.environment.set(\"timeStamp\", new Date().getTime())",
+          "",
+          "// Get the current date and time",
+          "let currentDate = new Date();",
+          "",
+          "// Get the epoch time (Unix timestamp) in milliseconds for the current date",
+          "let epochTimeCurrent = currentDate.getTime();",
+          "",
+          "// Get the epoch time (Unix timestamp) in milliseconds for current date + 10 days",
+          "let datePlus10Days = new Date(currentDate);",
+          "datePlus10Days.setDate(currentDate.getDate() + 10);",
+          "let epochTimePlus10Days = datePlus10Days.getTime();",
+          "",
+          "// Get the epoch time (Unix timestamp) in milliseconds for current date + 20 days",
+          "let datePlus20Days = new Date(currentDate);",
+          "datePlus20Days.setDate(currentDate.getDate() + 20);",
+          "let epochTimePlus20Days = datePlus20Days.getTime();",
+          "",
+          "// Set the epoch times in environment variables",
+          "pm.environment.set(\"epochTimeCurrent\", epochTimeCurrent);",
+          "pm.environment.set(\"epochTimePlus10Days\", epochTimePlus10Days);",
+          "pm.environment.set(\"epochTimePlus20Days\", epochTimePlus20Days);",
+          "",
+          "",
+          "",
+          "var uuid = require('uuid');",
+          "var clientReferenceId = uuid.v4();",
+          "pm.environment.set(\"uuid\", clientReferenceId)",
+          "clientReferenceId = uuid.v4();",
+          "pm.environment.set(\"uuid2\", clientReferenceId)",
+          "var beneficiaryClientReferenceId = uuid.v4();",
+          "pm.environment.set(\"beneficiaryClientReferenceId\", beneficiaryClientReferenceId)",
+          "beneficiaryClientReferenceId = uuid.v4();",
+          "pm.environment.set(\"beneficiaryClientReferenceId2\", beneficiaryClientReferenceId)",
+          "",
+          "var identifierTypes = [\"SYSTEM_GENERATED\", \"AADHAAR\", \"PAN\", \"VOTER ID CARD\", \"PASSPORT\", \"DRIVING LICENSE\"]",
+          "pm.environment.set(\"individualIdentifierType\", identifierTypes[Math.floor(Math.random() * identifierTypes.length)])",
+          "pm.environment.set(\"individualIdentifierId\", Math.floor((Math.random() * (999999999999 - 100000000000 + 1)) + 100000000000))",
+          "var skillTypes = [\"Type Writing\", \"Computer\", \"Science\", \"Singing\", \"Dancing\", \"Event Organizer\"]",
+          "pm.environment.set(\"individualSkillType\", skillTypes[Math.floor(Math.random() * skillTypes.length)])",
+          "var skillLevels = [\"Novice\", \"Learner\", \"Profecient\", \"Expert\"]",
+          "pm.environment.set(\"individualSkillLevel\", skillLevels[Math.floor(Math.random() * skillLevels.length)])",
+          "var skillExperiences = [\"1 Year\", \"2 Years\", \"3 Years\", \"4 Years\", \"5 Years\", \"6 Years\", \"7 Years\", \"8 Years\", \"9 Years\", \"10 Years\", \"10+ Years\"]",
+          "pm.environment.set(\"individualSkillExperience\", skillExperiences[Math.floor(Math.random() * skillExperiences.length)])",
+          "var bloodGroups = [\"A+\", \"B+\", \"O+\", \"AB+\", \"A-\", \"B-\", \"AB-\", \"O-\"]",
+          "pm.environment.set(\"individualBloodGroup\", bloodGroups[Math.floor(Math.random() * bloodGroups.length)])",
+          "var genderTypes = [ \"MALE\", \"FEMALE\"]",
+          "pm.environment.set(\"individualGenderType\", genderTypes[Math.floor(Math.random() * genderTypes.length)])",
+          "pm.environment.set(\"individualDateOfBirth\", new Date(new Date() - Math.random()*(1e+12)).toLocaleDateString('en-GB'))",
+          "pm.environment.set(\"individualGivenName\", \"Sourav\"+ Math.random().toString(36).slice(-10))",
+          "pm.environment.set(\"individualFamilyName\", \"Ganguly\"+ Math.random().toString(36).slice(-10))",
+          "pm.environment.set(\"individualOtherName\", \"Dada\"+ Math.random().toString(36).slice(-10))",
+          "",
+          "pm.environment.set(\"individualDateOfBirth2\", new Date(new Date() - Math.random()*(1e+12)).toLocaleDateString('en-GB'))",
+          "pm.environment.set(\"individualGivenName2\", \"Sourav\"+ Math.random().toString(36).slice(-10))",
+          "pm.environment.set(\"individualFamilyName2\", \"Ganguly\"+ Math.random().toString(36).slice(-10))",
+          "pm.environment.set(\"individualOtherName2\", \"Dada\"+ Math.random().toString(36).slice(-10))",
+          "pm.environment.set(\"individualIdentifierId2\", \"test_\" + String(Math.floor((Math.random() * (999999999999 - 100000000000 + 1)) + 100000000000)))",
+          "pm.environment.set(\"timeStamp\", new Date().getTime())",
+          "",
+          "pm.environment.set(\"newUserName\", \"USER-\" + Math.floor((Math.random() * (999999 - 100000 + 1)) + 100000))",
+          "pm.sendRequest({",
+          "    url: pm.environment.get(\"URL\") + '/user/oauth/token',",
+          "    method: 'POST',",
+          "    header: { \"Content-Type\": \"application/x-www-form-urlencoded\", \"Authorization\": \"Basic ZWdvdi11c2VyLWNsaWVudDo=\" },",
+          "    body: {",
+          "        mode: 'urlencoded',",
+          "        urlencoded: [",
+          "            { key: 'grant_type', value: 'password' },",
+          "            { key: 'scope', value: 'read' },",
+          "            { key: 'username', value: pm.environment.get('apiUserName') },",
+          "            { key: 'password', value: pm.environment.get('apiPassword') },",
+          "            { key: 'tenantId', value: 'mz' },",
+          "            { key: 'userType', value: 'EMPLOYEE' }",
+          "        ]",
+          "    }",
+          "},",
+          "",
+          "    function (err, response) {",
+          "        const responseJSON = response.json();",
+          "        console.log(\"Access Token is \" + responseJSON.access_token)",
+          "        pm.environment.set(\"authToken\", responseJSON.access_token)",
+          "        console.log(\"The auth token has been set up now\")",
+          "    });",
+          "",
+          "",
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "host",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "password",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tenantId",
+      "value": "mz",
+      "type": "string"
+    },
+    {
+      "key": "ProductVariantIdSP",
+      "value": "PVAR-2024-11-20-000001",
+      "type": "string"
+    },
+    {
+      "key": "ProductVariantIdAQ",
+      "value": "PVAR-2024-11-20-000003",
+      "type": "string"
+    },
+    {
+      "key": "ProductVariantIdBednet",
+      "value": "PVAR-2024-11-20-000005",
+      "type": "string"
+    },
+    {
+      "key": "ProductVariantIdIRSSumishield",
+      "value": "PVAR-2024-11-20-000006",
+      "type": "string"
+    },
+    {
+      "key": "ProductVariantIdIRSFludora",
+      "value": "PVAR-2024-11-20-000007",
+      "type": "string"
+    },
+    {
+      "key": "ProductVariantIdIRSDelt",
+      "value": "PVAR-2024-11-20-000008",
+      "type": "string"
+    },
+    {
+      "key": "ProductVariantIdIRSAcetellic",
+      "value": "PVAR-2024-11-20-000009",
+      "type": "string"
+    },
+    {
+      "key": "ProductVariantIdIRSDOT",
+      "value": "PVAR-2024-11-20-000010",
+      "type": "string"
+    },
+    {
+      "key": "ProductVariantIdIRSBendiocarb",
+      "value": "PVAR-2024-11-20-000011",
+      "type": "string"
+    },
+    {
+      "key": "productIDSP",
+      "value": "P-2024-11-20-000001",
+      "type": "string"
+    },
+    {
+      "key": "productIDAQ",
+      "value": "P-2024-11-20-000003",
+      "type": "string"
+    },
+    {
+      "key": "productBednet",
+      "value": "P-2024-11-20-000005",
+      "type": "string"
+    },
+    {
+      "key": "productIDIRSPowder",
+      "value": "P-2025-01-15-000004",
+      "type": "string"
+    }
+  ]
+}
