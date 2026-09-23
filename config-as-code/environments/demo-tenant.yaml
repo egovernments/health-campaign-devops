@@ -200,12 +200,12 @@ transformer:
 health-expense-calculator:
   image:
     repository: egovio/health-expense-calculator
-    tag: master-a5e4c31
+    tag: master-7c44e96
   initContainers:
     dbMigration:
       image:
         repository: egovio/health-expense-calculator-db
-        tag: master-a5e4c31
+        tag: master-7c44e96
   tracing-enabled: true
   java-enable-debug: true
   java-tool-options: "-Dspring.kafka.consumer.max-poll-records=1 -Dspring.kafka.consumer.properties.max.poll.interval.ms=600000"
