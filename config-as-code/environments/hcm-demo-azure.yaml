@@ -469,12 +469,12 @@ egov-notification-sms:
 egov-user:
   image:
     repository: egovio/egov-user
-    tag: user-bulk-upgrade-sso-64172aa
+    tag: user-bulk-upgrade-sso-18f7365
   initContainers:
     dbMigration:
       image:
         repository: egovio/egov-user-db
-        tag: user-bulk-upgrade-sso-64172aa
+        tag: user-bulk-upgrade-sso-18f7365
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
