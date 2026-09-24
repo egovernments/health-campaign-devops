@@ -203,7 +203,7 @@ env: |
   - name: EGOV_HRMS_EMPLOYEE_CREATE_URL
     value: /egov-hrms/employees/_create
   - name: MDMS_OIDCPROVIDERS_TENANTID
-    value: mz
+    value: demo
   - name: AUTH_OIDC_ENABLED
     value: "true"
   - name: EGOV_BOUNDARY_HOST
