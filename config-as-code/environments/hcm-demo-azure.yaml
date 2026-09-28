@@ -744,7 +744,7 @@ report:
 pdf-service:
   image:
     repository: egovio/pdf-service
-    tag: central-instance-pdf-7b3064f
+    tag: central-instance-pdf-f38069d
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
