@@ -86,7 +86,7 @@ payments-ui:
 console:
   image:
     repository: egovio/console
-    tag: master-5b31b5f
+    tag: console-dev-db7a20a
   namespace: demo
   central-instance-name: egov
   central-instance-build: true
