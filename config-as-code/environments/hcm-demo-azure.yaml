@@ -851,12 +851,12 @@ zuul:
 egov-localization:
   image:
     repository: egovio/egov-localization
-    tag: egov-localization-db:redis-localization-key-localization-consumer-5f65e53
+    tag: redis-localization-key-localization-consumer-5f65e53
   initContainers:
     dbMigration:
       image:
         repository: egovio/egov-localization-db
-        tag: egov-localization-db:redis-localization-key-localization-consumer-5f65e53
+        tag: redis-localization-key-localization-consumer-5f65e53
   namespace: "egov"
   replicas: 3
   heap: '-Xmx6144m -Xms2048m'
