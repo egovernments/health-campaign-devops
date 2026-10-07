@@ -101,7 +101,7 @@ console:
 transformer:
   image:
     repository: egovio/transformer
-    tag: transformer-task-age-gender-height-fix-ff27f11
+    tag: transformer-task-age-gender-height-fix-83c7661
   namespace: "demo"
   heap: "-Xmx768m -Xms512m"
   hpa:
