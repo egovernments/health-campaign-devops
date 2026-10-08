@@ -173,6 +173,8 @@ transformer:
   transformer-producer-user-action-index-v1-topic: "demo-transformer-producer-user-action-index-v1-topic"
   save-project-beneficiary-topic: "demo-save-project-beneficiary-topic"
   update-project-beneficiary-topic: "demo-update-project-beneficiary-topic"
+  # boundary hierarchies the transformer probes for records whose project (and so hierarchy type) is not resolved
+  egov-boundary-hierarchy-types: "NIGERIA"
   transformer-producer-project-beneficiary-index-v1-topic: "demo-transformer-producer-project-beneficiary-index-v1-topic"
   health-transformer: "demo-health-transformer"
   transformer-consumer-error-tracer-topic: "error-details-indexer-topic"

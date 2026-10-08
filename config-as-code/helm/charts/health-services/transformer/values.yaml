@@ -358,6 +358,8 @@ env: |
     value: "/boundary-service/boundary/_search"
   - name: EGOV_BOUNDARY_HIERARCHY_NAME
     value: {{ index .Values "egov-boundary-hierarchy-name" | quote }}
+  - name: EGOV_BOUNDARY_HIERARCHY_TYPES
+    value: {{ index .Values "egov-boundary-hierarchy-types" | default "ADMIN,ITN" | quote }}
   - name: PROJECT_STAFF_ROLE_MDMS_MODULE
     value: HCM-PROJECT-STAFF-ROLES
   - name: EGOV_SEARCH_HOUSEHOLD_URL
@@ -423,6 +425,10 @@ env: |
   - name: TRANSFORMER_CONSUMER_PROJECT_BENEFICIARY_CREATE_TOPIC
     value: {{ index .Values "save-project-beneficiary-topic" | default "save-project-beneficiary-topic" | quote }}
   - name: TRANSFORMER_CONSUMER_PROJECT_BENEFICIARY_UPDATE_TOPIC
+    value: {{ index .Values "update-project-beneficiary-topic" | default "update-project-beneficiary-topic" | quote }}
+  - name: TRANSFORMER_CONSUMER_BULK_CREATE_PROJECT_BENEFICIARY_TOPIC
+    value: {{ index .Values "save-project-beneficiary-topic" | default "save-project-beneficiary-topic" | quote }}
+  - name: TRANSFORMER_CONSUMER_BULK_UPDATE_PROJECT_BENEFICIARY_TOPIC
     value: {{ index .Values "update-project-beneficiary-topic" | default "update-project-beneficiary-topic" | quote }}
   - name: TRANSFORMER_PRODUCER_PROJECT_BENEFICIARY_INDEX_V1_TOPIC
     value: {{ index .Values "transformer-producer-project-beneficiary-index-v1-topic" | default "transformer-producer-project-beneficiary-index-v1-topic" | quote }}
