@@ -1414,12 +1414,12 @@ health-attendance:
 health-expense:
   image:
     repository: egovio/health-expense
-    tag: master-fcb1889
+    tag: master-94cbb75
   initContainers:
     dbMigration:
       image:
         repository: egovio/health-expense-db
-        tag: master-fcb1889
+        tag: master-94cbb75
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
