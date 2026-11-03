@@ -1,0 +1,8 @@
+.terraform/
+.terraform.lock.hcl
+tfplan*
+*.tfstate
+*.tfstate.backup
+
+# Holds the database administrator password — keep it out of version control.
+terraform.tfvars
