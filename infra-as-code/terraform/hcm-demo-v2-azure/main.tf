@@ -103,7 +103,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   kubernetes_version  = var.kubernetes_version
 
   default_node_pool {
-    name                   = "nodepool1"
+    name = "nodepool1"
+    # kubernetes_version above moves only the control plane; without this the
+    # nodes stay on their original version and the cluster runs split.
+    orchestrator_version   = var.kubernetes_version
     node_count             = var.node_count
     min_count              = var.node_min_count
     max_count              = var.node_max_count
@@ -239,6 +242,17 @@ resource "azurerm_storage_container" "filestore" {
   container_access_type = "private"
 }
 
+# Elasticsearch snapshot repository shared by both environments: hcm-demo writes
+# snapshots here, hcm-demo-v2 restores from them. It lives in the new
+# environment's account deliberately — the credential the live cluster is given
+# belongs to this environment, not the other way round, and the restore then
+# reads in-region.
+resource "azurerm_storage_container" "es_snapshots" {
+  name                  = var.es_snapshot_container
+  storage_account_id    = azurerm_storage_account.filestore.id
+  container_access_type = "private"
+}
+
 ### Key Vault >>>>>>>>>>>>>>>>>>>>
 
 data "azurerm_client_config" "current" {}
@@ -260,7 +274,8 @@ resource "azurerm_key_vault" "kv" {
 ### Static Elasticsearch disks >>>>>>>>>>>>>>>>>>>>
 # hcm-demo binds Elasticsearch to pre-created managed disks through static PVs
 # with a Retain policy, so index data survives the StatefulSet. The same disks
-# are created here; the matching PVs are applied from the restore runbook.
+# are created here, empty: index data arrives through the Elasticsearch
+# snapshot API from blob storage, not through a disk-level clone.
 
 resource "azurerm_managed_disk" "es_data" {
   count = var.es_node_count

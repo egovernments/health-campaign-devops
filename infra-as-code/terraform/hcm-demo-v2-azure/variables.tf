@@ -182,3 +182,9 @@ variable "es_node_count" {
   type        = number
   default     = 3
 }
+
+variable "es_snapshot_container" {
+  description = "Blob container holding the Elasticsearch snapshot repository used to move index data from hcm-demo."
+  type        = string
+  default     = "es-snapshots"
+}
