@@ -13,6 +13,13 @@ namespace: es-cluster
 extraEnvs:
   - name: "NODE_OPTIONS"
     value: "--max-old-space-size=1800"
+  # Password for the anonymous_user Elasticsearch user, substituted into
+  # kibana.yml below. The secret comes from cluster-configs (SOPS).
+  - name: "KIBANA_ANONYMOUS_PASSWORD"
+    valueFrom:
+      secretKeyRef:
+        name: kibana-anonymous
+        key: password
 #  - name: MY_ENVIRONMENT_VAR
 #    value: the_value_goes_here
 
@@ -75,8 +82,8 @@ kibanaConfig:
        anonymous.anonymous1:
          order: 1
          credentials:
-           username: "anonymous_service_account"
-           password: "anonymous_service_account_password"
+           username: "anonymous_user"
+           password: "${KIBANA_ANONYMOUS_PASSWORD}"
 
 # If Pod Security Policy in use it may be required to specify security context as well as service account
 

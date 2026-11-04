@@ -139,6 +139,10 @@ cluster-configs:
       namespace: monitoring
       name: grafana-admin
 
+    kibana-anonymous:
+      namespace: es-cluster
+      name: kibana-anonymous
+
     jenkins:
       namespace: jenkins
       name: jenkins 
