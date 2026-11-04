@@ -62,16 +62,18 @@ spec:
           kind: Deployment
           jsonPointers:
             - /spec/replicas
-        # These charts generate their CA, elastic password and KRaft cluster id
-        # with random functions, so every render differs. Without this, each
-        # self-heal would rotate them under the running cluster.
+        # Kubernetes 1.35 fills in apiVersion/kind on volumeClaimTemplates,
+        # which the rendered StatefulSets leave out.
+        - group: apps
+          kind: StatefulSet
+          jqPathExpressions:
+            - .spec.volumeClaimTemplates[]?.apiVersion
+            - .spec.volumeClaimTemplates[]?.kind
+        # These charts generate their CA and KRaft cluster id with random
+        # functions, so every render differs. Without this, each self-heal
+        # would rotate them under the running cluster.
         - kind: Secret
           name: elasticsearch-master-certs
-          namespace: es-cluster
-          jsonPointers:
-            - /data
-        - kind: Secret
-          name: elasticsearch-master-credentials
           namespace: es-cluster
           jsonPointers:
             - /data
@@ -81,15 +83,19 @@ spec:
           jsonPointers:
             - /data
         # caBundle is injected at runtime by the ingress-nginx admission job and
-        # by cert-manager's cainjector.
+        # by cert-manager's cainjector. AKS's admissions enforcer adds its own
+        # namespaceSelector terms to webhooks, which self-heal would otherwise
+        # strip and AKS re-add in a loop.
         - group: admissionregistration.k8s.io
           kind: ValidatingWebhookConfiguration
           jqPathExpressions:
             - .webhooks[]?.clientConfig.caBundle
+            - .webhooks[]?.namespaceSelector
         - group: admissionregistration.k8s.io
           kind: MutatingWebhookConfiguration
           jqPathExpressions:
             - .webhooks[]?.clientConfig.caBundle
+            - .webhooks[]?.namespaceSelector
 
       syncPolicy:
         automated:
