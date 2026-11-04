@@ -6,7 +6,7 @@ labels:
 
 # Ingress Configs
 ingress:
-  enabled: false
+  enabled: true
   context: "kafka-ui"
   waf:
     enabled: false
@@ -46,9 +46,9 @@ yamlApplicationConfig:
   # {}
   kafka:
     clusters:
-      - name: kafka-clusters
-        bootstrapServers: release-name-kafka-controller-0.release-name-kafka-controller-headless.kafka-cluster.svc.cluster.local:9092, release-name-kafka-controller-1.release-name-kafka-controller-headless.kafka-cluster.svc.cluster.local:9092, release-name-kafka-controller-2.release-name-kafka-controller-headless.kafka-cluster.svc.cluster.local:9092 
-        # readOnly: true
+      - name: hcm-demo-v2-kafka-kraft
+        bootstrapServers: release-name-kafka-controller-0.release-name-kafka-controller-headless.kafka-kraft.svc.cluster.local:9092,release-name-kafka-controller-1.release-name-kafka-controller-headless.kafka-kraft.svc.cluster.local:9092,release-name-kafka-controller-2.release-name-kafka-controller-headless.kafka-kraft.svc.cluster.local:9092
+        readOnly: false
   # spring:
   #   security:
   #     oauth2:

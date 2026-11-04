@@ -1,5 +1,5 @@
 global:
-  domain: health-demo.digit.org
+  domain: health-demo-v2.digit.org
 
 # service:
 #   additionalAnnotations: |

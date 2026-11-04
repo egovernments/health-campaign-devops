@@ -8,14 +8,19 @@ metadata:
 spec:
   project: default
 
-  source:
-    repoURL: git@github.com:HCM-WHO-AFRO/health-campaign-devops.git
-    targetRevision: azure-install-hcm-demo
-    path: config-as-code/helm/charts/security/clamav
-    helm:
-      valueFiles:
-        - values.yaml
-        - ../../../../environments/clamav-security.yaml
+  # hcm-demo runs the upstream wiremind chart (helm release "clamav"), not
+  # helm/charts/security/clamav, so v2 uses the same chart and values.
+  sources:
+    - repoURL: https://wiremind.github.io/wiremind-helm-charts
+      chart: clamav
+      targetRevision: 3.7.1
+      helm:
+        releaseName: clamav
+        valueFiles:
+          - $values/config-as-code/environments/clamav-hcm-demo-v2.yaml
+    - repoURL: git@github.com:egovernments/health-campaign-devops.git
+      targetRevision: azure-install-hcm-demo-v2
+      ref: values
 
   destination:
     server: https://kubernetes.default.svc

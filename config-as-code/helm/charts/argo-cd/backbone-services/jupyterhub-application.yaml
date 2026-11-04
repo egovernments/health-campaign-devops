@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: backbone-jupyterhub
+  namespace: argocd
+spec:
+  project: backbone-services-project
+
+  # Not part of the backbone appset: this chart sits one level higher
+  # (helm/charts/jupyterhub), so the appset's environment path doesn't resolve.
+  source:
+    repoURL: git@github.com:egovernments/health-campaign-devops.git
+    targetRevision: azure-install-hcm-demo-v2
+    path: config-as-code/helm/charts/jupyterhub
+    helm:
+      releaseName: release-name
+      valueFiles:
+        - values.yaml
+        - ../../../environments/hcm-demo-v2-azure.yaml
+        - secrets://../../../environments/jupyterhub-secrets.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: jhub
+
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - ServerSideApply=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s

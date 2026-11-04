@@ -1,0 +1,99 @@
+# Values for the loki-stack release, taken from the live hcm-demo release
+# (`helm get values loki-stack -n monitoring`) and adapted for hcm-demo-v2.
+grafana:
+  enabled: false
+  sidecar:
+    datasources:
+      enabled: true
+      label: ""
+      labelValue: ""
+      maxLines: 1000
+loki:
+  config:
+    auth_enabled: false
+    common:
+      path_prefix: /data/loki
+      replication_factor: 1
+      ring:
+        kvstore:
+          store: inmemory
+      storage:
+        filesystem:
+          chunks_directory: /data/loki/chunks
+          rules_directory: /data/loki/rules
+    compactor:
+      compaction_interval: 10m
+      retention_delete_delay: 2h
+      retention_delete_worker_count: 150
+      retention_enabled: true
+      shared_store: filesystem
+      working_directory: /data/loki/compactor
+    limits_config:
+      enforce_metric_name: false
+      reject_old_samples: true
+      reject_old_samples_max_age: 168h
+      retention_period: 720h
+    ruler:
+      rule_path: /data/loki/rules
+      storage:
+        local:
+          directory: /data/loki/rules
+        type: local
+    schema_config:
+      configs:
+      - from: "2024-01-01"
+        index:
+          period: 24h
+          prefix: index_
+        object_store: filesystem
+        schema: v13
+        store: tsdb
+    server:
+      grpc_listen_port: 9095
+      http_listen_port: 3100
+    storage_config:
+      filesystem:
+        directory: /data/loki/chunks
+      tsdb_shipper:
+        active_index_directory: /data/loki/index
+        cache_location: /data/loki/index_cache
+        cache_ttl: 24h
+        shared_store: filesystem
+  datasource:
+    jsonData: '{}'
+    uid: ""
+  enabled: true
+  image:
+    repository: grafana/loki
+    tag: 2.9.3
+  isDefault: true
+  livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  persistence:
+    accessModes:
+    - ReadWriteOnce
+    enabled: true
+    size: 20Gi
+    storageClassName: default
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 45
+  service:
+    port: 3100
+  url: http://{{(include "loki.serviceName" .)}}:{{ .Values.loki.service.port }}
+prometheus:
+  enabled: false
+promtail:
+  config:
+    clients:
+    - url: http://{{ .Release.Name }}:3100/loki/api/v1/push
+    logLevel: info
+    serverPort: 3101
+  enabled: true
+test_pod:
+  enabled: false

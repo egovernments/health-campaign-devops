@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: blackbox-exporter
+  name: blackbox
   namespace: argocd
   labels:
     app.kubernetes.io/part-of: monitoring-stack
@@ -13,46 +13,17 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://prometheus-community.github.io/helm-charts
-    chart: prometheus-blackbox-exporter
-    targetRevision: 8.2.0
-    helm:
-      values: |
-        config:
-          modules:
-            http_2xx:
-              prober: http
-              timeout: 5s
-              http:
-                valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
-                valid_status_codes: []
-                method: GET
-                follow_redirects: true
-                fail_if_ssl: false
-                fail_if_not_ssl: false
-                tls_config:
-                  insecure_skip_verify: true
-            tcp_connect:
-              prober: tcp
-              timeout: 5s
-            icmp:
-              prober: icmp
-              timeout: 5s
-        serviceMonitor:
-          enabled: true
-          defaults:
-            labels:
-              release: kube-prometheus-stack
-        ingress:
-          enabled: false
-        resources:
-          limits:
-            cpu: 200m
-            memory: 300Mi
-          requests:
-            cpu: 100m
-            memory: 100Mi
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: prometheus-blackbox-exporter
+      targetRevision: 8.2.0
+      helm:
+        releaseName: blackbox
+        valueFiles:
+          - $values/config-as-code/helm/charts/monitoring/hcm-demo-v2/blackbox.yaml
+    - repoURL: git@github.com:egovernments/health-campaign-devops.git
+      targetRevision: azure-install-hcm-demo-v2
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
@@ -63,6 +34,8 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ApplyOutOfSyncOnly=true
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true
     retry:
       limit: 5
       backoff:

@@ -8,8 +8,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@github.com:HCM-WHO-AFRO/health-campaign-devops.git
-    targetRevision: azure-install-who-test
+    repoURL: git@github.com:egovernments/health-campaign-devops.git
+    targetRevision: azure-install-hcm-demo-v2
     path: config-as-code/argocd-apps/monitoring
   destination:
     server: https://kubernetes.default.svc

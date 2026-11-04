@@ -60,7 +60,7 @@ service:
 ingress:
   enabled: true
   className: nginx
-  hostname: dhis2-demo.digit.org
+  hostname: dhis2-demo-v2.digit.org
   path: /
   certIssuer: letsencrypt-prod
 

@@ -135,6 +135,10 @@ cluster-configs:
       namespace: monitoring
       name: alertmanager-main      
 
+    grafana-admin:
+      namespace: monitoring
+      name: grafana-admin
+
     jenkins:
       namespace: jenkins
       name: jenkins 

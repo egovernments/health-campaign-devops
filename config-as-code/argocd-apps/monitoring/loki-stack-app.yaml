@@ -13,49 +13,17 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://grafana.github.io/helm-charts
-    chart: loki-stack
-    targetRevision: 2.10.1
-    helm:
-      values: |
-        test_pod:
-          enabled: false
-        loki:
-          enabled: true
-          isDefault: true
-          image:
-            tag: 2.9.3
-            repository: "grafana/loki"
-          service:
-            port: 3100
-          persistence:
-            enabled: true
-            accessModes:
-              - ReadWriteOnce
-            size: 30Gi
-          # Use the existing secret we created
-          existingSecret: loki-config-secret
-          # Override the config to not use the default
-          config:
-            auth_enabled: false
-        promtail:
-          enabled: true
-          config:
-            logLevel: info
-            serverPort: 3101
-            clients:
-              - url: http://loki-stack:3100/loki/api/v1/push
-        grafana:
-          enabled: false
-          sidecar:
-            datasources:
-              label: ""
-              labelValue: ""
-              enabled: true
-              maxLines: 1000
-        prometheus:
-          enabled: false
+  sources:
+    - repoURL: https://grafana.github.io/helm-charts
+      chart: loki-stack
+      targetRevision: 2.10.1
+      helm:
+        releaseName: loki-stack
+        valueFiles:
+          - $values/config-as-code/helm/charts/monitoring/hcm-demo-v2/loki-stack.yaml
+    - repoURL: git@github.com:egovernments/health-campaign-devops.git
+      targetRevision: azure-install-hcm-demo-v2
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
@@ -66,6 +34,7 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ApplyOutOfSyncOnly=true
+      - ServerSideApply=true
       - RespectIgnoreDifferences=true
     retry:
       limit: 5
@@ -73,9 +42,3 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 3m
-  # Ignore the secret since we manage it manually
-  ignoreDifferences:
-    - group: ""
-      kind: Secret
-      name: loki-config-secret
-      namespace: monitoring

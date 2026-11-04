@@ -31,6 +31,26 @@ spec:
             path: backbone-services/redis
             namespace: backbone
             valuesFile: values.yaml
+          - name: kibana
+            path: backbone-used-charts/kibana
+            namespace: es-cluster
+            valuesFile: values.yaml
+          - name: kafka-ui
+            path: backbone-services/kafka-ui
+            namespace: backbone
+            valuesFile: values.yaml
+          - name: oauth2-proxy
+            path: backbone-used-charts/oauth2-proxy
+            namespace: egov
+            valuesFile: values.yaml
+          - name: pgadmin
+            path: backbone-used-charts/pgadmin
+            namespace: playground
+            valuesFile: values.yaml
+          - name: playground
+            path: backbone-services/playground
+            namespace: playground
+            valuesFile: values.yaml
 
   template:
     metadata:

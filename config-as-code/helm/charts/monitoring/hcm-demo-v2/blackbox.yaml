@@ -1,0 +1,146 @@
+# Values for the blackbox release, taken from the live hcm-demo release
+# (`helm get values blackbox -n monitoring`) and adapted for hcm-demo-v2.
+affinity: {}
+automountServiceAccountToken: false
+commonLabels: {}
+config:
+  modules:
+    http_2xx:
+      http:
+        follow_redirects: true
+        method: GET
+        preferred_ip_protocol: ip4
+        valid_http_versions:
+        - HTTP/1.1
+        - HTTP/2.0
+      prober: http
+      timeout: 5s
+    http_post_2xx:
+      http:
+        body: '{}'
+        headers:
+          Content-Type: application/json
+        method: POST
+      prober: http
+      timeout: 5s
+configExistingSecretName: ""
+containerPort: 9115
+dnsConfig:
+dnsPolicy:
+extraArgs: []
+extraConfigmapMounts: []
+extraContainers: []
+extraEnv: {}
+extraInitContainers: []
+extraManifests: []
+extraSecretMounts: []
+extraVolumeMounts:
+extraVolumes: []
+global:
+  imageRegistry: ""
+hostAliases: []
+hostNetwork: false
+image:
+  digest: ""
+  pullPolicy: IfNotPresent
+  registry: quay.io
+  repository: prometheus/blackbox-exporter
+  tag: ""
+ingress:
+  annotations: {}
+  className: ""
+  enabled: false
+  hosts:
+  - host: chart-example.local
+    paths:
+    - path: /
+      pathType: ImplementationSpecific
+  labels: {}
+  tls: []
+kind: Deployment
+kubeVersionOverride: ""
+livenessProbe:
+  failureThreshold: 3
+  httpGet:
+    path: /-/healthy
+    port: http
+namespaceOverride: ""
+networkPolicy:
+  allowMonitoringNamespace: false
+  enabled: false
+nodeSelector: {}
+pod:
+  labels: {}
+podAnnotations: {}
+podDisruptionBudget: {}
+podSecurityContext: {}
+priorityClassName: ""
+prometheusRule:
+  additionalLabels: {}
+  enabled: false
+  namespace: ""
+  rules: []
+pspEnabled: true
+readinessProbe:
+  httpGet:
+    path: /-/healthy
+    port: http
+releaseLabel: false
+replicas: 1
+resources: {}
+restartPolicy: Always
+secretConfig: false
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsGroup: 1000
+  runAsNonRoot: true
+  runAsUser: 1000
+service:
+  annotations: {}
+  labels: {}
+  port: 9115
+  type: ClusterIP
+serviceAccount:
+  annotations: {}
+  create: true
+  name:
+serviceMonitor:
+  bearerTokenFile:
+  defaults:
+    additionalMetricsRelabels: {}
+    additionalRelabeling: []
+    interval: 30s
+    labels: {}
+    module: http_2xx
+    scrapeTimeout: 30s
+  enabled: false
+  path: /probe
+  scheme: http
+  selfMonitor:
+    additionalMetricsRelabels: {}
+    additionalRelabeling: []
+    enabled: false
+    interval: 30s
+    labels: {}
+    path: /metrics
+    scrapeTimeout: 30s
+  targets:
+  tlsConfig: {}
+strategy:
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
+  type: RollingUpdate
+tolerations: []
+topologySpreadConstraints: []
+verticalPodAutoscaler:
+  controlledResources: []
+  enabled: false
+  maxAllowed: {}
+  minAllowed: {}
+  updatePolicy:
+    updateMode: Auto

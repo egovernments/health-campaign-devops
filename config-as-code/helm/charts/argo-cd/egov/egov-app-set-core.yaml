@@ -30,8 +30,6 @@ spec:
           - name: service-request
           - name: user-otp
           - name: egov-malware-detection
-          - name: internal-gateway-scg
-          - name: gateway
           - name: inbox
 
   template:
