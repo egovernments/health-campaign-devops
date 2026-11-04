@@ -1785,8 +1785,29 @@ elasticsearch-master:
             - diskName: "es-master-disk-1"
               diskUri: "/subscriptions/777e3e4b-0998-4759-adc2-e7b5b19a6b28/resourceGroups/hcm-demo-v2-rg/providers/Microsoft.Compute/disks/es-master-disk-1"
             - diskName: "es-master-disk-2"
-              diskUri: "/subscriptions/777e3e4b-0998-4759-adc2-e7b5b19a6b28/resourceGroups/hcm-demo-v2-rg/providers/Microsoft.Compute/disks/es-master-disk-2" 
+              diskUri: "/subscriptions/777e3e4b-0998-4759-adc2-e7b5b19a6b28/resourceGroups/hcm-demo-v2-rg/providers/Microsoft.Compute/disks/es-master-disk-2"
 
+    # cluster-configs already owns elasticsearch-master-credentials, with the
+    # password from the secrets file. Letting this chart render it too makes
+    # two Argo CD apps fight over the Secret, and the chart's copy is random.
+    secret:
+        enabled: false
+    extraEnvs:
+        - name: path.data
+          value: "/usr/share/elasticsearch/data"
+        - name: path.logs
+          value: "/usr/share/elasticsearch/logs"
+        - name: gateway.expected_data_nodes
+          value: "1"
+        - name: gateway.recover_after_time
+          value: "5m"
+        - name: gateway.recover_after_data_nodes
+          value: "1"
+        - name: ELASTIC_PASSWORD
+          valueFrom:
+              secretKeyRef:
+                  name: elasticsearch-master-credentials
+                  key: password
 
     esJavaOpts: "-Xmx896m -Xms896m"
     resources:
