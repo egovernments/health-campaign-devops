@@ -7,7 +7,9 @@ metadata:
   labels: {{ include "kibana.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,post-delete
-    "helm.sh/hook-delete-policy": hook-succeeded
+    # Argo CD treats these as succeeded as soon as they exist and would delete
+    # them before the token Job mounts/uses them; keep them until the next run.
+    "helm.sh/hook-delete-policy": before-hook-creation
     {{- if .Values.annotations }}
     {{- range $key, $value := .Values.annotations }}
     {{ $key }}: {{ $value | quote }}
