@@ -63,7 +63,7 @@ variable "vm_size" {
 variable "node_count" {
   description = "Initial node count for the autoscaling pool"
   type        = number
-  default     = 8
+  default     = 4
 }
 
 variable "node_min_count" {
@@ -152,6 +152,17 @@ EOT
 variable "filestore_account_name" {
   description = "Storage account backing egov-filestore. 3-24 lowercase alphanumeric characters."
   type        = string
+}
+
+variable "filestore_containers" {
+  description = <<EOT
+Blob containers to pre-create on the filestore account. These mirror what
+hcm-demo's egov-filestore actually writes to: egov-rainmaker is the
+fixed-bucketname, egov-quarantine is where clamav moves infected uploads, and
+egov-filestore is the azure-blob-container default.
+EOT
+  type        = list(string)
+  default     = ["egov-rainmaker", "egov-quarantine", "egov-filestore"]
 }
 
 variable "es_data_disk_size_gb" {
