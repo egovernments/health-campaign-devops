@@ -26,11 +26,11 @@ spec:
           path: /
           pathType: ImplementationSpecific
           hosts:
-            - superset.health-demo.digit.org
+            - superset.health-demo-v2.digit.org
           tls:
-            - secretName: superset.health-demo.digit.org-tls-certs
+            - secretName: superset.health-demo-v2.digit.org-tls-certs
               hosts:
-                - superset.health-demo.digit.org
+                - superset.health-demo-v2.digit.org
 
         # The 6.x apache/superset image ships without DB drivers baked in;
         # install psycopg2 for the bundled Postgres metadata DB at pod startup.

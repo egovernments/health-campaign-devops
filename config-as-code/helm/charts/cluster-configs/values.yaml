@@ -135,6 +135,18 @@ cluster-configs:
       namespace: monitoring
       name: alertmanager-main      
 
+    grafana-admin:
+      namespace: monitoring
+      name: grafana-admin
+
+    kibana-anonymous:
+      namespace: es-cluster
+      name: kibana-anonymous
+
+    grafana:
+      namespace: monitoring
+      name: grafana-github-oauth
+
     jenkins:
       namespace: jenkins
       name: jenkins 

@@ -154,3 +154,27 @@ which then (per the selfHeal policy above) rolls out to the live Deployments.
 It intentionally excludes `superset-app.yaml` and has no `resources-finalizer` of its
 own, so deleting `airflow-app-sync.yaml` (or its Application object) can never cascade
 into deleting the `airflow` Application or the real resources behind it.
+
+## hcm-demo-v2 bring-up
+
+On the `azure-install-hcm-demo-v2` branch both apps point at the v2 hosts
+(`health-demo-v2.digit.org/airflow`, `superset.health-demo-v2.digit.org`).
+A fresh cluster needs these before the first sync:
+
+**Airflow**
+1. `kubectl apply -f airflow-prereqs.yaml` (namespace + `airflow-logs-pvc`).
+2. Secrets in the `airflow` namespace, referenced by name in `airflow-app.yaml`:
+   `airflow-fernet-key`, `airflow-api-secret-key`, `airflow-jwt-secret`,
+   `airflow-metadata`, `airflow-broker-url`, `airflow-postgresql`, and
+   `elasticsearch-credentials` (key `password` = the v2 `elastic` password from
+   `elasticsearch-master-credentials`, not hcm-demo's).
+3. `kubectl apply -f airflow-app-sync.yaml`; it applies `airflow-app.yaml` and
+   keeps it in sync.
+
+Unlike hcm-demo, the `/airflow` ingress is rendered by the chart
+(`ingress.apiServer`) rather than created by hand.
+
+**Superset**: same steps as above (`superset-app-secrets`, then real values for
+the three `REPLACE_WITH_REAL_VALUE` placeholders at apply time, then the admin
+user). DNS for `superset.health-demo-v2.digit.org` must point at the v2 ingress
+IP before cert-manager can issue the certificate.

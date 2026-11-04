@@ -1,5 +1,12 @@
 # Monitoring Stack - ArgoCD Migration
 
+> **hcm-demo-v2:** the child apps here use the same chart versions hcm-demo runs
+> (installed there with Helm, outside Argo CD). Values come from
+> `config-as-code/helm/charts/monitoring/hcm-demo-v2/`, which were taken from
+> the live hcm-demo releases with the hosts and cluster label changed to v2.
+> Alertmanager is disabled on v2 for now. The Grafana admin login is the
+> `grafana-admin` secret, rendered by cluster-configs from the SOPS secrets file.
+
 ## Overview
 This directory contains ArgoCD Application manifests for deploying the monitoring stack using the **App of Apps pattern**.
 

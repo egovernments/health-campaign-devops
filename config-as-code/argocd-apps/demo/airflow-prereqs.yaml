@@ -1,0 +1,23 @@
+# Objects the airflow Application expects to already exist. On hcm-demo these
+# were created by hand; apply this once before the first airflow sync:
+#   kubectl apply -f airflow-prereqs.yaml
+# The secrets it also needs are listed in README.md ("hcm-demo-v2 bring-up").
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: airflow
+---
+# Shared task-log volume, referenced by logs.persistence.existingClaim and by
+# the KubernetesExecutor worker pod template (kubernetes_executor.volumes).
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: airflow-logs-pvc
+  namespace: airflow
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: azurefile-csi
+  resources:
+    requests:
+      storage: 100Gi

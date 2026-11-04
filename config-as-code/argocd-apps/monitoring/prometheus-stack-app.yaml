@@ -13,65 +13,42 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://prometheus-community.github.io/helm-charts
-    chart: kube-prometheus-stack
-    targetRevision: 56.6.2
-    helm:
-      values: |
-        alertmanager:
-          enabled: true
-          config:
-            existingSecret: alertmanager-main
-          alertmanagerSpec:
-            configSecret: alertmanager-main
-        prometheus:
-          prometheusSpec:
-            retention: 90d
-            storageSpec:
-              volumeClaimTemplate:
-                spec:
-                  storageClassName: default
-                  accessModes: ["ReadWriteOnce"]
-                  resources:
-                    requests:
-                      storage: 30Gi
-            externalLabels:
-              cluster: afrohcm-t-euw
-            additionalScrapeConfigs:
-              - job_name: 'nginx-ingress-metrics'
-                static_configs:
-                  - targets: [ 'ingress-nginx-controller-metrics.egov:10254' ]
-              - job_name: 'blackbox'
-                metrics_path: /probe
-                params:
-                  module: [ http_2xx ]
-                static_configs:
-                  - targets:
-                      - https://campaigns.afro.who.int/jupyter/hub/
-                      - https://campaigns.afro.who.int/kibana-upgrade/
-                      - https://campaigns.afro.who.int/pgadmin/
-                relabel_configs:
-                  - source_labels: [ __address__ ]
-                    target_label: __param_target
-                  - source_labels: [ __param_target ]
-                    target_label: instance
-                  - target_label: __address__
-                    replacement: prometheus-blackbox-exporter:9115
-              - job_name: 'blackbox_exporter'
-                static_configs:
-                  - targets: [ 'prometheus-blackbox-exporter:9115' ]
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 56.6.2
+      helm:
+        releaseName: kube-prometheus-stack
+        valueFiles:
+          - $values/config-as-code/helm/charts/monitoring/hcm-demo-v2/kube-prometheus-stack.yaml
+    - repoURL: git@github.com:egovernments/health-campaign-devops.git
+      targetRevision: azure-install-hcm-demo-v2
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
+  # The operator injects caBundle into its admission webhooks, and AKS adds
+  # namespaceSelector terms; both would otherwise loop self-heal.
+  ignoreDifferences:
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      jqPathExpressions:
+        - .webhooks[]?.clientConfig.caBundle
+        - .webhooks[]?.namespaceSelector
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+      jqPathExpressions:
+        - .webhooks[]?.clientConfig.caBundle
+        - .webhooks[]?.namespaceSelector
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true
       - ApplyOutOfSyncOnly=true
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true
     retry:
       limit: 5
       backoff:

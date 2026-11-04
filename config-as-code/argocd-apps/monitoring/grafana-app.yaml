@@ -13,45 +13,17 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://grafana.github.io/helm-charts
-    chart: grafana
-    targetRevision: 7.3.0
-    helm:
-      values: |
-        ingress:
-          enabled: true
-          annotations:
-            kubernetes.io/ingress.class: nginx
-            cert-manager.io/cluster-issuer: letsencrypt-prod
-          hosts:
-            - campaigns.afro.who.int
-          path: /grafana
-          tls:
-            - secretName: campaigns-afro-who-int-tls
-              hosts:
-                - campaigns.afro.who.int
-        env:
-          GF_SERVER_ROOT_URL: https://campaigns.afro.who.int/grafana
-          GF_SERVER_SERVE_FROM_SUB_PATH: "true"
-        datasources:
-          datasources.yaml:
-            apiVersion: 1
-            datasources:
-              - name: Prometheus
-                type: prometheus
-                url: http://kube-prometheus-stack-prometheus:9090
-                access: proxy
-                isDefault: true
-              - name: Loki
-                type: loki
-                url: http://loki-stack:3100
-                access: proxy
-        persistence:
-          enabled: true
-          size: 10Gi
-        adminUser: admin
-        adminPassword: admin # Change this in production
+  sources:
+    - repoURL: https://grafana.github.io/helm-charts
+      chart: grafana
+      targetRevision: 7.3.0
+      helm:
+        releaseName: grafana
+        valueFiles:
+          - $values/config-as-code/helm/charts/monitoring/hcm-demo-v2/grafana.yaml
+    - repoURL: git@github.com:egovernments/health-campaign-devops.git
+      targetRevision: azure-install-hcm-demo-v2
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
@@ -62,6 +34,8 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ApplyOutOfSyncOnly=true
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true
     retry:
       limit: 5
       backoff:

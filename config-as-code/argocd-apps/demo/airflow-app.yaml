@@ -60,7 +60,7 @@ spec:
             volumes: '[{"name": "logs", "persistentVolumeClaim": {"claimName": "airflow-logs-pvc"}}]'
             volume_mounts: '[{"name": "logs", "mountPath": "/opt/airflow/logs"}]'
           webserver:
-            base_url: https://health-demo.digit.org/airflow
+            base_url: https://health-demo-v2.digit.org/airflow
 
         # These secrets already exist in-cluster from the original `helm install`
         # (see config-as-code/argocd-apps/demo/README.md). Pinning by name instead
@@ -212,6 +212,24 @@ spec:
         # replicas got OOMKilled by the node, not by their own cgroup limit.
         # Raising the request to ~match real usage fixes that targeting, even
         # though the underlying node overcommit is a separate problem.
+        # hcm-demo's ingress was created by hand outside the chart; v2 lets the
+        # chart own it, with the same path and annotations.
+        ingress:
+          apiServer:
+            enabled: true
+            ingressClassName: nginx
+            annotations:
+              cert-manager.io/cluster-issuer: letsencrypt-prod
+              nginx.ingress.kubernetes.io/app-root: /home
+              nginx.ingress.kubernetes.io/use-regex: "true"
+            path: /airflow
+            pathType: ImplementationSpecific
+            hosts:
+              - name: health-demo-v2.digit.org
+                tls:
+                  enabled: true
+                  secretName: health-demo-v2.digit.org-tls-certs
+
         apiServer:
           replicas: 2
           resources:

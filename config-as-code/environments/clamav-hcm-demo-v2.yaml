@@ -1,0 +1,179 @@
+# Values for the upstream wiremind/clamav 3.7.1 chart, taken from the live
+# hcm-demo release (`helm get values clamav -n security`). Rendering the chart
+# with these values produces no diff against hcm-demo.
+affinity: {}
+clamdConfigDict:
+  AlertBrokenExecutables: "yes"
+  Bytecode: "yes"
+  DatabaseDirectory: /data
+  DetectPUA: "yes"
+  DisableCertCheck: "yes"
+  ExcludePUA:
+  - NetTool
+  - PWTool
+  Foreground: "yes"
+  HeuristicAlerts: "yes"
+  LocalSocket: /tmp/clamd.sock
+  LogTime: "yes"
+  MaxEmbeddedPE: 10M
+  MaxFileSize: 30M
+  MaxFiles: 15000
+  MaxHTMLNoTags: 2M
+  MaxHTMLNormalize: 10M
+  MaxIconsPE: 200
+  MaxPartitions: 128
+  MaxRecursion: 10
+  MaxScanSize: 150M
+  MaxScriptNormalize: 5M
+  MaxZipTypeRcg: 1M
+  PCREMatchLimit: 10000
+  PCRERecMatchLimit: 10000
+  PhishingScanURLs: "yes"
+  PhishingSignatures: "yes"
+  PidFile: /tmp/clamd.pid
+  ScanArchive: "yes"
+  ScanELF: "yes"
+  ScanHTML: "yes"
+  ScanMail: "yes"
+  ScanOLE2: "yes"
+  ScanPDF: "yes"
+  ScanPE: "yes"
+  ScanSWF: "yes"
+  TCPSocket: 3310
+  TemporaryDirectory: /tmp
+extraArgs: []
+extraEnvVars: []
+extraEnvVarsCM: ""
+extraEnvVarsSecret: ""
+extraVolumeMounts: []
+extraVolumes: []
+freshclamConfigDict:
+  Bytecode: "yes"
+  DatabaseDirectory: /data
+  DatabaseMirror: database.clamav.net
+  DatabaseOwner: "2000"
+  LogTime: "yes"
+  NotifyClamd: /etc/clamav/clamd.conf
+  PidFile: /tmp/freshclam.pid
+  ScriptedUpdates: "yes"
+fullnameOverride: ""
+hpa:
+  cpu: 80
+  enabled: true
+  maxReplicas: 5
+  memory: 80
+  requests: 1k
+image:
+  pullPolicy: IfNotPresent
+  repository: clamav/clamav-debian
+  tag: 1.4.3
+imagePullSecrets: []
+ingress:
+  annotations: {}
+  enabled: false
+  hosts:
+  - chart-example.local
+  path: /
+  tls: []
+kind: StatefulSet
+livenessProbe:
+  failureThreshold: 3
+  initialDelaySeconds: 300
+  periodSeconds: 10
+  timeoutSeconds: 1
+metrics:
+  enabled: false
+  extraArgs: []
+  extraEnvVars: []
+  image:
+    pullPolicy: IfNotPresent
+    repository: sergeymakinen/clamav_exporter
+    tag: v2.1.2
+  livenessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 5
+  path: /metrics
+  port: 9906
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+  resources: {}
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+    privileged: false
+    runAsNonRoot: true
+  serviceMonitor:
+    additionalLabels: {}
+    annotations: {}
+    enabled: false
+    honorLabels: false
+    honorTimestamps: true
+    interval: 30s
+    metricRelabelings: []
+    namespace: ""
+    path: /metrics
+    portName: http-metrics
+    relabelings: []
+    scrapeTimeout: 10s
+nameOverride: ""
+nodeSelector: {}
+persistentVolume:
+  accessModes:
+  - ReadWriteOnce
+  annotations: {}
+  enabled: true
+  size: 1024Mi
+podAnnotations: {}
+podDisruptionBudget:
+  enabled: false
+podLabels: {}
+podSecurityContext:
+  fsGroup: 101
+  runAsGroup: 101
+  runAsNonRoot: true
+  runAsUser: 100
+priorityClassName: ""
+readinessProbe:
+  failureThreshold: 3
+  initialDelaySeconds: 90
+  periodSeconds: 10
+  timeoutSeconds: 1
+replicaCount: 1
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  privileged: false
+  runAsNonRoot: true
+service:
+  annotations: {}
+  port: 3310
+  type: ClusterIP
+serviceAccount:
+  annotations: {}
+  automountServiceAccountToken: false
+  create: true
+  name: ""
+startupProbe:
+  failureThreshold: 3
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  timeoutSeconds: 1
+tolerations: []
+topologySpreadConstraints: []
+updateStrategy: null
