@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: hcm-demo-infra-appset
+  name: hcm-demo-backbone-services-appset
   namespace: argocd
 spec:
   generators:
@@ -34,10 +34,10 @@ spec:
 
   template:
     metadata:
-      name: 'infra-{{name}}'
+      name: 'backbone-{{name}}'
 
     spec:
-      project: infra-project
+      project: backbone-services-project
 
       source:
         repoURL: git@github.com:egovernments/health-campaign-devops.git
