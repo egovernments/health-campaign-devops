@@ -315,6 +315,49 @@ is repointing it back — which is why the old environment stays up.
 
 ---
 
+## 6. Decommissioning `hcm-demo-rg`
+
+Deleting the old resource group is irreversible and takes several things with it
+that are not obviously part of "the old environment". Work through this list
+before anyone runs the delete.
+
+**Already handled — these used to live in `hcm-demo-rg` and no longer do:**
+
+- The v2 environment's **Terraform state**, moved out of `tfstate6fryx` into
+  `tfstatehcmdemov248f9cb` in `hcm-demo-v2-rg`. Had this been missed, deleting
+  the old group would have orphaned the state of the environment being kept.
+- **SOPS keys.** `hcm-demo-v2-azure-secrets.yaml` and `dhis2-secrets.yaml` are
+  both rotated onto `hcm-demo-v2-kv`. Anything still encrypted against
+  `hcm-demo-kv` becomes permanently undecryptable once the group is gone.
+- The **Elasticsearch snapshot repository**, which sits in
+  `egovfilestorehcmv2` rather than the old account.
+
+**Must be captured before deletion:**
+
+- **Postgres point-in-time backups.** They live inside `hcm-demo-server-v2`, not
+  separately — deleting the group destroys all seven days of them. Take a final
+  `pg_dump` (section 2) and store it outside both resource groups.
+- **Filestore blobs.** Confirm the counts in section 3 match before the source
+  account is removed; after deletion there is nothing to re-copy from.
+- **Superset credentials.** These were applied directly to the live cluster and
+  were never committed to this repo (see the comment in
+  `argocd-apps/demo/superset-app.yaml`), so they exist *only* inside the running
+  cluster. Read them out before deletion or they are lost:
+  `kubectl --context hcm-demo -n superset get secret superset-env -o yaml`
+- **Grafana dashboards** and **JupyterHub notebooks**, if section 4 was skipped.
+
+**Order of operations:**
+
+1. New environment live and validated through at least one full working day.
+2. Final snapshot taken and restored (section 5), and archived off both groups.
+3. Delete the old branch and rename this one to take its place, updating the
+   nine `targetRevision` lines in a single commit.
+4. Rotate the GitHub deploy key and the `sops-argocd-hcm-demo-azure` service
+   principal, so credentials the old cluster held are retired with it.
+5. Only then `az group delete -n hcm-demo-rg`.
+
+---
+
 ## Notes
 
 - `backbone`, `monitoring-stack` and `clamav` are sourced from the

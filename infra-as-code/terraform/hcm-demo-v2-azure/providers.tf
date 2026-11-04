@@ -15,12 +15,13 @@ terraform {
     }
   }
 
-  # State lives in the existing tfstate account alongside hcm-demo, in its own
-  # container so the two environments can never clobber each other's state.
+  # State lives in this environment's own resource group. It was originally in
+  # hcm-demo-rg's tfstate account, which would have orphaned the state for the
+  # environment being kept once the old resource group is deleted.
   backend "azurerm" {
-    resource_group_name  = "hcm-demo-rg"
-    storage_account_name = "tfstate6fryx"
-    container_name       = "hcm-demo-v2-container"
+    resource_group_name  = "hcm-demo-v2-rg"
+    storage_account_name = "tfstatehcmdemov248f9cb"
+    container_name       = "tfstate"
     key                  = "terraform.tfstate"
   }
 }
