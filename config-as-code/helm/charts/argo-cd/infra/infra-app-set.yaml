@@ -1,0 +1,110 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: hcm-demo-infra-appset
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - name: ingress-nginx
+            path: backbone-services/ingress-nginx
+            namespace: egov
+            valuesFile: values.yaml
+          - name: cert-manager
+            path: backbone-services/cert-manager
+            namespace: egov
+            valuesFile: values.yaml
+          - name: elasticsearch-master
+            path: backbone-services/elasticsearch
+            namespace: es-cluster
+            valuesFile: elasticsearch-master-values.yaml
+          - name: elasticsearch-data
+            path: backbone-services/elasticsearch
+            namespace: es-cluster
+            valuesFile: elasticsearch-data-values.yaml
+          - name: kafka-kraft
+            path: backbone-used-charts/kafka-kraft
+            namespace: kafka-kraft
+            valuesFile: values.yaml
+          - name: redis
+            path: backbone-services/redis
+            namespace: backbone
+            valuesFile: values.yaml
+
+  template:
+    metadata:
+      name: 'infra-{{name}}'
+
+    spec:
+      project: infra-project
+
+      source:
+        repoURL: git@github.com:egovernments/health-campaign-devops.git
+        targetRevision: azure-install-hcm-demo-v2
+        path: 'config-as-code/helm/charts/{{path}}'
+        helm:
+          # hcm-demo rendered these with `helm template`, so every object is
+          # named and labelled after the default release name. Keeping it means
+          # the same service names (e.g. release-name-kafka-controller-headless)
+          # that the env file points the services at.
+          releaseName: release-name
+          valueFiles:
+            - '{{valuesFile}}'
+            - ../../../../environments/hcm-demo-v2-azure.yaml
+
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{namespace}}'
+
+      ignoreDifferences:
+        - group: apps
+          kind: Deployment
+          jsonPointers:
+            - /spec/replicas
+        # These charts generate their CA, elastic password and KRaft cluster id
+        # with random functions, so every render differs. Without this, each
+        # self-heal would rotate them under the running cluster.
+        - kind: Secret
+          name: elasticsearch-master-certs
+          namespace: es-cluster
+          jsonPointers:
+            - /data
+        - kind: Secret
+          name: elasticsearch-master-credentials
+          namespace: es-cluster
+          jsonPointers:
+            - /data
+        - kind: Secret
+          name: release-name-kafka-kraft-cluster-id
+          namespace: kafka-kraft
+          jsonPointers:
+            - /data
+        # caBundle is injected at runtime by the ingress-nginx admission job and
+        # by cert-manager's cainjector.
+        - group: admissionregistration.k8s.io
+          kind: ValidatingWebhookConfiguration
+          jqPathExpressions:
+            - .webhooks[]?.clientConfig.caBundle
+        - group: admissionregistration.k8s.io
+          kind: MutatingWebhookConfiguration
+          jqPathExpressions:
+            - .webhooks[]?.clientConfig.caBundle
+
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true
+          - ServerSideApply=true
+          - RespectIgnoreDifferences=true
+          # ClusterIssuers are applied in the same sync as the cert-manager CRDs.
+          - SkipDryRunOnMissingResource=true
+        retry:
+          limit: 10
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m0s
