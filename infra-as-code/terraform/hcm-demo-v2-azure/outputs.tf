@@ -38,3 +38,8 @@ output "nat_public_ip" {
   description = "Static egress IP — allowlist this wherever hcm-demo's egress IP is allowlisted."
   value       = azurerm_public_ip.public_ip.ip_address
 }
+
+output "sops_key_url" {
+  description = "Versioned key URL the v2 environment's SOPS secrets are encrypted against."
+  value       = azurerm_key_vault_key.sops.id
+}

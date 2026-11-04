@@ -258,7 +258,9 @@ resource "azurerm_storage_container" "es_snapshots" {
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "kv" {
-  name                       = "${var.environment}-kv"
+  name = "${var.environment}-kv"
+  # hcm-demo-kv uses the access-policy model rather than RBAC; matching it keeps
+  # one way of granting SOPS access across both environments.
   location                   = azurerm_resource_group.rg.location
   resource_group_name        = azurerm_resource_group.rg.name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
@@ -315,4 +317,41 @@ resource "azurerm_role_assignment" "aks_disk_contributor" {
   scope                = azurerm_resource_group.rg.id
   role_definition_name = "Contributor"
   principal_id         = azurerm_kubernetes_cluster.aks.identity[0].principal_id
+}
+
+# Without an access policy the vault is unusable — azurerm creates it with none.
+# The two principals mirror hcm-demo-kv: the operator who rotates the key, and
+# the service principal ArgoCD's repo-server authenticates as to decrypt
+# secrets:// value files at sync time.
+resource "azurerm_key_vault_access_policy" "kv_operator" {
+  key_vault_id = azurerm_key_vault.kv.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_client_config.current.object_id
+
+  key_permissions = [
+    "Get", "List", "Update", "Create", "Import", "Delete", "Recover",
+    "Backup", "Restore", "GetRotationPolicy", "SetRotationPolicy",
+    "Encrypt", "Decrypt", "UnwrapKey", "WrapKey", "Verify", "Sign",
+  ]
+}
+
+resource "azurerm_key_vault_access_policy" "kv_sops" {
+  key_vault_id = azurerm_key_vault.kv.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = var.sops_principal_object_id
+
+  # Decrypt and UnwrapKey are all SOPS needs to read an encrypted file.
+  key_permissions = ["Get", "List", "Decrypt", "Encrypt", "UnwrapKey", "WrapKey"]
+}
+
+# The key the v2 environment's secrets are encrypted against, so hcm-demo-v2
+# no longer depends on a vault that lives in the old resource group.
+resource "azurerm_key_vault_key" "sops" {
+  name         = "sops-key"
+  key_vault_id = azurerm_key_vault.kv.id
+  key_type     = "RSA"
+  key_size     = 2048
+  key_opts     = ["decrypt", "encrypt", "unwrapKey", "wrapKey", "verify", "sign"]
+
+  depends_on = [azurerm_key_vault_access_policy.kv_operator]
 }

@@ -188,3 +188,13 @@ variable "es_snapshot_container" {
   type        = string
   default     = "es-snapshots"
 }
+
+variable "sops_principal_object_id" {
+  description = <<EOT
+Object ID of the service principal ArgoCD's repo-server uses to decrypt SOPS
+files. Defaults to sops-argocd-hcm-demo-azure, the same identity hcm-demo uses —
+the key material is per-environment, only the identity is shared.
+EOT
+  type        = string
+  default     = "944d0629-0263-4e9c-b171-c2bd0f0ef951"
+}
