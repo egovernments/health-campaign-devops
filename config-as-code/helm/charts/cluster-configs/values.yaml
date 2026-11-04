@@ -143,6 +143,10 @@ cluster-configs:
       namespace: es-cluster
       name: kibana-anonymous
 
+    grafana:
+      namespace: monitoring
+      name: grafana-github-oauth
+
     jenkins:
       namespace: jenkins
       name: jenkins 

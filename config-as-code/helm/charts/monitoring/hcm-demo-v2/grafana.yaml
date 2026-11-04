@@ -104,7 +104,8 @@ enableServiceLinks: true
 env:
   JAEGER_AGENT_PORT: "5775"
 envFromConfigMaps: []
-envFromSecret: ""
+# GF_AUTH_GITHUB_CLIENT_ID / _SECRET for auth.github, from cluster-configs (SOPS).
+envFromSecret: grafana-github-oauth
 envFromSecrets: []
 envRenderSecret: {}
 envValueFrom: {}
