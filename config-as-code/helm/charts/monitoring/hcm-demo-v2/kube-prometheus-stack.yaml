@@ -1,7 +1,7 @@
 # Values for the kube-prometheus-stack release, taken from the live hcm-demo release
 # (`helm get values kube-prometheus-stack -n monitoring`) and adapted for hcm-demo-v2.
-# alertmanager.config lives in the alertmanager-main secret (cluster-configs,
-# SOPS) because it carries the Slack webhook and SMTP password.
+# Alertmanager is disabled on v2 for now. Its config (Slack webhook, SMTP
+# password) is left out of this file; hcm-demo's lives in the chart release.
 additionalPrometheusRules:
 - groups:
   - name: SSLCertificateAlerts
@@ -190,14 +190,13 @@ alertmanager:
     tlsConfig: {}
     tolerations: []
     topologySpreadConstraints: []
-    useExistingSecret: true
+    useExistingSecret: false
     volumeMounts: []
     volumes: []
     web: {}
-    configSecret: alertmanager-main
   annotations: {}
   apiVersion: v2
-  enabled: true
+  enabled: false
   extraSecret:
     annotations: {}
     data: {}
