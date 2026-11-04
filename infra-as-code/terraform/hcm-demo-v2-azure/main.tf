@@ -234,12 +234,16 @@ resource "azurerm_storage_account" "filestore" {
   }
 }
 
-resource "azurerm_storage_container" "filestore" {
-  for_each = toset(var.filestore_containers)
+# Filestore containers are not managed here: they are created alongside the
+# blob copy from egovfilestorehcm, carrying over each container's public
+# access level. The ones created earlier are only dropped from state, not
+# deleted from Azure.
+removed {
+  from = azurerm_storage_container.filestore
 
-  name                  = each.value
-  storage_account_id    = azurerm_storage_account.filestore.id
-  container_access_type = "private"
+  lifecycle {
+    destroy = false
+  }
 }
 
 # Elasticsearch snapshot repository shared by both environments: hcm-demo writes
