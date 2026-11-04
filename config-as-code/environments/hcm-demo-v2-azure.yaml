@@ -1639,6 +1639,15 @@ redis:
   replicas: 1
   images:
     - egovio/redis:3.2
+  # Matches the live hcm-demo redis deployment. The common chart passes this
+  # through tpl, so it has to be a string block rather than a map.
+  resources: |
+    requests:
+      cpu: 500m
+      memory: 8Gi
+    limits:
+      cpu: "2"
+      memory: 16Gi
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 playground:
@@ -1702,12 +1711,64 @@ elasticsearch-data:
             - diskName: "es-data-disk-2"
               diskUri: "/subscriptions/777e3e4b-0998-4759-adc2-e7b5b19a6b28/resourceGroups/hcm-demo-v2-rg/providers/Microsoft.Compute/disks/es-data-disk-2"
 
-    esJavaOpts: "-Xmx2000M -Xms2000M"
+    # Matches the live hcm-demo data nodes, which share the master nodes'
+    # certificate and elastic password instead of generating their own.
+    roles:
+        - ingest
+        - data
+        - transform
+    createCert: false
+    secret:
+        enabled: false
+    secretMounts:
+        - name: elastic-certificates
+          secretName: elasticsearch-master-certs
+          path: /usr/share/elasticsearch/config/certs
+    extraEnvs:
+        - name: path.data
+          value: "/usr/share/elasticsearch/data"
+        - name: path.logs
+          value: "/usr/share/elasticsearch/logs"
+        - name: gateway.expected_data_nodes
+          value: "1"
+        - name: gateway.recover_after_time
+          value: "5m"
+        - name: gateway.recover_after_data_nodes
+          value: "1"
+        - name: ELASTIC_PASSWORD
+          valueFrom:
+              secretKeyRef:
+                  name: elasticsearch-master-credentials
+                  key: password
+        - name: xpack.security.enabled
+          value: "true"
+        - name: xpack.security.http.ssl.enabled
+          value: "true"
+        - name: xpack.security.transport.ssl.enabled
+          value: "true"
+        - name: xpack.security.transport.ssl.verification_mode
+          value: "certificate"
+        - name: xpack.security.transport.ssl.key
+          value: "/usr/share/elasticsearch/config/certs/tls.key"
+        - name: xpack.security.transport.ssl.certificate
+          value: "/usr/share/elasticsearch/config/certs/tls.crt"
+        - name: xpack.security.transport.ssl.certificate_authorities
+          value: "/usr/share/elasticsearch/config/certs/ca.crt"
+        - name: xpack.security.http.ssl.key
+          value: "/usr/share/elasticsearch/config/certs/tls.key"
+        - name: xpack.security.http.ssl.certificate
+          value: "/usr/share/elasticsearch/config/certs/tls.crt"
+        - name: xpack.security.http.ssl.certificate_authorities
+          value: "/usr/share/elasticsearch/config/certs/ca.crt"
+        - name: xpack.security.enrollment.enabled
+          value: "true"
+
+    esJavaOpts: "-Xmx4000M -Xms4000M"
     resources:
         requests:
-            memory: "2Gi"
+            memory: "4Gi"
         limits:
-            memory: "2.5Gi"
+            memory: "5Gi"
 
 
 elasticsearch-master:
@@ -1727,12 +1788,12 @@ elasticsearch-master:
               diskUri: "/subscriptions/777e3e4b-0998-4759-adc2-e7b5b19a6b28/resourceGroups/hcm-demo-v2-rg/providers/Microsoft.Compute/disks/es-master-disk-2" 
 
 
-    esJavaOpts: "-Xmx448m -Xms448m"
+    esJavaOpts: "-Xmx896m -Xms896m"
     resources:
         requests:
-            memory: "448Mi"
-        limits:
             memory: "896Mi"
+        limits:
+            memory: "1792Mi"
 
 
 pgadmin:
