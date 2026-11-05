@@ -6,7 +6,10 @@ metadata:
   namespace: {{ .Values.namespace }}
   labels: {{ include "kibana.labels" . | nindent 4 }}
   annotations:
-    "helm.sh/hook": pre-install,pre-upgrade,post-delete
+    # No post-delete: Argo CD treats any resource carrying post-delete as a
+    # PostDelete-only hook and never creates it during a sync, so the token Job
+    # had no script to mount.
+    "helm.sh/hook": pre-install,pre-upgrade
     # Argo CD treats these as succeeded as soon as they exist and would delete
     # them before the token Job mounts/uses them; keep them until the next run.
     "helm.sh/hook-delete-policy": before-hook-creation

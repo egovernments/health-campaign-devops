@@ -3063,12 +3063,14 @@ repoServer:
   # limits via a direct kubectl patch (never reflected back here) - this
   # brings git in line with what's actually running. Request raised from
   # 64Mi to 512Mi to match observed steady-state usage (320-392Mi).
+  # Raised from 300m/1Gi on hcm-demo-v2: with ~70 apps rendering, the
+  # repo-server was CPU-throttled into failing its liveness probe.
   resources:
    limits:
-     cpu: 300m
-     memory: 1Gi
+     cpu: "1"
+     memory: 2Gi
    requests:
-     cpu: 100m
+     cpu: 250m
      memory: 512Mi
 
   # Repo server container ports

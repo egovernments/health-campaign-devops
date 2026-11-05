@@ -163,18 +163,24 @@ A fresh cluster needs these before the first sync:
 
 **Airflow**
 1. `kubectl apply -f airflow-prereqs.yaml` (namespace + `airflow-logs-pvc`).
-2. Secrets in the `airflow` namespace, referenced by name in `airflow-app.yaml`:
-   `airflow-fernet-key`, `airflow-api-secret-key`, `airflow-jwt-secret`,
-   `airflow-metadata`, `airflow-broker-url`, `airflow-postgresql`, and
-   `elasticsearch-credentials` (key `password` = the v2 `elastic` password from
-   `elasticsearch-master-credentials`, not hcm-demo's).
+2. The secrets `airflow-app.yaml` references by name (`airflow-fernet-key`,
+   `airflow-api-secret-key`, `airflow-jwt-secret`, `airflow-metadata`,
+   `airflow-broker-url`, `airflow-postgresql`, `elasticsearch-credentials`) are
+   rendered by cluster-configs from `cluster-configs.secrets.generic` in the v2
+   SOPS secrets file, with hcm-demo's values.
 3. `kubectl apply -f airflow-app-sync.yaml`; it applies `airflow-app.yaml` and
    keeps it in sync.
 
 Unlike hcm-demo, the `/airflow` ingress is rendered by the chart
 (`ingress.apiServer`) rather than created by hand.
 
-**Superset**: same steps as above (`superset-app-secrets`, then real values for
-the three `REPLACE_WITH_REAL_VALUE` placeholders at apply time, then the admin
-user). DNS for `superset.health-demo-v2.digit.org` must point at the v2 ingress
-IP before cert-manager can issue the certificate.
+**Superset**: on v2 the app no longer carries any passwords. With
+`secretEnv.create: false` and `postgresql.auth.existingSecret`, the pods and the
+bundled Postgres read `superset-env`, `superset-postgresql-auth` and
+`superset-app-secrets`, all rendered by cluster-configs from
+`cluster-configs.secrets.generic`. `SUPERSET_SECRET_KEY` is hcm-demo's; the DB
+passwords are new (hcm-demo's were the literal placeholder, which is why its
+Superset can't reach its DB). Apply `superset-app.yaml` after cluster-configs has
+synced, then create the admin user as described above. DNS for
+`superset.health-demo-v2.digit.org` must point at the v2 ingress IP before
+cert-manager can issue the certificate.
