@@ -1041,12 +1041,12 @@ facility:
 project:
   image:
     repository: egovio/project
-    tag: master-61d9356
+    tag: HCMPRE-2371-name-regex-clone-delivery-rules-6b44251
   initContainers:
     dbMigration:
       image:
         repository: egovio/project-db
-        tag: master-61d9356
+        tag: HCMPRE-2371-name-regex-clone-delivery-rules-6b44251
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
