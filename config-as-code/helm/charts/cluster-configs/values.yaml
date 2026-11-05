@@ -115,8 +115,10 @@ cluster-configs:
       namespace: egov
       name: egov-user-chatbot
 
+    # egov's project-factory secret has a different base secret on hcm-demo,
+    # so it comes from the generic list in the secrets file instead.
     project-factory:
-      namespace: [ egov, demo ]
+      namespace: [ demo ]
       name: project-factory
 
     oauth2-proxy:
