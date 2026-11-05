@@ -593,7 +593,7 @@ audit-service:
   image:
     repository: egovio/audit-service
     tag: master-1e8d2bb
-  persist-yml-path: "https://raw.githubusercontent.com/egovernments/health-campaign-config/HCM-v2.1-DEMO/egov-persister/mdms-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/HCM-v2.1-DEMO/egov-persister/boundary-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/HCM-v2.1-DEMO/egov-persister/project-factory-persister.yml"
+  persist-yml-path: "https://raw.githubusercontent.com/egovernments/health-campaign-config/HCM-v2.2-DEMO/egov-persister/mdms-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/HCM-v2.2-DEMO/egov-persister/boundary-persister.yml,https://raw.githubusercontent.com/egovernments/health-campaign-config/HCM-v2.2-DEMO/egov-persister/project-factory-persister.yml"
   initContainers:
     dbMigration:
       image:
@@ -601,7 +601,7 @@ audit-service:
         tag: master-1e8d2bb
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.1-DEMO"  
+      branch: "HCM-v2.2-DEMO"  
   central-instance-build: true
   central-instance-enabled: true
 
@@ -618,7 +618,7 @@ egov-mdms-service:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-mdms"   ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.1-DEMO"                                        ##### Change repo branch with Your fork Repo branch
+      branch: "HCM-v2.2-DEMO"                                        ##### Change repo branch with Your fork Repo branch
   mdms-folder: "health-campaign-mdms"
   masters-config-url: "file:///work-dir/health-campaign-mdms/master-config.json"
   java-args: -Dspring.profiles.active=monitoring
@@ -646,7 +646,7 @@ egov-indexer:
         tag: master-1e8d2bb
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"        ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.1-DEMO"                                      ##### Change repo branch with Your fork Repo branch
+      branch: "HCM-v2.2-DEMO"                                      ##### Change repo branch with Your fork Repo branch
   egov-indexer-yaml-repo-path: "/work-dir/health-campaign-config/egov-indexer/demo,file:///work-dir/health-campaign-config/egov-indexer/egov-error-queue-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/attendance-service-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/census-service-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/egov-error-queue-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/egov-uploader-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/error-queue.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/expense-bill-service-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/facility-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/health-notification-service-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/household-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/household-member-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/individual-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/muster-service-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/plan-service-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/product-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/project-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/project-staff-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/project-task-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/referral-management-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/service-request-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/stock-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/transformed-error-tracer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/transformer-error-indexer.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/transformer-pgr-services.yml,file:///work-dir/health-campaign-config/egov-indexer/demo/user-action-indexer.yml"
 
 egov-persister:
@@ -675,20 +675,20 @@ egov-persister:
         tag: master-perf-fe334d2
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.1-DEMO"                                    ##### Change repo branch with Your fork Repo branch
+      branch: "HCM-v2.2-DEMO"                                    ##### Change repo branch with Your fork Repo branch
 
 egov-data-uploader:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.1-DEMO"                                    ##### Change repo branch with Your fork Repo branch
+      branch: "HCM-v2.2-DEMO"                                    ##### Change repo branch with Your fork Repo branch
 
 egov-searcher:
   search-yaml-path: ""
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.1-DEMO"                                   ##### Change repo branch with Your fork Repo branch
+      branch: "HCM-v2.2-DEMO"                                   ##### Change repo branch with Your fork Repo branch
 
 
 dashboard-analytics:
@@ -716,7 +716,7 @@ dashboard-analytics:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.1-DEMO"                                    ##### Change repo branch with Your fork Repo branch
+      branch: "HCM-v2.2-DEMO"                                    ##### Change repo branch with Your fork Repo branch
   config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/dashboard-analytics/*.json"
   extraEnv:
     app: |
@@ -732,7 +732,7 @@ dashboard-ingest:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.1-DEMO"
+      branch: "HCM-v2.2-DEMO"
 
 # reportinfra >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 report:
@@ -742,7 +742,7 @@ report:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.1-DEMO"                                   ##### Change repo branch with Your fork Repo branch
+      branch: "HCM-v2.2-DEMO"                                   ##### Change repo branch with Your fork Repo branch
   report-locationsfile-path: "file:///work-dir/health-campaign-config/reports/reportFileLocationsv1.txt"
 
 pdf-service:
@@ -755,7 +755,7 @@ pdf-service:
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"     ##### Change repo url with Your fork Repo url
-      branch: "HCM-v2.1-DEMO"                                   ##### Change repo branch with Your fork Repo branch
+      branch: "HCM-v2.2-DEMO"                                   ##### Change repo branch with Your fork Repo branch
   data-config-urls: "file:///work-dir/health-campaign-config/pdf-service/data-config/health-bill-payment.json"
   format-config-urls: "file:///work-dir/health-campaign-config/pdf-service/format-config/health-bill-payment.json"
 
