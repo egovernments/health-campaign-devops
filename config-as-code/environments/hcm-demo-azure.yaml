@@ -473,12 +473,12 @@ egov-notification-sms:
 egov-user:
   image:
     repository: egovio/egov-user
-    tag: user-bulk-upgrade-sso-18f7365
+    tag: sqli-fix-egov-user-user-bulk-upgrade-sso-18f7365-e6aa5e6
   initContainers:
     dbMigration:
       image:
         repository: egovio/egov-user-db
-        tag: user-bulk-upgrade-sso-18f7365
+        tag: sqli-fix-egov-user-user-bulk-upgrade-sso-18f7365-e6aa5e6
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1005,7 +1005,7 @@ egov-enc-service:
 egov-accesscontrol:
   image:
     repository: egovio/egov-accesscontrol
-    tag: master-1e8d2bb
+    tag: sqli-fix-egov-accesscontrol-master-1e8d2bb-0f5bc43
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
