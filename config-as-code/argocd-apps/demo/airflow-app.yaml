@@ -176,6 +176,24 @@ spec:
         redis:
           enabled: false
 
+        # Under Argo CD the chart's Helm-hook jobs deadlock a fresh install: the
+        # migration job is a post-install hook (Argo runs it only after the app
+        # is healthy) while every component waits for migrations in an init
+        # container. hcm-demo never hit this because it was first installed with
+        # `helm install`. Per the Airflow chart docs for Argo CD, run migrations
+        # as a plain Job annotated as an Argo Sync hook instead.
+        migrateDatabaseJob:
+          useHelmHooks: false
+          applyCustomEnv: false
+          jobAnnotations:
+            argocd.argoproj.io/hook: Sync
+        # The chart's default user job would create admin/admin. The account
+        # airflow-trigger-service uses (egov/airflow-admin-credentials) is created
+        # by hand instead, as on hcm-demo.
+        createUserJob:
+          enabled: false
+          useHelmHooks: false
+
         scheduler:
           replicas: 1
           logGroomerSidecar:
