@@ -54,28 +54,20 @@ spec:
           loadExamples: false
 
         # Postgres and Redis are bundled, ClusterIP-only, internal to this
-        # namespace (no external exposure). Passwords are pinned as literal
-        # values (not left to the subchart's lookup-based auto-generation) -
-        # Argo CD renders this chart via `helm template` with no live
-        # cluster access, so lookup() always misses and the subchart would
-        # otherwise mint a brand new random password on every single sync,
-        # orphaning it from whatever password the already-initialized data
-        # volume actually has. database.password must match
-        # postgresql.auth.password (Superset builds its own DB_PASS from
-        # database.password, it does not read the postgresql.* section).
-        #
-        # REPLACE_WITH_REAL_VALUES: the two password fields below are
-        # placeholders, not the live credentials. This repo normally encrypts
-        # secret values with sops against the hcm-demo-kv Azure Key Vault
-        # (see environments/dhis2-secrets.yaml for the pattern), but that
-        # wasn't accessible when this file was authored, so the real
-        # passwords were applied straight to the cluster and deliberately
-        # left out of git. See config-as-code/argocd-apps/demo/README.md.
+        # namespace. No passwords live in this file: Argo CD renders the chart
+        # with `helm template`, so anything not pinned would be regenerated on
+        # every sync, and the placeholders that used to be here were applied
+        # literally on hcm-demo (its Superset can't reach its own DB).
+        # Instead both sides read pre-created secrets rendered by
+        # cluster-configs from the SOPS secrets file (cluster-configs.secrets.generic):
+        #   superset-postgresql-auth - postgres-password / password for the DB
+        #   superset-env             - DB_* / REDIS_* env for the Superset pods
+        secretEnv:
+          create: false
         postgresql:
           enabled: true
           auth:
-            postgresPassword: "REPLACE_WITH_REAL_VALUE"
-            password: "REPLACE_WITH_REAL_VALUE"
+            existingSecret: superset-postgresql-auth
           primary:
             resources:
               requests:
@@ -85,8 +77,6 @@ spec:
                 cpu: "1000m"
                 memory: "4Gi"
 
-        database:
-          password: "REPLACE_WITH_REAL_VALUE"
 
         redis:
           enabled: true
