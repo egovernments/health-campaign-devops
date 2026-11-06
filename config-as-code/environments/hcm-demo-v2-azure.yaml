@@ -1041,12 +1041,12 @@ facility:
 project:
   image:
     repository: egovio/project
-    tag: HCMPRE-2371-pr-2389-review-fixes-a6fa824
+    tag: HCMPRE-2371-pr-2389-review-fixes-278fb18
   initContainers:
     dbMigration:
       image:
         repository: egovio/project-db
-        tag: HCMPRE-2371-pr-2389-review-fixes-a6fa824
+        tag: HCMPRE-2371-pr-2389-review-fixes-278fb18
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
