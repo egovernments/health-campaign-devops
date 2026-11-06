@@ -1025,12 +1025,12 @@ egov-accesscontrol:
 facility:
   image:
     repository: egovio/facility
-    tag: HCMPRE-2371-pr-2389-review-fixes-b7cf969
+    tag: master-c1dc738
   initContainers:
     dbMigration:
       image:
         repository: egovio/facility-db
-        tag: HCMPRE-2371-pr-2389-review-fixes-b7cf969
+        tag: master-c1dc738
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: true
@@ -1041,12 +1041,12 @@ facility:
 project:
   image:
     repository: egovio/project
-    tag: HCMPRE-2371-pr-2389-review-fixes-278fb18
+    tag: master-c1dc738
   initContainers:
     dbMigration:
       image:
         repository: egovio/project-db
-        tag: HCMPRE-2371-pr-2389-review-fixes-278fb18
+        tag: master-c1dc738
   central-instance-name: egov
   central-instance-build: true
   central-instance-enabled: true
@@ -1159,10 +1159,10 @@ project-factory:
     dbMigration:
       image:
         repository: "project-factory-db"
-        tag: HCMPRE-2371-pr-2389-review-fixes-9ec562c
+        tag: master-c1dc738
   image:
     repository: egovio/project-factory
-    tag: HCMPRE-2371-pr-2389-review-fixes-9ec562c
+    tag: master-c1dc738
   central-instance-enabled: true
   central-instance-build: true
   namespace: egov
@@ -1306,12 +1306,12 @@ resource-generator:
 excel-ingestion:
   image:
     repository: egovio/excel-ingestion
-    tag: HCMPRE-2371-name-regex-clone-delivery-rules-54fa575
+    tag: master-c1dc738
   initContainers:
     dbMigration:
       image:
         repository: egovio/excel-ingestion-db
-        tag: HCMPRE-2371-name-regex-clone-delivery-rules-54fa575
+        tag: master-c1dc738
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
   defaultLocale: 'en_DEMO'
