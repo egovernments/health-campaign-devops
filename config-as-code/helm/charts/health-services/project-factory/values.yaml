@@ -12,7 +12,7 @@ ingress:
   zuul: true
   context: "project-factory"
   additionalAnnotations: |
-    nginx.ingress.kubernetes.io/proxy-body-size: "20m"
+    nginx.ingress.kubernetes.io/proxy-body-size: 5m
 
 # Init Containers Configs
 initContainers:
@@ -22,11 +22,15 @@ initContainers:
     image:
       repository: "project-factory-db"
 
-
 # Container Configs
 image:
   repository: "project-factory"
-replicas: "2"
+replicas: "3"
+appType: "java-spring"
+tracing-enabled: true
+heap: '-Xmx1000m -Xms756m'
+memory_limits: '3Gi'
+cpu_limits: '2048m'
 
 # Additional Container Envs
 env: |
@@ -34,11 +38,11 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-config
-        key: kafka-brokers 
+        key: kafka-brokers
   - name: KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC
-    value: save-campaign-details
+    value: {{ .Values.saveCampaignDetails | default "save-campaign-details" }}
   - name: KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC
-    value: update-campaign-details
+    value: {{ .Values.updateCampaignDetails | default "update-campaign-details" }}
   - name: BASE_SECRET
     valueFrom:
       secretKeyRef:
@@ -48,20 +52,12 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: egov-mdms-service   
+        key: mdms-v2
   - name: EGOV_MDMS_V2_HOST
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: mdms-v2      
-  - name: EGOV_MDMS_SEARCH_ENDPOINT
-    value: "mdms-v2/v1/_search"
-  - name: EGOV_MDMS_V1_SEARCH_ENDPOINT
-    value: "mdms-v2/v1/_search"
-  - name: EGOV_MDMS_PATH
-    value: "mdms-v2/v1/_search"
-  - name: MDMS_PATH
-    value: "mdms-v2/v1/_search"
+        key: mdms-service-v2
   - name: EGOV_FILESTORE_SERVICE_HOST
     valueFrom:
       configMapKeyRef:
@@ -76,7 +72,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: excel-ingestion
+        key: {{ index .Values "excel-ingestion-host" | default "excel-ingestion" | quote }}
   - name: EGOV_FACILITY_HOST
     valueFrom:
       configMapKeyRef:
@@ -126,31 +122,28 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: plan-service
+        key: {{ index .Values "plan-service" | default "plan-service" | quote }}
   - name: EGOV_CENSUS_HOST
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
         key: census-service
-  - name: EGOV_SERVICE_REQUEST_HOST
-    valueFrom:
-      configMapKeyRef:
-        name: egov-service-host
-        key: service-request
   - name: CONTEXT_PATH
-    value: "/project-factory"   
+    value: "/project-factory"
   - name: FILE_STORE_SERVICE_END_POINT
-    value: filestore/v1/files 
+    value: filestore/v1/files
   - name: EGOV_MDMS_V2_SEARCH_ENDPOINT
     value: {{ .Values.mdmsV2SearchEndpoint | default "mdms-v2/v2/_search" }}
   - name: EGOV_MDMS_V2_CREATE_ENDPOINT
     value: {{ .Values.mdmsV2CreateEndpoint | default "mdms-v2/v2/_create" }}
   - name: EGOV_MDMS_V2_UPDATE_ENDPOINT
     value: {{ .Values.mdmsV2UpdateEndpoint | default "mdms-v2/v2/_update" }}
+  - name: EGOV_MDMS_V1_SEARCH_ENDPOINT
+    value: {{ .Values.mdmsV1SearchEndpoint | default "mdms-v1/v1/_search" }}
   - name: EGOV_IDGEN_PATH
     value: egov-idgen/id/_generate
   - name: EGOV_MDMS_SCHEMA_PATH
-    value: {{ .Values.mdmsV1SchemaSearchEndpoint | default "egov-mdms-service/schema/v1/_search" }}
+    value: {{ .Values.mdmsV1SchemaSearchEndpoint | default "mdms-v2/schema/v1/_search" }}
   - name: EGOV_BOUNDARY_RELATIONSHIP_SEARCHPATH
     value: boundary-service/boundary-relationships/_search
   - name: EGOV_BOUNDARY_SERVICE_SEARCHPATH
@@ -171,10 +164,10 @@ env: |
     value: egov-hrms/employees/_search
   - name: EGOV_PROJECT_RESOURCE_CREATE_PATH
     value: project/resource/v1/_create
-  - name: EGOV_PROJECT_RESOURCE_FACILITY_PATH
-    value: project/facility/v1/_create
   - name: EGOV_PROJECT_RESOURCE_SEARCH_PATH
     value: project/resource/v1/_search
+  - name: EGOV_PROJECT_RESOURCE_FACILITY_PATH
+    value: project/facility/v1/_create
   - name: EGOV_USER_SEARCH_PATH
     value: user/_search
   - name: EGOV_FACILITY_SEARCH_PATH
@@ -205,33 +198,41 @@ env: |
     value: plan-service/plan/_search
   - name: CMP_IDGEN_FORMAT
     value: CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]
+  - name: CMP_IDGEN_IDNAME
+    value: campaign.number
+  - name: VALIDATE_CAMPAIGN_ID_IN_METADATA
+    value: {{ .Values.validateCampaignIdInMetadata | default "false" | quote }}
+  - name: NOT_CREATE_USER_IF_ALREADY_THERE
+    value: {{ .Values.notCreateUserIfAlreadyThere | default "false" | quote }}
+  - name: INCOMING_REQUEST_PAYLOAD_LIMIT
+    value: 5mb
+  - name: EXCEL_INGESTION_GENERATE_SEARCH
+    value: {{ .Values.excelIngestionGenerateSearch | default "excel-ingestion/v1/data/generate/_search" }}
   - name: EXCEL_INGESTION_SHEET_SEARCH
     value: excel-ingestion/v1/data/sheet/_search
   - name: EXCEL_INGESTION_PROCESS
     value: {{ .Values.excelIngestionProcess | default "excel-ingestion/v1/data/process/_create" }}
   - name: EXCEL_INGESTION_GENERATE
     value: {{ .Values.excelIngestionGenerate | default "excel-ingestion/v1/data/generate/_init" }}
-  - name: EXCEL_INGESTION_GENERATE_SEARCH
-    value: {{ .Values.excelIngestionGenerateSearch | default "excel-ingestion/v1/data/generate/_search" }}
-  - name: CMP_IDGEN_IDNAME
-    value: campaign.number
+  - name: EGOV_SERVICE_DEFINITION_SEARCH_PATH
+    value: service-request/service/definition/v1/_search
+  - name: EGOV_SERVICE_REQUEST_HOST
+    valueFrom:
+      configMapKeyRef:
+          name: egov-service-host
+          key: service-request
+  - name: EGOV_SERVICE_DEFINITION_CREATE_PATH
+    value: service-request/service/definition/v1/_create
   - name: EGOV_HOST
     valueFrom:
       configMapKeyRef:
         name: egov-config
         key: egov-services-fqdn-name
   - name: "DB_URL"
-  {{- if eq .Values.namespace "health" }}
     valueFrom:
       configMapKeyRef:
         name: egov-config
         key: db-url
-  {{- else }}
-    valueFrom:
-      configMapKeyRef:
-        name: egov-config
-        key: db-url
-  {{- end }}
   - name: "SCHEMA_TABLE"
     value: {{ .Values.initContainers.dbMigration.schemaTable | quote }}
   - name: "FLYWAY_USER"
@@ -241,12 +242,12 @@ env: |
           key: flyway-username
   - name: "FLYWAY_PASSWORD"
     valueFrom:
-      secretKeyRef: 
+      secretKeyRef:
           name: db
           key: flyway-password
   - name: "FLYWAY_LOCATIONS"
-    valueFrom: 
-      configMapKeyRef: 
+    valueFrom:
+      configMapKeyRef:
           name: egov-config
           key: flyway-locations
   - name: DB_HOST
@@ -268,13 +269,15 @@ env: |
     valueFrom:
       secretKeyRef:
         name: db
-        key: password   
+        key: password
   - name: DB_PORT
     value: "5432"
   - name: DB_SSL
     value: {{ .Values.dbSsl | default "true" | quote }}
   - name: DB_SCHEMA
-    value: {{ .Values.namespace | default "public" }}
+    value: {{ index .Values "DB_SCHEMA" | quote }}
+  - name: BOUNDARY_MAIN_SHEET_NAME
+    value: "Boundary Data"
   - name: SPLIT_BOUNDARIES_ON
     value: {{ .Values.splitBoundariesOn | default "District" }}
   - name: SPLIT_BOUNDARIES_ON_LENGTH
@@ -286,11 +289,9 @@ env: |
   - name: USER_TAB_NAME
     value: "HCM_ADMIN_CONSOLE_USER_LIST"
   - name: LOCALE
-    value: {{ .Values.defaultLocale | default "en_IN" }} 
-  - name: LOCALIZATION_MODULE
-    value: "hcm-admin-schemas"
+    value: {{ .Values.defaultLocale | default "en_DEMO" }}
   - name: MODULE_NAME
-    value: "HCM-ADMIN-CONSOLE" 
+    value: "HCM-ADMIN-CONSOLE"
   - name: FORM_CONFIG_TEMPLATE_NAME
     value: {{ .Values.formConfigTemplateName | default "FormConfigTemplate" }}
   - name: FORM_CONFIG_NAME
@@ -298,25 +299,25 @@ env: |
   - name: EMAIL_NOTIFICATION_ID
     value: {{ .Values.emailNotificationId | default "support@egov.org.in" }}
   - name: EGOV_LOGO_LINK
-    value: {{ .Values.egovLogoLink | default "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/digit.png" }}  
+    value: {{ .Values.egovLogoLink | default "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/digit.png" }}
   - name: LOCALIZATION_WAIT_TIME_IN_BOUNDARY_CREATION
     value: "30000"
   - name: LOCALIZATION_CHUNK_SIZE_FOR_BOUNDARY_CREATION
     value: "2000"
   - name: APP_LOG_LEVEL
-    value: {{ .Values.logLevel | default "info" }} 
+    value: {{ .Values.logLevel | default "info" }}
   - name: APP_MAX_DEBUG_CHAR
     value: "{{ .Values.maxDebugChar | default "10000" }}"
   - name: DEBUG
     value: "{{ .Values.DEBUG | default "false" }}"
   - name: READ_ME_TAB
-    value: "HCM_README_SHEETNAME"  
+    value: "HCM_README_SHEETNAME"
   - name: DEFAULT_TENANT_ID
     value: {{ .Values.defaultTenantId | default "mz" }}
   - name: USER_PASSWORD_AUTO_GENERATE
-    value: "false"  
+    value: "false"
   - name: USER_DEFAULT_PASSWORD
-    value: "eGov@123"  
+    value: "eGov@123"
   - name: MAP_USER_VIA_COMMON_PARENT
     value: "true"
   - name: CACHE_ENABLED
@@ -330,17 +331,13 @@ env: |
   - name: AUTO_RETRY_IF_HTTP_ERROR
     value: "socket hang up"
   - name: ENABLE_DYNAMIC_TEMPLATE_FOR
-    value: {{ .Values.enableDynamicTemplate | default "false"  | quote }}
+    value: {{ .Values.enableDynamicTemplate | default "" }}
   - name: IS_CALL_GENERATE_WHEN_DELIVERY_CONDITIONS_DIFFER
     value: {{ .Values.CallGenerateWhenDeliveryConditionsDiffer | default "false" | quote }}
   - name: EXCLUDE_HIERARCHY_TYPE_FROM_BOUNDARY_CODES
     value: {{ .Values.ExcludeHierarchyTypeFromBoundaryCodes | default "false" | quote }}
   - name: EXCLUDE_BOUNDARY_NAME_AT_LAST_FROM_BOUNDARY_CODES
     value: {{ .Values.ExcludeBoundaryTypeFromLastBoundaryCodes | default "false" | quote }}
-  - name: VALIDATE_CAMPAIGN_ID_IN_METADATA
-    value: {{ .Values.validateCampaignIdInMetadata | default "false" | quote }}
-  - name: IS_ENVIRONMENT_CENTRAL_INSTANCE
-    value: {{ .Values.IS_ENVIRONMENT_CENTRAL_INSTANCE | default "false" | quote }}
   - name: KAFKA_START_CAMPAIGN_MAPPING_TOPIC
     value: {{ .Values.startCampaignMappingTopic | default "start-campaign-mapping" }}
   - name: KAFKA_CREATE_RESOURCE_DETAILS_TOPIC
@@ -349,10 +346,6 @@ env: |
     value: {{ .Values.updateResourceDetailsTopic | default "update-resource-details" }}
   - name: KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC
     value: {{ .Values.createResourceActivityTopic | default "create-resource-activity" }}
-  - name: NOT_CREATE_USER_IF_ALREADY_THERE
-    value: {{ .Values.notCreateUserIfAlreadyThere | default "false" | quote }}
-  - name: INCOMING_REQUEST_PAYLOAD_LIMIT
-    value: 5mb
   - name: KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC
     value: {{ .Values.updateGeneratedResourceDetailsTopic | default "update-generated-resource-details" }}
   - name: KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC
@@ -395,6 +388,12 @@ env: |
     value: {{ .Values.mappingBatchTopic | default "hcm-mapping-batch" }}
   - name: KAFKA_CAMPAIGN_MARK_FAILED_TOPIC
     value: {{ .Values.campaignMarkFailedTopic | default "hcm-campaign-mark-failed" }}
+  - name: KAFKA_ATTENDANCE_REGISTER_DELETE_TOPIC
+    value: {{ .Values.attendanceRegisterDeleteTopic | default "delete-attendance" }}
+  - name: KAFKA_ATTENDANCE_ATTENDEE_UPDATE_TOPIC
+    value: {{ .Values.attendanceAttendeeUpdateTopic | default "update-attendee" }}
+  - name: KAFKA_ATTENDANCE_STAFF_UPDATE_TOPIC
+    value: {{ .Values.attendanceStaffUpdateTopic | default "update-staff" }}
   - name: USER_MAIN_BOUNDARY
     value: {{ .Values.userMainBoundary | default "mz" }}
   - name: USER_MAIN_BOUNDARY_TYPE
@@ -405,13 +404,15 @@ env: |
     value: {{ .Values.waitTimeOfEachAttemptMs | default "40000" | quote }}
   - name: RETRY_TILL_RESOURCE_CREATION_COMPLETES
     value: {{ .Values.retryTillResourceCreationCompletes | default "100" | quote }}
+  - name: LOCALIZATION_MODULE
+    value: {{ .Values.localizationModule | default "hcm-admin-schemas" }}
   - name: KAFKAJS_GROUP_ID
     value: {{ .Values.groupId | default "project-factory" }}
   - name: EGOV_WORKER_REGISTRY_HOST
     valueFrom:
       configMapKeyRef:
-        name: egov-service-host
-        key: worker-registry-host
+          name: egov-service-host
+          key: worker-registry-host
   - name: EGOV_WORKER_REGISTRY_BULK_CREATE
     value: {{ .Values.workerRegistryBulkCreate | default "worker/v1/bulk/_create" }}
   - name: EGOV_WORKER_REGISTRY_BULK_UPDATE
@@ -460,9 +461,15 @@ env: |
   - name: ATTENDANCE_STAFF_SEARCH_PATH
     value: {{ .Values.attendanceStaffSearchPath | default "health-attendance/staff/v1/_search" }}
   - name: SERVER_TIMEZONE
-    value: {{ .Values.serverTimezone | default "UTC" }}
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: timezone
   - name: KAFKA_CONSUMER_TOPIC_PREFIX
-    value: {{ .Values.tenantIdPattern | default "" | quote }}
+    valueFrom:
+      configMapKeyRef:
+        name: egov-config
+        key: kafka-tenant-id-pattern
   - name: BOUNDARY_CODE_HEADER_NAME
     value: {{ .Values.boundaryCodeHeaderName | default "HCM_ADMIN_CONSOLE_BOUNDARY_CODE" }}
   - name: BOUNDARY_CODE_HEADER_NAME_FACILITY_MICROPLAN
@@ -579,54 +586,21 @@ env: |
     value: {{ .Values.hrmsSearchByUuidBatchSize | default "50" | quote }}
   - name: HRMS_SEARCH_BY_USERNAME_BATCH_SIZE
     value: {{ .Values.hrmsSearchByUsernameBatchSize | default "50" | quote }}
-  - name: HTTP_TIMEOUT_MS
-    value: {{ .Values.httpTimeoutMs | default "300000" | quote }}
-  - name: BOUNDARY_SYNC_RETRY_DELAY_MS
-    value: {{ .Values.boundarySyncRetryDelayMs | default "4000" | quote }}
-  - name: USER_KAFKA_PRODUCE_WINDOW_SIZE
-    value: {{ .Values.userKafkaProduceWindowSize | default "100" | quote }}
   - name: KAFKA_CONSUMER_MAX_CONCURRENT
     value: {{ .Values.kafkaConsumerMaxConcurrent | default "5" | quote }}
-  # --- master branch---
-  # Bulk project create is OPT-IN: PROJECT_BULK_CREATE_CHUNK_SIZE=0 keeps the classic per-node path; set > 0 to enable.
+  - name: MAPPING_BULK_CREATE_CHUNK_SIZE
+    value: {{ .Values.mappingBulkCreateChunkSize | default "100" | quote }}
   - name: PROJECT_BULK_CREATE_CHUNK_SIZE
-    value: {{ .Values.projectBulkCreateChunkSize | default "0" | quote }}
-  - name: PROJECT_BULK_CREATE_CONCURRENCY
-    value: {{ .Values.projectBulkCreateConcurrency | default "5" | quote }}
-  - name: PROJECT_SEARCH_PAGE_SIZE
-    value: {{ .Values.projectSearchPageSize | default "100" | quote }}
-  - name: PROJECT_CONFIRM_RETRIES
-    value: {{ .Values.projectConfirmRetries | default "15" | quote }}
-  - name: PROJECT_CONFIRM_POLL_INTERVAL_MS
-    value: {{ .Values.projectConfirmPollIntervalMs | default "2000" | quote }}
+    value: {{ .Values.projectBulkCreateChunkSize | default "100" | quote }}
   - name: PROJECT_CREATE_PACE_DELAY_MS
     value: {{ .Values.projectCreatePaceDelayMs | default "0" | quote }}
   - name: USER_WORKER_CREATE_BATCH_LAG
     value: {{ .Values.userWorkerCreateBatchLag | default "2" | quote }}
-  - name: MAPPING_BULK_CREATE_CHUNK_SIZE
-    value: {{ .Values.mappingBulkCreateChunkSize | default "100" | quote }}
-  # STAFF_MAPPING_BULK gates bulk staff-mapping create (accepts "1"/"true"); default off.
   - name: STAFF_MAPPING_BULK
-    value: {{ .Values.staffMappingBulk | default "false" | quote }}
-  - name: MAPPING_BULK_CONFIRM_POLL_INTERVAL_MS
-    value: {{ .Values.mappingBulkConfirmPollIntervalMs | default "2000" | quote }}
-  - name: MAPPING_BULK_CONFIRM_MAX_ATTEMPTS
-    value: {{ .Values.mappingBulkConfirmMaxAttempts | default "5" | quote }}
+    value: {{ .Values.staffMappingBulk | default "true" | quote }}
   - name: EGOV_PROJECT_STAFF_BULK_CREATE_PATH
-    value: {{ .Values.egovProjectStaffBulkCreatePath | default "project/staff/v1/bulk/_create" }}
+    value: project/staff/v1/bulk/_create
   - name: EGOV_PROJECT_RESOURCE_BULK_CREATE_PATH
-    value: {{ .Values.egovProjectResourceBulkCreatePath | default "project/resource/v1/bulk/_create" }}
+    value: project/resource/v1/bulk/_create
   - name: EGOV_PROJECT_FACILITY_BULK_CREATE_PATH
-    value: {{ .Values.egovProjectFacilityBulkCreatePath | default "project/facility/v1/bulk/_create" }}
-  - name: USER_KAFKA_PRODUCE_WINDOW_DELAY_MS
-    value: {{ .Values.userKafkaProduceWindowDelayMs | default "1000" | quote }}
-  - name: USER_SEARCH_CONCURRENCY
-    value: {{ .Values.userSearchConcurrency | default "10" | quote }}
-
-  # --- mirrored from the demo chart (health-campaign-devops @ azure-install-hcm-demo) ---
-  - name: EGOV_SERVICE_DEFINITION_SEARCH_PATH
-    value: service-request/service/definition/v1/_search
-  - name: EGOV_SERVICE_DEFINITION_CREATE_PATH
-    value: service-request/service/definition/v1/_create
-  - name: BOUNDARY_MAIN_SHEET_NAME
-    value: "Boundary Data"
+    value: project/facility/v1/bulk/_create
