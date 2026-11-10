@@ -1163,6 +1163,10 @@ project-factory:
   image:
     repository: egovio/project-factory
     tag: master-c1dc738
+  extraEnv:
+      app: |
+        - name: CAMPAIGN_DELIVERY_CONDITION_TYPES
+          value: "POLIO,IMMUNISATION"
   central-instance-enabled: true
   central-instance-build: true
   namespace: egov
@@ -1312,6 +1316,10 @@ excel-ingestion:
       image:
         repository: egovio/excel-ingestion-db
         tag: master-c1dc738
+  extraEnv:
+      app: |
+        - name: EXCEL_INGESTION_OUTSIDE_HOUSEHOLD_CAMPAIGN_TYPES
+          value: "POLIO,IMMUNISATION"
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
   defaultLocale: 'en_DEMO'
