@@ -1025,12 +1025,12 @@ egov-accesscontrol:
 facility:
   image:
     repository: egovio/facility
-    tag: master-c1dc738
+    tag: HCMPRE-2429-master-project-search-index-c1dc738-070b0f6
   initContainers:
     dbMigration:
       image:
         repository: egovio/facility-db
-        tag: master-c1dc738
+        tag: HCMPRE-2429-master-project-search-index-c1dc738-070b0f6
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: true
@@ -1159,10 +1159,10 @@ project-factory:
     dbMigration:
       image:
         repository: "project-factory-db"
-        tag: master-c1dc738
+        tag: HCMPRE-2429-master-project-search-index-c1dc738-bbf6c9d
   image:
     repository: egovio/project-factory
-    tag: master-c1dc738
+    tag: HCMPRE-2429-master-project-search-index-c1dc738-bbf6c9d
   extraEnv:
       app: |
         - name: CAMPAIGN_DELIVERY_CONDITION_TYPES
@@ -1310,12 +1310,12 @@ resource-generator:
 excel-ingestion:
   image:
     repository: egovio/excel-ingestion
-    tag: master-c1dc738
+    tag: HCMPRE-2429-master-project-search-index-c1dc738-bbf6c9d
   initContainers:
     dbMigration:
       image:
         repository: egovio/excel-ingestion-db
-        tag: master-c1dc738
+        tag: HCMPRE-2429-master-project-search-index-c1dc738-bbf6c9d
   extraEnv:
       app: |
         - name: EXCEL_INGESTION_OUTSIDE_HOUSEHOLD_CAMPAIGN_TYPES
