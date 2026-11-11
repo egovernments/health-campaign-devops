@@ -26,6 +26,7 @@ image:
   repository: "egov-indexer"
 replicas: "1"
 healthChecks:
+  startupProbeEnabled: true
   enabled: true
   livenessProbePath: "/egov-indexer/health"
   readinessProbePath: "/egov-indexer/health"
@@ -76,3 +77,9 @@ env: |
       secretKeyRef:
         name: elasticsearch-master-credentials
         key: password
+
+  # --- mirrored from the demo chart (health-campaign-devops @ azure-install-hcm-demo) ---
+  - name: EGOV_INFRA_INDEXER_LEGACY_VERSION
+    value: "false"
+  - name: SPRING_KAFKA_CONSUMER_GROUP
+    value: {{ index .Values "kafka-consumer-group-id" | quote }}

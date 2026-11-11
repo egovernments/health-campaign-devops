@@ -17,6 +17,7 @@ image:
   repository: "egov-accesscontrol"
 replicas: "1"
 healthChecks:
+  startupProbeEnabled: true
   enabled: true
   livenessProbePath: "/access/health"
   readinessProbePath: "/access/health"
@@ -45,8 +46,6 @@ env: |
   - name: JAVA_ARGS
     value: {{ index .Values "java-args" | quote }}
   {{- if index .Values "tracing-enabled" }}
-  - name: TRACER_OPENTRACING_ENABLED
-    value: "true" 
   {{- end }}
   - name: SECURITY_BASIC_ENABLED
     value: "false"  

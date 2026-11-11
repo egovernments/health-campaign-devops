@@ -33,6 +33,7 @@ image:
   repository: "zuul"
 replicas: "1"
 healthChecks:
+  startupProbeEnabled: true
   enabled: true
   livenessProbePath: "/health"
   readinessProbePath: "/health"
@@ -109,8 +110,6 @@ env: |
   - name: ZUUL_HOST_SOCKET_TIMEOUT_MILLIS
     value: "60000"
   {{- if index .Values "tracing-enabled" }}
-  - name: TRACER_OPENTRACING_ENABLED
-    value: "true"
   {{- end }}
   - name: SECURITY_BASIC_ENABLED
     value: "false"

@@ -121,7 +121,21 @@ healthChecks:
         timeoutSeconds: 3
         periodSeconds: 30
         successThreshold: 1
-        failureThreshold: 5        
+        failureThreshold: 5
+    # Opt-in startup probe (default off). Set healthChecks.startupProbeEnabled=true
+    # on slow-booting JVM services so the kubelet does not liveness-kill them mid-boot
+    # under cold-start CPU/memory contention (~720s grace = periodSeconds*failureThreshold).
+    # While the startupProbe is running, liveness/readiness are held off.
+    startupProbeEnabled: false
+    startupProbe: |
+        httpGet:
+            path: "{{ .Values.healthChecks.livenessProbePath }}"
+            port: {{ .Values.httpPort }}
+        initialDelaySeconds: 20
+        timeoutSeconds: 3
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 72
 
 lifecycle:
     preStop:
@@ -260,7 +274,7 @@ extraEnv:
       - name: STATE_LEVEL_TENANTID_LENGTH
         value: "1"            
       - name: IS_ENVIRONMENT_CENTRAL_INSTANCE
-        value: "false"
+        value: {{ index .Values "central-instance-enabled" | default false | quote }}
       - name: STATE_SCHEMA_INDEX_POSITION_TENANTID
         value: "0"
             

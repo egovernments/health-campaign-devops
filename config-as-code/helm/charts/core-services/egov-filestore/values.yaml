@@ -21,6 +21,7 @@ image:
   repository: "egov-filestore"
 replicas: "1"
 healthChecks:
+  startupProbeEnabled: true
   enabled: true
   livenessProbePath: "/filestore/health"
   readinessProbePath: "/filestore/health"
@@ -35,6 +36,12 @@ is-s3-enabled: true
 
 persistence:
   enabled: false
+
+# Malware Scanning Configuration (disabled by default)
+# Enable only when egov-malware-detection service is deployed
+kafka-malware-scan-enabled: false
+kafka-topics-malware-scan-request: "egov.malware.file-scan-request"
+  
 
 # Additional Container Envs
 env: |
@@ -113,4 +120,33 @@ env: |
   - name: PRESIGNED_URL_EXPIRY_TIME_IN_SECS     
     value: {{ index .Values "filestore-url-validity" | quote }}   
   {{- end }}  
+  - name: KAFKA_MALWARE_SCAN_ENABLED
+    value: {{ index .Values "kafka-malware-scan-enabled" | quote }}
+  - name: KAFKA_TOPICS_MALWARE_SCAN_REQUEST
+    value: {{ index .Values "kafka-topics-malware-scan-request" | quote }}  
 
+  # --- mirrored from the demo chart (health-campaign-devops @ azure-install-hcm-demo) ---
+  # Azure-only block, guarded: demo runs Azure blob storage; S3/EKS installs (is-s3-enabled)
+  # must not receive these vars (FIXED_BUCKET_REGION af-south-1 would mis-sign S3 requests).
+  {{- if index .Values "is-azure-storage-enabled" }}
+  - name: SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE
+    value: "180MB"
+  - name: MINIO_ENABLED
+    value: "false"
+  - name: FIXED_BUCKET_REGION
+    value: "af-south-1"
+  - name: ISAZURESTORAGEENABLED
+    value: "true"
+  - name: AZURE_ACCOUNTNAME
+    valueFrom:
+      secretKeyRef:
+        name: egov-filestore
+        key: awskey
+  - name: AZURE_ACCOUNTKEY
+    valueFrom:
+      secretKeyRef:
+        name: egov-filestore
+        key: awssecretkey
+  - name: AZURE_DEFAULTENDPOINTSPROTOCOL
+    value: "https"
+  {{- end }}

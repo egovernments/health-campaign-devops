@@ -15,6 +15,7 @@ image:
   repository: "egov-persister"
 replicas: "1"
 healthChecks:
+  startupProbeEnabled: true
   enabled: true
   livenessProbePath: "/common-persist/health"
   readinessProbePath: "/common-persist/health"
@@ -36,3 +37,26 @@ env: |
     value: "8080"
   - name: JAEGER_SAMPLER_PARAM
     value: "1"
+  # --- master persister reliability keys (effective on egov-persister image 2.9.4) ---
+  - name: spring.kafka.consumer.enable-auto-commit
+    value: "false"
+  - name: persister.dead-letter.reprocess.enabled
+    value: "true"
+  - name: persister.dead-letter.reprocess.error-topic
+    value: "egov-persister-deadletter-processed"
+  - name: persister.dead-letter.max-retries
+    value: "5"
+  - name: persister.db-health.check-interval-ms
+    value: "5000"
+  - name: spring.kafka.producer.acks
+    value: "all"
+  - name: tracer.errorsTopic
+    value: "egov-persister-deadletter"
+  - name: persister.batch.parallel-topic-processing.thread-pool-size
+    value: "1"
+
+  # --- mirrored from the demo chart (health-campaign-devops @ azure-install-hcm-demo) ---
+  - name: PERSISTER_BULK_ENABLED
+    value: "true"
+  - name: PERSISTER_BATCH_TOPICS
+    value: "boundary-relationship-bulk-create-job"

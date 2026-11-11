@@ -22,6 +22,7 @@ image:
   repository: "egov-idgen"
 replicas: "1"
 healthChecks:
+  startupProbeEnabled: true
   enabled: true
   livenessProbePath: "/egov-idgen/health"
   readinessProbePath: "/egov-idgen/health"

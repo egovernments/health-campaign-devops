@@ -32,11 +32,11 @@ Github account
 - Specify the branch name you wish to enable GitHub Actions for.
 - Configure Infrastructure-as-Code
 - Navigate to infra-as-code/terraform/sample-aws.
-- Open input.yaml and enter details such as domain_name, cluster_name, bucket_name, and db_name.
+- Open input.yaml and enter details such as cluster_name, db_name, db_username, domain_name and terraform_state_bucket_name.
 - Configure Application Secrets
 - Navigate to config-as-code/environments.
 - Open egov-demo-secrets.yaml.
-- Enter db_password and ssh_private_key. Add the public_key to your GitHub account.
+- In config-as-code/environments/egov-demo-secrets.yaml set the db username and password under cluster-configs.secrets.db, and replace the git-sync ssh private key placeholder with your own deploy key. Add the matching public key to the GitHub account that has access to the config and mdms repositories.
 - Generate SSH Key Pair
 - Choose one of the following methods to generate an SSH key pair:
     Method a: Use an online website (Note: This is not recommended for production setups, only for demo purposes): https://8gwifi.org/sshfunctions.jsp
@@ -95,7 +95,7 @@ We hope your experience with DIGIT was positive and that this guide makes the un
 **How to Run the Terraform Infrastructure Destruction Job**
 - To initiate the destruction of a Terraform-managed infrastructure, follow these steps:
 - Navigate to Actions.
-- Click DIGIT-Install workflow.
+- Click the DIGITClusterworkflow workflow.
 - Select Run workflow.
 - When prompted, type "destroy". This action starts the terraform_infra_destruction job.
 - You can observe the progress of the destruction job in the actions window.

@@ -1,0 +1,23 @@
+{{- $envOverrides := index .Values (tpl .Chart.Name .) -}}
+{{- $baseValues := .Values | deepCopy -}}
+{{- $values := dict "Values" (mustMergeOverwrite $baseValues $envOverrides) -}}
+{{- with mustMergeOverwrite . $values }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "common.name" . }}-clamd
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "common.labels" . | nindent 4 }}
+data:
+  clamd.conf: |
+{{- range $key, $value := .Values.clamdConfigDict }}
+  {{- if kindIs "slice" $value }}
+    {{- range $value }}
+    {{ $key }} {{ . }}
+    {{- end }}
+  {{- else }}
+    {{ $key }} {{ $value }}
+  {{- end }}
+{{- end }}
+{{- end -}}

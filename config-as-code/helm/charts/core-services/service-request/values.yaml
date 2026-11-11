@@ -60,3 +60,13 @@ env: |
     value: "false"  
   - name: MANAGEMENT_SECURITY_ENABLED
     value: "false"
+
+  # --- mirrored from the demo chart (health-campaign-devops @ azure-install-hcm-demo) ---
+  - name: EGOV_SERVICE_DEFINITION_UPDATE_TOPIC
+    value: {{ index .Values "egov-service-definition-update-topic" | quote }}
+  - name: EGOV_SERVICE_UPDATE_TOPIC
+    value: {{ index .Values "egov-service-update-topic" | quote }}
+
+# --- values mirrored from the demo chart (referenced by the env entries above) ---
+egov-service-definition-update-topic: "update-service-definition"
+egov-service-update-topic: "update-service"

@@ -21,6 +21,7 @@ image:
   repository: "boundary-service"
 replicas: "1"
 healthChecks:
+  startupProbeEnabled: true
   enabled: true
   livenessProbePath: "/boundary-service/health"
   readinessProbePath: "/boundary-service/health"
@@ -34,6 +35,8 @@ kafka-topics-create-boundary-hierarchy: "save-boundary-hierarchy-definition"
 kafka-topics-update-boundary-hierarchy: "update-boundary-hierarchy-definition"
 kafka-topics-create-boundary-relationship: "save-boundary-relationship"
 kafka-topics-update-boundary-relationship: "update-boundary-relationship"
+kafka-topics-bulk-create-boundary-relationship-job: "boundary-relationship-bulk-create-job"
+boundary-bulk-max-size: "100"
 memory_limits: "512Mi"
 cpu_limits: "150m"
 
@@ -59,16 +62,18 @@ env: |
     value: "false"  
   - name: MANAGEMENT_SECURITY_ENABLED
     value: "false"
-  - name: JAVA_ENABLE_DEBUG
-    value: "true"
   - name: KAFKA_TOPICS_CREATE_BOUNDARY
     value: {{ index .Values "kafka-topics-create-boundary" | quote }}
   - name: KAFKA_TOPICS_CREATE_BOUNDARY_HIERARCHY
     value: {{ index .Values "kafka-topics-create-boundary-hierarchy" | quote }}
   - name: KAFKA_TOPICS_CREATE_BOUNDARY_RELATIONSHIP
     value: {{ index .Values "kafka-topics-create-boundary-relationship" | quote }}
+  - name: KAFKA_TOPICS_BULK_CREATE_BOUNDARY_RELATIONSHIP_JOB
+    value: {{ index .Values "kafka-topics-bulk-create-boundary-relationship-job" | quote }}
   - name: KAFKA_TOPICS_UPDATE_BOUNDARY_RELATIONSHIP
     value: {{ index .Values "kafka-topics-update-boundary-relationship" | quote }}
+  - name: BOUNDARY_BULK_MAX_SIZE
+    value: {{ index .Values "boundary-bulk-max-size" | quote }}
   - name: KAFKA_TOPICS_UPDATE_BOUNDARY
     value: {{ index .Values "kafka-topics-update-boundary" | quote }}
   - name: KAFKA_TOPICS_UPDATE_BOUNDARY_HIERARCHY

@@ -97,3 +97,16 @@ env: |
       secretKeyRef:
         name: elasticsearch-master-credentials
         key: password
+
+  # --- mirrored from the demo chart (health-campaign-devops @ azure-install-hcm-demo) ---
+  - name: IS_CENTRAL_INSTANCE
+    value: {{ index .Values "is-central-instance" | quote }}
+  - name: CENTRAL_INSTANCE_TENANTS
+    value: {{ index .Values "central-instance-tenants" | quote }}
+  - name: CENTRAL_INSTANCE_BASE_PATH
+    value: {{ index .Values "central-instance-base-path" | quote }}
+
+# --- values mirrored from the demo chart (referenced by the env entries above) ---
+central-instance-base-path: "file:///work-dir/health-campaign-config/egov-dss-dashboards"
+central-instance-tenants: "demo"
+is-central-instance: "false"

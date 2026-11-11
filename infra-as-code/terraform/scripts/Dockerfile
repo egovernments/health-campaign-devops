@@ -7,7 +7,8 @@ RUN apt update && apt upgrade -y
 RUN apt install -y curl unzip gnupg
 
 # Download and install kubectl
-RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.22.0/bin/linux/amd64/kubectl
+RUN KUBECTL_VER=$(curl -fsSL https://dl.k8s.io/release/stable.txt) \
+    && curl -fLO "https://dl.k8s.io/release/${KUBECTL_VER}/bin/linux/amd64/kubectl"
 RUN chmod +x ./kubectl
 RUN mv ./kubectl /usr/local/bin/kubectl
 
@@ -34,18 +35,9 @@ RUN apt install -y git
 # Install Go
 RUN apt install -y golang-go
 
-# Add Helm GPG key
-RUN curl https://baltocdn.com/helm/signing.asc | gpg --dearmor > /usr/share/keyrings/helm-keyring.gpg
-
-# Install apt-transport-https
-RUN apt-get install -y apt-transport-https
-
-# Add Helm repository
-RUN echo "deb [signed-by=/usr/share/keyrings/helm-keyring.gpg] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list
-
-# Update and install Helm
-RUN apt-get update
-RUN apt-get install -y helm
+# Install Helm using the official installer script
+RUN curl -fsSL -o /tmp/get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
+    && chmod +x /tmp/get_helm.sh && /tmp/get_helm.sh && rm -f /tmp/get_helm.sh
 
 # Download and install Terraform
 RUN curl -LO https://releases.hashicorp.com/terraform/1.0.0/terraform_1.0.0_linux_amd64.zip

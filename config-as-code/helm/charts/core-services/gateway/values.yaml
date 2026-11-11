@@ -10,19 +10,19 @@ namespace: egov
 initContainers:
   extraInitContainers: |
     - name: "gateway-kubernetes-discovery"
-      image: {{ .Values.global.containerRegistry }}/gateway-kubernetes-discovery:core-2.9-lts-mvn-check-7f4ff55ce3-5
-      env: 
+      image: {{ .Values.global.containerRegistry }}/gateway-kubernetes-discovery:master-gateway-kubernetes-discovery-host-76493aa615-13
+      env:
       - name: "OUTPUT_FILE_PATH"
-        value: "/etc/zuul/routes.properties" 
+        value: "/etc/zuul/routes.properties"
       - name: "NAMESPACE"
-        value: "egov"         
+        value: "egov,demo"
       volumeMounts:
       - name: zuul-routes
         mountPath: /etc/zuul
 
 extraVolumes: |
   - name: zuul-routes
-    emptyDir: {}  
+    emptyDir: {}
 
 extraVolumeMounts: |
   - name: zuul-routes
@@ -50,13 +50,15 @@ egov-mixed-mode-endpoints-whitelist: "/user/_search,/access/v1/actions/mdms/_get
 eventlog-enabled: "false"
 eventlog-topic: "springGateway-event-log"
 eventlog-urls-whitelist: ""
+tenant-propagation-enabled: "true"
 home-isolation-chatbot-router-enabled: false
 memory_limits: "768Mi"
+cpu_limits: "400m"
 
 # Additional Container Envs
 env: |
   - name: URL_LISTS
-    value: "/pt-services-v2/property/_create:http://rainmaker-custom-service:8000/customization/protected/punjab-pt/property/_create|/pt-services-v2/property/_update:http://rainmaker-custom-service:8000/customization/protected/punjab-pt/property/_update|/pt-calculator-v2/propertytax/_estimate:http://rainmaker-custom-service:8000/customization/protected/punjab-pt/pt-calculator-v2/_estimate"
+    value: ""
   - name: CUSTOM_FILTER_PROPERTY
     value: {{ index .Values "custom-filter-property" | quote }}
   - name: CUSTOM_FILTER_POSTHOOKS
@@ -65,19 +67,10 @@ env: |
     value: "true"
   - name: URL_POSTHOOK_LISTS
     value: {{ index .Values "posthook-config" | quote }}
-  - name: URL_PREHOOK_LISTS        
+  - name: URL_PREHOOK_LISTS
     value: {{ index .Values "prehook-config" | quote }}
-  - name: GATEWAY_ROUTES_TL_CALCULATOR_URL
-    value: http://tl-calculator:8080/                                  
   - name: SERVER_PORT
     value: "8080"
-  {{- if index .Values "java-debug" }}
-  - name: JAVA_ENABLE_DEBUG
-    value: {{ index .Values "java-debug" | quote }}
-  {{- else }}
-  - name: JAVA_ENABLE_DEBUG
-    value: "false"
-  {{- end }}
   - name: JAVA_OPTS
     value: {{ index .Values "heap" | quote }}
   - name: SPRING_KAFKA_CONSUMER_GROUP_ID
@@ -89,15 +82,17 @@ env: |
   - name: EGOV_CUSTOM_ASYNC_FILTER_TOPIC
     value: res-custom-filter
   - name: EGOV_OPEN_ENDPOINTS_WHITELIST
-    value: {{ index .Values "egov-open-endpoints-whitelist" | quote }}  
+    value: {{ index .Values "egov-open-endpoints-whitelist" | quote }}
   - name: EGOV_MIXED_MODE_ENDPOINTS_WHITELIST
-    value: {{ index .Values "egov-mixed-mode-endpoints-whitelist" | quote }}    
+    value: {{ index .Values "egov-mixed-mode-endpoints-whitelist" | quote }}
   - name: EVENTLOG_ENABLED
-    value: {{ index .Values "eventlog-enabled" | quote }}   
+    value: {{ index .Values "eventlog-enabled" | quote }}
   - name: EVENTLOG_TOPIC
-    value: {{ index .Values "eventlog-topic" | quote }}   
+    value: {{ index .Values "eventlog-topic" | quote }}
   - name: EVENTLOG_URLS_WHITELIST
-    value: {{ index .Values "eventlog-whitelist" | quote }}   
+    value: {{ index .Values "eventlog-whitelist" | quote }}
+  - name: EGOV_GATEWAY_TENANT_PROPAGATION_ENABLED
+    value: {{ index .Values "tenant-propagation-enabled" | quote }}
   - name: EGOV_AUTHORIZE_ACCESS_CONTROL_HOST
     valueFrom:
       configMapKeyRef:
@@ -107,15 +102,11 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: egov-user     
+        key: egov-user
   - name: GATEWAY_HOST_CONNECT_TIMEOUT_MILLIS
     value: "20000"
   - name: GATEWAY_HOST_SOCKET_TIMEOUT_MILLIS
     value: "60000"
-  {{- if index .Values "tracing-enabled" }}
-  - name: TRACER_OPENTRACING_ENABLED
-    value: "true"
-  {{- end }}
   - name: SECURITY_BASIC_ENABLED
     value: "false"
   - name: MANAGEMENT_SECURITY_ENABLED
@@ -126,16 +117,16 @@ env: |
     valueFrom:
       configMapKeyRef:
         key: egov-state-level-tenant-id
-        name: egov-config    
+        name: egov-config
   - name: SPRING_DATA_REDIS_DEFAULT_REPLENISHRATE
     value: "10"
   - name: SPRING_DATA_REDIS_DEFAULT_BURSTCAPACITY
     value: "10"
   - name: SPRING_ROUTES_FILEPATH
-    value: "file:/etc/zuul/routes.properties"   
+    value: "file:/etc/zuul/routes.properties"
   {{- if index .Values "home-isolation-chatbot-router-enabled" }}
   - name: HOME_ISOLATION_CHATBOT_ROUTER_ENABLED
-    value: {{ index .Values "home-isolation-chatbot-router-enabled" | quote }}  
+    value: {{ index .Values "home-isolation-chatbot-router-enabled" | quote }}
   - name: CHATBOT_CONTEXT_PATH
     value: "/whatsapp-webhook"
   - name: EGOV_USER_ISOLATION_SERVICE_HOST
@@ -149,12 +140,16 @@ env: |
         name: egov-service-host
         key: home-isolation-chatbot
   {{- end }}
-  - name: SPRING_REDIS_HOST     
-  {{- if index .Values "cluster-configs" "configmaps" "egov-service-host" "data" "redis-host" }}   
+  - name: SPRING_DATA_REDIS_HOST
+  {{- if index .Values "cluster-configs" "configmaps" "egov-config" "data" "redis-host" }}
     valueFrom:
       configMapKeyRef:
-        name: egov-service-host
-        key: redis-host   
+        name: egov-config
+        key: redis-host
   {{- else }}
     value: "redis.backbone"
   {{- end }}
+  - name: SPRING_CODEC_MAX_IN_MEMORY_SIZE
+    value: "20971520"
+  - name: SPRING_DATA_REDIS_RATELIMIT_ENABLED
+    value: {{ index .Values "spring-data-redis-ratelimit-enabled" | quote }}
