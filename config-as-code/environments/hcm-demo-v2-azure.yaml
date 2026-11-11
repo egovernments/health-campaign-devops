@@ -1664,6 +1664,7 @@ redis:
 
 playground:
   replicas: 1
+  cpu_limits: 1000m
   image:
     repository: egovio/playground
     tag: "2.0"
