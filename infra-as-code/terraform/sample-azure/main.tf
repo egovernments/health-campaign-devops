@@ -104,7 +104,7 @@ module "kubernetes" {
   location                  = var.location
   resource_group            = var.resource_group
   vm_size                   = "Standard_D4_v4"
-  node_count                = 5
+  node_count                = 6
   vnet_subnet_id            = azurerm_subnet.aks.id
   os_disk_size_gb           = 64
   enable_auto_scaling       = false
