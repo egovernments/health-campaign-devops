@@ -122,7 +122,7 @@ env: |
     valueFrom:
       configMapKeyRef:
         name: egov-service-host
-        key: {{ index .Values "plan-service" | default "plan-service" | quote }}
+        key: {{ index .Values "plan-service-host" | default "plan-service" | quote }}
   - name: EGOV_CENSUS_HOST
     valueFrom:
       configMapKeyRef:
