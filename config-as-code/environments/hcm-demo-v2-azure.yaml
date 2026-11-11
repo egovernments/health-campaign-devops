@@ -1025,12 +1025,12 @@ egov-accesscontrol:
 facility:
   image:
     repository: egovio/facility
-    tag: HCMPRE-2429-master-project-search-index-c1dc738-070b0f6
+    tag: HCMPRE-2429-master-project-search-index-c1dc738-4920133
   initContainers:
     dbMigration:
       image:
         repository: egovio/facility-db
-        tag: HCMPRE-2429-master-project-search-index-c1dc738-070b0f6
+        tag: HCMPRE-2429-master-project-search-index-c1dc738-4920133
   central-instance-build: true
   central-instance-name: egov
   central-instance-enabled: true
