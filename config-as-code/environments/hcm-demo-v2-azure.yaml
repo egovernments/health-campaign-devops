@@ -1320,6 +1320,8 @@ excel-ingestion:
       app: |
         - name: EXCEL_INGESTION_OUTSIDE_HOUSEHOLD_CAMPAIGN_TYPES
           value: "POLIO,IMMUNISATION"
+        - name: JAVA_TOOL_OPTIONS
+          value: "-Xmx4500m -Xms256m -XX:+ExitOnOutOfMemoryError"
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "mdms-v2/v2/_search"
   defaultLocale: 'en_DEMO'
@@ -1329,6 +1331,10 @@ excel-ingestion:
   memory_limits: 6Gi
   cpu_requests: 250m
   heap: "-Xmx5000m -Xms256m"
+  healthChecks:
+    enabled: true
+    livenessProbePath: "/excel-ingestion/health/liveness"
+    readinessProbePath: "/excel-ingestion/health/readiness"
   excel-ingestion-generation-init-topic: "excel-ingestion-generation-init"
 
 worker-registry:
