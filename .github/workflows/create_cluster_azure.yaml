@@ -341,7 +341,7 @@ jobs:
         working-directory: deploy-as-code/deployer
       - name: Displaying the Loadbalancer IP
         run: |
-          LB_IP=$(kubectl get svc nginx-ingress-controller -n egov -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          LB_IP=$(kubectl get svc nginx-ingress-controller -n default -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
           echo "LoadBalancer IP: $LB_IP"
           echo "Thank you for installing DIGIT! 🙏 Your installation is complete and ready to roll! 🚀"
           echo "Please map the LoadBalancer IP ($LB_IP) with the domain provided in input.yaml to access the DIGIT UI"
@@ -404,7 +404,7 @@ jobs:
           cat ~/.kube/config > kubeconfig
         continue-on-error: true
       - name: Deleting Loadbalancer
-        run: kubectl delete svc nginx-ingress-controller -n egov
+        run: kubectl delete svc nginx-ingress-controller -n default
         continue-on-error: true
       - name: Download Terraform
         run: |
