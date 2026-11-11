@@ -1,0 +1,135 @@
+
+version: v2.1
+modules:
+  - name: backbone
+    services:
+      - kafka-kraft
+      - kafka-connect
+      - kafka-connect-restart-tasks
+      - elasticsearch-data
+      - elasticsearch-master
+      - kibana
+      - clamav
+  - name: authn-authz
+    services:
+      - redis
+      - ingress-nginx
+      - cert-manager
+      - zuul:v1.3.1-96b24b0d72-39
+      - gateway:HCMPRE-2023-corrfix-tenantId-11a40a1
+  - name: core
+    dependencies:
+      - "backbone"
+      - "authn-authz"
+      - "frontend"
+    services:
+      - egovio/egov-accesscontrol:master-1e8d2bb
+      - egovio/egov-malware-detection:master-malware-fix-77a437a
+      - egovio/egov-url-shortening:DIGIT-2.9-LTS-07f47790b8-12
+      - egovio/egov-enc-service:central-instance-tracerNew-eb7ff05
+      - egovio/egov-localization:redis-localization-key-5c0a4c4
+      - egovio/egov-idgen:2.9-LTS-IDgen-mdmsDatacache-bd2b4f1
+      - egovio/egov-filestore:master-1e8d2bb
+      - egovio/egov-indexer:master-1e8d2bb
+      - egovio/egov-notification-mail:DIGIT-2.9-LTS-07f47790b8-5
+      - egovio/egov-notification-sms:DIGIT-2.9-LTS-07f47790b8-7
+      - egovio/egov-otp:central-instance-a0fc793059-8
+      - egovio/egov-persister:master-perf-fe334d2
+      - egovio/egov-user:user-bulk-upgrade-960226f
+      - egovio/user-otp:v2.9.0-063968adc7-25
+      - egovio/egov-workflow-v2:central-instance-1248cc50e5-38
+      - egovio/audit-service:master-1e8d2bb
+      - egovio/error-handler:master-impel-dump-a28582d
+      - egovio/playground:2.0
+      - egovio/mdms-v2:central-instance-tracerNew-eb7ff05
+      - egovio/boundary-service:master-perf-ad568fb
+  - name: business
+    dependencies:
+      - "core"
+    services:
+      - egovio/egov-hrms:master-bd88994
+  - name: frontend
+    dependencies:
+      - "business"
+    services:
+      - egovio/digit-ui:feature-sso-dev-multiarch-eb9bc14cc2-454
+      - egovio/dashboard-ui:master-4e0e7fd
+      - egovio/console:ondo-proxy-f806f086a2-149
+      - egovio/core-ui:develop-548f854d1d-57
+  - name: m_pgr             #PGR
+    dependencies:
+      - "core"
+      - "business"
+    services:
+      - egovio/pgr-services:pgr-hierarchy-modification-a42c40b
+  - name: dss   #dss
+    dependencies:
+      - "frontend"
+      - "core"
+      - "business"
+    services:
+      - egovio/dashboard-ingest:v1.1.4-72f8a8f87b-10
+      - egovio/dashboard-analytics:analytics-raw-response-transform-5f98d99
+      - egovio/dss-dashboard:v1.8.0-0d70d60e63-53
+  - name: Other
+    dependencies:
+      - "core"
+      - "business"
+    services:
+      ## - egovio/egov-user-event:v1.2.0-c1e1e8ce24-21 not used currently in health
+  - name: m_health
+    dependencies:
+      - "backbone"
+      - "authn-authz"
+      - "core"
+      - "business"
+      - "dss"
+      - "Other"
+      - "frontend"
+      - "m_hcmconsole"
+    services:
+      - egovio/facility:master-b912a1c
+      - egovio/product:master-b912a1c
+      - egovio/individual:master-bd88994
+      - egovio/transformer:transformer-final-2.1-2c59d3b
+      - egovio/stock:master-b912a1c
+      - egovio/household:master-b912a1c
+      - egovio/project:master-b912a1c
+      - egovio/referralmanagement:master-b912a1c
+      - egovio/health-attendance:master-5767379
+      - egovio/service-request:master-7f8a6b8
+      - egovio/health-muster-roll:master-cdc5957
+      - egovio/health-expense:master-cdc5957
+      - egovio/health-expense-calculator:master-a5e4c31
+      - egovio/payments-ui:master-2376f89
+      - egovio/pdf-service:central-instance-pdf-7b3064f
+      - egovio/beneficiary-idgen:beneficiary-idgen-central-instance-a8d144a
+      - inbox:pgr-hierarchy-modification-inbox-d3ae73e
+      - egovio/egov-notification-push:master-7f8a6b8
+      - egovio/health-notification-service:master-b912a1c
+      - egovio/worker-registry:master-b912a1c
+  - name: m_hcmconsole
+    dependencies:
+      - "backbone"
+      - "authn-authz"
+      - "core"
+      - "m-health"
+      - "m_hcm_microplanning"
+    services:
+      - egovio/project-factory:master-32ff216
+      - egovio/workbench-ui:master-b40c93b
+      - egovio/excel-ingestion:master-32ff216
+      - egovio/boundary-management:master-b912a1c
+      - airflow-trigger-service:master-38dc577
+  - name: m_hcm_microplanning
+    dependencies:
+      - "backbone"
+      - "authn-authz"
+      - "core"
+      - "m_hcmconsole"
+      - "m_health"
+    services:
+      - plan-service:master-b912a1c
+      - resource-generator:master-b912a1c
+      - census-service:master-b912a1c
+      - microplan-ui:master-88c8318
