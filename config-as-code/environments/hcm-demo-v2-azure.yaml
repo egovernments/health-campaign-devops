@@ -1310,12 +1310,12 @@ resource-generator:
 excel-ingestion:
   image:
     repository: egovio/excel-ingestion
-    tag: HCMPRE-2429-master-project-search-index-c1dc738-bbf6c9d
+    tag: HCMPRE-2429-master-project-search-index-c1dc738-504b126
   initContainers:
     dbMigration:
       image:
         repository: egovio/excel-ingestion-db
-        tag: HCMPRE-2429-master-project-search-index-c1dc738-bbf6c9d
+        tag: HCMPRE-2429-master-project-search-index-c1dc738-504b126
   extraEnv:
       app: |
         - name: EXCEL_INGESTION_OUTSIDE_HOUSEHOLD_CAMPAIGN_TYPES
