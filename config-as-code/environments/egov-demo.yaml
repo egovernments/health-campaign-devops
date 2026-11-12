@@ -222,7 +222,7 @@ egov-malware-detection:
     dbMigration:
       image:
         repository: egovio/egov-malware-detection-db
-        tag: master-malware-fix-77a437a
+        tag: master-malware-fix-77a437a  
   # ClamAV Configuration
   clamav-host: "clamav.security"
   clamav-port: "3310"
@@ -243,6 +243,19 @@ egov-malware-detection:
   slack-channel: "#filestore-malware-alerts"
   slack-username: "MalwareBot"
   slack-icon-emoji: ":warning:"
+  # Email Notification (uses egov-notification-mail via Kafka)
+  mail-enabled: true
+  mail-notification-mode: "kafka"
+  mail-alert-recipients: "ritik.kumar@egovernments.org"
+  mail-alert-subject: "DIGIT Security Alert - Malware Detected"
+  # Scan Settings
+  scan-max-file-size-mb: "50"
+  # Quarantine Settings
+  quarantine-enabled: false
+  quarantine-delete-original: false
+  # JVM Settings
+  heap: "-Xmx512m -Xms512m"
+  memory_limits: "768Mi"
 
 egov-filestore:
   volume: /opt/eGov/filestore
