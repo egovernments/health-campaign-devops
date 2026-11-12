@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - release-githubactions-azure
+      - githubactions-azure-hcm-2.2
 
   workflow_dispatch:
     inputs:
@@ -209,11 +210,11 @@ jobs:
         working-directory: infra-as-code/terraform/sample-azure
       - name: Terraform Plan - Infra creation
         id: plan-Infra
-        run: terraform plan -no-color -input=false -var db_password=demo123456 -lock=false
+        run: terraform plan -no-color -input=false -var "db_password=${{ secrets.DB_PASSWORD }}" -lock=false
         working-directory: infra-as-code/terraform/sample-azure
       - name: Terraform Apply - Infra creation
         id: apply-Infra
-        run: terraform apply -no-color -input=false -auto-approve -var db_password=demo123456 -lock=false
+        run: terraform apply -no-color -input=false -auto-approve -var "db_password=${{ secrets.DB_PASSWORD }}" -lock=false
         continue-on-error: true
         working-directory: infra-as-code/terraform/sample-azure
 
@@ -318,12 +319,29 @@ jobs:
           wget https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux
           chmod +x sops-v3.7.1.linux
           sudo mv sops-v3.7.1.linux /usr/local/bin/sops
+      # Inject runtime secrets from GitHub Secrets so they are never committed.
+      # The DB password must match the one Terraform gave the Postgres server.
+      - name: Inject secrets into egov-demo-secrets.yaml
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          FILESTORE_ACCOUNT: ${{ secrets.AZURE_FILESTORE_ACCOUNT_NAME }}
+          FILESTORE_KEY: ${{ secrets.AZURE_FILESTORE_ACCOUNT_KEY }}
+        run: |
+          for v in DB_PASSWORD FILESTORE_ACCOUNT FILESTORE_KEY; do
+            [ -n "${!v}" ] || { echo "Missing GitHub secret for $v"; exit 1; }
+          done
+          f=config-as-code/environments/egov-demo-secrets.yaml
+          perl -pi -e 's/^(\s*(?:password|flywayPassword):\s*)demo123456\b.*/$1"$ENV{DB_PASSWORD}"/' "$f"
+          perl -pi -e 's/^(\s*aws-key:\s*)aswedfghew\b.*/$1"$ENV{FILESTORE_ACCOUNT}"/' "$f"
+          perl -pi -e 's/^(\s*aws-secret-key:\s*)xdefghgdxc\b.*/$1"$ENV{FILESTORE_KEY}"/' "$f"
+          grep -q demo123456 "$f" && { echo "DB password placeholder not replaced"; exit 1; } || true
+          echo "Secrets injected."
       - name: digit deployment
         run: go run digit_installer.go
         working-directory: deploy-as-code/deployer
       - name: Displaying the Loadbalancer IP
         run: |
-          LB_IP=$(kubectl get svc nginx-ingress-controller -n egov -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          LB_IP=$(kubectl get svc nginx-ingress-controller -n default -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
           echo "LoadBalancer IP: $LB_IP"
           echo "Thank you for installing DIGIT! 🙏 Your installation is complete and ready to roll! 🚀"
           echo "Please map the LoadBalancer IP ($LB_IP) with the domain provided in input.yaml to access the DIGIT UI"
@@ -386,7 +404,7 @@ jobs:
           cat ~/.kube/config > kubeconfig
         continue-on-error: true
       - name: Deleting Loadbalancer
-        run: kubectl delete svc nginx-ingress-controller -n egov
+        run: kubectl delete svc nginx-ingress-controller -n default
         continue-on-error: true
       - name: Download Terraform
         run: |
@@ -407,8 +425,8 @@ jobs:
         run: terraform validate -no-color
         working-directory: infra-as-code/terraform/sample-azure
       - name: Terraform Plan - Infra destruction
-        run: terraform plan -destroy -no-color -input=false -var db_password=demo123456 -lock=false
+        run: terraform plan -destroy -no-color -input=false -var "db_password=${{ secrets.DB_PASSWORD }}" -lock=false
         working-directory: infra-as-code/terraform/sample-azure
       - name: Terraform Destroy - Infra destruction
-        run: terraform destroy -no-color -auto-approve -var db_password=demo123456 -lock=false
+        run: terraform destroy -no-color -auto-approve -var "db_password=${{ secrets.DB_PASSWORD }}" -lock=false
         working-directory: infra-as-code/terraform/sample-azure

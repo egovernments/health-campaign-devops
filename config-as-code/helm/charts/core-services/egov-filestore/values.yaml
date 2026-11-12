@@ -129,6 +129,10 @@ env: |
   # Azure-only block, guarded: demo runs Azure blob storage; S3/EKS installs (is-s3-enabled)
   # must not receive these vars (FIXED_BUCKET_REGION af-south-1 would mis-sign S3 requests).
   {{- if index .Values "is-azure-storage-enabled" }}
+  # The service defaults isS3Enabled=true; without this both MinioRepository and
+  # AzureBlobStorageImpl load and startup fails with "required a single bean, but 2 were found".
+  - name: ISS3ENABLED
+    value: "false"
   - name: SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE
     value: "180MB"
   - name: MINIO_ENABLED
@@ -137,6 +141,12 @@ env: |
     value: "af-south-1"
   - name: ISAZURESTORAGEENABLED
     value: "true"
+  # Azure reads fixed.container.name (default "egov-rainmaker"), not FIXED_BUCKETNAME.
+  # Point it at the existing private container so the service never tries to create a public one.
+  - name: IS_CONTAINER_FIXED
+    value: "true"
+  - name: FIXED_CONTAINER_NAME
+    value: {{ index .Values "fixed-bucketname" | quote }}
   - name: AZURE_ACCOUNTNAME
     valueFrom:
       secretKeyRef:

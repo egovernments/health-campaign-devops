@@ -148,6 +148,7 @@ workbench-ui:
     sub_filter.conf: "
       sub_filter  '<head>' '<head>
       <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/demo/globalConfigsWorkbenchDemo.js type=text/javascript ></script>
+      <script>(function(){var g=window.globalConfigs,f=g.getConfig,o={STATE_LEVEL_TENANT_ID:\"mz\",LOCALE_REGION:\"MZ\",GOOGLE_TENANT_ID:\"mz\"};g.getConfig=function(k){return o.hasOwnProperty(k)?o[k]:f(k)};})();</script>
       <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript ></script>
       ';"
 
@@ -196,7 +197,8 @@ console:
   custom-js-injection: |
     sub_filter.conf: "
       sub_filter  '<head>' '<head>
-      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/demo/globalConfigsConsoleDemo.js type=text/javascript defer></script>
+      <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/demo/globalConfigsConsoleDemo.js type=text/javascript></script>
+      <script>(function(){var g=window.globalConfigs,f=g.getConfig,o={STATE_LEVEL_TENANT_ID:\"mz\",LOCALE_REGION:\"MZ\",GOOGLE_TENANT_ID:\"mz\"};g.getConfig=function(k){return o.hasOwnProperty(k)?o[k]:f(k)};})();</script>
       <script src=https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/analytics/analytics.js type=text/javascript async></script>
       ';"
 
@@ -220,7 +222,7 @@ egov-malware-detection:
     dbMigration:
       image:
         repository: egovio/egov-malware-detection-db
-        tag: master-malware-fix-77a437a
+        tag: master-malware-fix-77a437a  
   # ClamAV Configuration
   clamav-host: "clamav.security"
   clamav-port: "3310"
@@ -241,18 +243,36 @@ egov-malware-detection:
   slack-channel: "#filestore-malware-alerts"
   slack-username: "MalwareBot"
   slack-icon-emoji: ":warning:"
+  # Email Notification (uses egov-notification-mail via Kafka)
+  mail-enabled: true
+  mail-notification-mode: "kafka"
+  mail-alert-recipients: "ritik.kumar@egovernments.org"
+  mail-alert-subject: "DIGIT Security Alert - Malware Detected"
+  # Scan Settings
+  scan-max-file-size-mb: "50"
+  # Quarantine Settings
+  quarantine-enabled: false
+  quarantine-delete-original: false
+  # JVM Settings
+  heap: "-Xmx512m -Xms512m"
+  memory_limits: "768Mi"
 
 egov-filestore:
   volume: /opt/eGov/filestore
   is-bucket-fixed: "true"
   minio.url : "http://minio.backbone:9000/"
   aws.s3.url : "https://s3.amazonaws.com"
-  is-s3-enabled: "true"
+  # Azure Blob Storage instead of S3. Keep these as real booleans (not "false"):
+  # the chart uses `if`, and any non-empty string counts as true.
+  # Storage account name/key are injected by the workflow into egov-demo-secrets.yaml
+  # (aws-key = account name, aws-secret-key = account key).
+  is-s3-enabled: false
+  is-azure-storage-enabled: true
   minio-enabled: false
   allowed-file-formats-map: "{jpg:{'image/jpg','image/jpeg'},jpeg:{'image/jpeg','image/jpg'},png:{'image/png'},pdf:{'application/pdf'},odt:{'application/vnd.oasis.opendocument.text'},ods:{'application/vnd.oasis.opendocument.spreadsheet'},docx:{'application/x-tika-msoffice','application/x-tika-ooxml','application/vnd.oasis.opendocument.text','application/msword'},doc:{'application/x-tika-msoffice','application/x-tika-ooxml','application/vnd.oasis.opendocument.text','application/msword'},dxf:{'text/plain','application/dxf','application/octet-stream','image/vnd.dxf','image/vnd.dxf; format=ascii','image/vnd.dxf; format=binary','image/vnd.dxb'},csv:{'text/plain'},txt:{'text/plain'},xlsx:{'application/x-tika-ooxml','application/x-tika-msoffice','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/zip','multipart/form-data'},xls:{'application/x-tika-ooxml','application/x-tika-msoffice','application/vnd.ms-excel','multipart/form-data'},zip:{'application/zip','application/octet-stream'},geojson:{'application/json','text/plain','application/geo+json','multipart/form-data'},json:{'application/json','text/plain'}}"
   allowed-file-formats: "jpg,jpeg,png,doc,docx,pdf,odt,ods,text,dxf,xls,xlsx,zip,geojson,json"
   filestore-url-validity: 3600
-  fixed-bucketname: hcmv8-testing-s3-filestore  ## Add filestore bucket name
+  fixed-bucketname: egov-filestore  ## Azure Blob container name in the filestore storage account
 
 egov-idgen:
   replicas : 1
@@ -441,7 +461,7 @@ egov-persister:
   heap: '-Xmx256m -Xms256m'
   images:
     - egovio/egov-persister
-  persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/hrms-employee-persister.yml,file:///work-dir/health-campaign-config/egov-persister/product-persister.yml,file:///work-dir/health-campaign-config/egov-persister/project-persister.yml,file:///work-dir/health-campaign-config/egov-persister/individual-persister.yml,file:///work-dir/health-campaign-config/egov-persister/household-persister.yml,file:///work-dir/health-campaign-config/egov-persister/project-task-persister.yml,file:///work-dir/health-campaign-config/egov-persister/stock-persister.yml,file:///work-dir/health-campaign-config/egov-persister/facility-persister.yml,file:///work-dir/health-campaign-config/egov-persister/service-request-persister.yml,file:///work-dir/health-campaign-config/egov-persister/pgr-services-persister.yml,file:///work-dir/health-campaign-config/egov-persister/egov-workflow-v2-persister.yml,file:///work-dir/health-campaign-config/egov-persister/mdms-persister.yml,file:///work-dir/health-campaign-config/egov-persister/referral-management-persister.yml,file:///work-dir/health-campaign-config/egov-persister/project-factory-persister.yml,file:///work-dir/health-campaign-config/egov-persister/attendance-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/irs-persister.yml,file:///work-dir/health-campaign-config/egov-persister/census-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/plan-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/boundary-persister.yml,file:///work-dir/health-campaign-config/egov-persister/id-pool-persister.yml,file:///work-dir/health-campaign-config/egov-persister/id-pool-dispatch-log-persister.yml,file:///work-dir/health-campaign-config/egov-persister/boundary-management-persister.yml,file:///work-dir/health-campaign-config/egov-persister/excel-ingestion-persister.yml,file:///work-dir/health-campaign-config/egov-persister/muster-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/expense-bill-payment-persister.yaml,file:///work-dir/health-campaign-config/egov-persister/health-notification-persister.yml,file:///work-dir/health-campaign-config/egov-persister/expense-billarray-payment-persister.yml,file:///work-dir/health-campaign-config/egov-persister/egov-notification-push-persister.yml,file:///work-dir/health-campaign-config/egov-persister/reports-metadata-persister.yml"
+  persist-yml-path: "file:///work-dir/health-campaign-config/egov-persister/hrms-employee-persister.yml,file:///work-dir/health-campaign-config/egov-persister/product-persister.yml,file:///work-dir/health-campaign-config/egov-persister/project-persister.yml,file:///work-dir/health-campaign-config/egov-persister/individual-persister.yml,file:///work-dir/health-campaign-config/egov-persister/household-persister.yml,file:///work-dir/health-campaign-config/egov-persister/project-task-persister.yml,file:///work-dir/health-campaign-config/egov-persister/stock-persister.yml,file:///work-dir/health-campaign-config/egov-persister/facility-persister.yml,file:///work-dir/health-campaign-config/egov-persister/service-request-persister.yml,file:///work-dir/health-campaign-config/egov-persister/pgr-services-persister.yml,file:///work-dir/health-campaign-config/egov-persister/egov-workflow-v2-persister.yml,file:///work-dir/health-campaign-config/egov-persister/mdms-persister.yml,file:///work-dir/health-campaign-config/egov-persister/referral-management-persister.yml,file:///work-dir/health-campaign-config/egov-persister/project-factory-persister.yml,file:///work-dir/health-campaign-config/egov-persister/attendance-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/irs-persister.yml,file:///work-dir/health-campaign-config/egov-persister/census-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/plan-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/boundary-persister.yml,file:///work-dir/health-campaign-config/egov-persister/id-pool-persister.yml,file:///work-dir/health-campaign-config/egov-persister/id-pool-dispatch-log-persister.yml,file:///work-dir/health-campaign-config/egov-persister/boundary-management-persister.yml,file:///work-dir/health-campaign-config/egov-persister/excel-ingestion-persister.yml,file:///work-dir/health-campaign-config/egov-persister/muster-service-persister.yml,file:///work-dir/health-campaign-config/egov-persister/expense-bill-payment-persister.yml,file:///work-dir/health-campaign-config/egov-persister/health-notification-persister.yml,file:///work-dir/health-campaign-config/egov-persister/expense-billarray-payment-persister.yml,file:///work-dir/health-campaign-config/egov-persister/egov-notification-push-persister.yml,file:///work-dir/health-campaign-config/egov-persister/reports-metadata-persister.yml"
   initContainers:
     gitSync:
       repo: "git@github.com:egovernments/health-campaign-config"      ##### Change repo url with Your fork Repo url
@@ -461,6 +481,7 @@ egov-searcher:
       branch: "DEMO"                                   ##### Change repo branch with Your fork Repo branch
 
 dashboard-analytics:
+  central-instance-tenants: "mz"
   config-schema-paths: "file:///work-dir/health-campaign-config/egov-dss-dashboards/dashboard-analytics/*.json"
   initContainers:
     gitSync:
@@ -639,6 +660,7 @@ egov-workflow-v2:
   pdf-link: "/download/epass?tenantId={TENANTID}&ids={UUID}"
 
 transformer:
+  state-level-tenantid: "mz"
   egov-boundary-hierarchy-name: "ADMIN"
   egov-mdms-service-host-key: 'mdms-service-v2'
   egov-mdms-service-endpoint-key: "/mdms-v2/v1/_search"
@@ -1112,7 +1134,7 @@ es-curator:
 
 # clamav (malware scanner backend for egov-malware-detection) >>>>>>>>>>>>>>>>
 # Mirrored from the reference environment (health-campaign-devops @ azure-install-hcm-demo,
-# environments/clamav-security.yaml); storageClass adapted azure "default" -> EKS gp2.
+# environments/clamav-security.yaml); storageClass "default" (AKS built-in managed disk class).
 # First boot downloads virus definitions into the PVC before clamd listens - the pod
 # stays unready for several minutes; that is not a crash.
 clamav:
@@ -1149,7 +1171,7 @@ clamav:
   persistentVolume:
     enabled: true
     size: 5Gi
-    storageClass: "gp2"
+    storageClass: "default"
 
   service:
     type: ClusterIP

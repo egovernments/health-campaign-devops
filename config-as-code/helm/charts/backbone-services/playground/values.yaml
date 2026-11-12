@@ -11,3 +11,13 @@ image:
   repository: playground 
   tag: "1.3"
 replicas: "1"
+
+# The image runs PostgreSQL and Elasticsearch in one container. Without a limit
+# the embedded ES JVM sizes its heap against the whole node and gets OOMKilled.
+resources: |
+  requests:
+    cpu: "100m"
+    memory: "1Gi"
+  limits:
+    cpu: "1"
+    memory: "3Gi"
