@@ -88,14 +88,14 @@ modules:
       - "frontend"
       - "m_hcmconsole"
     services:
-      - egovio/facility:master-b912a1c
+      - egovio/facility:master-c1dc738
       - egovio/product:master-b912a1c
       - egovio/individual:master-bd88994
       - egovio/transformer:transformer-final-2.1-2c59d3b
       - egovio/stock:master-b912a1c
       - egovio/household:master-b912a1c
-      - egovio/project:master-b912a1c
-      - egovio/referralmanagement:master-b912a1c
+      - egovio/project:master-c1dc738
+      - egovio/referralmanagement:master-c1dc738
       - egovio/health-attendance:master-5767379
       - egovio/service-request:master-7f8a6b8
       - egovio/health-muster-roll:master-cdc5957
@@ -107,7 +107,7 @@ modules:
       - inbox:pgr-hierarchy-modification-inbox-d3ae73e
       - egovio/egov-notification-push:master-7f8a6b8
       - egovio/health-notification-service:master-b912a1c
-      - egovio/worker-registry:master-b912a1c
+      - egovio/worker-registry:master-c1dc738
   - name: m_hcmconsole
     dependencies:
       - "backbone"
@@ -116,10 +116,10 @@ modules:
       - "m-health"
       - "m_hcm_microplanning"
     services:
-      - egovio/project-factory:master-32ff216
-      - egovio/workbench-ui:master-b40c93b
-      - egovio/excel-ingestion:master-32ff216
-      - egovio/boundary-management:master-b912a1c
+      - egovio/project-factory:master-c1dc738
+      - egovio/workbench-ui:master-faa252f
+      - egovio/excel-ingestion:master-c1dc738
+      - egovio/boundary-management:master-c1dc738
       - airflow-trigger-service:master-38dc577
   - name: m_hcm_microplanning
     dependencies:
