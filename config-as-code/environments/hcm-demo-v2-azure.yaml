@@ -1159,10 +1159,10 @@ project-factory:
     dbMigration:
       image:
         repository: "project-factory-db"
-        tag: HCMPRE-2429-master-project-search-index-c1dc738-bbf6c9d
+        tag: HCMPRE-2429-master-project-search-index-c1dc738-b0c415a
   image:
     repository: egovio/project-factory
-    tag: HCMPRE-2429-master-project-search-index-c1dc738-bbf6c9d
+    tag: HCMPRE-2429-master-project-search-index-c1dc738-b0c415a
   extraEnv:
       app: |
         - name: CAMPAIGN_DELIVERY_CONDITION_TYPES
