@@ -44,6 +44,14 @@ cluster-configs:
       namespace: egov
       name: egov-notification-sms
 
+    airflow-admin-credentials:
+      namespace: egov
+      name: airflow-admin-credentials
+
+    egov-malware-detection:
+      namespace: egov
+      name: egov-malware-detection
+
     egov-filestore: 
       namespace: egov
       name: egov-filestore     
