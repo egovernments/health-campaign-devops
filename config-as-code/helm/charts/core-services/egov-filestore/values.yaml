@@ -141,6 +141,12 @@ env: |
     value: "af-south-1"
   - name: ISAZURESTORAGEENABLED
     value: "true"
+  # Azure reads fixed.container.name (default "egov-rainmaker"), not FIXED_BUCKETNAME.
+  # Point it at the existing private container so the service never tries to create a public one.
+  - name: IS_CONTAINER_FIXED
+    value: "true"
+  - name: FIXED_CONTAINER_NAME
+    value: {{ index .Values "fixed-bucketname" | quote }}
   - name: AZURE_ACCOUNTNAME
     valueFrom:
       secretKeyRef:
