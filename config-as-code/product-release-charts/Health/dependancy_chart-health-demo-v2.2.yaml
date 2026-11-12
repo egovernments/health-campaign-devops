@@ -47,7 +47,7 @@ modules:
     dependencies:
       - "core"
     services:
-      - egovio/egov-hrms:master-bd88994
+      - egovio/egov-hrms:master-c1dc738
   - name: frontend
     dependencies:
       - "business"
@@ -61,7 +61,7 @@ modules:
       - "core"
       - "business"
     services:
-      - egovio/pgr-services:pgr-hierarchy-modification-a42c40b
+      - egovio/pgr-services:master-c1dc738
   - name: dss   #dss
     dependencies:
       - "frontend"
@@ -89,24 +89,24 @@ modules:
       - "m_hcmconsole"
     services:
       - egovio/facility:master-c1dc738
-      - egovio/product:master-b912a1c
-      - egovio/individual:master-bd88994
+      - egovio/product:master-c1dc738
+      - egovio/individual:master-c1dc738
       - egovio/transformer:transformer-final-2.1-2c59d3b
-      - egovio/stock:master-b912a1c
-      - egovio/household:master-b912a1c
+      - egovio/stock:master-c1dc738
+      - egovio/household:master-c1dc738
       - egovio/project:master-c1dc738
       - egovio/referralmanagement:master-c1dc738
       - egovio/health-attendance:master-5767379
-      - egovio/service-request:master-7f8a6b8
+      - egovio/service-request:master-c1dc738
       - egovio/health-muster-roll:master-cdc5957
       - egovio/health-expense:master-cdc5957
       - egovio/health-expense-calculator:master-a5e4c31
       - egovio/payments-ui:master-2376f89
       - egovio/pdf-service:central-instance-pdf-7b3064f
-      - egovio/beneficiary-idgen:beneficiary-idgen-central-instance-a8d144a
-      - inbox:pgr-hierarchy-modification-inbox-d3ae73e
-      - egovio/egov-notification-push:master-7f8a6b8
-      - egovio/health-notification-service:master-b912a1c
+      - egovio/beneficiary-idgen:master-c1dc738
+      - egovio/inbox:master-c1dc738
+      - egovio/egov-notification-push:master-c1dc738
+      - egovio/health-notification-service:master-c1dc738
       - egovio/worker-registry:master-c1dc738
   - name: m_hcmconsole
     dependencies:
