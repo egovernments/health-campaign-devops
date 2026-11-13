@@ -1,5 +1,0 @@
-environment = "hcm-demo"
-resource_group = "hcm-demo-rg"
-location  = "centralus"
-db_user  = "healthegovdemo"
-db_password = "health#db#pass"

@@ -23,7 +23,7 @@
 
 ### Step 1: Destroy Current Infrastructure
 ```bash
-export TF_VAR_db_password="afrohcm@2024"
+read -rs -p "DB admin password: " TF_VAR_db_password && export TF_VAR_db_password
 terraform destroy -auto-approve
 ```
 
