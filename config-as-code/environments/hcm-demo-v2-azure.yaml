@@ -2014,10 +2014,37 @@ superset:
     resultsDb: "3"
   branding:
     appName: "HCM Analytics"
+  # CPU requests sized to fit: all 8 nodes are ~90% requested and the node pool
+  # is at its autoscaler max, so the chart defaults (sized for unified-dev)
+  # left superset-web Pending. Actual use here is far below these; limits are
+  # unchanged so bursts are still allowed.
+  web:
+    resources:
+      requests:
+        cpu: "300m"
+    nginx:
+      resources:
+        requests:
+          cpu: "50m"
+  worker:
+    resources:
+      requests:
+        cpu: "100m"
+  beat:
+    resources:
+      requests:
+        cpu: "50m"
+  initContainers:
+    resources:
+      requests:
+        cpu: "50m"
   initJob:
     # Local admin, created when ADMIN_PASSWORD is in superset-secret.
     adminUsername: admin
     adminEmail: admin@health-demo-v2.digit.org
+    resources:
+      requests:
+        cpu: "200m"
   auth:
     # GitHub sign-in plus username/password on the same login page.
     # OAuth app callback: https://superset.health-demo-v2.digit.org/oauth-authorized/github
