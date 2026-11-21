@@ -1994,3 +1994,48 @@ loki:
     table_manager:
       retention_deletes_enabled: true
       retention_period: 168h  # 7 days
+
+# Superset (helm.digit.org/digit3/analytics/superset), deployed by
+# helm/charts/argo-cd/analytics/superset-application.yaml. Overrides the chart's
+# values.yaml; anything not set here keeps the chart default. Credentials
+# (SECRET_KEY, DB URI, ADMIN_PASSWORD, OAUTH_CLIENT_ID/SECRET) are in the
+# superset-secret Secret from cluster-configs.secrets.generic in the SOPS file.
+superset:
+  namespace: analytics
+  database:
+    host: hcm-demo-v2-server.postgres.database.azure.com
+    name: superset
+    user: superset
+  # Shared backbone Redis: the DIGIT services use db0, so Superset takes 2 and 3.
+  redis:
+    host: redis.backbone.svc.cluster.local
+    port: 6379
+    celeryDb: "2"
+    resultsDb: "3"
+  branding:
+    appName: "HCM Analytics"
+  initJob:
+    # Local admin, created when ADMIN_PASSWORD is in superset-secret.
+    adminUsername: admin
+    adminEmail: admin@health-demo-v2.digit.org
+  auth:
+    # GitHub sign-in plus username/password on the same login page.
+    # OAuth app callback: https://superset.health-demo-v2.digit.org/oauth-authorized/github
+    oauth:
+      enabled: true
+      githubOrg: egovernments
+      # GitHub team slug -> Superset roles. Only members of these teams can
+      # sign in with GitHub; everyone also gets defaultRole.
+      teamRoles:
+        hcm-demo-superset-admins: [ Admin ]
+        hcm-demo-superset-users: [ Alpha, sql_lab ]
+      defaultRole: Gamma
+      syncRolesAtLogin: true
+    passwordLogin:
+      enabled: true
+  # Off until the old Superset app (argocd-apps/demo/superset-app.yaml) is
+  # deleted: ingress-nginx rejects a second ingress for the same host/path.
+  # Until then reach it with: kubectl -n analytics port-forward svc/superset 8080
+  ingress:
+    enabled: false
+    hostName: superset.health-demo-v2.digit.org

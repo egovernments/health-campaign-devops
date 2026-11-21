@@ -1,0 +1,52 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: analytics-superset
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  # Packaged chart from egovernments/helm-charts (charts/digit3/analytics/superset).
+  # Values come from the `superset:` block of the env file; the chart merges it
+  # over its defaults. Credentials are in the `superset-secret` Secret, rendered
+  # by cluster-configs from cluster-configs.secrets.generic in the SOPS file.
+  #
+  # Replaces the upstream Apache Superset app (argocd-apps/demo/superset-app.yaml,
+  # namespace superset). Both run until the old one's metadata is migrated; the
+  # new ingress stays off until then because ingress-nginx rejects a second
+  # ingress for superset.health-demo-v2.digit.org.
+  sources:
+    - repoURL: https://helm.digit.org/digit3/analytics
+      chart: superset
+      targetRevision: 3.0.0
+      helm:
+        releaseName: superset
+        valueFiles:
+          - $values/config-as-code/environments/hcm-demo-v2-azure.yaml
+    - repoURL: git@github.com:egovernments/health-campaign-devops.git
+      targetRevision: azure-install-hcm-demo-v2
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: analytics
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      # cluster-configs writes superset-secret into this namespace, so it has to
+      # exist first; until the secret appears the pods wait in
+      # CreateContainerConfigError and the init job retries.
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - ServerSideApply=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
