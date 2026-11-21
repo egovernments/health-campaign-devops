@@ -2060,9 +2060,8 @@ superset:
       syncRolesAtLogin: true
     passwordLogin:
       enabled: true
-  # Off until the old Superset app (argocd-apps/demo/superset-app.yaml) is
-  # deleted: ingress-nginx rejects a second ingress for the same host/path.
-  # Until then reach it with: kubectl -n analytics port-forward svc/superset 8080
+  # Took over this host from the upstream Apache Superset app (namespace
+  # superset), which was removed. cert-manager issues the certificate.
   ingress:
-    enabled: false
+    enabled: true
     hostName: superset.health-demo-v2.digit.org
