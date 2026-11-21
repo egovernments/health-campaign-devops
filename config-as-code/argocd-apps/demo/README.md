@@ -2,77 +2,23 @@
 
 Apps in this folder are applied directly with `kubectl apply -f <file>` against the
 `hcm-demo` cluster's `argocd` namespace — there is no app-of-apps auto-syncing this
-whole folder from git, so any new file here (or edits to `superset-app.yaml`) still
-needs to be applied manually once.
+whole folder from git, so any new file here still needs to be applied manually once.
 
 `airflow-app.yaml` is the one exception: `airflow-app-sync.yaml` is a file-scoped
 app-of-apps (`directory.include: airflow-app.yaml`) that watches only that one file
 and re-applies it automatically on every git change (see its own section below).
-It deliberately does **not** include `superset-app.yaml` — that file has placeholder
-secrets that must never be auto-reapplied (see the Superset section below) — so
-Superset stays manual-only.
 
-## superset-app.yaml
+## Superset
 
-Deploys Apache Superset (upstream chart `apache.github.io/superset`) into its own
-`superset` namespace, exposed at `https://superset.hcm-demo.digit.org` (Superset does
-not reliably support being served from a subpath, so a dedicated subdomain is used
-instead of `hcm-demo.digit.org/superset`).
-
-Requires the DNS record `superset.hcm-demo.digit.org` to point at the same ingress
-load balancer IP as `hcm-demo.digit.org` before cert-manager can issue the TLS cert.
-
-### Required secret (pre-created in-cluster, intentionally not committed to git)
-
-Must exist in the `superset` namespace before/when the Application syncs:
-
-- `superset-app-secrets` — key `SUPERSET_SECRET_KEY` (Flask secret key, `openssl rand -base64 42`),
-  wired in via `envFromSecrets`.
-
-```bash
-kubectl create secret generic superset-app-secrets -n superset \
-  --from-literal=SUPERSET_SECRET_KEY="$(openssl rand -base64 42 | tr -d '\n')"
-```
-
-### Postgres/Redis passwords (placeholders in git — READ THIS before reapplying)
-
-The bundled Postgres has no `existingSecret` indirection for the *app side* of its
-DB connection: `postgresql.auth.password` / `database.password` are rendered as
-literal strings into the pods' env, so they can't be secret-refs the way you'd
-expect. They also can't be left unset, because Argo CD renders this chart via
-`helm template` with no live cluster access — the subchart's `lookup()`-based
-"reuse the existing password" logic always misses in that mode, so an unset
-password gets **regenerated randomly on every single sync**, orphaning it from
-whatever password the already-initialized data volume actually has (this broke
-the deployment once already — see git history).
-
-So the password *must* be pinned as a literal. `postgresql.auth.postgresPassword`,
-`postgresql.auth.password`, and `database.password` (the last two must match
-each other) are checked into this file as `REPLACE_WITH_REAL_VALUE` rather than
-real secrets, because this repo's usual secret-encryption path (sops against the
-`hcm-demo-kv` Azure Key Vault, same as `environments/dhis2-secrets.yaml`) wasn't
-reachable when this file was authored. **The live Application in the cluster has
-real values already applied and running** — git and the cluster are
-intentionally out of sync on just these three fields.
-
-If you ever need to recreate this Application from git alone: generate two new
-random passwords, substitute them for all three `REPLACE_WITH_REAL_VALUE`
-placeholders, `kubectl apply` the file, then — because the data volume will be
-fresh — the values will actually take effect cleanly (no orphaned-password
-problem on a brand new volume). Ideally, migrate this to a real sops-encrypted
-values file instead of leaving it as a placeholder long-term.
-
-### Admin user
-
-`init.createAdmin` is set to `false` so no admin password is ever templated into the
-Application spec. After the first successful sync, create the admin user directly in
-the running pod:
-
-```bash
-kubectl exec -n superset deploy/superset -it -- superset fab create-admin \
-  --username admin --firstname Superset --lastname Admin \
-  --email <real-email> --password '<choose-a-strong-password>'
-```
+On hcm-demo-v2, Superset is no longer deployed from this folder. It is
+`helm/charts/argo-cd/analytics/superset-application.yaml`: the
+`digit3/analytics/superset` chart from helm.digit.org, namespace `analytics`,
+values from the `superset:` block of `environments/hcm-demo-v2-azure.yaml`, and
+credentials in `superset-secret` (SOPS, `cluster-configs.secrets.generic`).
+The upstream Apache Superset app that used to live here (`superset-app.yaml`,
+namespace `superset`) was removed; it held no dashboards, charts, datasets or
+connections. hcm-demo's own Superset never became ready (its pods crash-loop on
+the placeholder DB passwords), so it had nothing to migrate either.
 
 ## airflow-app.yaml
 
@@ -151,14 +97,13 @@ with `syncPolicy.automated: {selfHeal: true, prune: false}`, so any git change t
 `airflow-app.yaml` is re-applied to the `airflow` Application object automatically,
 which then (per the selfHeal policy above) rolls out to the live Deployments.
 
-It intentionally excludes `superset-app.yaml` and has no `resources-finalizer` of its
-own, so deleting `airflow-app-sync.yaml` (or its Application object) can never cascade
+It has no `resources-finalizer` of its own, so deleting `airflow-app-sync.yaml` (or its Application object) can never cascade
 into deleting the `airflow` Application or the real resources behind it.
 
 ## hcm-demo-v2 bring-up
 
-On the `azure-install-hcm-demo-v2` branch both apps point at the v2 hosts
-(`health-demo-v2.digit.org/airflow`, `superset.health-demo-v2.digit.org`).
+On the `azure-install-hcm-demo-v2` branch Airflow points at the v2 host
+(`health-demo-v2.digit.org/airflow`).
 A fresh cluster needs these before the first sync:
 
 **Airflow**
@@ -174,13 +119,4 @@ A fresh cluster needs these before the first sync:
 Unlike hcm-demo, the `/airflow` ingress is rendered by the chart
 (`ingress.apiServer`) rather than created by hand.
 
-**Superset**: on v2 the app no longer carries any passwords. With
-`secretEnv.create: false` and `postgresql.auth.existingSecret`, the pods and the
-bundled Postgres read `superset-env`, `superset-postgresql-auth` and
-`superset-app-secrets`, all rendered by cluster-configs from
-`cluster-configs.secrets.generic`. `SUPERSET_SECRET_KEY` is hcm-demo's; the DB
-passwords are new (hcm-demo's were the literal placeholder, which is why its
-Superset can't reach its DB). Apply `superset-app.yaml` after cluster-configs has
-synced, then create the admin user as described above. DNS for
-`superset.health-demo-v2.digit.org` must point at the v2 ingress IP before
-cert-manager can issue the certificate.
+**Superset**: see the Superset section above.

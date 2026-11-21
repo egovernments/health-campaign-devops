@@ -274,7 +274,7 @@ dump. None carry DSS data, so they can follow the main restore.
 
 | what | where | why it matters |
 |---|---|---|
-| Superset metadata | `superset/data-superset-postgresql-0` (20 Gi) | dashboards, charts, saved queries |
+| Superset metadata | not migrated | hcm-demo's Superset never became ready, so it holds no dashboards; v2 runs the `analytics` Superset with its metadata in the `superset` database on `hcm-demo-v2-server` |
 | DHIS2 | `dhis2/dhis2-postgresql-1` (20 Gi) | DHIS2 instance data |
 | Airflow metadata | `airflow/data-airflow-postgresql-0` (8 Gi) | DAG run history; safe to skip if a clean slate is acceptable |
 | Grafana | `monitoring/grafana` (10 Gi) | dashboards — prefer exporting via the API |
@@ -283,11 +283,11 @@ dump. None carry DSS data, so they can follow the main restore.
 Pattern for each in-cluster Postgres:
 
 ```sh
-kubectl --context hcm-demo -n superset exec superset-postgresql-0 -- \
-  pg_dump -U superset -d superset -Fc > superset-$SNAP.dump
+kubectl --context hcm-demo -n <namespace> exec <postgres-pod> -- \
+  pg_dump -U <user> -d <database> -Fc > <database>-$SNAP.dump
 
-kubectl --context hcm-demo-v2 -n superset exec -i superset-postgresql-0 -- \
-  pg_restore -U superset -d superset --no-owner --clean --if-exists < superset-$SNAP.dump
+kubectl --context hcm-demo-v2 -n <namespace> exec -i <postgres-pod> -- \
+  pg_restore -U <user> -d <database> --no-owner --clean --if-exists < <database>-$SNAP.dump
 ```
 
 ---
@@ -339,11 +339,8 @@ before anyone runs the delete.
   `pg_dump` (section 2) and store it outside both resource groups.
 - **Filestore blobs.** Confirm the counts in section 3 match before the source
   account is removed; after deletion there is nothing to re-copy from.
-- **Superset credentials.** These were applied directly to the live cluster and
-  were never committed to this repo (see the comment in
-  `argocd-apps/demo/superset-app.yaml`), so they exist *only* inside the running
-  cluster. Read them out before deletion or they are lost:
-  `kubectl --context hcm-demo -n superset get secret superset-env -o yaml`
+- **Superset credentials.** Not needed: hcm-demo's Superset never ran, and v2's
+  Superset has its own credentials in the v2 SOPS file (`superset-secret`).
 - **Grafana dashboards** and **JupyterHub notebooks**, if section 4 was skipped.
 
 **Order of operations:**

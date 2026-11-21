@@ -13,10 +13,14 @@ spec:
   # over its defaults. Credentials are in the `superset-secret` Secret, rendered
   # by cluster-configs from cluster-configs.secrets.generic in the SOPS file.
   #
-  # Replaces the upstream Apache Superset app (argocd-apps/demo/superset-app.yaml,
-  # namespace superset). Both run until the old one's metadata is migrated; the
-  # new ingress stays off until then because ingress-nginx rejects a second
-  # ingress for superset.health-demo-v2.digit.org.
+  # Replaced the upstream Apache Superset app (namespace superset). That one held
+  # no dashboards, charts, datasets or connections, so nothing was migrated.
+  #
+  # The metadata DB `superset` on hcm-demo-v2-server is created by hand, once:
+  # role `superset`, database owned by it, and `ALTER SCHEMA public OWNER TO
+  # superset` -- on Azure Flexible Server a new database's public schema belongs
+  # to azure_pg_admin, so without it the init job fails with "permission denied
+  # for schema public".
   sources:
     - repoURL: https://helm.digit.org/digit3/analytics
       chart: superset
