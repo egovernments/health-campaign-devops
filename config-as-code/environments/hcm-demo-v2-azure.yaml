@@ -2065,3 +2065,36 @@ superset:
   ingress:
     enabled: true
     hostName: superset.health-demo-v2.digit.org
+
+# ClickHouse for analytics (helm-charts digit3/analytics/clickhouse), deployed by
+# the Argo CD app analytics-clickhouse into namespace analytics, next to
+# Superset. The ClickHouse Inc. operator comes from the analytics-clickhouse-operator
+# app, which runs on its chart defaults (override under a top-level
+# `clickhouse-operator:` key). Passwords are in the
+# clickhouse-users Secret (cluster-configs, SOPS): default-password,
+# app-password, otelcollector-password.
+# Superset connects with
+#   clickhousedb://app:<app-password>@clickhouse-clickhouse-headless.analytics.svc.cluster.local:8123/default
+clickhouse:
+  cluster:
+    spec:
+      # Chart default is 1 CPU / 2Gi requested and 4 CPU / 8Gi limit, sized for
+      # unified-dev. Most nodes here are ~90% CPU-requested, so request less.
+      containerTemplate:
+        resources:
+          requests:
+            cpu: 500m
+            memory: 2Gi
+          limits:
+            cpu: "2"
+            memory: 4Gi
+      dataVolumeClaimSpec:
+        resources:
+          requests:
+            storage: 20Gi
+  keeper:
+    spec:
+      containerTemplate:
+        resources:
+          requests:
+            cpu: 100m

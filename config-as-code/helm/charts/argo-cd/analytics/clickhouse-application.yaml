@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: analytics-clickhouse
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  # ClickHouse cluster + Keeper (helm-charts charts/digit3/analytics/clickhouse):
+  # a ClickHouseCluster and a KeeperCluster that analytics-clickhouse-operator
+  # turns into StatefulSets, Services and PDBs. Values come from the
+  # `clickhouse:` block of the env file. Passwords are in the clickhouse-users
+  # Secret, rendered by cluster-configs from cluster-configs.secrets.generic in
+  # the SOPS file.
+  #
+  # Apply analytics-clickhouse-operator first and wait for it to be Healthy:
+  # the CRDs and the validating webhook must exist before these resources.
+  sources:
+    - repoURL: https://helm.digit.org/digit3/analytics
+      chart: clickhouse
+      targetRevision: 3.0.0
+      helm:
+        releaseName: clickhouse
+        valueFiles:
+          - $values/config-as-code/environments/hcm-demo-v2-azure.yaml
+    - repoURL: git@github.com:egovernments/health-campaign-devops.git
+      targetRevision: azure-install-hcm-demo-v2
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: analytics
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - ServerSideApply=true
+      - SkipDryRunOnMissingResource=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
