@@ -20,6 +20,21 @@ namespace `superset`) was removed; it held no dashboards, charts, datasets or
 connections. hcm-demo's own Superset never became ready (its pods crash-loop on
 the placeholder DB passwords), so it had nothing to migrate either.
 
+## ClickHouse
+
+Also in `helm/charts/argo-cd/analytics/`, applied by hand like Superset:
+
+1. `clickhouse-operator-application.yaml`: the ClickHouse Inc. operator
+   (`digit3/analytics/clickhouse-operator`), namespace `clickhouse-operator`.
+   Apply it first and wait for Healthy: it installs the CRDs and webhooks.
+2. `clickhouse-application.yaml`: one ClickHouse server and one Keeper
+   (`digit3/analytics/clickhouse`), namespace `analytics`, values from the
+   `clickhouse:` block of the env file, passwords in `clickhouse-users` (SOPS,
+   `cluster-configs.secrets.generic`).
+
+Superset reaches it at
+`clickhouse-clickhouse-headless.analytics.svc.cluster.local:8123` as user `app`.
+
 ## airflow-app.yaml
 
 Adopts the pre-existing Airflow deployment (upstream chart `airflow.apache.org/airflow`,

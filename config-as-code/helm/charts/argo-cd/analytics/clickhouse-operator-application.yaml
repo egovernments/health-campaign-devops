@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: analytics-clickhouse-operator
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  # ClickHouse Inc. operator (helm-charts charts/digit3/analytics/clickhouse-operator,
+  # a wrapper over oci://ghcr.io/clickhouse/clickhouse-operator-helm 0.0.8).
+  # Owns the ClickHouseCluster/KeeperCluster CRDs and their webhooks; the
+  # webhook and metrics certificates come from cert-manager, which is already
+  # installed. Must be Healthy before analytics-clickhouse syncs.
+  sources:
+    - repoURL: https://helm.digit.org/digit3/analytics
+      chart: clickhouse-operator
+      targetRevision: 3.0.0
+      helm:
+        releaseName: clickhouse-operator
+        valueFiles:
+          - $values/config-as-code/environments/hcm-demo-v2-azure.yaml
+    - repoURL: git@github.com:egovernments/health-campaign-devops.git
+      targetRevision: azure-install-hcm-demo-v2
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: clickhouse-operator
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      # The CRDs are too large for client-side apply's last-applied annotation.
+      - ServerSideApply=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
