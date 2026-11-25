@@ -24,7 +24,7 @@ spec:
   sources:
     - repoURL: https://helm.digit.org/digit3/analytics
       chart: superset
-      targetRevision: 3.0.2
+      targetRevision: 3.0.3
       helm:
         releaseName: superset
         valueFiles:
